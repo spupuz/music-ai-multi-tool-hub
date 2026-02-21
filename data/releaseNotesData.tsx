@@ -64,13 +64,52 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
+    version: "1.9.6",
+    content: (
+      <section id="version-1.9.6">
+        <SectionTitle>Version 1.9.6 - 2026-02-21</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Producer.AI Integration</STRONG>: Recognizes and processes URLs from <CODE>producer.ai</CODE> across all tools.</LI>
+        </UL>
+        <P>---</P>
+      </section>
+    )
+  },
+  {
+    version: "1.9.3",
+    content: (
+      <section id="version-1.9.3">
+        <SectionTitle>Version 1.9.3 - 2026-02-21</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Riffusion Integration</STRONG>: Expanded support for Riffusion URLs in Music Shuffler, Cover Art Creator, Lyric Processor, and MP3 Cutter.</LI>
+        </UL>
+        <P>---</P>
+      </section>
+    )
+  },
+  {
+    version: "1.9.0",
+    content: (
+      <section id="version-1.9.0">
+        <SectionTitle>Version 1.9.0 - 2026-02-20</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SparkTune Super-Generator</STRONG>: Massive upgrade with creative constraints (Vocal Style, BPM, Negative Constraints) and Dual Post generation.</LI>
+        </UL>
+        <P>---</P>
+      </section>
+    )
+  },
+  {
     version: "1.0.0",
     content: (
       <section id="version-1.0.0">
         <SectionTitle>Version 1.0.0 - 2026-02-14</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
-          <LI><STRONG>Initial Release</STRONG>: 20+ specialized AI music tools.</LI>
+          <LI><STRONG>Initial Release</STRONG>: 20+ specialized AI music tools (Suno Shuffler, Lyric Processor, Music Style Generator, etc.).</LI>
         </UL>
       </section>
     )

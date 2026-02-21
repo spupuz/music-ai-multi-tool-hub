@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+<!--
+GUIDA RAPIDA ALL'AGGIORNAMENTO:
+1. Aggiungi una nuova sezione in cima sotto un'intestazione '## [Versione] - Data'
+2. Usa '### Added', '### Changed', '### Removed', '### Fixed' per categorizzare i cambi.
+3. Usa i punti elenco '- ' per ogni voce.
+4. Salva il file.
+5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
+-->
 
 ## [2.0.0] - 2026-02-22
 
@@ -23,6 +30,7 @@ All notable changes to this project will be documented in this file.
 ---
 
 ## [1.9.8] - 2026-02-21
+
 ### Added
 - **Lyric Processor Meta Update**: Enhanced metadata and legal clarity for processed lyrics.
 - **Copyright Disclaimer**: Automatically appended to cleaned lyrics.
@@ -31,11 +39,34 @@ All notable changes to this project will be documented in this file.
 ---
 
 ## [1.9.7] - 2026-02-21
+
 ### Added
 - **Guided Workflows**: "Quick Start" section on the About page for better onboarding.
 
 ---
 
-## [1.0.0] - 2026-02-14
+## [1.9.6] - 2026-02-21
+
 ### Added
-- **Initial Release**: 20+ specialized AI music tools.
+- **Producer.AI Integration**: Recognizes and processes URLs from `producer.ai` across all tools.
+
+---
+
+## [1.9.3] - 2026-02-21
+
+### Added
+- **Riffusion Integration**: Expanded support for Riffusion URLs in Music Shuffler, Cover Art Creator, Lyric Processor, and MP3 Cutter.
+
+---
+
+## [1.9.0] - 2026-02-20
+
+### Added
+- **SparkTune Super-Generator**: Massive upgrade with creative constraints (Vocal Style, BPM, Negative Constraints) and Dual Post generation.
+
+---
+
+## [1.0.0] - 2026-02-14
+
+### Added
+- **Initial Release**: 20+ specialized AI music tools (Suno Shuffler, Lyric Processor, Music Style Generator, etc.).
