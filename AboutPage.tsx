@@ -172,6 +172,31 @@ Thanks,
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
           Your companion for AI-powered music creation and exploration.
         </p>
+
+        {/* GitHub Star CTA */}
+        <div className="mt-8 flex flex-col items-center animate-fade-in">
+          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl p-6 shadow-sm max-w-2xl w-full">
+            <h2 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">🚀 We are now Open Source!</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              The Hub is now public on GitHub. If you find these tools useful, please consider giving us a star to support the project!
+            </p>
+            <a
+              href="https://github.com/spupuz/music-ai-multi-tool-hub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:scale-105 transition-transform shadow-md group"
+              onClick={() => trackLocalEvent && trackLocalEvent('Github', 'ClickedGitHubStar', 'AboutPage')}
+            >
+              <svg className="w-5 h-5 mr-3 fill-current" viewBox="0 0 24 24">
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+              </svg>
+              Star on GitHub
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </header>
 
       <main className="text-gray-700 dark:text-gray-300 leading-relaxed">
