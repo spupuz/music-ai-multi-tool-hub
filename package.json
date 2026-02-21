@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run sync-notes",
     "dev": "vite",
+    "prebuild": "npm run sync-notes",
     "build": "npm run build:tw && vite build",
     "build:tw": "npx tailwindcss -i ./index.css -o ./dist/index.css",
     "preview": "vite preview",
