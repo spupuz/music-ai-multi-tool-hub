@@ -58,10 +58,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>About Page Enhancements</STRONG>:</LI>
-        </UL>
-        <P>- <STRONG>Quick Start Workflows Section</STRONG>: Added a goal-oriented section to help newcomers find the right tools.</P>
-        <P>- <STRONG>Goal-Oriented Navigation</STRONG>: Cards like "I need inspiration...", "I'm writing a song..." with direct tool links.</P>
-        <UL>
+          <UL>
+            <LI><STRONG>Quick Start Workflows Section</STRONG>: Added a goal-oriented section to help newcomers find the right tools.</LI>
+            <LI><STRONG>Goal-Oriented Navigation</STRONG>: Cards like "I need inspiration...", "I'm writing a song..." with direct tool links.</LI>
+          </UL>
           <LI><STRONG>Improved Onboarding</STRONG>: Better discoverability by turning the Hub into a guided creative suite.</LI>
         </UL>
         <P>---</P>
@@ -76,13 +76,15 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Producer.AI Integration</STRONG>:</LI>
-        </UL>
-        <P>- Seamless support for `producer.ai` URLs across the Hub.</P>
-        <P>- Automatic extraction of song IDs and transformation to `riffusion.com` format.</P>
-        <UL>
+          <UL>
+            <LI>Seamless support for <CODE>producer.ai</CODE> URLs across the Hub.</LI>
+            <LI>Automatic extraction of song IDs and transformation to <CODE>riffusion.com</CODE> format.</LI>
+          </UL>
           <LI><STRONG>Tool Updates</STRONG>:</LI>
+          <UL>
+            <LI>Music Shuffler, Compliance Checker, Cover Art Creator, MP3 Cutter, Lyric Processor, Lyrics Synchronizer, and Song Deck Picker all support Producer.AI links.</LI>
+          </UL>
         </UL>
-        <P>- Music Shuffler, Compliance Checker, Cover Art Creator, MP3 Cutter, Lyric Processor, Lyrics Synchronizer, and Song Deck Picker all support Producer.AI links.</P>
         <P>---</P>
       </section>
     )
@@ -95,14 +97,16 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Ranking Reveal Mode (Song Deck Picker)</STRONG>:</LI>
-        </UL>
-        <P>- <STRONG>New Game-like Reveal</STRONG>: Cards are face-down and revealed in reverse rank order (from #10 to #1).</P>
-        <P>- <STRONG>Special Previews</STRONG>: Top-ranked cards trigger flip animations and audio snippets in an enlarged modal.</P>
-        <UL>
+          <UL>
+            <LI><STRONG>New Game-like Reveal</STRONG>: Cards are face-down and revealed in reverse rank order (from #10 to #1).</LI>
+            <LI><STRONG>Special Previews</STRONG>: Top-ranked cards trigger flip animations and audio snippets in an enlarged modal.</LI>
+          </UL>
           <LI><STRONG>UI Polish</STRONG>:</LI>
+          <UL>
+            <LI>Enhanced modal display preserves aspect ratio and visual elements.</LI>
+            <LI>Improved interaction flow for closing modals.</LI>
+          </UL>
         </UL>
-        <P>- Enhanced modal display preserves aspect ratio and visual elements.</P>
-        <P>- Improved interaction flow for closing modals.</P>
         <P>---</P>
       </section>
     )
@@ -115,16 +119,16 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Song Structure Builder "Power-Up"</STRONG>:</LI>
-        </UL>
-        <P>- <STRONG>Line-by-Line Lyric Management</STRONG>: Dedicated lyric editor for each block on the timeline.</P>
-        <P>- <STRONG>Automatic Version Control</STRONG>: Saves drafts on blur with a history modal for easy reverting.</P>
-        <P>- <STRONG>Live Syllable Counting</STRONG>: Real-time syllable counter for each lyric line.</P>
-        <UL>
+          <UL>
+            <LI><STRONG>Line-by-Line Lyric Management</STRONG>: Dedicated lyric editor for each block on the timeline.</LI>
+            <LI><STRONG>Automatic Version Control</STRONG>: Saves drafts on blur with a history modal for easy reverting.</LI>
+            <LI><STRONG>Live Syllable Counting</STRONG>: Real-time syllable counter for each lyric line.</LI>
+          </UL>
           <LI><STRONG>Saved Arrangement Management</STRONG>:</LI>
-        </UL>
-        <P>- <STRONG>Safe Deletion</STRONG>: 3-click confirmation for deleting saved arrangements.</P>
-        <P>- <STRONG>New Import/Export</STRONG>: Export to `.txt` (AI prompt format) or `.csv`.</P>
-        <UL>
+          <UL>
+            <LI><STRONG>Safe Deletion</STRONG>: 3-click confirmation for deleting saved arrangements.</LI>
+            <LI><STRONG>New Import/Export</STRONG>: Export to <CODE>.txt</CODE> (AI prompt format) or <CODE>.csv</CODE>.</LI>
+          </UL>
           <LI><STRONG>Lyric Utils</STRONG>: Shared syllable counting logic moved to <CODE>utils/lyricUtils.ts</CODE>.</LI>
         </UL>
         <P>---</P>
@@ -139,11 +143,13 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Riffusion Integration Across Tools</STRONG>:</LI>
+          <UL>
+            <LI><STRONG>Music Shuffler</STRONG>: Load and play Riffusion tracks.</LI>
+            <LI><STRONG>Song Cover Art Creator</STRONG>: Fetch info/artwork from Riffusion URLs.</LI>
+            <LI><STRONG>Lyric Processor</STRONG>: Fetch lyrics/title/artist from Riffusion links.</LI>
+            <LI><STRONG>MP3 Cutter</STRONG>: Load audio directly from Riffusion songs.</LI>
+          </UL>
         </UL>
-        <P>- <STRONG>Music Shuffler</STRONG>: Load and play Riffusion tracks.</P>
-        <P>- <STRONG>Song Cover Art Creator</STRONG>: Fetch info/artwork from Riffusion URLs.</P>
-        <P>- <STRONG>Lyric Processor</STRONG>: Fetch lyrics/title/artist from Riffusion links.</P>
-        <P>- <STRONG>MP3 Cutter</STRONG>: Load audio directly from Riffusion songs.</P>
         <P>---</P>
       </section>
     )
@@ -170,9 +176,11 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <UL>
           <LI><STRONG>Music Shuffler Riffusion Integration</STRONG>: Support for <CODE>riffusion.com/song/...</CODE> URLs with multi-platform playlist capability.</LI>
           <LI><STRONG>Hub Reorganization</STRONG>:</LI>
+          <UL>
+            <LI>New <STRONG>"AI Music Platforms"</STRONG> sidebar category.</LI>
+            <LI>Moved Music Shuffler, User Stats, and Song Compliance under the new category.</LI>
+          </UL>
         </UL>
-        <P>- New <STRONG>"AI Music Platforms"</STRONG> sidebar category.</P>
-        <P>- Moved Music Shuffler, User Stats, and Song Compliance under the new category.</P>
         <P>---</P>
       </section>
     )
@@ -185,10 +193,12 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>SparkTune Super-Generator</STRONG>:</LI>
+          <UL>
+            <LI><STRONG>Creative Constraints</STRONG>: Vocal Style (with randomizer), Tempo (BPM), and Negative Constraints.</LI>
+            <LI><STRONG>Dual Post Generation</STRONG>: Distinct Announcement and Reminder posts with tabbed navigation.</LI>
+            <LI><STRONG>Smarter Content</STRONG>: Dynamic hashtags and intelligent line omission for blank fields.</LI>
+          </UL>
         </UL>
-        <P>- <STRONG>Creative Constraints</STRONG>: Vocal Style (with randomizer), Tempo (BPM), and Negative Constraints.</P>
-        <P>- <STRONG>Dual Post Generation</STRONG>: Distinct Announcement and Reminder posts with tabbed navigation.</P>
-        <P>- <STRONG>Smarter Content</STRONG>: Dynamic hashtags and intelligent line omission for blank fields.</P>
         <P>---</P>
       </section>
     )
@@ -201,10 +211,12 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Lyrics Synchronizer Layout</STRONG>:</LI>
+          <UL>
+            <LI>Player controls relocated to the load section for better flow.</LI>
+            <LI>Single-column layout for the synchronization interface.</LI>
+            <LI>Scrollable lyrics list with max height.</LI>
+          </UL>
         </UL>
-        <P>- Player controls relocated to the load section for better flow.</P>
-        <P>- Single-column layout for the synchronization interface.</P>
-        <P>- Scrollable lyrics list with max height.</P>
         <P>---</P>
       </section>
     )
@@ -217,9 +229,11 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno Shuffler Improvements</STRONG>:</LI>
+          <UL>
+            <LI><STRONG>Remove Song from Playlist</STRONG>: Trash can icon added to queue items for individual removal.</LI>
+            <LI><STRONG>UI Fixes</STRONG>: Shortened example URL text to prevent overflow on mobile.</LI>
+          </UL>
         </UL>
-        <P>- <STRONG>Remove Song from Playlist</STRONG>: Trash can icon added to queue items for individual removal.</P>
-        <P>- <STRONG>UI Fixes</STRONG>: Shortened example URL text to prevent overflow on mobile.</P>
         <P>---</P>
       </section>
     )
@@ -234,9 +248,11 @@ export const releaseNotes: ReleaseNoteItem[] = [
           <LI><STRONG>Snippet Mode</STRONG>: 30-second random song previews for rapid discovery in Suno Music Shuffler.</LI>
           <LI><STRONG>Reveal Cards Mode (Song Deck Picker)</STRONG>: Face-down card game with customizable card backs.</LI>
           <LI><STRONG>Technical Fixes</STRONG>:</LI>
+          <UL>
+            <LI>Fixed <CODE>SyntaxError</CODE> in placeholder files.</LI>
+            <LI>Corrected TypeScript types for browser timers and audio player.</LI>
+          </UL>
         </UL>
-        <P>- Fixed `SyntaxError` in placeholder files.</P>
-        <P>- Corrected TypeScript types for browser timers and audio player.</P>
         <P>---</P>
       </section>
     )
@@ -249,12 +265,14 @@ export const releaseNotes: ReleaseNoteItem[] = [
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno User Stats "Data Nerd" Pack</STRONG>:</LI>
+          <UL>
+            <LI><STRONG>Song Performance Lifecycle Modal</STRONG>: Detailed line charts for individual song growth.</LI>
+            <LI><STRONG>Plays vs. Comments Scatter Plot</STRONG>: Identify "talkable" songs based on engagement rates.</LI>
+            <LI><STRONG>Cross-Chart Filtering</STRONG>: Click chart data to filter the performance table.</LI>
+            <LI><STRONG>Stickiness Metrics</STRONG>: Avg. Upvote/Comment rates for Tags and Genres.</LI>
+            <LI><STRONG>Duration Buckets</STRONG>: Performance analysis grouped by song length.</LI>
+          </UL>
         </UL>
-        <P>- <STRONG>Song Performance Lifecycle Modal</STRONG>: Detailed line charts for individual song growth.</P>
-        <P>- <STRONG>Plays vs. Comments Scatter Plot</STRONG>: Identify "talkable" songs based on engagement rates.</P>
-        <P>- <STRONG>Cross-Chart Filtering</STRONG>: Click chart data to filter the performance table.</P>
-        <P>- <STRONG>Stickiness Metrics</STRONG>: Avg. Upvote/Comment rates for Tags and Genres.</P>
-        <P>- <STRONG>Duration Buckets</STRONG>: Performance analysis grouped by song length.</P>
         <P>---</P>
       </section>
     )

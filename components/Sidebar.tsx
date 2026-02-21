@@ -1,12 +1,12 @@
 
 import React from 'react';
-import type { ToolId } from '../Layout'; 
+import type { ToolId } from '../Layout';
 
 interface SidebarTool {
   id: ToolId;
   name: string;
   // FIX: Replaced JSX.Element with React.ReactElement
-  icon?: React.ReactElement; 
+  icon?: React.ReactElement;
   category: string; // Added category
 }
 
@@ -16,7 +16,7 @@ interface SidebarProps {
   tools: SidebarTool[];
   activeToolId: ToolId;
   onNavigate: (toolId: ToolId) => void;
-  trackLocalEvent: (category: string, action: string, label?: string, value?: string | number) => void; 
+  trackLocalEvent: (category: string, action: string, label?: string, value?: string | number) => void;
 }
 
 const EmailIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
@@ -25,18 +25,12 @@ const EmailIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) 
   </svg>
 );
 
-const CommunityBoardIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.68-3.091a1.251 1.251 0 00-.797-.282h-3.239c-1.136 0-2.1-.847-2.193-1.98A11.997 11.997 0 012.25 12.75v-4.286c0-.97.616-1.813 1.5-2.097m16.5 0c.884.284 1.5 1.128 1.5 2.097V6.255c0-1.136-.847-2.1-1.98-2.193C18.427 3.927 18.087 3.9 17.747 3.9h-1.102c-1.136 0-2.1.847-2.193 1.98C14.354 6.073 14.3 6.413 14.3 6.753v1.172c.208-.023.416-.041.624-.056h4.006a4.5 4.5 0 014.5 4.5v.005c0 .584-.121 1.14-.337 1.652M12 10.5h.008v.008H12V10.5z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75a.75.75 0 000-1.5m0 1.5a.75.75 0 010-1.5m0 1.5H3M12 12.75H7.5m4.5-4.5H7.5m9-3H7.5" />
-    </svg>
-);
 
 const ReleaseNotesLinkIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
-    </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
+  </svg>
 );
 
 const HeartLinkIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => ( // New Icon
@@ -73,7 +67,6 @@ Thanks,
 [Your Name / Discord Handle (Optional)]`;
 
   const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-  const feedbackBoardLink = "https://music-ai-multi-tool-hub.feedbackchimp.space/";
 
   const handleToolButtonClick = (event: React.MouseEvent<HTMLButtonElement>, toolId: ToolId) => {
     if (event.button === 1 || (event.button === 0 && (event.ctrlKey || event.metaKey))) { // Middle-click or Ctrl/Cmd+Left-click
@@ -106,8 +99,8 @@ Thanks,
   return (
     <>
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-30 bg-black opacity-50 md:hidden" 
+        <div
+          className="fixed inset-0 z-30 bg-black opacity-50 md:hidden"
           onClick={onClose}
           aria-hidden="true"
         ></div>
@@ -133,10 +126,10 @@ Thanks,
                     key={tool.id}
                     onClick={(e) => handleToolButtonClick(e, tool.id)}
                     className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors
-                                ${ activeToolId === tool.id 
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white' 
-                                    : 'text-gray-700 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                                }`}
+                                ${activeToolId === tool.id
+                        ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                      }`}
                     aria-current={activeToolId === tool.id ? 'page' : undefined}
                   >
                     {tool.icon && <span className="mr-3 flex-shrink-0">{tool.icon}</span>}
@@ -147,83 +140,73 @@ Thanks,
             );
           })}
         </nav>
-        
+
         <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
-            <div>
-                <h4 className="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-500 tracking-wider mb-1">Feedback</h4>
-                <a 
-                    href={mailtoLink}
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
-                    aria-label="Send suggestions or feedback via email"
-                >
-                    <EmailIcon className="w-4 h-4 mr-2 flex-shrink-0"/>
-                    Email Feedback
-                </a>
-                <a 
-                    href={feedbackBoardLink}
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
-                    aria-label="Visit community feedback board"
-                >
-                    <CommunityBoardIcon className="w-4 h-4 mr-2 flex-shrink-0"/>
-                    Community Board
-                </a>
-            </div>
-            <div className="pt-2"> {/* Support and Version Info */}
-                <a 
-                    href="https://www.buymeacoffee.com/spupuz" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="block mx-auto hover:opacity-90 transition-opacity mb-2"
-                    aria-label="Buy Me A Coffee"
-                >
-                    <img 
-                        src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" 
-                        alt="Buy Me A Coffee" 
-                        style={{ height: '45px', width: '163px', display: 'block', margin: '0 auto' }} 
-                    />
-                </a>
-                <button
-                    onClick={(e) => handleToolButtonClick(e, 'releaseNotes')}
-                    className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors mb-1
-                                ${ activeToolId === 'releaseNotes' 
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white' 
-                                    : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                                }`}
-                    aria-current={activeToolId === 'releaseNotes' ? 'page' : undefined}
-                >
-                    <ReleaseNotesLinkIcon className="w-4 h-4 mr-2 flex-shrink-0"/>
-                    Release Notes
-                </button>
-                <button
-                    onClick={(e) => handleToolButtonClick(e, 'specialMentions')}
-                    className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
-                                ${ activeToolId === 'specialMentions' 
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white' 
-                                    : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                                }`}
-                    aria-current={activeToolId === 'specialMentions' ? 'page' : undefined}
-                >
-                    <HeartLinkIcon className="w-4 h-4 mr-2 flex-shrink-0"/>
-                    Special Mentions
-                </button>
-            </div>
+          <div>
+            <h4 className="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-500 tracking-wider mb-1">Feedback</h4>
+            <a
+              href={mailtoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
+              aria-label="Send suggestions or feedback via email"
+            >
+              <EmailIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+              Email Feedback
+            </a>
+          </div>
+          <div className="pt-2"> {/* Support and Version Info */}
+            <a
+              href="https://www.buymeacoffee.com/spupuz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mx-auto hover:opacity-90 transition-opacity mb-2"
+              aria-label="Buy Me A Coffee"
+            >
+              <img
+                src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
+                alt="Buy Me A Coffee"
+                style={{ height: '45px', width: '163px', display: 'block', margin: '0 auto' }}
+              />
+            </a>
+            <button
+              onClick={(e) => handleToolButtonClick(e, 'releaseNotes')}
+              className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors mb-1
+                                ${activeToolId === 'releaseNotes'
+                  ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                }`}
+              aria-current={activeToolId === 'releaseNotes' ? 'page' : undefined}
+            >
+              <ReleaseNotesLinkIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+              Release Notes
+            </button>
+            <button
+              onClick={(e) => handleToolButtonClick(e, 'specialMentions')}
+              className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
+                                ${activeToolId === 'specialMentions'
+                  ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+                }`}
+              aria-current={activeToolId === 'specialMentions' ? 'page' : undefined}
+            >
+              <HeartLinkIcon className="w-4 h-4 mr-2 flex-shrink-0" />
+              Special Mentions
+            </button>
+          </div>
         </div>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 md:hidden"> 
-            <button
-                onClick={onClose}
-                className="w-full flex items-center justify-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-                aria-label="Close sidebar"
-            >
-                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Close Menu
-            </button>
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 md:hidden">
+          <button
+            onClick={onClose}
+            className="w-full flex items-center justify-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+            aria-label="Close sidebar"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Close Menu
+          </button>
         </div>
       </aside>
     </>

@@ -16,17 +16,17 @@ function parseChangelog() {
         const version = headerMatch[1];
         const bodyLines = lines.slice(1).filter(line => line.trim() !== '');
 
-        // Very basic MD to JSX converter
+        // MD to JSX converter with basic nested list support
         let jsxContent = bodyLines.map(line => {
             if (line.startsWith('### ')) {
                 return `<SubSectionTitle>${line.replace('### ', '').trim()}</SubSectionTitle>`;
             }
-            if (line.startsWith('- ')) {
-                // Handle bold in lists
-                let text = line.replace('- ', '').trim();
+            if (line.trim().startsWith('- ')) {
+                const isNested = line.startsWith('  ');
+                let text = line.trim().replace('- ', '').trim();
                 text = text.replace(/\*\*(.*?)\*\*/g, '<STRONG>$1</STRONG>');
                 text = text.replace(/`(.*?)`/g, '<CODE>$1</CODE>');
-                return `<LI>${text}</LI>`;
+                return { type: 'LI', text, nested: isNested };
             }
             if (line.match(/^[^<]/)) {
                 let text = line.trim();
@@ -36,25 +36,41 @@ function parseChangelog() {
             return line;
         });
 
-        // Group LIs into ULs
+        // Group LIs into ULs (supports one level of nesting)
         const groupedJsx = [];
-        let inList = false;
+        let listStack = []; // 'UL' or 'NESTED_UL'
+
         jsxContent.forEach(item => {
-            if (item.startsWith('<LI>')) {
-                if (!inList) {
-                    groupedJsx.push('<UL>');
-                    inList = true;
+            if (typeof item === 'object' && item.type === 'LI') {
+                if (item.nested) {
+                    if (listStack[listStack.length - 1] !== 'NESTED_UL') {
+                        groupedJsx.push('  <UL>');
+                        listStack.push('NESTED_UL');
+                    }
+                    groupedJsx.push(`    <LI>${item.text}</LI>`);
+                } else {
+                    while (listStack.length > 0 && listStack[listStack.length - 1] === 'NESTED_UL') {
+                        groupedJsx.push('  </UL>');
+                        listStack.pop();
+                    }
+                    if (listStack[listStack.length - 1] !== 'UL') {
+                        groupedJsx.push('<UL>');
+                        listStack.push('UL');
+                    }
+                    groupedJsx.push(`  <LI>${item.text}</LI>`);
                 }
-                groupedJsx.push(`  ${item}`);
             } else {
-                if (inList) {
-                    groupedJsx.push('</UL>');
-                    inList = false;
+                while (listStack.length > 0) {
+                    const last = listStack.pop();
+                    groupedJsx.push(last === 'NESTED_UL' ? '  </UL>' : '</UL>');
                 }
                 groupedJsx.push(item);
             }
         });
-        if (inList) groupedJsx.push('</UL>');
+        while (listStack.length > 0) {
+            const last = listStack.pop();
+            groupedJsx.push(last === 'NESTED_UL' ? '  </UL>' : '</UL>');
+        }
 
         return {
             version,

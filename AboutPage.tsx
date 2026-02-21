@@ -140,7 +140,6 @@ Thanks,
 [Your Name / Discord Handle (Optional)]`;
 
   const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-  const feedbackBoardLink = "https://music-ai-multi-tool-hub.feedbackchimp.space/";
   const privacyPolicyLastUpdated = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const groupedTools = toolsList ? toolsList.reduce((acc, tool) => {
@@ -344,7 +343,7 @@ Thanks,
         <section id="feedback">
           <h2 className="text-3xl font-bold text-green-600 dark:text-green-400 mt-10 mb-6 border-b-2 border-green-600 pb-3">Feedback & Suggestions</h2>
           <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <p className="mb-3 leading-relaxed text-gray-700 dark:text-gray-300">Your experience and ideas are vital! We encourage you to share your feedback, suggest new tools, or report any bugs. The best way to get in touch is through our <a href={feedbackBoardLink} target="_blank" rel="noopener noreferrer" className="text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 font-semibold underline">Community Feedback Board</a> or by sending an email to <a href={mailtoLink} className="text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 font-semibold underline">{emailAddress}</a>.</p>
+            <p className="mb-3 leading-relaxed text-gray-700 dark:text-gray-300">Your experience and ideas are vital! We encourage you to share your feedback, suggest new tools, or report any bugs. The best way to get in touch is by sending an email to <a href={mailtoLink} className="text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 font-semibold underline">{emailAddress}</a>.</p>
           </div>
         </section>
 
