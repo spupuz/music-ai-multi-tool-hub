@@ -82,7 +82,7 @@ Browser → Cloudflare Pages (static SPA)
 ## 💬 Support & Feedback
 
 - Reach out to **@spupuz** or **@flickerlog** on Discord
-- Use the **Community Feedback Board** in the sidebar
+- Email us via the **Email Feedback** link in the app sidebar
 
 ---
 

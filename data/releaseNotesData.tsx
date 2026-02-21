@@ -12,12 +12,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     content: (
       <section id="version-2.0.0">
         <SectionTitle>Version 2.0.0 - 2026-02-22</SectionTitle>
-        <SubSectionTitle>Added</SubSectionTitle>
         <UL>
-          <LI><STRONG>Cloudflare Pages Migration</STRONG>: The Hub is now a pure static site deployed on Cloudflare Pages.</LI>
-          <LI><STRONG>Gemini Proxy Worker</STRONG>: Introduced a Cloudflare Worker (<CODE>gemini-proxy</CODE>) to secure API calls.</LI>
-          <LI><STRONG>Server-side Password Verification</STRONG>: "Committee" password is now verified via Worker secrets, removing it from the client bundle.</LI>
           <LI><STRONG>Public Repository Readiness</STRONG>: Performed a full security audit and git history scrub for open-source release.</LI>
+          <LI><STRONG>Official Open-Source Launch</STRONG>: The repository is now public on GitHub!</LI>
+          <LI><STRONG>Removed Obsolete Links</STRONG>: Deleted the unused Community Feedback Board links from the Sidebar and About page.</LI>
         </UL>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>

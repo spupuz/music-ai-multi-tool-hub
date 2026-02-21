@@ -11,11 +11,9 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.0.0] - 2026-02-22
 
-### Added
-- **Cloudflare Pages Migration**: The Hub is now a pure static site deployed on Cloudflare Pages.
-- **Gemini Proxy Worker**: Introduced a Cloudflare Worker (`gemini-proxy`) to secure API calls.
-- **Server-side Password Verification**: "Committee" password is now verified via Worker secrets, removing it from the client bundle.
 - **Public Repository Readiness**: Performed a full security audit and git history scrub for open-source release.
+- **Official Open-Source Launch**: The repository is now public on GitHub!
+- **Removed Obsolete Links**: Deleted the unused Community Feedback Board links from the Sidebar and About page.
 
 ### Changed
 - **Architecture**: Transitioned from Docker/Nginx/CORS-Proxy to a modern serverless stack.
