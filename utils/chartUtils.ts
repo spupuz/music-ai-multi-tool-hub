@@ -58,7 +58,7 @@ export const getBaseChartOptions = (
           precision: 0, 
           callback: function(value) {
             if (Number(value) >= 1000) {
-                return (Number(value) / 1000) + 'k';
+                return (Number(value) / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
             }
             return value;
           }

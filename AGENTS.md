@@ -86,7 +86,20 @@ The application uses `localStorage` for data persistence and local statistics tr
 trackLocalEvent('ToolCategory', 'ActionName', 'Label', value);
 ```
 
-## Anti-Patterns to Avoid
+### Mobile-First Responsiveness Patterns
+
+The application prioritizes a seamless mobile experience (320px+). Follow these patterns to prevent horizontal overflow and maximize space:
+
+- **Aggressive Container Padding**: On small screens, reduce or remove container padding to reclaim pixels. Use `p-0` or `p-1` for mobile and scale up (`sm:p-6`) for larger viewports.
+- **Responsive Tables**: 
+  - Abbreviate column headers on mobile using conditional rendering: `<span className="sm:hidden">Plays</span> <span className="hidden sm:inline">Avg Plays</span>`.
+  - Reduce font size (`text-[9px]` or `text-[10px]`) and cell padding (`px-1`) for narrow viewports.
+  - Round large decimals or use `toLocaleString()` to keep cell content compact.
+- **Chart Optimization**:
+  - Track `screenWidth` to dynamically adjust `Chart.js` options (layout padding, tooltips, axis titles).
+  - Hide non-essential axis titles on mobile (`display: screenWidth > 640`).
+  - Use `ticks.padding` and `ticks.font.size` to prevent labels from hitting container edges.
+- **Text Scaling**: Use responsive font sizes for titles (e.g., `text-xl sm:text-2xl`) and ensure single-line headers use `truncate` or `text-ellipsis` to prevent wrapping.
 
 ### Anti-Pattern 1: Direct Fetch in Components
 **Bad**: Calling `fetch()` or heavy logic directly inside a `useEffect` or event handler in a UI component.

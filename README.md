@@ -20,6 +20,7 @@ A premium suite of **20+ specialized tools** for AI music creators, producers, a
 | ☁️ **Cloudflare Powered** | Zero-server static deployment with Worker-side AI proxy |
 | 🔒 **Secrets in Worker** | Gemini API key never touches the frontend bundle |
 | ⚡ **Modern Stack** | React 19, Vite, TypeScript |
+| 📱 **Mobile Optimized** | Seamless experience on all screen sizes (320px+) |
 
 ---
 

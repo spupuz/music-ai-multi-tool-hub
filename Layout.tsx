@@ -336,7 +336,7 @@ const Layout: React.FC = () => {
           trackLocalEvent={trackLocalEvent}
         />
         <main className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${isSidebarOpen && isDesktop ? 'md:ml-64' : 'ml-0'}`}>
-          <div className="p-4 sm:p-6 lg:p-8"> 
+          <div className="p-0 sm:p-6 lg:p-8"> 
             {ActiveToolComponent ? <ActiveToolComponent {...combinedToolProps} /> : <ToolNotFoundComponent />}
           </div>
         </main>

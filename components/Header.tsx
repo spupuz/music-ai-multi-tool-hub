@@ -69,9 +69,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, appName }) => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>
-      <div className="ml-3 flex items-center flex-grow">
-        <AppLogo />
-        <h1 className="text-xl font-semibold">
+      <div className="ml-1 sm:ml-3 flex items-center flex-grow overflow-hidden">
+        <div className="hidden min-[340px]:block">
+          <AppLogo />
+        </div>
+        <h1 className="text-sm min-[380px]:text-base sm:text-lg md:text-xl font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
           {styledName}
         </h1>
       </div>

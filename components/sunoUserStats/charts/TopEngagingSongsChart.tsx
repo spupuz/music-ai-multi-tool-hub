@@ -24,6 +24,13 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
+  const [screenWidth, setScreenWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => { if (typeof window !== 'undefined') setScreenWidth(window.innerWidth); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Filter for valid items and sort, then slice
   const validData = data.filter(item => item && item.song && typeof item.upvoteRate === 'number');
@@ -48,11 +55,15 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
             ...chartOptions.scales.x.ticks.font, 
             size: topNValue <= 5 ? 7 : 8 
         };
-        chartOptions.scales.x.ticks.maxRotation = 60;
-        chartOptions.scales.x.ticks.minRotation = 30;
+        chartOptions.scales.x.ticks.maxRotation = screenWidth < 480 ? 45 : 60;
+        chartOptions.scales.x.ticks.minRotation = screenWidth < 480 ? 45 : 30;
         
-        chartOptions.scales.y.title = { display: true, text: 'Upvote Rate (%)', color: fontColor, font: {size: 10} };
-        chartOptions.scales.y.ticks.callback = function(value: any) { return `${parseFloat(value).toFixed(1)}%`; };
+        chartOptions.scales.y.title = { display: screenWidth >= 640, text: 'Upvote Rate (%)', color: fontColor, font: {size: 10} };
+        chartOptions.scales.y.ticks.callback = function(value: any) { 
+            return screenWidth < 640 ? `${Math.round(value)}%` : `${parseFloat(value).toFixed(1)}%`; 
+        };
+        chartOptions.scales.y.ticks.font = { size: screenWidth < 480 ? 8 : 10 };
+        chartOptions.scales.y.ticks.padding = screenWidth < 640 ? 4 : 4;
         
         chartOptions.plugins.tooltip.callbacks = {
             title: function(tooltipItems: any[]) { // Typed tooltipItems
@@ -87,10 +98,10 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
 
          chartOptions.layout = {
             padding: {
-                left: topNValue <= 3 ? 0 : 5,
-                right: topNValue <= 3 ? 0 : 5,
+                left: screenWidth < 640 ? 2 : (topNValue <= 3 ? 0 : 5),
+                right: screenWidth < 640 ? 2 : (topNValue <= 3 ? 0 : 5),
                 top: 5,
-                bottom: 0
+                bottom: screenWidth < 640 ? 45 : 10 
             }
         };
 
@@ -120,7 +131,7 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, barColor, fontColor, gridColor, topNValue]);
+  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth]);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song data meets criteria for upvote rate chart.</p>;

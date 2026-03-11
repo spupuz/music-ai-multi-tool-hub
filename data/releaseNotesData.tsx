@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.1.0",
+    content: (
+      <section id="version-2.1.0">
+        <SectionTitle>Version 2.1.0 - 2026-03-11</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Full Mobile Responsiveness Overhaul</STRONG>: Eliminated horizontal overflow across the entire application, focusing on the Suno User Stats tool.</LI>
+          <LI><STRONG>Aggressive Spacing Optimization</STRONG>: Reclaimed horizontal space by zeroing out paddings on mobile containers (<CODE>Layout</CODE>, <CODE>Tool Container</CODE>, <CODE>ChartContainer</CODE>).</LI>
+          <LI><STRONG>Responsive Charts</STRONG>: Implemented dynamic scaling for Chart.js labels, padding, and decimal precision (e.g., rounding percentages on mobile).</LI>
+          <LI><STRONG>Responsive Tables</STRONG>: Added intelligent header abbreviations (e.g., "Avg Plays" &rarr; "Plays") and cell compaction for small screens.</LI>
+          <LI><STRONG>Header Scaling</STRONG>: Optimized the main header to ensure branding remains on a single line on all devices using dynamic font sizes and ellipsis.</LI>
+          <LI><STRONG>Clean UI</STRONG>: Removed redundant mobile-only "small screen" warning as the UI is now fully optimized.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.0.0",
     content: (
       <section id="version-2.0.0">

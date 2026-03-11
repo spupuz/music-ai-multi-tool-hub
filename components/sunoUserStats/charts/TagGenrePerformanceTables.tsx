@@ -53,7 +53,7 @@ const PerformanceTable = <T extends { name: string; count: number; avgPlays: num
     return sortDirection === 'asc' ? <span aria-label="sorted ascending">🔼</span> : <span aria-label="sorted descending">🔽</span>;
   };
 
-  const thClasses = "px-1 sm:px-2 py-1.5 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-normal sm:tracking-wider cursor-pointer select-none hover:bg-gray-700 transition-colors";
+  const thClasses = "px-0.5 sm:px-2 py-1 text-left text-[9px] sm:text-xs font-medium text-gray-300 uppercase tracking-tighter sm:tracking-wider cursor-pointer select-none hover:bg-gray-700 transition-colors";
 
   if (sortedData.length === 0) {
     return <p className="text-gray-400 text-xs italic py-2 text-center">No data available for {title.toLowerCase()}.</p>;
@@ -65,25 +65,51 @@ const PerformanceTable = <T extends { name: string; count: number; avgPlays: num
         <table className="min-w-full divide-y divide-gray-600">
           <thead className="bg-gray-700">
             <tr>
-              <th scope="col" className={thClasses} onClick={() => handleSort('name')}>{itemTypeLabel} <SortArrow column="name"/></th>
-              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgPlays')}>Avg Plays <SortArrow column="avgPlays"/></th>
-              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgUpvotes')}>Avg Upvotes <SortArrow column="avgUpvotes"/></th>
-              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgComments')}>Avg Comments <SortArrow column="avgComments"/></th>
+              <th scope="col" className={thClasses} onClick={() => handleSort('name')}>
+                <span className="sm:hidden">{itemTypeLabel.substring(0, 3)}.</span>
+                <span className="hidden sm:inline">{itemTypeLabel}</span>
+                <SortArrow column="name"/>
+              </th>
+              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgPlays')}>
+                <span className="sm:hidden">Plays</span>
+                <span className="hidden sm:inline">Avg Plays</span>
+                <SortArrow column="avgPlays"/>
+              </th>
+              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgUpvotes')}>
+                <span className="sm:hidden">Upvt</span>
+                <span className="hidden sm:inline">Avg Upvotes</span>
+                <SortArrow column="avgUpvotes"/>
+              </th>
+              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgComments')}>
+                <span className="sm:hidden">Cmnt</span>
+                <span className="hidden sm:inline">Avg Comments</span>
+                <SortArrow column="avgComments"/>
+              </th>
               <th scope="col" className={`${thClasses} text-right hidden lg:table-cell`} onClick={() => handleSort('avgUpvoteRate')}>Avg Upvote% <SortArrow column="avgUpvoteRate"/></th>
               <th scope="col" className={`${thClasses} text-right hidden lg:table-cell`} onClick={() => handleSort('avgCommentRate')}>Avg Cmnt% <SortArrow column="avgCommentRate"/></th>
-              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('count')}>Songs <SortArrow column="count"/></th>
+              <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('count')}>
+                <span className="sm:hidden">Qty</span>
+                <span className="hidden sm:inline">Songs</span>
+                <SortArrow column="count"/>
+              </th>
             </tr>
           </thead>
           <tbody className="bg-gray-750 divide-y divide-gray-600">
             {sortedData.map((item) => (
               <tr key={item.name}>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-[11px] sm:text-xs truncate max-w-[80px] sm:max-w-[100px]" title={item.name}>{item.name}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-right text-[11px] sm:text-xs">{(item.avgPlays as number).toFixed(1)}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-right text-[11px] sm:text-xs">{(item.avgUpvotes as number).toFixed(1)}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-right text-[11px] sm:text-xs">{(item.avgComments as number).toFixed(1)}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-right text-[11px] sm:text-xs hidden lg:table-cell">{item.avgUpvoteRate !== undefined ? `${item.avgUpvoteRate.toFixed(1)}%` : 'N/A'}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-200 text-right text-[11px] sm:text-xs hidden lg:table-cell">{item.avgCommentRate !== undefined ? `${item.avgCommentRate.toFixed(1)}%` : 'N/A'}</td>
-                <td className="px-1 sm:px-2 py-1.5 whitespace-nowrap text-gray-300 text-right text-[11px] sm:text-xs">{item.count.toLocaleString()}</td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-[10px] sm:text-xs truncate max-w-[60px] sm:max-w-[100px]" title={item.name}>{item.name}</td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">
+                  <span className="sm:hidden">{Math.round(item.avgPlays as number)}</span>
+                  <span className="hidden sm:inline">{(item.avgPlays as number).toFixed(1)}</span>
+                </td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">
+                  <span className="sm:hidden">{Math.round(item.avgUpvotes as number)}</span>
+                  <span className="hidden sm:inline">{(item.avgUpvotes as number).toFixed(1)}</span>
+                </td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">{(item.avgComments as number).toFixed(1)}</td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs hidden lg:table-cell">{item.avgUpvoteRate !== undefined ? `${item.avgUpvoteRate.toFixed(1)}%` : 'N/A'}</td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs hidden lg:table-cell">{item.avgCommentRate !== undefined ? `${item.avgCommentRate.toFixed(1)}%` : 'N/A'}</td>
+                <td className="px-0.5 sm:px-2 py-1 whitespace-nowrap text-gray-300 text-right text-[10px] sm:text-xs">{item.count.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

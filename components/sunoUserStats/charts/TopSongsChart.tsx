@@ -28,6 +28,13 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
+  const [screenWidth, setScreenWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => { if (typeof window !== 'undefined') setScreenWidth(window.innerWidth); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Filter for valid song objects before processing
   const validSongs = songs.filter(song => song && typeof song === 'object');
@@ -50,7 +57,7 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
         }) as any;
         
         chartOptions.indexAxis = 'x'; 
-        chartOptions.scales.x.title = { display: true, text: 'Song Title', color: fontColor, font: { size: 10 } };
+        chartOptions.scales.x.title = { display: screenWidth > 640, text: 'Song Title', color: fontColor, font: { size: 10 } };
         chartOptions.scales.x.ticks = {
             ...chartOptions.scales.x.ticks,
             color: fontColor,
@@ -58,8 +65,9 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
                 family: "'Inter', sans-serif", 
                 size: topN <= 5 ? 7 : 8 
             }, 
-            maxRotation: 60, 
-            minRotation: 30,
+            maxRotation: screenWidth < 480 ? 45 : 60, 
+            minRotation: screenWidth < 480 ? 45 : 30,
+            padding: screenWidth < 640 ? 4 : 0,
             callback: function(value: any) { 
                 const label = processedSongs[value]?.title || '';
                 return label.length > (topN <= 3 ? 7 : (topN <= 5 ? 10 : 15)) 
@@ -67,7 +75,7 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
                    : label;
             }
         };
-        chartOptions.scales.y.title = { display: true, text: valueLabel, color: fontColor, font: { size: 10 } };
+        chartOptions.scales.y.title = { display: screenWidth > 640, text: valueLabel, color: fontColor, font: { size: 10 } };
         chartOptions.plugins.tooltip.callbacks = {
             title: function(tooltipItems: any[]) { // Typed tooltipItems
                  if (tooltipItems.length > 0) {
@@ -88,11 +96,16 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
 
         chartOptions.layout = {
             padding: {
-                left: topN <= 3 ? 0 : 5,
-                right: topN <= 3 ? 0 : 5,
+                left: screenWidth < 640 ? 2 : (topN <= 3 ? 0 : 5),
+                right: screenWidth < 640 ? 2 : (topN <= 3 ? 0 : 5),
                 top: 5,
-                bottom: 0 
+                bottom: screenWidth < 640 ? 45 : 0 
             }
+        };
+        chartOptions.scales.y.ticks = {
+            ...chartOptions.scales.y.ticks,
+            font: { size: screenWidth < 480 ? 8 : 10 },
+            padding: screenWidth < 640 ? 2 : 4
         };
 
         chartInstanceRef.current = new Chart(ctx, {
@@ -121,7 +134,7 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
         chartInstanceRef.current = null;
       }
     };
-  }, [processedSongs, metric, valueLabel, barColor, fontColor, gridColor, topN]);
+  }, [processedSongs, metric, valueLabel, barColor, fontColor, gridColor, topN, screenWidth]);
 
   if (!processedSongs || processedSongs.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song data available for this chart.</p>;

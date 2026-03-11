@@ -135,7 +135,6 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   } = useSunoUserStatsData(trackLocalEvent);
 
   const [topNValue, setTopNValue] = useState(10);
-  const [showSmallScreenDisclaimer, setShowSmallScreenDisclaimer] = useState(false);
   const [isDetailedTableOpen, setIsDetailedTableOpen] = useState(false);
 
   const [clearCurrentUserCacheClickCount, setClearCurrentUserCacheClickCount] = useState(0);
@@ -171,9 +170,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      const height = window.innerHeight;
       if (width < 420) { setTopNValue(3); } else if (width < 768) { setTopNValue(5); } else { setTopNValue(10); }
-      setShowSmallScreenDisclaimer(width < 412 && height < 914);
     };
     handleResize(); window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -224,12 +221,14 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full">
-      {showSmallScreenDisclaimer && ( <div className="mb-4 p-3 bg-red-700 text-white rounded-md text-sm text-center flex items-center justify-center" role="alert"> <AlertIcon /> Screen size is too small for optimal statistics display. Some charts might be cramped or hard to read. </div>)}
-      <header className="mb-10 text-center"> <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Suno User Stats</h1> <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"> Enter a Suno username to fetch and view their profile statistics and song data. Data is stored locally in your browser. </p> </header>
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
+      <header className="mb-6 md:mb-10 text-center px-2"> 
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-green-600 dark:text-green-400 break-words">Suno User Stats</h1> 
+        <p className="mt-3 text-sm md:text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"> Enter a Suno username to fetch and view their profile statistics and song data. Data is stored locally in your browser. </p> 
+      </header>
+      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-0 sm:p-6 md:p-10 border-2 border-green-600 dark:border-green-500 overflow-hidden">
         <form onSubmit={handleSubmit} className="mb-6 flex flex-col sm:flex-row items-stretch gap-2">
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Suno Username (e.g., suno)" className="flex-grow px-4 py-2.5 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-900 dark:text-white sm:text-sm" aria-label="Suno Username" disabled={isLoading} />
-          <button type="submit" disabled={isLoading || !username.trim()} className="px-6 py-2.5 bg-green-500 text-black font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors flex items-center justify-center"> {isLoading ? <Spinner size="w-5 h-5 mr-2" color="text-black" /> : null} {mainButtonText} </button>
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Suno Username" className="flex-grow px-4 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-900 dark:text-white text-sm" aria-label="Suno Username" disabled={isLoading} />
+          <button type="submit" disabled={isLoading || !username.trim()} className="px-6 py-2 bg-green-500 text-black font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors flex items-center justify-center text-sm"> {isLoading ? <Spinner size="w-4 h-4 mr-2" color="text-black" /> : null} {mainButtonText} </button>
         </form>
         <div className="mb-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
             <h3 className="text-md font-semibold text-green-600 dark:text-green-300 mb-2">Data Management</h3>

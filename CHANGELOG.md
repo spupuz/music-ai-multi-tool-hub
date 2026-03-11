@@ -9,6 +9,16 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.1.0] - 2026-03-11
+
+### Fixed
+- **Full Mobile Responsiveness Overhaul**: Eliminated horizontal overflow across the entire application, focusing on the Suno User Stats tool.
+- **Aggressive Spacing Optimization**: Reclaimed horizontal space by zeroing out paddings on mobile containers (`Layout`, `Tool Container`, `ChartContainer`).
+- **Responsive Charts**: Implemented dynamic scaling for Chart.js labels, padding, and decimal precision (e.g., rounding percentages on mobile).
+- **Responsive Tables**: Added intelligent header abbreviations (e.g., "Avg Plays" &rarr; "Plays") and cell compaction for small screens.
+- **Header Scaling**: Optimized the main header to ensure branding remains on a single line on all devices using dynamic font sizes and ellipsis.
+- **Clean UI**: Removed redundant mobile-only "small screen" warning as the UI is now fully optimized.
+
 ## [2.0.0] - 2026-02-22
 
 ### Added

@@ -158,15 +158,12 @@ Thanks,
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300">
+    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-4 sm:p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300 overflow-hidden">
       <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold tracking-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight flex flex-wrap justify-center gap-x-2">
           <span className="text-green-600 dark:text-green-400">Music</span>
-          {' '}
           <span className="text-green-500 dark:text-green-300">AI</span>
-          {' '}
           <span className="text-gray-800 dark:text-gray-200">Multi-Tool</span>
-          {' '}
           <span className="text-green-700 dark:text-green-500 font-bold">Hub</span>
         </h1>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -215,7 +212,7 @@ Thanks,
         <section id="workflows">
           <h2 className="text-3xl font-bold text-green-600 dark:text-green-400 mt-10 mb-6 border-b-2 border-green-600 pb-3">Quick Start Workflows</h2>
           <p className="mb-3 leading-relaxed text-gray-700 dark:text-gray-300">Not sure where to begin? Select a goal below to jump to the right tools for the job.</p>
-          <div className="grid md:grid-cols-2 gap-6 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
             {workflows.map(workflow => {
               const icon = getIconByToolId(workflow.iconId);
               return (
@@ -320,7 +317,7 @@ Thanks,
             return (
               <div key={categoryName}>
                 <h3 className="text-2xl font-semibold text-green-700 dark:text-green-200 mt-8 mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">{categoryName}</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                   {toolsInCategory.map(tool => (
                     <ToolCard
                       key={tool.id}

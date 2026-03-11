@@ -24,6 +24,13 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
+  const [screenWidth, setScreenWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    const handleResize = () => { if (typeof window !== 'undefined') setScreenWidth(window.innerWidth); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const validData = data.filter(item => item && item.song && typeof item.commentRate === 'number' && item.commentRate > 0);
   const processedData = validData.sort((a, b) => (b.commentRate || 0) - (a.commentRate || 0)).slice(0, topNValue);
@@ -46,11 +53,15 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
             ...chartOptions.scales.x.ticks.font, 
             size: topNValue <= 5 ? 7 : 8 
         };
-        chartOptions.scales.x.ticks.maxRotation = 60;
-        chartOptions.scales.x.ticks.minRotation = 30;
+        chartOptions.scales.x.ticks.maxRotation = screenWidth < 480 ? 45 : 60;
+        chartOptions.scales.x.ticks.minRotation = screenWidth < 480 ? 45 : 30;
         
-        chartOptions.scales.y.title = { display: true, text: 'Comment Rate (%)', color: fontColor, font: {size: 10} };
-        chartOptions.scales.y.ticks.callback = function(value: any) { return `${parseFloat(value).toFixed(1)}%`; };
+        chartOptions.scales.y.title = { display: screenWidth >= 640, text: 'Comment Rate (%)', color: fontColor, font: {size: 10} };
+        chartOptions.scales.y.ticks.callback = function(value: any) { 
+            return screenWidth < 640 ? `${Math.round(value)}%` : `${parseFloat(value).toFixed(1)}%`; 
+        };
+        chartOptions.scales.y.ticks.font = { size: screenWidth < 480 ? 8 : 10 };
+        chartOptions.scales.y.ticks.padding = screenWidth < 640 ? 4 : 4;
         
         chartOptions.plugins.tooltip.callbacks = {
             title: function(tooltipItems: any[]) {
@@ -85,10 +96,10 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
 
          chartOptions.layout = {
             padding: {
-                left: topNValue <= 3 ? 0 : 5,
-                right: topNValue <= 3 ? 0 : 5,
+                left: screenWidth < 640 ? 2 : (topNValue <= 3 ? 0 : 5),
+                right: screenWidth < 640 ? 2 : (topNValue <= 3 ? 0 : 5),
                 top: 5,
-                bottom: 0
+                bottom: screenWidth < 640 ? 45 : 10 
             }
         };
 
@@ -118,7 +129,7 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, barColor, fontColor, gridColor, topNValue]);
+  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth]);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No songs meet criteria for comment rate chart.</p>;
