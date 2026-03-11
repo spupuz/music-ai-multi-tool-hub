@@ -1,3 +1,7 @@
 name = "gemini-proxy"
 main = "index.js"
 compatibility_date = "2024-09-23"
+
+[[kv_namespaces]]
+binding = "STATS_KV"
+id = "a748896da10f4570a68e8561bd9319be"

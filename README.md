@@ -20,6 +20,7 @@ A premium suite of **20+ specialized tools** for AI music creators, producers, a
 | ☁️ **Cloudflare Powered** | Zero-server static deployment with Worker-side AI proxy |
 | 🔒 **Secrets in Worker** | Gemini API key never touches the frontend bundle |
 | ⚡ **Modern Stack** | React 19, Vite, TypeScript |
+| 🌍 **Live Stats** | Public dashboard for site telemetry and global reach |
 | 📱 **Mobile Optimized** | Seamless experience on all screen sizes (320px+) |
 
 ---
@@ -29,6 +30,7 @@ A premium suite of **20+ specialized tools** for AI music creators, producers, a
 ### 🤖 AI Music Platforms
 - **Music Shuffler** — Play Suno/Riffusion/Producer.AI libraries with 10-band EQ
 - **Suno User Stats** — Creator metrics and activity trends
+- **Hub Stats** — Interactive global activity dashboard and site telemetry
 - **Song Compliance Checker** — AI-powered title, duration, and lyrics verification via Gemini
 
 ### ✍️ Creative AI & Content

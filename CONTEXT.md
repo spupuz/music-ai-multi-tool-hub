@@ -11,13 +11,14 @@
 - **Service Layer**: Pure TypeScript abstractions in `services/` (Suno, Riffusion, Gemini, HuggingFace).
 - **Communication**: Local event tracking via `localStorage` in `Layout.tsx`.
 - **Orchestration**: Deployed as a static SPA on **Cloudflare Pages**.
-- **API Proxy**: Cloudflare Worker (`gemini-proxy`) handles Gemini calls and password verification server-side. Secrets never reach the frontend bundle.
+- **API Proxy**: Cloudflare Worker (`gemini-proxy`) handles Gemini calls, telemetry, and visitor statistics. Secrets never reach the frontend bundle.
+- **Iconography**: Centralized SVG icons in `components/Icons.tsx` for consistent premium branding.
 
 ## 📐 Architecture Overview
 - **Main Shell (`Layout.tsx`)**: Central hub managing tool registration, navigation state, and theme management.
 - **Tool Registry**: Modular structure where each tool is a focused React component.
 - **Navigation (`Sidebar.tsx`)**: Categorized access to all tools (App & Info, AI Music Platforms, Creative AI, etc.).
-- **Infrastructure**: Nginx handles routing, security headers, and reverse-proxying to the CORS container.
+- **Telemetry & Stats**: Visitor data and site-wide metrics are visualized in the **Hub Stats** page using `react-simple-maps` and Chart.js.
 
 ## ⚠️ Important Rules for AI
 1. **Build verification**: Run `npm run build` locally to verify changes compile without errors before submitting.

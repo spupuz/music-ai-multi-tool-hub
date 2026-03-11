@@ -3,7 +3,7 @@
 
 
 import React from 'react';
-import type { ToolId } from '../Layout'; 
+import type { ToolId } from './Layout'; 
 
 interface SidebarTool {
   id: ToolId;
@@ -94,7 +94,7 @@ Thanks,
 
   const groupedTools = tools.reduce((acc, tool) => {
     // Exclude Release Notes and Special Mentions from regular grouping
-    if (tool.id === 'releaseNotes' || tool.id === 'specialMentions') {
+    if (tool.id === 'releaseNotes' || tool.id === 'specialMentions' || tool.id === 'stats') {
       return acc;
     }
     const category = tool.category || "Other Tools";
@@ -212,6 +212,20 @@ Thanks,
                 >
                     <HeartLinkIcon className="w-4 h-4 mr-2 flex-shrink-0"/>
                     Special Mentions
+                </button>
+                <button
+                    onClick={(e) => handleToolButtonClick(e, 'stats')}
+                    className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
+                                ${ activeToolId === 'stats' 
+                                    ? 'bg-green-600 text-white' 
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                }`}
+                    aria-current={activeToolId === 'stats' ? 'page' : undefined}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2 flex-shrink-0">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Hub Stats
                 </button>
             </div>
         </div>

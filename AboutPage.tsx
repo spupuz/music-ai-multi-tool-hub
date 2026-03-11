@@ -34,6 +34,7 @@ const toolDescriptions: Record<ToolId, string> = {
   bpmTapper: "Quickly find the Beats Per Minute (BPM) of any song by tapping along to the rhythm. Also includes a Musical Key Finder where you can upload an audio file or provide a Suno/Riffusion URL to analyze and suggest the song's key and BPM.",
   metronome: "A classic metronome. Set BPM and time signature to get a steady visual and audible beat. Now features selectable beat subdivisions (eighths, sixteenths, triplets) and customizable click sounds for enhanced practice.",
   releaseNotes: "See what's new! Track updates, features, and fixes for the Music AI Multi-Tool Hub. Notes are now organized for easier reading.",
+  stats: "Gain insights into the Music AI Multi-Tool Hub's global reach. View all-time unique visitors, total pageviews, recent activity trends, and a breakdown of top countries using the Hub. Data is collected anonymously to help us understand and improve the platform.",
   specialMentions: "Acknowledgements and thanks to individuals who have supported and contributed to the Hub.",
   about: "Information about this application, its mission, creators, and privacy policy."
 };

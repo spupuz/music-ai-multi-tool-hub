@@ -27,6 +27,8 @@ import SparkTuneTool from './SparkTuneTool';
 import SunoCommunitySpinnerTool from './SunoCommunitySpinnerTool';
 import LocalMusicResourceDirectoryTool from './LocalMusicResourceDirectoryTool'; 
 import { useTheme } from './context/ThemeContext';
+import { useTelemetry } from './hooks/useTelemetry';
+import StatsPage from './StatsPage';
 
 // --- Tool Icons (SVGs) ---
 const AboutIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>);
@@ -97,14 +99,24 @@ const ResourceDirectoryIcon: React.FC<{ className?: string }> = ({ className = "
     <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9v6m-2.25-3.75l2.25 2.25 2.25-2.25" /> {/* Simple music note representation */}
   </svg>
 );
-const LyricsSyncIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5V19.5M15 4.5V19.5M3.75 12H20.25" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6.188 10.031c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 00-1.414-1.414L6.188 8.617a1 1 0 000 1.414zM14.812 10.031c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 00-1.414-1.414l-1.591 1.591a1 1 0 000 1.414zM6.188 15.531c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 10-1.414-1.414l-1.591 1.591a1 1 0 000 1.414zM14.812 15.531c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 10-1.414-1.414l-1.591 1.591a1 1 0 000 1.414z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 0V4.5m0 1.5V7.5M12 18a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 0v-1.5m0 1.5v1.5" />
-  </svg>
+const StatsIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
 );
-const SongStructureIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => ( // New Icon
+const SunoSongStatsIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5V19.5M15 4.5V19.5M3.75 12H20.25" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.188 10.031c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 00-1.414-1.414L6.188 8.617a1 1 0 000 1.414zM14.812 10.031c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 00-1.414-1.414l-1.591 1.591a1 1 0 000 1.414zM6.188 15.531c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 10-1.414-1.414l-1.591 1.591a1 1 0 000 1.414zM14.812 15.531c.39.39 1.024.39 1.414 0l1.591-1.591a1 1 0 10-1.414-1.414l-1.591 1.591a1 1 0 000 1.414z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 0V4.5m0 1.5V7.5M12 18a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 0v-1.5m0 1.5v1.5" />
+    </svg>
+);
+const LyricsSyncIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+);
+const SongStructureIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4h16M4 4v16" />
     <path strokeLinecap="round" strokeLinejoin="round" d="M8 8h10v2.5H8zM8 13.5h10v2.5H8z" />
@@ -135,6 +147,7 @@ export type ToolId =
   'sparkTuneChallenge' |
   'sunoCommunitySpinner' | 
   'releaseNotes' |
+  'stats' |
   'specialMentions';
 
 export interface ToolProps {
@@ -175,6 +188,7 @@ const tools: Tool[] = [
   { id: 'sparkTuneChallenge', name: 'SparkTune Challenge Gen', component: SparkTuneTool, icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
   { id: 'releaseNotes', name: 'Release Notes', component: ReleaseNotesPage as React.FC<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
   { id: 'specialMentions', name: 'Special Mentions', component: SpecialMentionsPage as React.FC<ToolProps>, icon: <HeartIcon />, category: "App & Info"},
+  { id: 'stats', name: 'Hub Stats', component: StatsPage as React.FC<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
 ];
 
 const COOKIE_CONSENT_KEY = 'aiMultiToolHub_cookieConsent';
@@ -183,6 +197,7 @@ const LOCAL_VISITS_LOG_KEY = 'myVisitsLog';
 const LAST_DAILY_LOCAL_PING_KEY = 'lastDailyLocalActivePing';
 
 const Layout: React.FC = () => {
+  useTelemetry();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeToolId, setActiveToolId] = useState<ToolId>('about'); 
   const [showCookieConsent, setShowCookieConsent] = useState<boolean>(false);

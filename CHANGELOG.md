@@ -9,6 +9,21 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.2.0] - 2026-03-11
+
+### Added
+- **Hub Stats Page**: New interactive dashboard for site-wide telemetry and visitor analytics.
+- **Interactive World Map**: Real-time visualization of global activity with country-level breakdown.
+- **Centralized Icon System**: Introduced `components/Icons.tsx` to unify SVG icons across the application.
+
+### Changed
+- **Performance**: Optimized Hub Stats loading state with a smaller, more integrated Spinner.
+
+### Fixed
+- **Map Visualization**: Resolved prorejection scaling and centering issues to prevent geographical truncation (e.g., Greenland/Russia).
+- **Data Accuracy**: Standardized site metrics to track "Visits" instead of "Installations".
+- **Visual Consistency**: Replaced emoji placeholders with premium SVG icons in the Stats dashboard.
+
 ## [2.1.0] - 2026-03-11
 
 ### Fixed
