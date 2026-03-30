@@ -486,6 +486,19 @@ export const useSunoAudioPlayer = ({
 
   useEffect(() => { if ('mediaSession' in navigator) { navigator.mediaSession.setActionHandler('play', () => togglePlayPause()); navigator.mediaSession.setActionHandler('pause', () => togglePlayPause()); navigator.mediaSession.setActionHandler('previoustrack', () => previousTrack()); navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack(false)); try { navigator.mediaSession.setActionHandler('seekto', (details) => { if (details.fastSeek || details.seekTime == null) return; seek(details.seekTime); }); } catch (error) { console.warn("Error setting mediaSession seekto:", error); } } }, [togglePlayPause, previousTrack, nextTrack, seek]);
   const setVolume = useCallback((newVolume: number) => { const clampedVolume = Math.max(0, Math.min(1, newVolume)); setPlayerState(prev => ({ ...prev, volume: clampedVolume })); }, [setPlayerState]);
+  useEffect(() => { 
+    let animationFrameId: number | null = null; 
+    const progressLoop = () => { 
+      if (currentSoundRef.current && playerStateRef.current.status === PlaybackStatus.Playing && playerStateRef.current.duration > 0) { 
+        const seekTime = currentSoundRef.current.seek() as number; 
+        if (Math.abs(seekTime - playerStateRef.current.currentTime) > 0.1) setPlayerState(prev => ({ ...prev, currentTime: seekTime })); 
+      } 
+      animationFrameId = requestAnimationFrame(progressLoop); 
+    }; 
+    if (playerState.status === PlaybackStatus.Playing && playerState.duration > 0) animationFrameId = requestAnimationFrame(progressLoop); 
+    return () => { if (animationFrameId) cancelAnimationFrame(animationFrameId); }; 
+  }, [playerState.status, playerState.duration, setPlayerState]);
+
   useEffect(() => {      // Audio context management is now handled by the useSunoAudioSystem hook.
       // If we need to trigger a specific cleanup here, we can do it via the hook's interface.
 }, [playerState.volume, isAudioSystemReady]);
