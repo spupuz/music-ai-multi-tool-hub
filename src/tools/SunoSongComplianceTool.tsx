@@ -1,14 +1,14 @@
 
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import type { ToolProps, ToolId } from './Layout';
-import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from './services/sunoService';
-import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from './services/aiAnalysisService';
-import { getCountryDetails, getFlagEmoji } from './utils/countryData';
-import type { SunoClip, SingleSongComplianceResult, TitleCheckResult, LyricsLanguageCheckResult, ContentRatingCheckResult, RatingLevel, DurationCheckResult } from './types';
-import Spinner from './components/Spinner';
-import { downloadSunoComplianceResultsAsCsv } from './services/csvExportService';
-import { fetchRiffusionSongData, extractRiffusionSongId } from './services/riffusionService';
+import type { ToolProps, ToolId } from '../../Layout';
+import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from '../../services/sunoService';
+import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from '../../services/aiAnalysisService';
+import { getCountryDetails, getFlagEmoji } from '../../utils/countryData';
+import type { SunoClip, SingleSongComplianceResult, TitleCheckResult, LyricsLanguageCheckResult, ContentRatingCheckResult, RatingLevel, DurationCheckResult } from '../../types';
+import Spinner from '../../components/Spinner';
+import { downloadSunoComplianceResultsAsCsv } from '../../services/csvExportService';
+import { fetchRiffusionSongData, extractRiffusionSongId } from '../../services/riffusionService';
 
 const TOOL_CATEGORY = 'SunoSongCompliance';
 const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';

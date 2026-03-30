@@ -1,10 +1,10 @@
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import type { ToolProps } from './Layout';
-import type { SongStructureBlock, SavedArrangement, LyricLineData } from './types';
-import { countSyllablesInLine } from './utils/lyricUtils';
-import InputField from './components/forms/InputField';
-import TextAreaField from './components/forms/TextAreaField'; 
+import type { ToolProps } from '../../Layout';
+import type { SongStructureBlock, SavedArrangement, LyricLineData } from '../../types';
+import { countSyllablesInLine } from '../../utils/lyricUtils';
+import InputField from '../../components/forms/InputField';
+import TextAreaField from '../../components/forms/TextAreaField'; 
 
 const TOOL_CATEGORY = 'SongStructureBuilder';
 const LOCAL_STORAGE_CURRENT_WORK_KEY = 'songStructureBuilder_currentWork_v2'; 

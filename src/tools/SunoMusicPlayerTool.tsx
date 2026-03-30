@@ -1,14 +1,14 @@
 
 
 import React, { useState, useEffect, useCallback, ChangeEvent, useRef } from 'react';
-import { fetchSunoSongsByUsername, fetchSunoPlaylistById } from './services/sunoService';
-import type { SunoClip, SunoProfileDetail, SunoPlaylistDetail, SavedCustomPlaylist, PlaylistAnalysis } from './types';
-import { PlaybackStatus } from './types';
-import Spinner from './components/Spinner';
-import AudioVisualizer from './components/AudioVisualizer/AudioVisualizer';
-import type { ToolProps } from './Layout';
-import { useSunoAudioPlayer, SortCriteriaHook } from './hooks/useSunoAudioPlayer';
-import PlaylistCreationDateChart from './components/sunoUserStats/charts/PlaylistCreationDateChart';
+import { fetchSunoSongsByUsername, fetchSunoPlaylistById } from '../../services/sunoService';
+import type { SunoClip, SunoProfileDetail, SunoPlaylistDetail, SavedCustomPlaylist, PlaylistAnalysis } from '../../types';
+import { PlaybackStatus } from '../../types';
+import Spinner from '../../components/Spinner';
+import AudioVisualizer from '../../components/AudioVisualizer/AudioVisualizer';
+import type { ToolProps } from '../../Layout';
+import { useSunoAudioPlayer, SortCriteriaHook } from '../../hooks/useSunoAudioPlayer';
+import PlaylistCreationDateChart from '../../components/sunoUserStats/charts/PlaylistCreationDateChart';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;

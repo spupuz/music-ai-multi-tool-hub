@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import type { LockableCategoryKey, CustomItemCategoryKey, CustomItemsState, IntensityLevel, MultiSelectItemCategoryKey } from './types';
+import type { LockableCategoryKey, CustomItemCategoryKey, CustomItemsState, IntensityLevel, MultiSelectItemCategoryKey } from '../../../types';
 import { LockOpenIcon, LockClosedIcon, PlusCircleIcon, UserIcon, TrashIcon, ExportIcon, ImportIcon, RefreshIcon } from './RandomMusicStyleGenerator.icons';
 
 interface CategoryItemDisplayProps {

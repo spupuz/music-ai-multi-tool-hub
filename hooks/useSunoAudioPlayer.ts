@@ -122,9 +122,9 @@ export interface UseSunoAudioPlayerReturn {
   getClearQueueButtonText: () => string;
 }
 
-const sunoPlaylistUrlPatternHook = /^(?:https?:\/\/)?(?:www\.)?(?:suno\.com|app\.suno\.ai)\/playlist\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
+const sunoPlaylistUrlPatternHook = /^(?:https?:\/\/)?(?:www\.)?(?:suno\.com|app\.suno\.ai)\/playlist\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
 const sunoUserProfileUrlPatternHook = /^(?:https?:\/\/)?(?:www\.)?(?:suno\.com|app\.suno\.ai)\/@([\w.-]+)/;
-const riffusionUrlPatternHook = /^(?:https?:\/\/)?(?:www\.)?riffusion\.com\/song\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
+const riffusionUrlPatternHook = /^(?:https?:\/\/)?(?:www\.)?riffusion\.com\/song\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
 
 
 const knownAppLocalStorageKeys = [

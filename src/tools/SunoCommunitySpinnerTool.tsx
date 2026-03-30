@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ToolProps } from './Layout';
-import Spinner from './components/Spinner';
-import ImageUpload from './components/ImageUpload'; // For custom logo
-import { useTheme } from './context/ThemeContext';
+import type { ToolProps } from '../../Layout';
+import Spinner from '../../components/Spinner';
+import ImageUpload from '../../components/ImageUpload'; // For custom logo
+import { useTheme } from '../../context/ThemeContext';
 
 const TOOL_CATEGORY = 'SunoCommunitySpinner';
 const LOCAL_STORAGE_CURRENT_PREFIX = 'SCS_current_MagicSpinWheel_v3_';

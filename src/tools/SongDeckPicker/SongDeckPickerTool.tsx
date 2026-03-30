@@ -1,19 +1,19 @@
 
 // SongDeckPickerTool.tsx
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react';
-import type { ToolProps } from './Layout';
-import { useSongDeckPickerLogic } from './hooks/useSongDeckPickerLogic';
-import Spinner from './components/Spinner';
-import ImageUpload from './components/ImageUpload';
-import InputField from './components/forms/InputField';
-import TextAreaField from './components/forms/TextAreaField';
-import SelectField from './components/forms/SelectField';
+import type { ToolProps } from '../../../Layout';
+import { useSongDeckPickerLogic } from '../../../hooks/useSongDeckPickerLogic';
+import Spinner from '../../../components/Spinner';
+import ImageUpload from '../../../components/ImageUpload';
+import InputField from '../../../components/forms/InputField';
+import TextAreaField from '../../../components/forms/TextAreaField';
+import SelectField from '../../../components/forms/SelectField';
 import { EyeOpenIcon, DiceFiveIcon, PlusCircleIcon, DownloadIcon, CopyIcon, ConfigIcon, SaveIcon, LoadDeckIcon, DeleteIcon, ExportIcon, ImportIcon, ArrowDownIcon, HandRaisedIcon, EyeSlashIcon, FolderPlusIcon, ListCheckIcon, ArrowUturnLeftIcon, TrashIcon } from './songDeckPicker.icons';
 import { logoSizeOptions, cardTextFontOptions, DEFAULT_NUMBER_OF_CARDS_TO_DRAW, DEFAULT_REVEAL_POOL_SIZE_X, DEFAULT_MAX_LOGGED_SONGS_N, DEFAULT_PICKER_MODE, SONG_INFO_CACHE_CLEAR_CLICKS_NEEDED, DEFAULT_MAX_SONGS_PER_GROUP, TOOL_CATEGORY, LOGGED_SONGS_CLEAR_RETURN_CLICKS_NEEDED, GROUP_REMOVE_CLICKS_NEEDED, DEFAULT_RANKING_REVEAL_TOP_X, DEFAULT_RANKING_REVEAL_SNIPPET_DURATION } from './songDeckPicker.constants';
-import { getAdjustedTextColor, lightenDarkenColor } from './utils/imageUtils';
-import { SongCardInterface, PickerMode } from './types'; 
-import { downloadSongGroupsAsCsv } from './services/csvExportService';
-import { useTheme } from './context/ThemeContext';
+import { getAdjustedTextColor, lightenDarkenColor } from '../../../utils/imageUtils';
+import { SongCardInterface, PickerMode } from '../../../types'; 
+import { downloadSongGroupsAsCsv } from '../../../services/csvExportService';
+import { useTheme } from '../../../context/ThemeContext';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;

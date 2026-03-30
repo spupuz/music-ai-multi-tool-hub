@@ -9,7 +9,7 @@ import {
     CUSTOM_ITEMS_STORAGE_KEY_PREFIX, OPTIONAL_TOGGLES_STORAGE_KEY,
     initialLockedCategories, initialOptionalCategoryToggles, initialCustomItems,
     initialCategoryIntensity, CATEGORY_INTENSITY_STORAGE_KEY 
-} from '../RandomMusicStyleGenerator.constants';
+} from '../src/tools/RandomMusicStyleGenerator/RandomMusicStyleGenerator.constants';
 import type { 
     GeneratedStyleParts, LockableCategoryKey, SavedStyleEntry, 
     CustomItemsState, OptionalCategoryToggleState, CustomItemCategoryKey, 

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import type { ToolProps } from './Layout';
+import type { ToolProps } from '../../Layout';
 
 const TOOL_CATEGORY = 'MusicTheoryWiki';
 

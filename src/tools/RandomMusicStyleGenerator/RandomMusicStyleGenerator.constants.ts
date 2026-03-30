@@ -1,5 +1,5 @@
 
-import type { CustomItemsState, LockedCategoriesState, OptionalCategoryToggleState, IntensityLevel, MultiSelectItemCategoryKey } from './types';
+import type { CustomItemsState, LockedCategoriesState, OptionalCategoryToggleState, IntensityLevel, MultiSelectItemCategoryKey } from '../../../types';
 
 export const musicGenres: string[] = [
   "Pop", "Indie Pop", "Synth-Pop", "Dream Pop", "Bedroom Pop", "Hyperpop",

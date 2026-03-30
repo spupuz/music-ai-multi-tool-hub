@@ -1,6 +1,6 @@
 // songDeckPicker.utils.ts
-import type { SongCardInterface } from './types';
-import { fetchSunoClipById } from './services/sunoService'; 
+import type { SongCardInterface } from '../../../types';
+import { fetchSunoClipById } from '../../../services/sunoService'; 
 
 export const shuffleArray = <T,>(array: T[]): T[] => {
     const newArray = [...array];

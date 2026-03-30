@@ -8,6 +8,30 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.2.0",
+    content: (
+      <section id="version-2.2.0">
+        <SectionTitle>Version 2.2.0 - 2026-03-11</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Hub Stats Page</STRONG>: New interactive dashboard for site-wide telemetry and visitor analytics.</LI>
+          <LI><STRONG>Interactive World Map</STRONG>: Real-time visualization of global activity with country-level breakdown.</LI>
+          <LI><STRONG>Centralized Icon System</STRONG>: Introduced <CODE>components/Icons.tsx</CODE> to unify SVG icons across the application.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Performance</STRONG>: Optimized Hub Stats loading state with a smaller, more integrated Spinner.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Map Visualization</STRONG>: Resolved prorejection scaling and centering issues to prevent geographical truncation (e.g., Greenland/Russia).</LI>
+          <LI><STRONG>Data Accuracy</STRONG>: Standardized site metrics to track "Visits" instead of "Installations".</LI>
+          <LI><STRONG>Visual Consistency</STRONG>: Replaced emoji placeholders with premium SVG icons in the Stats dashboard.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.1.0",
     content: (
       <section id="version-2.1.0">

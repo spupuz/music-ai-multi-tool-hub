@@ -18,11 +18,11 @@ import {
     DEFAULT_MAX_SONGS_PER_GROUP, TOOL_CATEGORY,
     LOGGED_SONGS_CLEAR_RETURN_CLICKS_NEEDED, GROUP_REMOVE_CLICKS_NEEDED, CONFIRM_TIMEOUT_MS,
     DEFAULT_RANKING_REVEAL_TOP_X, DEFAULT_RANKING_REVEAL_SNIPPET_DURATION
-} from '../songDeckPicker.constants';
+} from '../src/tools/SongDeckPicker/songDeckPicker.constants';
 import {
     shuffleArray, generateRandomColor, extractSunoPlaylistIdFromPath,
     parseKeyValueFormat, isLikelyUrl, convertCardToOutputFormat, downloadTextFile, inferSourceTypeFromInput
-} from '../songDeckPicker.utils';
+} from '../src/tools/SongDeckPicker/songDeckPicker.utils';
 import { normalizeHexColor } from '../utils/imageUtils';
 import { useTheme } from '../context/ThemeContext';
 
