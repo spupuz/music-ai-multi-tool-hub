@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react';
 import type { ToolProps } from '@/Layout';
 import { useSongDeckPickerLogic } from '@/hooks/useSongDeckPickerLogic';
-import { EyeOpenIcon, DiceFiveIcon, ConfigIcon } from './songDeckPicker.icons';
+import Button from '@/components/common/Button';
+import { EyeIcon as EyeOpenIcon, DiceIcon as DiceFiveIcon, CogIcon as ConfigIcon } from '@/components/Icons';
 import { getAdjustedTextColor, lightenDarkenColor } from '@/utils/imageUtils';
 import { SongCardInterface, PickerMode } from '@/types'; 
 import { useTheme } from '@/context/ThemeContext';
@@ -107,31 +108,74 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     };
 
     return (
-      <div className="w-full min-h-screen p-2 md:p-4 transition-colors duration-300" style={{ backgroundColor: logic.toolBackgroundColor, color: logic.toolTextColor }}>
+      <div className="w-full min-h-screen p-3 md:p-6 transition-colors duration-500 font-sans" style={{ backgroundColor: logic.toolBackgroundColor, color: logic.toolTextColor }}>
+        <div className="max-w-6xl mx-auto space-y-6">
         
-        <div className="sticky top-0 z-10 p-2 mb-3 rounded-b-lg flex flex-wrap items-center justify-center sm:justify-between gap-2" style={{ backgroundColor: lightenDarkenColor(logic.toolBackgroundColor, theme === 'light' ? -5 : 5), borderBottom: `1px solid ${logic.toolAccentColor}`}}>
-            <div className="flex items-center gap-2">
-                <label htmlFor="pickerModeSelect" className="text-xs font-medium" style={{ color: logic.toolTextColor }}>Picker Mode:</label>
-                <select id="pickerModeSelect" value={logic.pickerMode} onChange={(e) => logic.setPickerMode(e.target.value as PickerMode)} className="text-xs p-1 rounded border dark:bg-gray-800" style={{borderColor: logic.toolAccentColor, color: logic.toolTextColor}}>
-                    <option value={PickerMode.Standard}>Standard Mode</option>
-                    <option value={PickerMode.Reveal}>Reveal Cards Mode</option>
-                    <option value={PickerMode.RankingReveal}>Ranking Reveal Mode</option>
+        <nav 
+            className="sticky top-4 z-30 p-3 md:p-4 mb-8 rounded-2xl flex flex-wrap items-center justify-between gap-4 border backdrop-blur-md shadow-2xl transition-all duration-300" 
+            style={{ 
+                backgroundColor: `${lightenDarkenColor(logic.toolBackgroundColor, theme === 'light' ? -5 : 10)}cc`, 
+                borderColor: `${logic.toolAccentColor}44`,
+                boxShadow: `0 8px 32px 0 ${logic.toolAccentColor}33`
+            }}
+        >
+            <div className="flex items-center gap-3">
+                <label htmlFor="pickerModeSelect" className="text-xs font-bold uppercase tracking-wider opacity-80" style={{ color: logic.toolTextColor }}>Mode</label>
+                <select 
+                    id="pickerModeSelect" 
+                    value={logic.pickerMode} 
+                    onChange={(e) => logic.setPickerMode(e.target.value as PickerMode)} 
+                    className="text-sm px-3 py-1.5 rounded-lg border bg-transparent font-bold focus:ring-2 focus:outline-none transition-all" 
+                    style={{
+                        borderColor: `${logic.toolAccentColor}66`, 
+                        color: logic.toolTextColor,
+                    }}
+                >
+                    <option value={PickerMode.Standard} style={{backgroundColor: logic.toolBackgroundColor}}>Standard</option>
+                    <option value={PickerMode.Reveal} style={{backgroundColor: logic.toolBackgroundColor}}>Reveal</option>
+                    <option value={PickerMode.RankingReveal} style={{backgroundColor: logic.toolBackgroundColor}}>Ranking</option>
                 </select>
             </div>
+            
             <div className="flex items-center gap-2">
-                <button onClick={() => logic.setShowInputs(!logic.showInputs)} className="text-xs py-1 px-2.5 rounded-md flex items-center gap-1 font-medium" style={{backgroundColor: String(logic.toolAccentColor), color: String(getAdjustedTextColorForContrast(logic.toolAccentColor, logic.toolTextColor))}}>
-                    <EyeOpenIcon className="w-3.5 h-3.5"/> {logic.showInputs ? 'Hide Inputs' : 'Show Inputs'}
-                </button>
-                <button onClick={() => logic.setShowCustomization(!logic.showCustomization)} className="text-xs py-1 px-2.5 rounded-md flex items-center gap-1 font-medium" style={{backgroundColor: String(logic.toolAccentColor), color: String(getAdjustedTextColorForContrast(logic.toolAccentColor, logic.toolTextColor))}}>
-                    <ConfigIcon className="w-3.5 h-3.5"/> {logic.showCustomization ? 'Hide UI Config' : 'Show UI Config'}
-                </button>
+                <Button 
+                    onClick={() => logic.setShowInputs(!logic.showInputs)} 
+                    variant="ghost"
+                    size="sm"
+                    startIcon={<EyeOpenIcon className="w-4 h-4"/>}
+                    className="hover:bg-white/10"
+                    textColor={logic.toolTextColor}
+                >
+                    {logic.showInputs ? 'Inputs' : 'Inputs'}
+                </Button>
+                <Button 
+                    onClick={() => logic.setShowCustomization(!logic.showCustomization)} 
+                    variant="ghost"
+                    size="sm"
+                    startIcon={<ConfigIcon className="w-4 h-4"/>}
+                    className="hover:bg-white/10"
+                    textColor={logic.toolTextColor}
+                >
+                    {logic.showCustomization ? 'Config' : 'Config'}
+                </Button>
             </div>
-        </div>
+        </nav>
         
-        <header className="mb-4 text-center">
-             {logic.customLogo && ( <img src={logic.customLogo} alt="Custom Deck Picker Logo" className="mx-auto mb-2 rounded-md object-contain" style={{ maxHeight: logic.selectedLogoSize, maxWidth: '80%' }} /> )}
-            <h1 className="text-3xl md:text-4xl font-extrabold" style={{ color: logic.toolAccentColor }}>{logic.customTitle}</h1>
-            <p className="mt-1 text-xs md:text-sm max-w-xl mx-auto">Build your song deck, apply bonuses, pick cards, and log your choices!</p>
+        <header className="mb-10 text-center animate-fadeIn">
+             {logic.customLogo && ( 
+                <img 
+                    src={logic.customLogo} 
+                    alt="Custom Deck Picker Logo" 
+                    className="mx-auto mb-4 rounded-2xl object-contain shadow-lg" 
+                    style={{ maxHeight: logic.selectedLogoSize, maxWidth: '80%' }} 
+                /> 
+             )}
+            <h1 className="text-4xl md:text-5xl font-[900] tracking-tight mb-2" style={{ color: logic.toolAccentColor }}>
+                {logic.customTitle}
+            </h1>
+            <p className="text-sm md:text-base max-w-xl mx-auto opacity-70 font-medium italic">
+                Build your song deck, apply bonuses, pick cards, and reveal your destiny!
+            </p>
         </header>
         
         <DeckControls {...logic} theme={theme} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
@@ -139,11 +183,20 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <DeckSettings {...logic} theme={theme} />
 
         {logic.pickerMode === PickerMode.Standard && (
-            <div className="flex items-center justify-center my-4">
-                <button onClick={logic.pickRandomCard} disabled={logic.isLoading || logic.isPickingRandomCard || logic.unloggedDeckForDisplay.length === 0} className="flex items-center justify-center py-3 px-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold text-lg rounded-lg shadow-md disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors transform hover:scale-105 active:scale-95">
-                    {logic.isPickingRandomCard && logic.animatedSelectionStage !== 'idle' ? <progress className="w-5 h-5 mr-2" /> : <DiceFiveIcon className="mr-2 w-5 h-5"/>}
-                    {logic.isPickingRandomCard && logic.animatedSelectionStage !== 'idle' ? 'PICKING...' : `PICK RANDOM CARD (${logic.unloggedDeckForDisplay.length} left)`}
-                </button>
+            <div className="flex items-center justify-center my-10">
+                <Button 
+                    onClick={logic.pickRandomCard} 
+                    disabled={logic.isLoading || logic.isPickingRandomCard || logic.unloggedDeckForDisplay.length === 0} 
+                    loading={logic.isPickingRandomCard && logic.animatedSelectionStage !== 'idle'}
+                    variant="primary"
+                    size="lg"
+                    startIcon={<DiceFiveIcon className="w-6 h-6"/>}
+                    className="font-[900] !px-12 !py-6 !text-xl uppercase tracking-widest shadow-2xl transform hover:scale-105 active:scale-95 transition-all"
+                    backgroundColor="#FACC15"
+                    textColor="#000000"
+                >
+                    {logic.isPickingRandomCard && logic.animatedSelectionStage !== 'idle' ? 'PICKING...' : `PICK CARD (${logic.unloggedDeckForDisplay.length})`}
+                </Button>
             </div>
         )}
 
@@ -155,6 +208,7 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         <RankingModal {...logic} audioRef={audioRef} setIsSnippetPlaying={setIsSnippetPlaying} isSnippetPlaying={isSnippetPlaying} FALLBACK_IMAGE_DATA_URI={FALLBACK_IMAGE_DATA_URI} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
 
+        </div>
         <style>{`
         .card-container { perspective: 1000px; }
         .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
