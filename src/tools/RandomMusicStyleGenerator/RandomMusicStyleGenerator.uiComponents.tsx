@@ -80,10 +80,13 @@ export const CategoryItemDisplay: React.FC<CategoryItemDisplayProps> = ({
                   key={level}
                   onClick={() => onSetCategoryIntensity(categoryKey as MultiSelectItemCategoryKey, level)}
                   disabled={effectiveCardDisabled || (isLocked && isOptionalCategoryOn)}
-                  variant="ghost"
+                  variant={currentIntensity === level ? "primary" : "ghost"}
                   size="xs"
-                  className={`w-8 h-8 p-0 flex items-center justify-center text-[12px] rounded-lg font-bold transition-all uppercase
-                              ${currentIntensity === level ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                  className={`w-8 h-8 !p-0 flex items-center justify-center transition-all duration-300 rounded-lg border-none ${
+                    currentIntensity === level 
+                    ? '!bg-emerald-500 !text-black shadow-[0_0_20px_rgba(16,185,129,0.6)] font-black text-[12px] scale-105' 
+                    : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 text-[11px] font-bold'
+                  }`}
                   title={`Complexity: ${level === 'simple' ? 'Minimum' : level === 'moderate' ? 'Standard' : 'Maximum'}`}
                 >
                   {level.charAt(0)}
