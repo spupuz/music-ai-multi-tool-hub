@@ -1,7 +1,7 @@
 import React from 'react';
-import type { ToolProps } from '../../Layout';
-import { useWikiLogic } from '../components/MusicTheoryWiki/hooks/useWikiLogic';
-import { WikiSidebar, WikiArticle } from '../components/MusicTheoryWiki/WikiLayouts';
+import type { ToolProps } from '@/Layout';
+import { useWikiLogic } from '@/components/MusicTheoryWiki/hooks/useWikiLogic';
+import { WikiSidebar, WikiArticle } from '@/components/MusicTheoryWiki/WikiLayouts';
 
 const MusicTheoryWikiTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const {

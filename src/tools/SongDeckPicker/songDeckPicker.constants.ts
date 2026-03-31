@@ -1,6 +1,6 @@
 
 // songDeckPicker.constants.ts
-import { PickerMode } from '../../../types';
+import { PickerMode } from '@/types';
 
 export const LOCAL_STORAGE_PICKED_SONGS_LOG_KEY = 'deckPickerPickedSongsLog_v1';
 export const LOCAL_STORAGE_SAVED_THEMES_KEY = 'songDeckPicker_savedThemes_v1';

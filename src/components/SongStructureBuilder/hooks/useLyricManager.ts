@@ -1,5 +1,5 @@
 import { useState, Dispatch, SetStateAction } from 'react';
-import { SongStructureBlock, LyricLineData } from '../../../../types';
+import { SongStructureBlock, LyricLineData } from '@/types';
 import { TOOL_CATEGORY } from '../constants';
 
 export function useLyricManager(

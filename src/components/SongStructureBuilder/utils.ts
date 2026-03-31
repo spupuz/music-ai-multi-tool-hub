@@ -1,4 +1,4 @@
-import type { SongStructureBlock } from '../../../types';
+import type { SongStructureBlock } from '@/types';
 
 export const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
     let newColor = hex.trim();

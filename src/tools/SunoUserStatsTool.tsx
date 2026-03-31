@@ -1,15 +1,15 @@
 
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
-import type { ToolProps } from '../../Layout';
-import { useSunoUserStatsData } from '../../hooks/useSunoUserStatsData';
-import Spinner from '../../components/Spinner';
-import UserProfileCard from '../../components/sunoUserStats/UserProfileCard';
-import StatDisplayCard from '../../components/sunoUserStats/StatDisplayCard';
-import StatChartsArea from '../../components/sunoUserStats/StatChartsArea'; 
-import DetailedSongPerformanceTable from '../../components/sunoUserStats/DetailedSongPerformanceTable'; 
-import SongLifecycleChartModal from '../../components/sunoUserStats/charts/SongLifecycleChartModal';
-import type { SunoClip } from '../../types';
-import type { SongInteractionPoint } from '../../types/sunoUserStatsTypes';
+import type { ToolProps } from '@/Layout';
+import { useSunoUserStatsData } from '@/hooks/useSunoUserStatsData';
+import Spinner from '@/components/Spinner';
+import UserProfileCard from '@/components/sunoUserStats/UserProfileCard';
+import StatDisplayCard from '@/components/sunoUserStats/StatDisplayCard';
+import StatChartsArea from '@/components/sunoUserStats/StatChartsArea'; 
+import DetailedSongPerformanceTable from '@/components/sunoUserStats/DetailedSongPerformanceTable'; 
+import SongLifecycleChartModal from '@/components/sunoUserStats/charts/SongLifecycleChartModal';
+import type { SunoClip } from '@/types';
+import type { SongInteractionPoint } from '@/types/sunoUserStatsTypes';
 
 
 // Icons for Stat Cards

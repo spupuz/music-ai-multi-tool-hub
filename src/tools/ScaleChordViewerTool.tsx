@@ -6,8 +6,8 @@ import {
   getScaleNotes,
   getDiatonicChords,
   DiatonicChordInfo
-} from '../../utils/musicTheoryUtils';
-import type { ToolProps } from '../../Layout';
+} from '@/utils/musicTheoryUtils';
+import type { ToolProps } from '@/Layout';
 
 const TOOL_CATEGORY = 'ScaleChordViewer';
 

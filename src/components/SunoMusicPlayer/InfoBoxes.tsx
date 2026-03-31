@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SunoProfileDetail, SunoPlaylistDetail } from '../../../types';
+import type { SunoProfileDetail, SunoPlaylistDetail } from '@/types';
 import { TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, FollowersIcon, ClipsIcon, PlaylistIcon } from './Icons';
 
 export const ProfileInfoBox: React.FC<{ detail: SunoProfileDetail }> = ({ detail }) => (

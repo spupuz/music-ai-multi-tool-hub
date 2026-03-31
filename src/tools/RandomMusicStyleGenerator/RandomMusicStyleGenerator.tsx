@@ -1,12 +1,12 @@
 
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import type { ToolProps } from '../../../Layout';
-import { useRandomMusicStyle } from '../../../hooks/useRandomMusicStyle';
+import type { ToolProps } from '@/Layout';
+import { useRandomMusicStyle } from '@/hooks/useRandomMusicStyle';
 import { AddCustomItemModal, ManageCustomItemsModal, ImportConfirmationModal, CategoryItemDisplay, ToggleSwitch } from './RandomMusicStyleGenerator.uiComponents';
-import Spinner from '../../../components/Spinner';
+import Spinner from '@/components/Spinner';
 import { SunoPromptIcon, CopyIcon, StarEmptyIcon, StarFilledIcon, NoteIcon, PlusCircleIcon, TagIcon, UserIcon } from './RandomMusicStyleGenerator.icons';
-import type { SavedStyleEntry } from '../../../types';
+import type { SavedStyleEntry } from '@/types';
 
 
 const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => {

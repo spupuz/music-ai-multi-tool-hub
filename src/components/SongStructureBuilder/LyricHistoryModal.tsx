@@ -1,5 +1,5 @@
 import React from 'react';
-import type { LyricLineData } from '../../../types';
+import type { LyricLineData } from '@/types';
 
 export interface LyricHistoryModalProps {
     show: boolean;

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SavedArrangement } from '../../../types';
+import type { SavedArrangement } from '@/types';
 import { TrashIcon } from './Icons';
 
 export interface LoadArrangementModalProps {

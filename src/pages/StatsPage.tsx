@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ToolProps } from '../../Layout';
+import { ToolProps } from '@/Layout';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -21,15 +21,15 @@ import {
   Graticule 
 } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
-import Spinner from '../../components/Spinner';
-import { countries as countryList } from '../../utils/countryData';
+import Spinner from '@/components/Spinner';
+import { countries as countryList } from '@/utils/countryData';
 import { 
   UserStatsIcon, 
   BookOpenIcon, 
   SignalIcon, 
   StatsIcon,
   GlobeAltIcon
-} from '../../components/Icons';
+} from '@/components/Icons';
 
 ChartJS.register(
   CategoryScale,

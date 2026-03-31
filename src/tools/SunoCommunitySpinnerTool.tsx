@@ -1,22 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { ToolProps } from '../../Layout';
-import ImageUpload from '../../components/ImageUpload';
-import { useTheme } from '../../context/ThemeContext';
+import type { ToolProps } from '@/Layout';
+import ImageUpload from '@/components/ImageUpload';
+import { useTheme } from '@/context/ThemeContext';
 
 // Extracted Modules
 import { 
     TOOL_CATEGORY, logoSizeOptions, cardTextFontOptions, spinSoundPresets, DEFAULT_TOOL_ACCENT_COLOR, DEFAULT_WHEEL_TEXT_FONT, DEFAULT_SPIN_SOUND, defaultActivitiesListEnglish
-} from '../components/SunoCommunitySpinner/constants';
-import { lightenDarkenColor, getAdjustedTextColorForContrast } from '../components/SunoCommunitySpinner/utils';
-import { CogIcon, EyeOpenIcon } from '../components/SunoCommunitySpinner/Icons';
+} from '@/components/SunoCommunitySpinner/constants';
+import { lightenDarkenColor, getAdjustedTextColorForContrast } from '@/components/SunoCommunitySpinner/utils';
+import { CogIcon, EyeOpenIcon } from '@/components/SunoCommunitySpinner/Icons';
 import { 
     InputField, TextAreaField, CheckboxField, SelectField, ConfirmationButton
-} from '../components/SunoCommunitySpinner/FormComponents';
-import { LoadModal, ExportModal, ImportModal } from '../components/SunoCommunitySpinner/SpinnerModals';
-import { useSpinAudio } from '../components/SunoCommunitySpinner/hooks/useSpinAudio';
-import { useWheelDrawing } from '../components/SunoCommunitySpinner/hooks/useWheelDrawing';
-import { useWheelState } from '../components/SunoCommunitySpinner/hooks/useWheelState';
-import { WheelConfigData } from '../components/SunoCommunitySpinner/types';
+} from '@/components/SunoCommunitySpinner/FormComponents';
+import { LoadModal, ExportModal, ImportModal } from '@/components/SunoCommunitySpinner/SpinnerModals';
+import { useSpinAudio } from '@/components/SunoCommunitySpinner/hooks/useSpinAudio';
+import { useWheelDrawing } from '@/components/SunoCommunitySpinner/hooks/useWheelDrawing';
+import { useWheelState } from '@/components/SunoCommunitySpinner/hooks/useWheelState';
+import { WheelConfigData } from '@/components/SunoCommunitySpinner/types';
 
 const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const { theme } = useTheme();

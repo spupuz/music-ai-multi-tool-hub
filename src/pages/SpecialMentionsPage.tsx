@@ -1,6 +1,6 @@
 
 import React from 'react';
-import type { ToolProps } from '../../Layout'; // Assuming ToolProps is needed if onNavigate is used in future
+import type { ToolProps } from '@/Layout'; // Assuming ToolProps is needed if onNavigate is used in future
 
 // Helper components for consistent styling (defined locally for this page)
 const SectionTitle: React.FC<{ children: React.ReactNode; id?: string }> = ({ children, id }) => (

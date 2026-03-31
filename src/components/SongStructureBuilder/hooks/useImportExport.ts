@@ -1,4 +1,4 @@
-import { SongStructureBlock, LyricLineData } from '../../../../types';
+import { SongStructureBlock, LyricLineData } from '@/types';
 import { TOOL_CATEGORY } from '../constants';
 import { guessBarCount, escapeCsvField } from '../utils';
 

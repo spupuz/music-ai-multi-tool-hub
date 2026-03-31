@@ -1,9 +1,9 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import type { ToolProps } from '../../Layout';
-import type { SparkTuneChallengeData } from '../../types';
-import InputField from '../../components/forms/InputField';
-import TextAreaField from '../../components/forms/TextAreaField';
+import type { ToolProps } from '@/Layout';
+import type { SparkTuneChallengeData } from '@/types';
+import InputField from '@/components/forms/InputField';
+import TextAreaField from '@/components/forms/TextAreaField';
 
 const TOOL_CATEGORY = 'SparkTuneChallenge';
 const LOCAL_STORAGE_KEY = 'sparkTuneChallenges_v1';

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ToolProps } from '../../Layout';
+import type { ToolProps } from '@/Layout';
 
 const TOOL_CATEGORY = 'MetronomeTool';
 const LOCAL_STORAGE_BPM_KEY = 'metronome_bpm_v1';

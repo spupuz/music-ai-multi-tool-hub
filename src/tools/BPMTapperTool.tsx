@@ -1,9 +1,9 @@
 
 import React, { useState, useCallback, useRef } from 'react';
-import type { ToolProps } from '../../Layout';
-import Spinner from '../../components/Spinner';
-import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '../../services/sunoService';
-import { fetchRiffusionSongData, extractRiffusionSongId } from '../../services/riffusionService';
+import type { ToolProps } from '@/Layout';
+import Spinner from '@/components/Spinner';
+import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
+import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 
 
 const TOOL_CATEGORY = 'BPMTapper';

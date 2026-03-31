@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
-import type { ToolProps } from '../../Layout';
-import { releaseNotes } from '../../data/releaseNotesData';
+import type { ToolProps } from '@/Layout';
+import { releaseNotes } from '@/data/releaseNotesData';
 
 const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   useEffect(() => {

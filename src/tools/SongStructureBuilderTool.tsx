@@ -1,24 +1,24 @@
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import type { ToolProps } from '../../Layout';
-import type { SongStructureBlock, SavedArrangement, LyricLineData } from '../../types';
-import { countSyllablesInLine } from '../../utils/lyricUtils';
-import InputField from '../../components/forms/InputField';
+import type { ToolProps } from '@/Layout';
+import type { SongStructureBlock, SavedArrangement, LyricLineData } from '@/types';
+import { countSyllablesInLine } from '@/utils/lyricUtils';
+import InputField from '@/components/forms/InputField';
 
 
-import { TOOL_CATEGORY, LOCAL_STORAGE_CURRENT_WORK_KEY, LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, predefinedBlockTypes, arrangementTemplates } from '../components/SongStructureBuilder/constants';
-import { CopyIcon, SaveIcon, LoadIcon, InfoIcon } from '../components/SongStructureBuilder/Icons';
-import { escapeCsvField } from '../components/SongStructureBuilder/utils';
-import SaveArrangementModal from '../components/SongStructureBuilder/SaveArrangementModal';
-import LoadArrangementModal from '../components/SongStructureBuilder/LoadArrangementModal';
-import ImportExportModal from '../components/SongStructureBuilder/ImportExportModal';
-import LyricHistoryModal from '../components/SongStructureBuilder/LyricHistoryModal';
-import StructurePalette from '../components/SongStructureBuilder/StructurePalette';
-import TimelineBlockItem, { DropIndicator } from '../components/SongStructureBuilder/TimelineBlockItem';
-import BarsExplainer from '../components/SongStructureBuilder/BarsExplainer';
-import { useTimelineResize } from '../components/SongStructureBuilder/hooks/useTimelineResize';
-import { useLyricManager } from '../components/SongStructureBuilder/hooks/useLyricManager';
-import { useImportExport } from '../components/SongStructureBuilder/hooks/useImportExport';
+import { TOOL_CATEGORY, LOCAL_STORAGE_CURRENT_WORK_KEY, LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, predefinedBlockTypes, arrangementTemplates } from '@/components/SongStructureBuilder/constants';
+import { CopyIcon, SaveIcon, LoadIcon, InfoIcon } from '@/components/SongStructureBuilder/Icons';
+import { escapeCsvField } from '@/components/SongStructureBuilder/utils';
+import SaveArrangementModal from '@/components/SongStructureBuilder/SaveArrangementModal';
+import LoadArrangementModal from '@/components/SongStructureBuilder/LoadArrangementModal';
+import ImportExportModal from '@/components/SongStructureBuilder/ImportExportModal';
+import LyricHistoryModal from '@/components/SongStructureBuilder/LyricHistoryModal';
+import StructurePalette from '@/components/SongStructureBuilder/StructurePalette';
+import TimelineBlockItem, { DropIndicator } from '@/components/SongStructureBuilder/TimelineBlockItem';
+import BarsExplainer from '@/components/SongStructureBuilder/BarsExplainer';
+import { useTimelineResize } from '@/components/SongStructureBuilder/hooks/useTimelineResize';
+import { useLyricManager } from '@/components/SongStructureBuilder/hooks/useLyricManager';
+import { useImportExport } from '@/components/SongStructureBuilder/hooks/useImportExport';
 
 
 const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {

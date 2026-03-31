@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SongStructureBlock, LyricLineData } from '../../../types';
+import type { SongStructureBlock, LyricLineData } from '@/types';
 import { TrashIcon, DuplicateIcon, UpArrowIcon, DownArrowIcon, HistoryIcon, PlusIcon } from './Icons';
 
 export const DropIndicator: React.FC = () => (

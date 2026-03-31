@@ -9,9 +9,9 @@ import {
   getMidiNoteNumber,
   ProgressionChord,
   DiatonicChordInfo
-} from '../../utils/musicTheoryUtils';
-import Spinner from '../../components/Spinner';
-import type { ToolProps } from '../../Layout';
+} from '@/utils/musicTheoryUtils';
+import Spinner from '@/components/Spinner';
+import type { ToolProps } from '@/Layout';
 
 const TOOL_CATEGORY = 'ChordProgressionGenerator';
 const FAVORITES_STORAGE_KEY = 'chordProgFavorites_v1';

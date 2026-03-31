@@ -1,6 +1,6 @@
 
 import React from 'react';
-import type { ToolId, ToolProps as LayoutToolProps } from '../../Layout';
+import type { ToolId, ToolProps as LayoutToolProps } from '@/Layout';
 
 // Define the order of categories for the sidebar
 const categoryDisplayOrder = [

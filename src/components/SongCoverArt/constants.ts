@@ -1,4 +1,4 @@
-import { TextOptions } from '../../../utils/imageUtils';
+import { TextOptions } from '@/utils/imageUtils';
 
 export interface ExtendedTextOptions extends TextOptions {
   songNameXOffset: number;

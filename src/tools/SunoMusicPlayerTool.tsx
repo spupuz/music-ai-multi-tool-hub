@@ -1,20 +1,20 @@
 
 
 import React, { useState, useEffect, useCallback, ChangeEvent, useRef } from 'react';
-import { fetchSunoSongsByUsername, fetchSunoPlaylistById } from '../../services/sunoService';
-import type { SunoClip, SunoProfileDetail, SunoPlaylistDetail, SavedCustomPlaylist, PlaylistAnalysis } from '../../types';
-import { PlaybackStatus } from '../../types';
-import Spinner from '../../components/Spinner';
-import AudioVisualizer from '../../components/AudioVisualizer/AudioVisualizer';
-import type { ToolProps } from '../../Layout';
-import { useSunoAudioPlayer } from '../../hooks/useSunoAudioPlayer';
-import { SortCriteriaHook } from '../../hooks/suno/useSunoQueue';
-import PlaylistCreationDateChart from '../../components/sunoUserStats/charts/PlaylistCreationDateChart';
+import { fetchSunoSongsByUsername, fetchSunoPlaylistById } from '@/services/sunoService';
+import type { SunoClip, SunoProfileDetail, SunoPlaylistDetail, SavedCustomPlaylist, PlaylistAnalysis } from '@/types';
+import { PlaybackStatus } from '@/types';
+import Spinner from '@/components/Spinner';
+import AudioVisualizer from '@/components/AudioVisualizer/AudioVisualizer';
+import type { ToolProps } from '@/Layout';
+import { useSunoAudioPlayer } from '@/hooks/useSunoAudioPlayer';
+import { SortCriteriaHook } from '@/hooks/suno/useSunoQueue';
+import PlaylistCreationDateChart from '@/components/sunoUserStats/charts/PlaylistCreationDateChart';
 
-import { LOGO_SVG_STRING, FALLBACK_IMAGE_DATA_URI, TOOL_CATEGORY_UI, LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, DEFAULT_PLAYLIST_HEIGHT_PX, MIN_PLAYLIST_HEIGHT_PX, MAX_PLAYLIST_HEIGHT_PX, MIN_SNIPPET_DURATION_SECONDS, MAX_SNIPPET_DURATION_SECONDS, LOCAL_CLICK_CONFIRM_NEEDED, LOCAL_CLICK_TIMEOUT_MS, EQ_PRESETS_FOR_UI } from '../components/SunoMusicPlayer/constants';
-import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon } from '../components/SunoMusicPlayer/Icons';
-import KeyboardShortcutsModal from '../components/SunoMusicPlayer/KeyboardShortcutsModal';
-import { ProfileInfoBox, PlaylistInfoBox } from '../components/SunoMusicPlayer/InfoBoxes';
+import { LOGO_SVG_STRING, FALLBACK_IMAGE_DATA_URI, TOOL_CATEGORY_UI, LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, DEFAULT_PLAYLIST_HEIGHT_PX, MIN_PLAYLIST_HEIGHT_PX, MAX_PLAYLIST_HEIGHT_PX, MIN_SNIPPET_DURATION_SECONDS, MAX_SNIPPET_DURATION_SECONDS, LOCAL_CLICK_CONFIRM_NEEDED, LOCAL_CLICK_TIMEOUT_MS, EQ_PRESETS_FOR_UI } from '@/components/SunoMusicPlayer/constants';
+import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon } from '@/components/SunoMusicPlayer/Icons';
+import KeyboardShortcutsModal from '@/components/SunoMusicPlayer/KeyboardShortcutsModal';
+import { ProfileInfoBox, PlaylistInfoBox } from '@/components/SunoMusicPlayer/InfoBoxes';
 
 
 const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {

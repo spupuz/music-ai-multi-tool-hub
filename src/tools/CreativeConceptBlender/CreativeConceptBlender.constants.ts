@@ -1,5 +1,5 @@
 
-import type { CreativeLockedCategoriesState, OptionalCreativeCategoryToggleState, CreativeCustomItemsState, CreativeCustomItemCategoryKey } from '../../../types';
+import type { CreativeLockedCategoriesState, OptionalCreativeCategoryToggleState, CreativeCustomItemsState, CreativeCustomItemCategoryKey } from '@/types';
 
 export const themesAndScenarios = [
   "A forgotten alien archive discovering human pop music", "A chase through a neon-drenched cyberpunk city during a digital rainstorm", 

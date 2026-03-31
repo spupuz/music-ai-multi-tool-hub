@@ -1,5 +1,5 @@
 import React from 'react';
-import InputField from '../../../components/forms/InputField';
+import InputField from '@/components/forms/InputField';
 
 export interface SaveArrangementModalProps {
     show: boolean;

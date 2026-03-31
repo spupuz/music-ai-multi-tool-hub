@@ -1,8 +1,8 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import Spinner from '../../../components/Spinner';
-import type { ToolProps } from '../../../Layout';
-import type { BlendedConceptParts, CreativeLockableCategoryKey, CreativeLockedCategoriesState, CreativeSavedConceptEntry, CreativeCustomItemCategoryKey, CreativeCustomItemsState, OptionalCreativeCategoryToggleState } from '../../../types';
+import Spinner from '@/components/Spinner';
+import type { ToolProps } from '@/Layout';
+import type { BlendedConceptParts, CreativeLockableCategoryKey, CreativeLockedCategoriesState, CreativeSavedConceptEntry, CreativeCustomItemCategoryKey, CreativeCustomItemsState, OptionalCreativeCategoryToggleState } from '@/types';
 import { 
     categoryDataSources, 
     initialLockedCategories, 

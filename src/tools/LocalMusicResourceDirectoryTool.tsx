@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import type { ToolProps } from '../../Layout';
+import type { ToolProps } from '@/Layout';
 
 const TOOL_CATEGORY = 'LocalMusicResourceDirectory';
 

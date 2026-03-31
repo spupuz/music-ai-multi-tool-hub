@@ -1,6 +1,6 @@
 import React from 'react';
-import InputField from '../../../components/forms/InputField';
-import TextAreaField from '../../../components/forms/TextAreaField';
+import InputField from '@/components/forms/InputField';
+import TextAreaField from '@/components/forms/TextAreaField';
 import { DeleteIcon, ExportIcon, ImportIcon } from './Icons';
 import { ArtStylePreset } from './constants';
 

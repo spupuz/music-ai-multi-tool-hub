@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react';
-import TextAreaField from '../../../components/forms/TextAreaField';
+import TextAreaField from '@/components/forms/TextAreaField';
 import { ExportIcon, ImportIcon } from './Icons';
 
 export interface ImportExportModalProps {

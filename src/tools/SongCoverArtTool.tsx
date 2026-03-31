@@ -1,32 +1,32 @@
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { GeneratedImage, AppState } from '../../types';
-import ImageUpload from '../../components/ImageUpload';
-import Spinner from '../../components/Spinner';
-import { addTextToImage, TextOptions, OverlayImageOptions, ImageFilterOptions, hexToRgb } from '../../utils/imageUtils';
-import type { ToolProps } from '../../Layout'; // Import ToolProps for trackLocalEvent
-import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from '../../services/sunoService';
-import { fetchRiffusionSongData, extractRiffusionSongId } from '../../services/riffusionService';
-import InputField from '../../components/forms/InputField';
-import SelectField from '../../components/forms/SelectField';
-import CheckboxField from '../../components/forms/CheckboxField';
-import SliderField from '../../components/forms/SliderField';
-import TextAreaField from '../../components/forms/TextAreaField';
+import { GeneratedImage, AppState } from '@/types';
+import ImageUpload from '@/components/ImageUpload';
+import Spinner from '@/components/Spinner';
+import { addTextToImage, TextOptions, OverlayImageOptions, ImageFilterOptions, hexToRgb } from '@/utils/imageUtils';
+import type { ToolProps } from '@/Layout'; // Import ToolProps for trackLocalEvent
+import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
+import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
+import InputField from '@/components/forms/InputField';
+import SelectField from '@/components/forms/SelectField';
+import CheckboxField from '@/components/forms/CheckboxField';
+import SliderField from '@/components/forms/SliderField';
+import TextAreaField from '@/components/forms/TextAreaField';
 
 
 import {
   SparklesIcon, PaletteIcon, SaveIcon, LoadIcon, ConfigIcon, ImportIcon
-} from '../components/SongCoverArt/Icons';
+} from '@/components/SongCoverArt/Icons';
 
 import {
   ExtendedTextOptions, ArtStyleSettings, ArtStylePreset, SAVED_PRESETS_LOCAL_STORAGE_KEY,
   TOOL_CATEGORY, FALLBACK_IMAGE_DATA_URI, availableFonts, textPositionOptions, overlayPositionOptions,
   relativeFontSizeOptions, textEffectPresets, overlayBlendModeOptions, textColorModeOptions,
   gradientDirectionOptions, textAlignOptions
-} from '../components/SongCoverArt/constants';
+} from '@/components/SongCoverArt/constants';
 
-import { imageUrlToBase64, isValidHexColor, normalizeHexColor } from '../components/SongCoverArt/utils';
-import PresetModals from '../components/SongCoverArt/PresetModals';
+import { imageUrlToBase64, isValidHexColor, normalizeHexColor } from '@/components/SongCoverArt/utils';
+import PresetModals from '@/components/SongCoverArt/PresetModals';
 
 
 const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
