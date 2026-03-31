@@ -1,6 +1,7 @@
-
 import React from 'react';
 import type { ToolId, ToolProps as LayoutToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
+import { GithubIcon } from '@/components/Icons';
 
 // Define the order of categories for the sidebar
 const categoryDisplayOrder = [
@@ -22,7 +23,7 @@ const toolDescriptions: Record<ToolId, string> = {
   mp3Cutter: "Quickly cut or crop audio. Upload an MP3 file or load from a Suno, Riffusion, or Producer.AI song URL (displays cover art & artist, allows cover download). Visualize its waveform, select a region (max 50% of total duration), preview, and download the cropped segment as an MP3 file.",
   lyricProcessor: "Perfect your lyrics. Load lyrics, title, and artist from Suno, Riffusion, or Producer.AI URLs. Analyze syllable counts (now with word/char counts per line), clean & format (with options for bracket removal), find & replace text (with regex/case options), convert case (UPPER, lower, Title), optionally show line numbers, and add standardized creator/copyright headers. Lyrics can be pre-filled from the Suno Song Compliance Tool.",
   lyricsSynchronizer: "Create time-stamped lyrics for karaoke. Load an audio file (MP3, Suno, Riffusion, or Producer.AI URL) and lyrics (paste, type, or import LRC). Auto-imports timed lyrics from Riffusion if available. Mark timestamps manually by clicking or use the spacebar shortcut while playing. Features Karaoke preview mode, and export to LRC file format.",
-  sparkTuneChallenge: "Design and share music challenges! Set prompts (genre, mood, vocals, tempo, etc.), rules, and links. Generates two posts for you via tabs: a detailed 'Announcement Post' and a concise 'Reminder Post' for later use. Saves challenge history for quick loading.",
+  promptSpark: "Design and share music challenges! Set prompts (genre, mood, vocals, tempo, etc.), rules, and links. Generates two posts for you via tabs: a detailed 'Announcement Post' and a concise 'Reminder Post' for later use. Saves challenge history for quick loading.",
   sunoCommunitySpinner: "A playful and interactive addition to spark fun and engagement within the Suno AI music community. It's a customizable wheel pre-filled with activities relevant to Suno AI music creation and its community. Spin for a random action or mini-challenge!",
   randomMusicStyle: "Break creative blocks! Generate diverse combinations of genres, moods, tempos, instrumentation, and more. Features intensity controls for multi-item categories (Simple, Moderate, Complex), personalize with your own custom items (import/export supported), lock elements, get Suno-ready tags, and save favorites to kickstart your next AI music generation.",
   creativeConceptBlender: "Spark wildly original musical ideas by blending concepts. Use the 'Record New' mode to manually build your concept step-by-step from interactive palettes. Personalize with your own custom items, lock your favorite parts, add a surprise twist, save history, and manage favorites! Now with advanced optional layers for Musicality, Core Conflict, Character, Setting, and Catalyst to build even more detailed concepts.",
@@ -159,47 +160,39 @@ Thanks,
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-4 sm:p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300 overflow-hidden">
-      <header className="mb-10 text-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight flex flex-wrap justify-center gap-x-2">
-          <span className="text-green-600 dark:text-green-400">Music</span>
-          <span className="text-green-500 dark:text-green-300">AI</span>
-          <span className="text-gray-800 dark:text-gray-200">Multi-Tool</span>
-          <span className="text-green-700 dark:text-green-500 font-bold">Hub</span>
+    <div className="w-full max-w-5xl mx-auto glass-card p-4 sm:p-8 md:p-12 border-white/10 shadow-2xl transition-all duration-500 animate-fadeIn relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
+      
+      <header className="mb-8 md:mb-14 text-center pt-4 md:pt-8 px-4 relative z-10">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">
+          The Hub
         </h1>
-        <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-          Your companion for AI-powered music creation and exploration.
+        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+          Your companion for AI-powered music creation and exploration
         </p>
 
         {/* GitHub Star CTA */}
-        <div className="mt-8 flex flex-col items-center animate-fade-in">
-          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl p-6 shadow-sm max-w-2xl w-full">
-            <h2 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">🚀 We are now Open Source!</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              The Hub is now public on GitHub. If you find these tools useful, please consider giving us a star to support the project!
-            </p>
-            <a
-              href="https://github.com/spupuz/music-ai-multi-tool-hub"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:scale-105 transition-transform shadow-md group"
-              onClick={() => trackLocalEvent && trackLocalEvent('Github', 'ClickedGitHubStar', 'AboutPage')}
+        <div className="mt-12 flex flex-col items-center">
+            <Button
+              onClick={() => {
+                window.open("https://github.com/spupuz/music-ai-multi-tool-hub", "_blank");
+                trackLocalEvent && trackLocalEvent('Github', 'ClickedGitHubStar', 'AboutPage');
+              }}
+              variant="primary"
+              size="lg"
+              startIcon={<GithubIcon className="w-6 h-6" />}
+              className="font-black uppercase tracking-[0.2em] px-10 py-5 rounded-2xl shadow-xl hover:scale-105 transition-transform"
+              backgroundColor="#111827"
             >
-              <svg className="w-5 h-5 mr-3 fill-current" viewBox="0 0 24 24">
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-              </svg>
               Star on GitHub
-              <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </div>
+            </Button>
         </div>
       </header>
 
       <main className="text-gray-700 dark:text-gray-300 leading-relaxed">
         <section id="mission">
-          <h2 className="text-3xl font-bold text-green-600 dark:text-green-400 mt-10 mb-6 border-b-2 border-green-600 pb-3">Our Mission & Ethos</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400 mt-10 mb-6 border-b-2 border-green-600 pb-3 text-center sm:text-left">Our Mission & Ethos</h2>
           <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
             <p className="mb-3 leading-relaxed text-gray-700 dark:text-gray-300 text-lg">
               To empower musicians, producers, and creative minds by providing intuitive, innovative, and fun AI-driven tools. We aim to simplify complex tasks, spark inspiration, and enhance the joy of making music with cutting-edge technology.
@@ -381,7 +374,6 @@ Thanks,
             <h4 className="text-lg font-semibold text-green-700 dark:text-green-200 mt-4 mb-2">Data Handling & Infrastructure</h4>
             <ul className="list-disc list-inside pl-4 mb-3 space-y-1 text-gray-700 dark:text-gray-300">
               <li><strong className="font-semibold text-green-700 dark:text-green-200">Local Storage:</strong> We use your browser's local storage solely to remember your preferences, favorites, and custom settings for a seamless experience. You have full control to clear this at any time.</li>
-              <li><strong className="font-semibold text-green-700 dark:text-green-200">Secure Proxying:</strong> For tools requiring cross-origin requests, we now route traffic through our own secure infrastructure rather than public proxies. This ensures your request data remains private and is not exposed to third-party data aggregators.</li>
               <li><strong className="font-semibold text-green-700 dark:text-green-200">External Services:</strong> When you interact with third-party platforms (like Suno or Google Gemini), data is transmitted directly to them or via our secure relays strictly for the purpose of the request. We do not log or retain this information.</li>
             </ul>
 

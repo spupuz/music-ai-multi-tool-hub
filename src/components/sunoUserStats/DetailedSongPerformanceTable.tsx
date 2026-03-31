@@ -1,8 +1,9 @@
 
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { SunoClip } from '@/types';
 import type { SongInteractionPoint } from '@/types/sunoUserStatsTypes';
+import Button from '@/components/common/Button';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
@@ -204,88 +205,118 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
 
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-850 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <div className="mb-4 flex flex-col sm:flex-row gap-2 items-center">
-        <input
-          type="text"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          placeholder="Filter by Title or Artist within current view..."
-          className="flex-grow w-full sm:w-auto px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500 text-sm"
-          aria-label="Filter songs table"
-        />
+    <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-3xl pointer-events-none"></div>
+      
+      <div className="mb-8 flex flex-col sm:flex-row gap-6 items-center">
+        <div className="relative flex-grow group w-full">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg className="h-3 w-3 text-gray-500 group-hover:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            placeholder="Search neural signals by title or handle..."
+            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl placeholder-gray-600 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-green-500/30 focus:ring-1 focus:ring-green-500/20 transition-all"
+            aria-label="Filter songs table"
+          />
+        </div>
         {activeTableFilters && (
-          <span className="text-xs text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-gray-700 px-2 py-1 rounded-md whitespace-nowrap">
-             {getActiveFilterText()}
-          </span>
+          <div className="flex items-center gap-3 px-4 py-2 bg-yellow-500/5 border border-yellow-500/20 rounded-xl animate-in fade-in slide-in-from-right-4">
+             <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></div>
+             <span className="text-[8px] font-black uppercase tracking-[0.2em] text-yellow-500/80">
+                Active Buffer: {getActiveFilterText()}
+             </span>
+          </div>
         )}
       </div>
-      <div className="overflow-x-auto">
-        <div className="max-h-[70vh] overflow-y-auto"> 
-          <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-            <thead className="sticky top-0 z-10 bg-gray-100 dark:bg-gray-750"> 
+
+      <div className="overflow-hidden rounded-3xl border border-white/5 bg-white/2">
+        <div className="max-h-[70vh] overflow-y-auto custom-scrollbar"> 
+          <table className="min-w-full divide-y divide-white/5 border-collapse">
+            <thead className="sticky top-0 z-20 bg-[#0a0a0a] backdrop-blur-md"> 
               <tr>
-                <th className={`${thClasses} w-12`} scope="col">Cover</th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('title')} aria-sort={sortColumn === 'title' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Title <SortArrow column="title" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('upvotes')} aria-sort={sortColumn === 'upvotes' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Upvotes <SortArrow column="upvotes" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('plays')} aria-sort={sortColumn === 'plays' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Plays <SortArrow column="plays" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('comments')} aria-sort={sortColumn === 'comments' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Comments <SortArrow column="comments" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('created_at')} aria-sort={sortColumn === 'created_at' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Created <SortArrow column="created_at" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('duration')} aria-sort={sortColumn === 'duration' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Duration <SortArrow column="duration" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('upvoteRate')} aria-sort={sortColumn === 'upvoteRate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Upvote% <SortArrow column="upvoteRate" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('commentRate')} aria-sort={sortColumn === 'commentRate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Cmnt% <SortArrow column="commentRate" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('playsPerDay')} aria-sort={sortColumn === 'playsPerDay' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Plays/Day <SortArrow column="playsPerDay" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('upvotesPerDay')} aria-sort={sortColumn === 'upvotesPerDay' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Upvt/Day <SortArrow column="upvotesPerDay" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('commentsPerDay')} aria-sort={sortColumn === 'commentsPerDay' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Cmnt/Day <SortArrow column="commentsPerDay" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('upvotesDelta')} aria-sort={sortColumn === 'upvotesDelta' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Upvotes Δ <SortArrow column="upvotesDelta" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('playsDelta')} aria-sort={sortColumn === 'playsDelta' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Plays Δ <SortArrow column="playsDelta" /></th>
-                <th className={thClasses} scope="col" onClick={() => handleSort('commentsDelta')} aria-sort={sortColumn === 'commentsDelta' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>Comments Δ <SortArrow column="commentsDelta" /></th>
-                <th className={`${thClasses} w-20`} scope="col">Actions</th>
+                <th className="px-6 py-5 text-left text-[8px] font-black text-gray-500 uppercase tracking-[0.3em] w-16" scope="col">Node</th>
+                {[
+                  { id: 'title', label: 'Signal Identifier' },
+                  { id: 'upvotes', label: 'Affinity' },
+                  { id: 'plays', label: 'Flux' },
+                  { id: 'comments', label: 'Echoes' },
+                  { id: 'created_at', label: 'Genesis' },
+                  { id: 'duration', label: 'Span' },
+                  { id: 'upvoteRate', label: 'Affinity%' },
+                  { id: 'commentRate', label: 'Echo%' },
+                  { id: 'playsPerDay', label: 'Flux/Cycle' },
+                  { id: 'upvotesPerDay', label: 'Affinity/Cycle' },
+                  { id: 'commentsPerDay', label: 'Echo/Cycle' },
+                  { id: 'upvotesDelta', label: 'Affinity Δ' },
+                  { id: 'playsDelta', label: 'Flux Δ' },
+                  { id: 'commentsDelta', label: 'Echo Δ' }
+                ].map((col) => (
+                  <th 
+                    key={col.id}
+                    className="px-4 py-5 text-left text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] cursor-pointer hover:bg-white/5 transition-colors whitespace-nowrap" 
+                    scope="col" 
+                    onClick={() => handleSort(col.id as SortableColumn)} 
+                    aria-sort={sortColumn === col.id ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
+                  >
+                    <div className="flex items-center gap-2 group/header">
+                      <span className={sortColumn === col.id ? 'text-green-500' : 'group-hover/header:text-gray-300'}>{col.label}</span>
+                      <SortArrow column={col.id as SortableColumn} />
+                    </div>
+                  </th>
+                ))}
+                <th className="px-6 py-5 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.3em] w-24" scope="col">Ops</th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
+            <tbody className="divide-y divide-white/5">
               {filteredAndSortedSongs.map((song) => (
-                <tr key={song.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  <td className="px-3 py-2 whitespace-nowrap">
-                    <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" title={`View ${song.title} on Suno`}>
+                <tr key={song.id} className="group hover:bg-white/5 transition-all duration-300">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="block relative h-12 w-12 group/thumb">
+                      <div className="absolute inset-0 bg-green-500/20 rounded-xl blur-sm opacity-0 group-hover/thumb:opacity-100 transition-opacity"></div>
                       <img 
                         src={song.image_url || FALLBACK_IMAGE_DATA_URI} 
                         alt={song.title} 
-                        className="w-10 h-10 object-cover rounded border border-gray-300 dark:border-gray-500" 
+                        className="h-12 w-12 object-cover rounded-xl border border-white/10 shadow-lg relative z-10 grayscale-[0.5] group-hover:grayscale-0 transition-all" 
                         onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}/>
                     </a>
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 max-w-xs truncate">
-                    <div className="font-medium truncate" title={song.title}>
-                      <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="hover:text-green-600 dark:hover:text-green-400 hover:underline">
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="flex flex-col max-w-xs">
+                      <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="text-[11px] font-black text-white tracking-widest uppercase truncate hover:text-green-500 transition-colors" title={song.title}>
                         {song.title}
                       </a>
+                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 truncate" title={song.display_name}>ID: {song.handle}</span>
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 truncate" title={song.display_name}>by {song.display_name} (@{song.handle})</div>
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.upvote_count.toLocaleString()}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.play_count.toLocaleString()}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.comment_count.toLocaleString()}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(song.created_at).toLocaleDateString()}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-right">
-                    {song.metadata?.duration ? `${Math.floor(song.metadata.duration / 60)}:${String(Math.floor(song.metadata.duration % 60)).padStart(2, '0')}` : 'N/A'}
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-300 tracking-widest text-right">{song.upvote_count.toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-300 tracking-widest text-right">{song.play_count.toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-300 tracking-widest text-right">{song.comment_count.toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[9px] font-black text-gray-500 uppercase tracking-widest">{new Date(song.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-400 tracking-widest text-right">
+                    {song.metadata?.duration ? `${Math.floor(song.metadata.duration / 60)}:${String(Math.floor(song.metadata.duration % 60)).padStart(2, '0')}` : '---'}
                   </td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.upvoteRate !== null ? `${song.upvoteRate.toFixed(1)}%` : 'N/A'}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.commentRate !== null ? `${song.commentRate.toFixed(2)}%` : 'N/A'}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.playsPerDay !== null ? song.playsPerDay.toFixed(2) : 'N/A'}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.upvotesPerDay !== null ? song.upvotesPerDay.toFixed(2) : 'N/A'}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right">{song.commentsPerDay !== null ? song.commentsPerDay.toFixed(2) : 'N/A'}</td>
-                  <td className={`px-3 py-2 whitespace-nowrap text-sm text-right ${song.upvotesDelta && song.upvotesDelta > 0 ? 'text-green-600 dark:text-green-400' : (song.upvotesDelta && song.upvotesDelta < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-400')}`}>{formatDelta(song.upvotesDelta)}</td>
-                  <td className={`px-3 py-2 whitespace-nowrap text-sm text-right ${song.playsDelta && song.playsDelta > 0 ? 'text-green-600 dark:text-green-400' : (song.playsDelta && song.playsDelta < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-400')}`}>{formatDelta(song.playsDelta)}</td>
-                  <td className={`px-3 py-2 whitespace-nowrap text-sm text-right ${song.commentsDelta && song.commentsDelta > 0 ? 'text-green-600 dark:text-green-400' : (song.commentsDelta && song.commentsDelta < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-400')}`}>{formatDelta(song.commentsDelta)}</td>
-                  <td className="px-3 py-2 whitespace-nowrap text-sm">
-                    <button 
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-green-500/80 tracking-widest text-right">{song.upvoteRate !== null ? `${song.upvoteRate.toFixed(1)}%` : '---'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-green-500/60 tracking-widest text-right">{song.commentRate !== null ? `${song.commentRate.toFixed(2)}%` : '---'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-400 tracking-widest text-right">{song.playsPerDay !== null ? song.playsPerDay.toFixed(1) : '---'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-400 tracking-widest text-right">{song.upvotesPerDay !== null ? song.upvotesPerDay.toFixed(1) : '---'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-[10px] font-black text-gray-400 tracking-widest text-right">{song.commentsPerDay !== null ? song.commentsPerDay.toFixed(1) : '---'}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-[10px] font-black tracking-widest text-right ${song.upvotesDelta && song.upvotesDelta > 0 ? 'text-green-500' : (song.upvotesDelta && song.upvotesDelta < 0 ? 'text-red-500' : 'text-gray-600')}`}>{formatDelta(song.upvotesDelta)}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-[10px] font-black tracking-widest text-right ${song.playsDelta && song.playsDelta > 0 ? 'text-green-500' : (song.playsDelta && song.playsDelta < 0 ? 'text-red-500' : 'text-gray-600')}`}>{formatDelta(song.playsDelta)}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-[10px] font-black tracking-widest text-right ${song.commentsDelta && song.commentsDelta > 0 ? 'text-green-500' : (song.commentsDelta && song.commentsDelta < 0 ? 'text-red-500' : 'text-gray-600')}`}>{formatDelta(song.commentsDelta)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <Button 
                       onClick={() => onAnalyzeSong(song)} 
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-xs py-0.5 px-1.5 border border-indigo-500 rounded hover:bg-indigo-100 dark:hover:bg-indigo-700 transition-colors"
-                      title="Analyze song lifecycle"
+                      variant="ghost" 
+                      size="xs" 
+                      className="font-black uppercase tracking-widest text-[8px] py-2 px-4 border-white/5 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/20 shadow-xl"
                     >
-                      Analyze
-                    </button>
+                      Inspect
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -301,7 +332,9 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
         </div>
       </div>
       {filteredAndSortedSongs.length > 20 && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">Displaying all {filteredAndSortedSongs.length} results. Scroll within the table to see more.</p>
+        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-gray-600 text-center mt-6 animate-pulse">
+           Buffer Overflow: Signal integrity maintained for {filteredAndSortedSongs.length} entries.
+        </p>
       )}
     </div>
   );

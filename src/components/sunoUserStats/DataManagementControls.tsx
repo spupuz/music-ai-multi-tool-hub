@@ -1,6 +1,7 @@
-
 import React from 'react';
 import Spinner from '../Spinner';
+import Button from '../common/Button';
+import { RefreshIcon } from '../Icons';
 
 interface DataManagementControlsProps {
   onUpdate: () => void;
@@ -22,22 +23,28 @@ const DataManagementControls: React.FC<DataManagementControlsProps> = ({
       <p className="text-xs text-gray-400 sm:max-w-xs">
         Data is stored locally in your browser. Update to fetch the latest stats, or clear stored data for this user.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        <button
+      <div className="flex flex-row items-center gap-3 w-full sm:w-auto">
+        <Button
           onClick={onUpdate}
           disabled={isUpdating || !isClearingPossible}
-          className="flex-1 flex justify-center items-center py-1.5 px-3 border border-blue-500 text-blue-300 hover:bg-blue-700 hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors"
+          variant="primary"
+          size="sm"
+          startIcon={isUpdating ? null : <RefreshIcon className="w-3.5 h-3.5" />}
+          loading={isUpdating}
+          className="flex-1 px-6 py-2.5 text-[10px] font-black uppercase tracking-widest border-none shadow-none"
+          backgroundColor="#3b82f6"
         >
-          {isUpdating ? <Spinner size="w-3 h-3 mr-1.5" /> : null} {/* Adjusted spinner size for smaller button */}
-          {isUpdating ? 'Updating...' : 'Update Data'}
-        </button>
-        <button
+          Update Data
+        </Button>
+        <Button
           onClick={onClear}
           disabled={isUpdating || !isClearingPossible}
-          className="flex-1 py-1.5 px-3 border border-red-500 text-red-300 hover:bg-red-700 hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors"
+          variant="ghost"
+          size="sm"
+          className="flex-1 px-6 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/10 border-red-500/20 shadow-none hover:shadow-none"
         >
           {clearButtonText}
-        </button>
+        </Button>
       </div>
     </div>
   );

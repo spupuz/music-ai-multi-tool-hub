@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@/components/common/Button';
 import { SavedWheel } from './types';
 import { ConfirmationButton } from './FormComponents';
 
@@ -24,14 +25,14 @@ export const LoadModal: React.FC<LoadModalProps> = ({ isOpen, onClose, savedWhee
                             <div key={sw.id} className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:border-green-500 dark:hover:border-green-400 transition-colors">
                                 <span className="font-semibold text-gray-900 dark:text-white truncate pr-4">{sw.name}</span>
                                 <div className="flex gap-2">
-                                    <button onClick={() => onLoad(sw.id)} className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md text-sm font-medium transition-colors">Load</button>
-                                    <ConfirmationButton onConfirm={() => onDelete(sw.id)} label="Delete" confirmLabel="Delete?" className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md text-sm font-medium transition-colors" />
+                                    <Button onClick={() => onLoad(sw.id)} variant="primary" size="xs" backgroundColor="#10b981" className="font-black uppercase tracking-widest px-5">Load</Button>
+                                    <ConfirmationButton onConfirm={() => onDelete(sw.id)} label="Delete" confirmLabel="Delete?" className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all" />
                                 </div>
                             </div>
                         ))
                     )}
                 </div>
-                <button onClick={onClose} className="w-full py-3 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-bold transition-colors">Close</button>
+                <Button onClick={onClose} variant="ghost" className="w-full py-4 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest border-white/10 hover:bg-white/5">Close</Button>
             </div>
         </div>
     );
@@ -52,9 +53,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, confi
                 <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Export Configuration</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Copy the JSON below or download as a file to share or backup your wheel.</p>
                 <textarea readOnly value={configJson} className="w-full h-64 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs mb-6 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent text-gray-900 dark:text-white" />
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <button onClick={onDownload} className="flex-1 py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg font-bold transition-colors shadow-lg">Download .json File</button>
-                    <button onClick={onClose} className="flex-1 py-3 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-bold transition-colors">Close</button>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Button onClick={onDownload} variant="primary" size="lg" backgroundColor="#10b981" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Download .json File</Button>
+                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-white/10 text-gray-500">Close</Button>
                 </div>
             </div>
         </div>
@@ -87,9 +88,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, confi
                     <textarea value={configJson} onChange={(e) => onJsonChange(e.target.value)} placeholder="Paste your Magic Spin Wheel JSON configuration here..." className="w-full h-48 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent text-gray-900 dark:text-white" />
                     {importError && <p className="mt-2 text-xs text-red-600 dark:text-red-400 font-medium">Error: {importError}</p>}
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <button onClick={onImport} className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition-colors shadow-lg">Import Configuration</button>
-                    <button onClick={onClose} className="flex-1 py-3 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-bold transition-colors">Cancel</button>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Button onClick={onImport} variant="primary" size="lg" backgroundColor="#8b5cf6" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Import Configuration</Button>
+                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-white/10 text-gray-500">Cancel</Button>
                 </div>
             </div>
         </div>

@@ -23,7 +23,7 @@ import SunoSongComplianceTool from '@/tools/SunoSongComplianceTool';
 import ReleaseNotesPage from '@/pages/ReleaseNotesPage'; 
 import SpecialMentionsPage from '@/pages/SpecialMentionsPage';
 import CookieConsentPopup from '@/components/CookieConsentPopup';
-import SparkTuneTool from '@/tools/SparkTuneTool'; 
+import PromptSparkTool from '@/tools/SparkTuneTool'; 
 import SunoCommunitySpinnerTool from '@/tools/SunoCommunitySpinnerTool';
 import LocalMusicResourceDirectoryTool from '@/tools/LocalMusicResourceDirectoryTool'; 
 import { useTheme } from '@/context/ThemeContext';
@@ -144,7 +144,7 @@ export type ToolId =
   'localMusicResourceDirectory' | 
   'bpmTapper' | 
   'metronome' |
-  'sparkTuneChallenge' |
+  'promptSpark' |
   'sunoCommunitySpinner' | 
   'releaseNotes' |
   'stats' |
@@ -169,26 +169,26 @@ const tools: Tool[] = [
   { id: 'about', name: 'About This Hub', component: AboutPage as React.FC<ToolProps>, icon: <AboutIcon />, category: "App & Info" },
   { id: 'sunoMusicPlayer', name: 'Music Shuffler', component: SunoMusicPlayerTool, icon: <PlatformsIcon />, category: "AI Music Platforms" },
   { id: 'sunoUserStats', name: 'Suno User Stats', component: SunoUserStatsTool, icon: <UserStatsIcon />, category: "AI Music Platforms" },
-  { id: 'sunoSongCompliance', name: 'Song Compliance Checker', component: SunoSongComplianceTool, icon: <ComplianceCheckIcon />, category: "AI Music Platforms" },
-  { id: 'songStructureBuilder', name: 'Song Structure Builder', component: SongStructureBuilderTool, icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
-  { id: 'songCoverArt', name: 'Song Cover Art Creator', component: SongCoverArtTool, icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
-  { id: 'mp3Cutter', name: 'MP3 Cutter & Cropper', component: MP3CutterTool, icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
-  { id: 'lyricProcessor', name: 'Lyric Processor', component: LyricProcessorTool, icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
-  { id: 'lyricsSynchronizer', name: 'Lyrics Synchronizer', component: LyricsSynchronizerTool, icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
-  { id: 'randomMusicStyle', name: 'Music Style Generator', component: RandomMusicStyleGenerator, icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
-  { id: 'creativeConceptBlender', name: 'Creative Concept Blender', component: CreativeConceptBlender, icon: <LightbulbIcon className="w-5 h-5 transform scale-x-[-1]" />, category: "Creative AI & Content Tools" },
-  { id: 'localMusicResourceDirectory', name: 'Music Resource Directory', component: LocalMusicResourceDirectoryTool, icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
+  { id: 'sunoSongCompliance', name: 'Compliance Check', component: SunoSongComplianceTool, icon: <ComplianceCheckIcon />, category: "AI Music Platforms" },
+  { id: 'songStructureBuilder', name: 'Structure Builder', component: SongStructureBuilderTool, icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
+  { id: 'songCoverArt', name: 'Visual Synth', component: SongCoverArtTool, icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
+  { id: 'mp3Cutter', name: 'MP3 Cutter', component: MP3CutterTool, icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
+  { id: 'lyricProcessor', name: 'Lyric Lab', component: LyricProcessorTool, icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
+  { id: 'lyricsSynchronizer', name: 'Lyrics Sync', component: LyricsSynchronizerTool, icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
+  { id: 'randomMusicStyle', name: 'Style Architect', component: RandomMusicStyleGenerator, icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
+  { id: 'creativeConceptBlender', name: 'Concept Blender', component: CreativeConceptBlender, icon: <LightbulbIcon className="w-5 h-5 transform scale-x-[-1]" />, category: "Creative AI & Content Tools" },
+  { id: 'localMusicResourceDirectory', name: 'Resource Nexus', component: LocalMusicResourceDirectoryTool, icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
   { id: 'musicTheoryWiki', name: 'Music Theory Wiki', component: MusicTheoryWikiTool, icon: <BookOpenIcon />, category: "Creator Resources & Learning" },
-  { id: 'sunoCommunitySpinner', name: 'Magic Spin Wheel', component: SunoCommunitySpinnerTool, icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
-  { id: 'chordProgressionGenerator', name: 'Chord Progression Generator', component: ChordProgressionTool, icon: <TuneIcon />, category: "Music Theory & Composition" }, 
-  { id: 'scaleChordViewer', name: 'Scale & Chord Viewer', component: ScaleChordViewerTool, icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
-  { id: 'songDeckPicker', name: 'Song Deck Picker', component: SongDeckPickerTool, icon: <CardsIcon />, category: "Community & Fun Tools" },
-  { id: 'bpmTapper', name: 'BPM & Key Finder', component: BPMTapperTool, icon: <TapIcon />, category: "Music Theory & Composition" }, 
+  { id: 'sunoCommunitySpinner', name: 'Magic Spin', component: SunoCommunitySpinnerTool, icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
+  { id: 'chordProgressionGenerator', name: 'Chord Progressions', component: ChordProgressionTool, icon: <TuneIcon />, category: "Music Theory & Composition" }, 
+  { id: 'scaleChordViewer', name: 'Scale & Chords', component: ScaleChordViewerTool, icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
+  { id: 'songDeckPicker', name: 'Song Deck', component: SongDeckPickerTool, icon: <CardsIcon />, category: "Community & Fun Tools" },
+  { id: 'bpmTapper', name: 'Tempo & Key', component: BPMTapperTool, icon: <TapIcon />, category: "Music Theory & Composition" }, 
   { id: 'metronome', name: 'Metronome', component: MetronomeTool, icon: <MetronomeIcon />, category: "Music Theory & Composition" },
-  { id: 'sparkTuneChallenge', name: 'SparkTune Challenge Gen', component: SparkTuneTool, icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
+  { id: 'promptSpark', name: 'SparkTune', component: PromptSparkTool, icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
   { id: 'releaseNotes', name: 'Release Notes', component: ReleaseNotesPage as React.FC<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
   { id: 'specialMentions', name: 'Special Mentions', component: SpecialMentionsPage as React.FC<ToolProps>, icon: <HeartIcon />, category: "App & Info"},
-  { id: 'stats', name: 'Hub Stats', component: StatsPage as React.FC<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
+  { id: 'stats', name: 'Analytics', component: StatsPage as React.FC<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
 ];
 
 const COOKIE_CONSENT_KEY = 'aiMultiToolHub_cookieConsent';
@@ -339,9 +339,15 @@ const Layout: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-200 transition-colors duration-300">
-      <Header onToggleSidebar={toggleSidebar} appName="Music AI Multi-Tool Hub" />
-      <div className="flex flex-1 pt-16">
+    <div className="flex flex-col min-h-screen transition-colors duration-500 ease-in-out overflow-x-hidden">
+      <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} appName="Music AI Multi-Tool Hub" />
+      <div className="flex flex-1 pt-16 relative overflow-hidden">
+        {/* Animated Background Orbs */}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-green-500/10 blur-[120px] animate-pulse"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+        </div>
+
         <Sidebar 
           isOpen={isSidebarOpen} 
           onClose={toggleSidebar} 
@@ -350,18 +356,26 @@ const Layout: React.FC = () => {
           onNavigate={handleNavigate} 
           trackLocalEvent={trackLocalEvent}
         />
-        <main className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${isSidebarOpen && isDesktop ? 'md:ml-64' : 'ml-0'}`}>
-          <div className="p-0 sm:p-6 lg:p-8"> 
-            {ActiveToolComponent ? <ActiveToolComponent {...combinedToolProps} /> : <ToolNotFoundComponent />}
+        <main className={`flex-1 w-full max-w-full overflow-x-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'md:ml-80 ml-0' : 'ml-0'}`}>
+          <div className="px-0 sm:px-6 lg:px-12 pt-2 pb-12 max-w-[1600px] mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col items-center"> 
+            <div className="w-full max-w-full">
+              {ActiveToolComponent ? <ActiveToolComponent {...combinedToolProps} /> : <ToolNotFoundComponent />}
+            </div>
           </div>
         </main>
       </div>
-      <footer className="py-4 px-6 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 text-center text-xs text-gray-500">
-        <p>&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
-        <p>Developed by @spupuz with support from @flickerlog. For creative purposes. Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-green-600 dark:text-green-400 hover:underline">Privacy Policy</a> before use.</p>
-        <p className="mt-2 flex items-center justify-center gap-1.5 text-gray-500">
-          i <HeartIcon className="w-3.5 h-3.5 text-red-500" /> Vibe Coding
-        </p>
+      <footer className="relative z-20 py-8 px-6 glass-nav text-center text-xs text-gray-500">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <p className="font-black uppercase tracking-widest text-[10px] opacity-60">&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
+          <p className="leading-relaxed">
+            Developed by <span className="font-bold text-gray-700 dark:text-gray-300">@spupuz</span> with support from <span className="font-bold text-gray-700 dark:text-gray-300">@flickerlog</span>. 
+            <br className="sm:hidden" /> For creative purposes. 
+            Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-green-600 dark:text-green-400 font-bold hover:underline transition-all underline-offset-4">Privacy Policy</a> before use.
+          </p>
+          <div className="pt-2 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] opacity-40 hover:opacity-80 transition-opacity">
+            i <HeartIcon className="w-3.5 h-3.5 text-red-500 animate-pulse" /> Vibe Coding
+          </div>
+        </div>
       </footer>
       {showCookieConsent && <CookieConsentPopup onAccept={handleAcceptCookieConsent} onLearnMore={() => { if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }), 50); setShowCookieConsent(false);}, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }), 50); setShowCookieConsent(false); }}} />}
     </div>

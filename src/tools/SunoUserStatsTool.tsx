@@ -8,11 +8,18 @@ import StatDisplayCard from '@/components/sunoUserStats/StatDisplayCard';
 import StatChartsArea from '@/components/sunoUserStats/StatChartsArea'; 
 import DetailedSongPerformanceTable from '@/components/sunoUserStats/DetailedSongPerformanceTable'; 
 import SongLifecycleChartModal from '@/components/sunoUserStats/charts/SongLifecycleChartModal';
+import Button from '@/components/common/Button';
+import InputField from '@/components/forms/InputField';
 import type { SunoClip } from '@/types';
 import type { SongInteractionPoint } from '@/types/sunoUserStatsTypes';
+import { StatsIcon, ExportIcon, ImportIcon, TrashIcon, RefreshIcon } from '@/components/Icons';
 
 
-// Icons for Stat Cards
+const AlertIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 mr-2" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+    </svg>
+);
 const TotalPlaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
@@ -53,11 +60,7 @@ const GrowthIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 tex
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.0049L8.13187 12.1231C8.52043 11.7345 9.1536 11.7345 9.54216 12.1231L13.2071 15.7881C13.5976 16.1786 14.2308 16.1786 14.6213 15.7881L21.75 8.66116M21.75 8.66116V13.1612M21.75 8.66116H17.25" />
     </svg>
 );
-const AlertIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 mr-2" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-    </svg>
-);
+// (AlertIcon moved to central Icons)
 const TargetIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-2.474-1.956-2.225H11.25M16.6 16.6l-2.225-2.51.569-2.474-2.225-1.956v2.687M16.6 16.6L19.5 14m-2.928 2.628L17.071 13m-4.242 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zM12 21a9 9 0 110-18 9 9 0 010 18z" />
@@ -88,8 +91,7 @@ const FilterIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4 mr-
   </svg>
 );
 
-const ExportIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>);
-const ImportIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>);
+// (ExportIcon/ImportIcon moved to central Icons)
 
 
 const TOOL_CATEGORY_STATS_TOOL = 'SunoUserStatsTool'; 
@@ -221,67 +223,154 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full">
-      <header className="mb-6 md:mb-10 text-center px-2"> 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-green-600 dark:text-green-400 break-words">Suno User Stats</h1> 
-        <p className="mt-3 text-sm md:text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"> Enter a Suno username to fetch and view their profile statistics and song data. Data is stored locally in your browser. </p> 
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-lg sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
+          User Stats
+        </h1>
+        <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto opacity-60">High-fidelity profile analytics • Neural performance mapping</p>
       </header>
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-0 sm:p-6 md:p-10 border-2 border-green-600 dark:border-green-500 overflow-hidden">
-        <form onSubmit={handleSubmit} className="mb-6 flex flex-col sm:flex-row items-stretch gap-2">
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Suno Username" className="flex-grow px-4 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-900 dark:text-white text-sm" aria-label="Suno Username" disabled={isLoading} />
-          <button type="submit" disabled={isLoading || !username.trim()} className="px-6 py-2 bg-green-500 text-black font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors flex items-center justify-center text-sm"> {isLoading ? <Spinner size="w-4 h-4 mr-2" color="text-black" /> : null} {mainButtonText} </button>
+
+      <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] pointer-events-none"></div>
+        
+        <form onSubmit={handleSubmit} className="mb-10 flex flex-col sm:flex-row items-stretch sm:items-end gap-3 animate-in fade-in slide-in-from-top-4 duration-500 w-full max-w-full overflow-hidden">
+          <div className="flex-grow w-full">
+            <InputField 
+              id="usernameInput" 
+              label="Neural Identifier (Username)" 
+              value={username} 
+              onChange={setUsername} 
+              placeholder="@username" 
+              className="mb-0 w-full" 
+              disabled={isLoading} 
+            />
+          </div>
+          <Button 
+            type="submit" 
+            disabled={isLoading || !username.trim()} 
+            variant="primary" 
+            size="md" 
+            className="w-full h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
+            backgroundColor="#22c55e"
+            startIcon={isLoading ? null : <StatsIcon className="w-4 h-4" />}
+          >
+            {isLoading ? <Spinner size="w-3 h-3" color="text-black" /> : null}
+            {mainButtonText}
+          </Button>
         </form>
-        <div className="mb-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-md font-semibold text-green-600 dark:text-green-300 mb-2">Data Management</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                <button onClick={handleClearCurrentUserCache} disabled={isLoading || !storedData} className="flex-1 py-1.5 px-3 border border-red-500 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-800 dark:hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors"> {getClearCurrentUserCacheButtonText()} </button>
-                <button onClick={exportUserDataSnapshot} disabled={isLoading || !storedData} className="flex-1 py-1.5 px-3 border border-blue-500 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-700 hover:text-blue-800 dark:hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"><ExportIcon />Export User Data</button>
-                <input type="file" ref={importFileRef} accept=".json" onChange={(e) => e.target.files && e.target.files[0] && importUserDataSnapshot(e.target.files[0])} style={{display: 'none'}} id="import-user-stats-file"/>
-                <button onClick={handleImportClick} disabled={isLoading} className="flex-1 py-1.5 px-3 border border-teal-500 text-teal-600 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-700 hover:text-teal-800 dark:hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"><ImportIcon/>Import User Data</button>
-                <button onClick={handleClearAllHubDataFromStatsTool} disabled={isLoading && clearAllHubDataClickCount < (CLEAR_CLICKS_NEEDED_GLOBAL -1) } className="lg:col-start-4 flex-1 py-1.5 px-3 bg-gray-200 dark:bg-gray-700 hover:bg-red-100 dark:hover:bg-red-800 text-gray-800 dark:text-gray-200 hover:text-red-800 dark:hover:text-white border border-red-600 rounded-md text-xs font-medium shadow-sm transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Clear all locally stored hub data"> {getClearAllHubDataButtonText()} </button>
+
+        <section className="mb-10 p-8 bg-white/5 border border-white/10 rounded-3xl relative group overflow-hidden">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 flex items-center gap-2">
+            <TargetIcon className="w-3 h-3" /> System Intelligence / Data Node
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+            <Button 
+              onClick={handleClearCurrentUserCache} 
+              disabled={isLoading || !storedData} 
+              variant="ghost" 
+              size="xs" 
+              startIcon={<RefreshIcon className="w-3.5 h-3.5" />} 
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 flex flex-row items-center justify-center shadow-none"
+            >
+              {getClearCurrentUserCacheButtonText()}
+            </Button>
+            <Button 
+              onClick={exportUserDataSnapshot} 
+              disabled={isLoading || !storedData} 
+              variant="ghost" 
+              size="xs" 
+              startIcon={<ExportIcon className="w-3.5 h-3.5" />} 
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 flex flex-row items-center justify-center shadow-none"
+            >
+              Export Snapshot
+            </Button>
+            <input type="file" ref={importFileRef} accept=".json" onChange={(e) => e.target.files && e.target.files[0] && importUserDataSnapshot(e.target.files[0])} style={{display: 'none'}} id="import-user-stats-file"/>
+            <Button 
+              onClick={handleImportClick} 
+              disabled={isLoading} 
+              variant="ghost" 
+              size="xs" 
+              startIcon={<ImportIcon className="w-3.5 h-3.5" />} 
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-teal-500/10 hover:text-teal-400 hover:border-teal-500/20 flex flex-row items-center justify-center shadow-none"
+            >
+              Inject Data Feed
+            </Button>
+            <Button 
+              onClick={handleClearAllHubDataFromStatsTool} 
+              disabled={isLoading && clearAllHubDataClickCount < (CLEAR_CLICKS_NEEDED_GLOBAL -1) } 
+              variant="ghost" 
+              size="xs" 
+              startIcon={<TrashIcon className="w-3.5 h-3.5" />} 
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 bg-white/5 hover:bg-red-600/20 hover:text-white hover:border-red-600/40 flex flex-row items-center justify-center shadow-none"
+            >
+              {getClearAllHubDataButtonText()}
+            </Button>
+          </div>
+          {(dataManagementStatus || exportImportStatusMessage) && (
+            <div className="mt-6 text-center animate-pulse">
+              <p className={`text-[8px] font-black uppercase tracking-widest ${ (dataManagementStatus?.includes('Failed') || exportImportStatusMessage?.includes('failed')) ? 'text-red-400' : 'text-green-500' }`}>
+                {dataManagementStatus || exportImportStatusMessage}
+              </p>
             </div>
-            {dataManagementStatus && ( <p className={`mt-2 text-sm ${dataManagementStatus.includes('Failed') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-300'}`}> {dataManagementStatus} </p> )}
-            {exportImportStatusMessage && ( <p className={`mt-2 text-sm ${exportImportStatusMessage.includes('Failed') || exportImportStatusMessage.includes('failed') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-300'}`}>{exportImportStatusMessage}</p>)}
-        </div>
-        {isLoading && progressMessage && ( <div className="my-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-green-600 dark:text-green-300 text-center animate-pulse" role="status"> {progressMessage} </div> )}
-        {error && ( <div className="my-4 p-3 bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-md text-sm text-center" role="alert"> {error} </div> )}
+          )}
+        </section>
+
+        {isLoading && progressMessage && (
+          <div className="my-8 p-6 bg-green-500/5 border border-green-500/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-green-500 text-center animate-pulse">
+            Neural Mapping in Progress: {progressMessage}
+          </div>
+        )}
+        
+        {error && (
+          <div className="my-8 p-6 bg-red-500/5 border border-red-500/20 text-red-400 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center" role="alert">
+            <AlertIcon className="inline-block w-3 h-3 mb-1 mr-2" /> {error}
+          </div>
+        )}
         {storedData && (
           <div className={`mt-8 transition-opacity duration-300 ${isLoading ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}>
             <UserProfileCard profile={storedData.profile} />
              {storedData.lastFetched && ( <p className="text-xs text-gray-500 dark:text-gray-500 text-center -mt-4 mb-6"> Data last fetched: {formatLastFetched(storedData.lastFetched)} </p> )}
-            <section className="my-6">
-              <h3 className="text-2xl font-semibold text-green-600 dark:text-green-300 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">Song & Profile Statistics</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <StatDisplayCard title="Total Songs" value={formatNumber(storedData.aggregatedStats?.totalSongs)} icon={<SongIcon />} tooltipText="Total number of public songs fetched for this user." />
-                <StatDisplayCard title="Total Music Duration" value={formatDuration(storedData.aggregatedStats?.totalDurationSec)} icon={<DurationIcon />} tooltipText="Combined duration of all fetched public songs." />
-                <StatDisplayCard title="Avg Song Duration" value={formatDuration(storedData.aggregatedStats?.avgDurationSec)} icon={<DurationIcon className="opacity-70"/>} tooltipText="Average length of a song for this user."/>
-                <StatDisplayCard title="Avg Plays / Song" value={formatNumber(storedData.aggregatedStats?.avgPlaysPerSong, 1)} icon={<TotalPlaysIcon className="opacity-70"/>} tooltipText="Average number of plays received per song." />
-                <StatDisplayCard title="Avg Upvotes / Song" value={formatNumber(storedData.aggregatedStats?.avgUpvotesPerSong, 1)} icon={<TotalUpvotesIcon className="opacity-70"/>} tooltipText="Average number of upvotes received per song." />
-                <StatDisplayCard title="Avg Comments / Song" value={formatNumber(storedData.aggregatedStats?.avgCommentsPerSong, 1)} icon={<TotalCommentsIcon className="opacity-70"/>} tooltipText="Average number of comments received per song." /> 
-                <StatDisplayCard title="Avg. Upvote Rate (Songs >20p)" value={`${formatNumber(storedData.aggregatedStats?.avgSongUpvoteRate, 2)}%`} icon={<TargetIcon />} tooltipText="Average upvotes per play for songs with over 20 plays. Calculated as (Upvotes / Plays) * 100." />
-                <StatDisplayCard title="Avg. Comment Rate (Songs >20p)" value={`${formatNumber(storedData.aggregatedStats?.avgCommentRatePer1000Plays, 1)} / 1k plays`} icon={<TotalCommentsIcon />} tooltipText="Average comments per 1000 plays for songs with over 20 plays." />
-                <StatDisplayCard title="Follower Growth (7d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate7dPercentage)}`} description={`Absolute: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease7d, 0, true)}`} icon={<GrowthIcon />} tooltipText="Percentage change in followers over the last 7 days, based on stored data snapshots. Absolute change also shown."/>
-                <StatDisplayCard title="Follower Growth (30d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate30dPercentage)}`} description={`Absolute: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease30d, 0, true)}`} icon={<GrowthIcon />} tooltipText="Percentage change in followers over the last 30 days, based on stored data snapshots. Absolute change also shown." />
-                <StatDisplayCard title="Longest Song" value={storedData.aggregatedStats?.longestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.longestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="The title and duration of the longest song found." />
-                <StatDisplayCard title="Shortest Song" value={storedData.aggregatedStats?.shortestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.shortestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="The title and duration of the shortest song found." />
-                <StatDisplayCard title="Most Productive Day" value={storedData.aggregatedStats?.productivity?.mostProductiveDay || 'N/A'} icon={<CalendarDaysIcon />} tooltipText="Day of the week with the most song creations, based on song timestamps." />
-                <StatDisplayCard title="Most Productive Hour" value={storedData.aggregatedStats?.productivity?.mostProductiveHour || 'N/A'} icon={<ClockIcon />} tooltipText="Hour of the day (user's local time) with the most song creations, based on song timestamps." />
-                <StatDisplayCard title="Hit Rate (Plays)" value={storedData.aggregatedStats?.hitRatePlays !== null ? `${formatNumber(storedData.aggregatedStats.hitRatePlays, 1)}%` : 'N/A'} description="% songs > avg plays" icon={<BullseyeIcon />} tooltipText="Percentage of songs with play counts above the user's average plays per song." />
-                <StatDisplayCard title="Hit Rate (Upvotes)" value={storedData.aggregatedStats?.hitRateUpvotes !== null ? `${formatNumber(storedData.aggregatedStats.hitRateUpvotes, 1)}%` : 'N/A'} description="% songs > avg upvotes" icon={<BullseyeIcon />} tooltipText="Percentage of songs with upvote counts above the user's average upvotes per song." />
-                <StatDisplayCard title="Plays Std. Deviation" value={formatNumber(storedData.aggregatedStats?.stdDevPlays, 1)} description="Play count variability" icon={<SigmaIcon />} tooltipText="Standard Deviation of play counts. A lower value (relative to the average) indicates more consistent play counts across songs." />
-                <StatDisplayCard title="Upvotes Std. Deviation" value={formatNumber(storedData.aggregatedStats?.stdDevUpvotes, 1)} description="Upvote count variability" icon={<SigmaIcon />} tooltipText="Standard Deviation of upvote counts. A lower value (relative to the average) indicates more consistent upvote counts across songs." />
+            <section className="my-10 space-y-8">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 border-b border-white/5 pb-4">Composition Analytics</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <StatDisplayCard title="Neural Library" value={formatNumber(storedData.aggregatedStats?.totalSongs)} icon={<SongIcon />} tooltipText="Total public songs retrieved." />
+                <StatDisplayCard title="Temporal Mass" value={formatDuration(storedData.aggregatedStats?.totalDurationSec)} icon={<DurationIcon />} tooltipText="Total duration of all fetched content." />
+                <StatDisplayCard title="Mean Duration" value={formatDuration(storedData.aggregatedStats?.avgDurationSec)} icon={<DurationIcon className="opacity-70"/>} tooltipText="Average composition length."/>
+                <StatDisplayCard title="Playback Density" value={formatNumber(storedData.aggregatedStats?.avgPlaysPerSong, 1)} icon={<TotalPlaysIcon className="opacity-70"/>} tooltipText="Average plays received per song." />
+                <StatDisplayCard title="Consensus Flux" value={formatNumber(storedData.aggregatedStats?.avgUpvotesPerSong, 1)} icon={<TotalUpvotesIcon className="opacity-70"/>} tooltipText="Average upvotes received per song." />
+                <StatDisplayCard title="Feedback Resonance" value={formatNumber(storedData.aggregatedStats?.avgCommentsPerSong, 1)} icon={<TotalCommentsIcon className="opacity-70"/>} tooltipText="Average comments received per song." /> 
+                <StatDisplayCard title="Affinity Quotient" value={`${formatNumber(storedData.aggregatedStats?.avgSongUpvoteRate, 2)}%`} icon={<TargetIcon />} tooltipText="Average upvotes per play (Songs > 20p)." />
+                <StatDisplayCard title="Dialogue Rate" value={`${formatNumber(storedData.aggregatedStats?.avgCommentRatePer1000Plays, 1)} / 1k`} icon={<TotalCommentsIcon />} tooltipText="Average comments per 1k plays (Songs > 20p)." />
+                <StatDisplayCard title="Expansion (7d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate7dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease7d, 0, true)}`} icon={<GrowthIcon />} tooltipText="7-day follower growth vector."/>
+                <StatDisplayCard title="Expansion (30d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate30dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease30d, 0, true)}`} icon={<GrowthIcon />} tooltipText="30-day follower growth vector." />
+                <StatDisplayCard title="Apex Duration" value={storedData.aggregatedStats?.longestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.longestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="Longest composition in library." />
+                <StatDisplayCard title="Nadir Duration" value={storedData.aggregatedStats?.shortestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.shortestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="Shortest composition in library." />
+                <StatDisplayCard title="Peak Cycle (Day)" value={storedData.aggregatedStats?.productivity?.mostProductiveDay || 'N/A'} icon={<CalendarDaysIcon />} tooltipText="Most productive day of week." />
+                <StatDisplayCard title="Peak Cycle (Hour)" value={storedData.aggregatedStats?.productivity?.mostProductiveHour || 'N/A'} icon={<ClockIcon />} tooltipText="Most productive hour of cycle." />
+                <StatDisplayCard title="Hit Flux (Plays)" value={storedData.aggregatedStats?.hitRatePlays !== null ? `${formatNumber(storedData.aggregatedStats.hitRatePlays, 1)}%` : 'N/A'} description="> avg plays" icon={<BullseyeIcon />} />
+                <StatDisplayCard title="Hit Flux (Upvotes)" value={storedData.aggregatedStats?.hitRateUpvotes !== null ? `${formatNumber(storedData.aggregatedStats.hitRateUpvotes, 1)}%` : 'N/A'} description="> avg upvotes" icon={<BullseyeIcon />} />
               </div>
             </section>
+
             <StatChartsArea stats={storedData.aggregatedStats} username={storedData.username} topNValue={topNValue} onSetFilter={handleSetFilter} />
-            <section className="my-8">
-                <div className="flex justify-between items-center mb-2">
-                  <button onClick={() => setIsDetailedTableOpen(!isDetailedTableOpen)} className="w-full flex items-center justify-between py-3 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-green-700 dark:text-green-300 font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" aria-expanded={isDetailedTableOpen} aria-controls="detailed-song-performance-panel">
-                      <div className="flex items-center"> <TableIcon className="mr-2 w-5 h-5 text-green-600 dark:text-green-400" /> Detailed Song Performance Data </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={`w-5 h-5 transform transition-transform ${isDetailedTableOpen ? 'rotate-180' : ''}`}> <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /> </svg>
-                  </button>
+
+            <section className="my-12">
+                <div className="flex justify-between items-center mb-6">
+                  <Button 
+                    onClick={() => setIsDetailedTableOpen(!isDetailedTableOpen)} 
+                    variant="ghost" 
+                    className="w-full flex items-center justify-between py-6 px-8 bg-white/5 border-white/10 rounded-3xl group hover:bg-white/10 transition-all shadow-xl"
+                  >
+                    <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-green-500">
+                      <TableIcon className="mr-4 w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" /> 
+                      Detailed Signal Performance Repository
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 text-green-600 transform transition-transform duration-500 ${isDetailedTableOpen ? 'rotate-180' : ''}`}> <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /> </svg>
+                  </Button>
                   {activeTableFilters && isDetailedTableOpen && (
-                    <button onClick={handleClearFilters} className="ml-3 py-1 px-2 text-xs bg-red-600 hover:bg-red-500 text-white rounded-md flex items-center whitespace-nowrap">
-                      <FilterIcon className="mr-1 w-3 h-3"/> Clear Filters
-                    </button>
+                    <Button onClick={handleClearFilters} variant="danger" size="xs" className="ml-4 font-black uppercase tracking-widest text-[8px] bg-red-500/10 text-red-400 border-red-500/20">
+                      <FilterIcon className="mr-2 w-3 h-3"/> Purge Filters
+                    </Button>
                   )}
                 </div>
                 {isDetailedTableOpen && ( 
@@ -302,8 +391,13 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           onClose={() => setIsLifecycleModalOpen(false)}
         />
       )}
-      <div className="mt-8 pt-4 border-t border-gray-300 dark:border-gray-700 text-center px-6 md:px-10"> <p className="text-sm text-gray-500 dark:text-gray-400"> <strong className="text-yellow-600 dark:text-yellow-300">Troubleshooting Tip:</strong> If this tool isn't working as expected, or if data seems stale, clearing your browser's cache and site data for this Hub can often resolve the issue. This will clear cached user data for this tool. </p> </div>
-      <style>{`.animate-fadeIn { animation: fadeIn 0.5s ease-out; } @keyframes fadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0px); } }`}</style>
+      <div className="mt-12 pt-8 border-t border-white/5 text-center px-8">
+        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600 leading-relaxed max-w-xl mx-auto">
+          <strong className="text-yellow-600 dark:text-yellow-500 mr-2">Neural Link Warning:</strong> 
+          If data streams appear desynchronized or stale, initiate a hard buffer purge (Clear Site Data). 
+          Signal persistence is limited to local thermal storage.
+        </p>
+      </div>
     </div>
   );
 };

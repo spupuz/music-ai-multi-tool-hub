@@ -26,83 +26,71 @@ const STRONG: React.FC<{children: React.ReactNode}> = ({children}) => <strong cl
 
 const SpecialMentionsPage: React.FC<ToolProps> = ({ trackLocalEvent, onNavigate }) => {
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400 tracking-tight">
-          Special Mentions & Acknowledgements
+    <div className="w-full max-w-4xl mx-auto glass-card p-6 md:p-12 border-white/10 shadow-2xl transition-all duration-500 animate-fadeIn relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
+
+      <header className="mb-14 text-center pt-8 px-4 relative z-10">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">
+          Allies
         </h1>
-        <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-          A heartfelt thank you to the individuals who have supported and contributed to the Music AI Multi-Tool Hub.
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+          A heartfelt tribute to the pioneers and architects of the Hub
         </p>
       </header>
 
-      <main className="text-gray-700 dark:text-gray-300 leading-relaxed">
-        <section id="flickerlog">
+      <main className="text-gray-700 dark:text-gray-300 leading-relaxed relative z-10 space-y-8">
+        <section id="flickerlog" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>flickerlog</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              A massive thank you to <STRONG>flickerlog</STRONG> for their unwavering support, invaluable feedback, feature ideas, and for generously providing the virtual server infrastructure that keeps this Hub running and accessible to everyone. Your contributions have been instrumental!
-            </P>
-          </div>
+          <P>
+            A massive thank you to <STRONG>flickerlog</STRONG> for their unwavering support, invaluable feedback, feature ideas, and for generously providing the virtual server infrastructure that keeps this Hub running and accessible to everyone. Your contributions have been instrumental!
+          </P>
         </section>
 
-        <section id="sebmeister">
+        <section id="sebmeister" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>sebmeister | sunosebstream</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              Special thanks to <STRONG>sebmeister (sunosebstream)</STRONG> for the original idea and inspiration behind the "Song Deck Picker" tool. Your creative concept helped spark a fun and useful addition to the Hub.
-            </P>
-          </div>
+          <P>
+            Special thanks to <STRONG>sebmeister (sunosebstream)</STRONG> for the original idea and inspiration behind the "Song Deck Picker" tool. Your creative concept helped spark a fun and useful addition to the Hub.
+          </P>
         </section>
 
-        <section id="luiz-felipe">
+        <section id="luiz-felipe" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>Δ∙Ʀ∙Q∙ Luiz★Felip≡</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              Gratitude to <STRONG>Δ∙Ʀ∙Q∙ Luiz★Felip≡</STRONG> for providing the foundational content and inspiration for the "Music Theory Wiki". Your knowledge sharing has created a valuable learning resource within the Hub.
-            </P>
-          </div>
+          <P>
+            Gratitude to <STRONG>Δ∙Ʀ∙Q∙ Luiz★Felip≡</STRONG> for providing the foundational content and inspiration for the "Music Theory Wiki". Your knowledge sharing has created a valuable learning resource within the Hub.
+          </P>
         </section>
         
-        <section id="alikan">
+        <section id="alikan" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>Alikan</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              Thank you to <STRONG>Alikan</STRONG> for contributing additional content and insights to the "Music Theory Wiki", further enriching its educational value for all users.
-            </P>
-          </div>
+          <P>
+            Thank you to <STRONG>Alikan</STRONG> for contributing additional content and insights to the "Music Theory Wiki", further enriching its educational value for all users.
+          </P>
         </section>
 
-        <section id="feropub">
+        <section id="feropub" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>FeroPub</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              Our gratitude to <STRONG>FeroPub</STRONG> for suggesting the idea for the "MP3 Cutter & Cropper" tool. Your input helped bring a much-requested audio editing feature to the Hub!
-            </P>
-          </div>
+          <P>
+            Our gratitude to <STRONG>FeroPub</STRONG> for suggesting the idea for the "MP3 Cutter & Cropper" tool. Your input helped bring a much-requested audio editing feature to the Hub!
+          </P>
         </section>
         
-        <section id="senzu">
+        <section id="senzu" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
           <SectionTitle>SENZU</SectionTitle>
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-            <P>
-              A big thank you to <STRONG>SENZU</STRONG> for their valuable guidance and assistance in integrating Riffusion support across multiple tools in the Hub. Your help was essential in expanding the application's capabilities!
-            </P>
-          </div>
+          <P>
+            A big thank you to <STRONG>SENZU</STRONG> for their valuable guidance and assistance in integrating Riffusion support across multiple tools in the Hub. Your help was essential in expanding the application's capabilities!
+          </P>
         </section>
 
-        <section id="community">
+        <section id="community" className="bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
             <SectionTitle>And to the Community...</SectionTitle>
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                <P>A general thank you to everyone in the Suno community and beyond who uses these tools, provides feedback, and shares their musical creations. Your enthusiasm is what drives the continuous development and improvement of this Hub!</P>
-            </div>
+            <P>A general thank you to everyone in the Suno community and beyond who uses these tools, provides feedback, and shares their musical creations. Your enthusiasm is what drives the continuous development and improvement of this Hub!</P>
         </section>
-
       </main>
 
-      <footer className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
-        <p className="text-md text-gray-500 dark:text-gray-400">
-          Music AI Multi-Tool Hub &copy; {new Date().getFullYear()}
+      <footer className="mt-16 pt-8 border-t border-white/10 text-center relative z-10">
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400 opacity-40">
+          Music AI Multi-Tool Hub &copy; {new Date().getFullYear()} • Network of Excellence
         </p>
       </footer>
     </div>

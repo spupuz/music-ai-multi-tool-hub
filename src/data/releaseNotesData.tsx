@@ -8,6 +8,27 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.3.0",
+    content: (
+      <section id="version-2.3.0">
+        <SectionTitle>Version 2.3.0 - 2026-03-31</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Mobile UI & Accessibility Refinement</STRONG>: Performed a high-precision overhaul for 375px+ viewports. Standardized responsive paddings and eliminated horizontal overflow across all tools.</LI>
+          <LI><STRONG>Light Mode Visual Polish</STRONG>: Extensive theme-aware refactoring for <CODE>Suno Music Player</CODE>, <CODE>Visual Synth</CODE>, and <CODE>Creative Concept Blender</CODE>. Replaced hardcoded charcoal regions with dynamic, translucent slate surfaces.</LI>
+          <LI><STRONG>Audio Visualizer Redesign</STRONG>: Upgraded the visualizer with a premium glassmorphic background (<CODE>backdrop-blur</CODE>), <CODE>rounded-3xl</CODE> corners, and theme-sensitive border contrast.</LI>
+          <LI><STRONG>Suno Music Player Refinement</STRONG>: Control buttons (Previous, Next, Shuffle) and volume sliders now feature improved visibility and interaction states in Light Mode.</LI>
+          <LI><STRONG>Sidebar UX Optimization</STRONG>: Removed redundant application titles from the sidebar drawer to maximize vertical space and decrease visual clutter on mobile devices.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Community Spinner Polish</STRONG>: Resolved the "flashing blue square" glitch by implementing custom focus rings and a more elegant <CODE>pulse-gentle</CODE> animation for the Spin button.</LI>
+          <LI><STRONG>Text Contrast</STRONG>: Audited and corrected low-contrast technical status labels (e.g., "System Idle", "Waiting for Signal") across the Hub.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.2.0",
     content: (
       <section id="version-2.2.0">

@@ -111,7 +111,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyserNodes, isPlay
   }, [isPlaying, analyserNodes, draw]);
 
   return (
-    <div className="mb-4 h-20 md:h-28 bg-black rounded-md overflow-hidden border-2 border-gray-700">
+    <div className="mb-4 h-20 md:h-28 bg-slate-100/50 dark:bg-black/40 backdrop-blur-md rounded-3xl overflow-hidden border-2 border-gray-200 dark:border-white/10 shadow-inner">
       <canvas 
         ref={canvasRef} 
         className="w-full h-full" 

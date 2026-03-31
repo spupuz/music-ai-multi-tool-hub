@@ -1,6 +1,7 @@
 
 import React from 'react';
 import type { ToolId } from '@/Layout';
+import Button from '@/components/common/Button';
 
 interface SidebarTool {
   id: ToolId;
@@ -106,107 +107,126 @@ Thanks,
         ></div>
       )}
 
-      <aside
-        className={`fixed inset-y-0 left-0 z-40 pt-16 flex flex-col bg-white dark:bg-gray-800 text-gray-900 dark:text-white w-64 transform transition-transform duration-300 ease-in-out border-r border-gray-200 dark:border-green-700
-                    ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        aria-label="Main navigation"
-      >
-        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+      <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-900 shadow-2xl z-40 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] border-r border-gray-200/50 dark:border-gray-800 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full invisible pointer-events-none'}`} aria-label="Main navigation">
+        <header className="p-4 border-b border-gray-200/50 dark:border-white/5 flex items-center justify-between gap-4 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl z-20">
+           <div className="flex items-center flex-grow overflow-hidden">
+             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 dark:text-gray-500 ml-2">
+                Hub Menu
+             </h2>
+           </div>
+        </header>
+
+        <nav className="flex-1 px-3 py-6 space-y-6 overflow-y-auto scrollbar-hide sm:scrollbar-default transition-all">
           {categoryOrder.map(categoryName => {
             const toolsInCategory = groupedTools[categoryName] || [];
             if (toolsInCategory.length === 0) return null;
 
             return (
-              <div key={categoryName} className="space-y-1">
-                <h3 className="px-3 mt-3 mb-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wider">
+              <div key={categoryName} className="space-y-2">
+                <h3 className="px-4 text-[10px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-[0.2em] mb-3">
                   {categoryName}
                 </h3>
-                {toolsInCategory.map((tool) => (
-                  <button
-                    key={tool.id}
-                    onClick={(e) => handleToolButtonClick(e, tool.id)}
-                    className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors
-                                ${activeToolId === tool.id
-                        ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
-                        : 'text-gray-700 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                      }`}
-                    aria-current={activeToolId === tool.id ? 'page' : undefined}
-                  >
-                    {tool.icon && <span className="mr-3 flex-shrink-0">{tool.icon}</span>}
-                    <span className="flex-grow text-left">{tool.name}</span>
-                  </button>
-                ))}
+                <div className="space-y-1">
+                  {toolsInCategory.map((tool) => (
+                    <Button
+                      key={tool.id}
+                      onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, tool.id)}
+                      variant="ghost"
+                      startIcon={tool.icon ? (
+                        <span className={`transition-transform duration-300 group-hover:scale-110 ${activeToolId === tool.id ? 'opacity-100' : 'opacity-60'}`}>
+                          {tool.icon}
+                        </span>
+                      ) : null}
+                      className={`w-full flex flex-row items-center justify-start px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all duration-200 group border-none shadow-none whitespace-nowrap
+                                  ${activeToolId === tool.id
+                          ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400 shadow-sm border border-white/20'
+                          : 'text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                      aria-current={activeToolId === tool.id ? 'page' : undefined}
+                    >
+                      {tool.name}
+                    </Button>
+                  ))}
+                </div>
               </div>
             );
           })}
         </nav>
 
-        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+        <div className="px-4 py-6 border-t border-gray-200/50 dark:border-white/10 space-y-4 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl z-20">
           <div>
-            <h4 className="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-500 tracking-wider mb-1">Feedback</h4>
-            <a
+            <h4 className="px-4 text-[9px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-[0.2em] mb-2">Feedback</h4>
+            <Button
               href={mailtoLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white transition-colors"
+              as="a"
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start px-4 text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-green-600 dark:hover:text-green-400 border-none shadow-none"
+              startIcon={<EmailIcon className="w-4 h-4 opacity-60" />}
               aria-label="Send suggestions or feedback via email"
             >
-              <EmailIcon className="w-4 h-4 mr-2 flex-shrink-0" />
               Email Feedback
-            </a>
+            </Button>
           </div>
-          <div className="pt-2"> {/* Support and Version Info */}
+          <div className="space-y-2">
             <a
               href="https://www.buymeacoffee.com/spupuz"
               target="_blank"
               rel="noopener noreferrer"
-              className="block mx-auto hover:opacity-90 transition-opacity mb-2"
+              className="block transition-transform hover:scale-[1.02] active:scale-[0.98]"
               aria-label="Buy Me A Coffee"
             >
               <img
                 src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
                 alt="Buy Me A Coffee"
-                style={{ height: '45px', width: '163px', display: 'block', margin: '0 auto' }}
+                style={{ height: '40px', width: '145px', display: 'block', margin: '0 auto' }}
               />
             </a>
-            <button
-              onClick={(e) => handleToolButtonClick(e, 'releaseNotes')}
-              className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors mb-1
-                                ${activeToolId === 'releaseNotes'
-                  ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                }`}
-              aria-current={activeToolId === 'releaseNotes' ? 'page' : undefined}
-            >
-              <ReleaseNotesLinkIcon className="w-4 h-4 mr-2 flex-shrink-0" />
-              Release Notes
-            </button>
-            <button
-              onClick={(e) => handleToolButtonClick(e, 'specialMentions')}
-              className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
-                                ${activeToolId === 'specialMentions'
-                  ? 'bg-green-100 text-green-800 dark:bg-green-600 dark:text-white'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
-                }`}
-              aria-current={activeToolId === 'specialMentions' ? 'page' : undefined}
-            >
-              <HeartLinkIcon className="w-4 h-4 mr-2 flex-shrink-0" />
-              Special Mentions
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, 'releaseNotes')}
+                variant="ghost"
+                size="sm"
+                className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none
+                                  ${activeToolId === 'releaseNotes'
+                    ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                startIcon={<ReleaseNotesLinkIcon className="w-3.5 h-3.5 opacity-60" />}
+              >
+                Notes
+              </Button>
+              <Button
+                onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, 'specialMentions')}
+                variant="ghost"
+                size="sm"
+                className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none
+                                  ${activeToolId === 'specialMentions'
+                    ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                startIcon={<HeartLinkIcon className="w-3.5 h-3.5 opacity-60" />}
+              >
+                Credits
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 md:hidden">
-          <button
+          <Button
             onClick={onClose}
-            className="w-full flex items-center justify-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+            variant="ghost"
+            className="w-full flex items-center justify-start px-5 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white border-transparent shadow-none"
             aria-label="Close sidebar"
+            startIcon={
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            }
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Close Menu
-          </button>
+            Collapse Hub
+          </Button>
         </div>
       </aside>
     </>

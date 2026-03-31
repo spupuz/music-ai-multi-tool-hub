@@ -1,6 +1,10 @@
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
+import Select from '@/components/common/Select';
+import { MetronomeIcon, StopIcon } from '@/components/Icons';
 
 const TOOL_CATEGORY = 'MetronomeTool';
 const LOCAL_STORAGE_BPM_KEY = 'metronome_bpm_v1';
@@ -218,45 +222,92 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto text-center">
-      <header className="mb-10">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Metronome</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300">Set your tempo and keep a steady beat. Now with subdivisions and custom click sounds!</p>
+    <div className="w-full max-w-lg mx-auto">
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Metronome</h1>
+        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Temporal Synchronization Core • Precision Rhythmic Alignment
+        </p>
       </header>
 
-      <main className="bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
-        <div className="mb-8"> 
-            <div className={`w-24 h-24 mx-auto rounded-full transition-all duration-50 ${visualBeatClass()} shadow-lg border-4`} aria-hidden="true"></div> 
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-green-500/10 blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 blur-[80px] pointer-events-none"></div>
+
+        <div className="mb-12 flex justify-center"> 
+            <div className={`w-32 h-32 rounded-3xl transition-all duration-75 flex items-center justify-center border-2 border-white/5 shadow-2xl
+                            ${visualBeat === 2 
+                              ? 'bg-green-500 shadow-[0_0_50px_rgba(34,197,94,0.4)] scale-110' 
+                              : visualBeat === 1 
+                                ? 'bg-green-500/40 shadow-[0_0_30px_rgba(34,197,94,0.2)] scale-105' 
+                                : 'bg-white/5 backdrop-blur-xl opacity-20'}`} 
+                 aria-hidden="true">
+              <div className={`w-4 h-4 rounded-full ${visualBeat > 0 ? 'bg-white' : 'bg-transparent'}`}></div>
+            </div> 
         </div>
-        <div className="mb-6"> 
-            <label htmlFor="bpm" className="block text-sm font-medium text-gray-700 dark:text-green-400 mb-1">
-                BPM: <span className="text-gray-900 dark:text-white font-semibold">{bpm}</span>
+
+        <div className="mb-10 text-left"> 
+            <label htmlFor="bpm" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4 ml-1">
+                Tempo · <span className="text-green-600 dark:text-green-500 font-black">{bpm} BPM</span>
             </label> 
-            <input type="range" id="bpm" value={bpm} onChange={handleBpmChange} min="20" max="300" step="1" className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-600 dark:accent-green-500 focus:outline-none focus:ring-1 focus:ring-green-400" aria-label="Beats Per Minute slider"/> 
+            <input 
+              type="range" 
+              id="bpm" 
+              value={bpm} 
+              onChange={handleBpmChange} 
+              min="20" 
+              max="300" 
+              step="1" 
+              className="w-full h-1.5 bg-slate-200/50 dark:bg-white/5 rounded-full appearance-none cursor-pointer accent-green-500 focus:outline-none" 
+            /> 
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div> 
-                <label htmlFor="timeSignature" className="block text-xs font-medium text-gray-700 dark:text-green-400 mb-0.5">Time Signature</label> 
-                <select id="timeSignature" value={timeSignature} onChange={handleTimeSignatureChange} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md text-gray-900 dark:text-white focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 text-sm">
-                    <option value="4/4">4/4</option><option value="3/4">3/4</option><option value="2/4">2/4</option><option value="6/8">6/8</option>
-                </select> 
-            </div>
-            <div> 
-                <label htmlFor="subdivision" className="block text-xs font-medium text-gray-700 dark:text-green-400 mb-0.5">Subdivision</label> 
-                <select id="subdivision" value={subdivision} onChange={handleSubdivisionChange} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md text-gray-900 dark:text-white focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 text-sm">
-                    <option value="none">None</option><option value="eighth">Eighth Notes</option><option value="sixteenth">Sixteenth Notes</option><option value="triplet">Triplets</option>
-                </select> 
-            </div>
-            <div> 
-                <label htmlFor="clickSound" className="block text-xs font-medium text-gray-700 dark:text-green-400 mb-0.5">Click Sound</label> 
-                <select id="clickSound" value={clickSound} onChange={handleClickSoundChange} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md text-gray-900 dark:text-white focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 text-sm">
-                    <option value="classic">Classic Click</option><option value="woodblock">Woodblock</option><option value="digital">Digital Beep</option>
-                </select> 
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            <Select 
+              label="Signature" 
+              value={timeSignature} 
+              onChange={(val) => { setTimeSignature(val); beatCountRef.current = 0; }} 
+              options={[
+                { value: "4/4", label: "4/4" },
+                { value: "3/4", label: "3/4" },
+                { value: "2/4", label: "2/4" },
+                { value: "6/8", label: "6/8" }
+              ]} 
+            />
+            <Select 
+              label="Subdivision" 
+              value={subdivision} 
+              onChange={(val) => setSubdivision(val as SubdivisionType)} 
+              options={[
+                { value: "none", label: "None" },
+                { value: "eighth", label: "1/8" },
+                { value: "sixteenth", label: "1/16" },
+                { value: "triplet", label: "Triplet" }
+              ]} 
+            />
+            <Select 
+              label="Tone" 
+              value={clickSound} 
+              onChange={(val) => setClickSound(val as ClickSoundType)} 
+              options={[
+                { value: "classic", label: "Classic" },
+                { value: "woodblock", label: "Wood" },
+                { value: "digital", label: "Beep" }
+              ]} 
+            />
         </div>
         
-        <button onClick={handleStartStop} className={`w-full py-4 px-6 text-xl font-semibold rounded-lg shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-4 focus:ring-opacity-50 ${isPlaying ? 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-400' : 'bg-green-500 hover:bg-green-600 text-black focus:ring-green-400'}`} aria-pressed={isPlaying}> {isPlaying ? 'STOP' : 'START'} </button>
+        <Button 
+          onClick={handleStartStop} 
+          variant={isPlaying ? "ghost" : "primary"}
+          size="lg"
+          startIcon={isPlaying ? <StopIcon className="w-5 h-5 ml-1" /> : <MetronomeIcon className="w-6 h-6 ml-0.5" />}
+          className={`w-full font-black uppercase tracking-[0.3em] py-6 shadow-2xl transition-all duration-300
+                     ${isPlaying ? 'border-red-500/50 text-red-500 hover:bg-red-500/10' : ''}`}
+          backgroundColor={isPlaying ? undefined : "#10b981"}
+        >
+          {isPlaying ? 'Disable Pulse' : 'Initiate Pulse'}
+        </Button>
       </main>
     </div>
   );

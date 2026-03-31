@@ -24,60 +24,43 @@ const CohortPerformanceTable: React.FC<CohortPerformanceTableProps> = ({ cohortD
 
 
   return (
-    <ChartContainer title="Song Performance by Creation Cohort" heightClassName="h-auto">
-      <div className="overflow-x-auto text-xs">
-        <table className="min-w-full divide-y divide-gray-600">
-          <thead className="bg-gray-750">
+    <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-3xl pointer-events-none"></div>
+      
+      <div className="mb-6 flex items-center gap-3">
+        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">Temporal Cohort Analysis</h3>
+      </div>
+
+      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-white/5 bg-white/2">
+        <table className="min-w-full divide-y divide-white/5 border-collapse">
+          <thead className="bg-[#0a0a0a]/80 backdrop-blur-md">
             <tr>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-left text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider">Cohort</th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider">
-                <span className="sm:hidden">Qty</span>
-                <span className="hidden sm:inline">Songs</span>
-              </th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider">
-                <span className="sm:hidden">Plays</span>
-                <span className="hidden sm:inline">Avg Plays</span>
-              </th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider">
-                <span className="sm:hidden">Upvt</span>
-                <span className="hidden sm:inline">Avg Upvotes</span>
-              </th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider">
-                <span className="sm:hidden">Cmnt</span>
-                <span className="hidden sm:inline">Avg Comments</span>
-              </th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider" title="For songs with >20 plays in cohort">
-                <span className="sm:hidden">U%</span>
-                <span className="hidden sm:inline">Avg Upvote %</span>
-              </th>
-              <th scope="col" className="px-1 sm:px-3 py-1 sm:py-2 text-right text-[9px] sm:text-xs font-medium text-green-300 tracking-tighter sm:tracking-wider" title="For songs with >20 plays in cohort">
-                <span className="sm:hidden">C%</span>
-                <span className="hidden sm:inline">Avg Comment %</span>
-              </th>
+              <th scope="col" className="px-6 py-4 text-left text-[8px] font-black text-gray-500 uppercase tracking-[0.3em]">Temporal Node</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Signal Count</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Flux</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Affinity</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Echoes</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Affinity%</th>
+              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Echo%</th>
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-600">
+          <tbody className="divide-y divide-white/5">
             {cohortData.map((cohort) => (
-              <tr key={cohort.cohortName}>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-[10px] sm:text-xs">{cohort.cohortName}</td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">{cohort.songCount.toLocaleString()}</td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">
-                  <span className="sm:hidden">{Math.round(cohort.avgPlays || 0)}</span>
-                  <span className="hidden sm:inline">{formatNumberDisplay(cohort.avgPlays)}</span>
-                </td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">
-                  <span className="sm:hidden">{Math.round(cohort.avgUpvotes || 0)}</span>
-                  <span className="hidden sm:inline">{formatNumberDisplay(cohort.avgUpvotes)}</span>
-                </td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">{formatNumberDisplay(cohort.avgComments)}</td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">{formatPercentageDisplay(cohort.avgUpvoteRate)}</td>
-                <td className="px-1 sm:px-3 py-1 sm:py-2 whitespace-nowrap text-gray-200 text-right text-[10px] sm:text-xs">{formatPercentageDisplay(cohort.avgCommentRate)}</td>
+              <tr key={cohort.cohortName} className="group hover:bg-white/5 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap text-[10px] font-black text-white/90 uppercase tracking-widest">{cohort.cohortName}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-400 tracking-widest">{cohort.songCount.toLocaleString()}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgPlays)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgUpvotes)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgComments)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/80 tracking-widest">{formatPercentageDisplay(cohort.avgUpvoteRate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/60 tracking-widest">{formatPercentageDisplay(cohort.avgCommentRate)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </ChartContainer>
+    </div>
   );
 };
 

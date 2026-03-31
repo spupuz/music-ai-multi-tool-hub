@@ -1,9 +1,19 @@
 
 import React, { useState, useCallback, useRef } from 'react';
-import type { ToolProps } from '@/Layout';
 import Spinner from '@/components/Spinner';
+import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
 import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
+import { 
+  MetronomeIcon, 
+  RefreshIcon, 
+  LinkIcon, 
+  UploadIcon, 
+  SparklesIcon, 
+  CheckIcon,
+  SearchIcon
+} from '@/components/Icons';
 
 
 const TOOL_CATEGORY = 'BPMTapper';
@@ -219,71 +229,189 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto text-center">
-      <header className="mb-10">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">BPM & Key Finder</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300">
-          Two tools in one! Tap the beat to find the BPM, or upload/link an audio file to automatically detect its key and tempo.
-        </p>
+    <div className="w-full max-w-3xl mx-auto">
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Tempo & Key</h1>
+        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">High-fidelity rhythm analysis • Harmonic detection</p>
       </header>
 
-      <div className="flex justify-center border-b border-gray-300 dark:border-gray-700 mb-6">
-        <button onClick={() => setActiveTab('tapper')} className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'tapper' ? 'border-b-2 border-green-600 dark:border-green-400 text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white'}`}>BPM Tapper</button>
-        <button onClick={() => setActiveTab('finder')} className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'finder' ? 'border-b-2 border-green-600 dark:border-green-400 text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white'}`}>Key & BPM Finder</button>
+      {/* Premium Tabs */}
+      <div className="flex justify-center mb-12 p-2 bg-white/5 rounded-2xl border border-white/10 w-fit mx-auto backdrop-blur-xl gap-2 shadow-2xl shadow-black/20">
+        <Button 
+          onClick={() => setActiveTab('tapper')} 
+          variant={activeTab === 'tapper' ? 'primary' : 'ghost'}
+          size="md"
+          className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
+            ${activeTab === 'tapper' 
+              ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
+              : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+        >
+          BPM Tapper
+        </Button>
+        <Button 
+          onClick={() => setActiveTab('finder')} 
+          variant={activeTab === 'finder' ? 'primary' : 'ghost'}
+          size="md"
+          className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
+            ${activeTab === 'finder' 
+              ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
+              : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+        >
+          Signal Finder
+        </Button>
       </div>
 
       {activeTab === 'tapper' && (
-        <main className="bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500 transition-colors duration-300">
-          <div className={`mb-8 text-6xl font-bold transition-transform duration-100 ease-out ${calculatedBpm ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'} ${tapFeedback ? 'scale-105' : 'scale-100'}`} style={{ minHeight: '80px' }} aria-live="polite">
-            {calculatedBpm !== null ? calculatedBpm : '---'}
+        <main className="glass-card p-10 md:p-14 border-white/10 shadow-2xl relative overflow-hidden text-center animate-fadeIn">
+          {/* Decorative Glow */}
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-green-500/20 blur-[100px] pointer-events-none transition-opacity duration-300 ${tapFeedback ? 'opacity-100' : 'opacity-40'}`}></div>
+
+          <div className="relative z-10">
+            <div className={`mb-12 text-7xl md:text-8xl font-black uppercase tracking-tighter transition-all duration-75 
+                            ${calculatedBpm ? 'text-green-600 dark:text-green-500' : 'text-gray-200 dark:text-white/10'} 
+                            ${tapFeedback ? 'scale-110 drop-shadow-[0_0_30px_rgba(34,197,94,0.6)]' : 'scale-100'}`} style={{ minHeight: '120px' }}>
+              {calculatedBpm !== null ? Math.round(calculatedBpm) : '000'}
+              <span className="text-xs font-black tracking-widest text-gray-500 ml-2">BPM</span>
+            </div>
+
+            <Button 
+                onClick={handleTap} 
+                variant="primary" 
+                size="lg" 
+                startIcon={<MetronomeIcon className={`w-8 h-8 ${tapFeedback ? 'text-black' : 'text-black/40'}`} />}
+                className={`w-full py-12 mb-8 text-2xl font-black uppercase tracking-[0.4em] shadow-2xl transition-all duration-150
+                           ${tapFeedback ? 'scale-[0.98]' : ''}`}
+                backgroundColor="#10b981"
+            >
+              TAP
+            </Button>
+
+            <div className="mb-10 min-h-[20px]">
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 opacity-60 transition-all">
+                {statusMessage}
+              </p>
+            </div>
+
+            <Button 
+              onClick={handleReset} 
+              variant="ghost" 
+              size="sm" 
+              startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
+              className="px-10 font-black uppercase tracking-widest text-[10px] border-white/10 text-red-500 hover:bg-red-500/10"
+            >
+              Reset Stream
+            </Button>
           </div>
-          <button onClick={handleTap} className={`w-full py-8 px-6 mb-6 text-2xl font-semibold text-black bg-green-500 rounded-lg shadow-xl hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-400 focus:ring-opacity-50 active:bg-green-700 transform active:scale-95 transition-all duration-150 ease-in-out ${tapFeedback ? 'scale-105 ring-4 ring-green-300' : ''}`} aria-label="Tap beat here">TAP BEAT</button>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 h-5" aria-live="polite">{statusMessage}</div>
-          <button onClick={handleReset} className="py-2 px-6 text-sm font-medium text-red-600 dark:text-red-300 bg-transparent border-2 border-red-600 dark:border-red-500 rounded-md hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-800 dark:hover:text-white dark:hover:border-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-colors" aria-label="Reset tap count and BPM calculation">RESET TAPS</button>
         </main>
       )}
 
       {activeTab === 'finder' && (
-        <main className="bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500 transition-colors duration-300">
-          <div className="space-y-4">
+        <main className="w-full glass-card p-3 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+          <div className="space-y-8 relative z-10">
+            {/* URL Input Group */}
             <div>
-              <label htmlFor="finderUrlInput" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Load from Suno/Riffusion URL</label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <input type="text" id="finderUrlInput" value={finderUrlInput} onChange={(e) => setFinderUrlInput(e.target.value)} placeholder="https://suno.com/song/..." className="block w-full flex-1 rounded-none rounded-l-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-green-500 focus:ring-green-500 sm:text-sm" disabled={finderState === 'loading' || finderState === 'analyzing'} />
-                <button type="button" onClick={handleLoadFromUrl} disabled={!finderUrlInput.trim() || finderState === 'loading' || finderState === 'analyzing'} className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:opacity-50">Load</button>
+              <label htmlFor="finderUrlInput" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">Source Analysis URL</label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  id="finderUrlInput" 
+                  value={finderUrlInput} 
+                  onChange={(e) => setFinderUrlInput(e.target.value)} 
+                  placeholder="Suno or Riffusion URL..." 
+                  className="flex-grow px-6 py-3.5 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" 
+                  disabled={finderState === 'loading' || finderState === 'analyzing'} 
+                />
+                <Button 
+                  onClick={handleLoadFromUrl} 
+                  disabled={!finderUrlInput.trim() || finderState === 'loading' || finderState === 'analyzing'} 
+                  variant="primary"
+                  startIcon={<LinkIcon className="w-4 h-4 ml-0.5" />}
+                  className="px-8 font-black uppercase tracking-widest"
+                  backgroundColor="#8b5cf6"
+                >
+                  Load
+                </Button>
               </div>
             </div>
-            <div className="flex items-center"><div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div><span className="flex-shrink mx-4 text-gray-500">OR</span><div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div></div>
+
+            <div className="flex items-center gap-4">
+              <div className="flex-grow h-px bg-white/5"></div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-600">or</span>
+              <div className="flex-grow h-px bg-white/5"></div>
+            </div>
+
+            {/* File Upload Group */}
             <div>
-              <label htmlFor="audioFile" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload Audio File</label>
-              <input type="file" id="audioFile" accept="audio/mpeg,audio/wav,audio/ogg" onChange={handleFileChange} ref={fileInputRef} className="mt-1 block w-full text-sm text-gray-600 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-black hover:file:bg-green-500" disabled={finderState === 'loading' || finderState === 'analyzing'} />
+              <label htmlFor="audioFile" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">Local Signal Import</label>
+              <div className="relative group">
+                <input 
+                  type="file" 
+                  id="audioFile" 
+                  accept="audio/mpeg,audio/wav,audio/ogg" 
+                  onChange={handleFileChange} 
+                  ref={fileInputRef} 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  disabled={finderState === 'loading' || finderState === 'analyzing'} 
+                />
+                <div className="px-6 py-8 border-2 border-dashed border-white/10 rounded-3xl bg-white/5 group-hover:bg-white/10 group-hover:border-green-500/30 transition-all text-center">
+                  <p className="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-green-500 transition-colors">
+                    {fileName || "Drop audio file or click to browse"}
+                  </p>
+                  <p className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-600 mt-2 flex items-center justify-center gap-2">
+                    <UploadIcon className="w-3 h-3" />
+                    MP3, WAV, OGG supported
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 min-h-[12rem] flex flex-col items-center justify-center p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            {finderState === 'idle' && <p className="text-gray-600 dark:text-gray-400">Upload or link an audio file to begin analysis.</p>}
-            {(finderState === 'loading' || finderState === 'analyzing') && <div className="flex flex-col items-center"><Spinner color="text-green-600 dark:text-green-400" /><p className="mt-2 text-green-700 dark:text-green-300">{finderProgress}</p></div>}
-            {finderState === 'error' && <p className="text-red-600 dark:text-red-400">{finderError}</p>}
+          {/* Results Section */}
+          <div className="mt-12 min-h-[16rem] flex flex-col items-center justify-center p-8 bg-slate-50/50 dark:bg-black/30 rounded-3xl border border-gray-200 dark:border-white/5 relative z-10">
+            {finderState === 'idle' && <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600">System idle. Awaiting signal.</p>}
+            {(finderState === 'loading' || finderState === 'analyzing') && (
+              <div className="flex flex-row items-center gap-6 p-6">
+                <Spinner color="text-green-500" />
+                <div className="text-left">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-500 animate-pulse flex items-center gap-2">
+                    <SparklesIcon className="w-3 h-3" />
+                    Processing Signal
+                  </p>
+                  <p className="text-xs font-bold uppercase tracking-widest opacity-60">{finderProgress}</p>
+                </div>
+              </div>
+            )}
+            {finderState === 'error' && <p className="text-xs font-black uppercase tracking-widest text-red-500">{finderError}</p>}
             {finderState === 'success' && (
-              <div className="text-center animate-fadeIn w-full">
+              <div className="text-center animate-fadeIn w-full space-y-8">
                 {(songTitle || artistName || coverArtUrl) && (
-                  <div className="mb-4 p-3 bg-gray-200 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 flex flex-col items-center gap-2">
-                    {coverArtUrl && <img src={coverArtUrl} alt={songTitle || 'Song Cover'} className="w-24 h-24 object-cover rounded-md border-2 border-green-500" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }} />}
-                    <div>
-                      {songTitle && <p className="text-lg text-green-700 dark:text-green-300">{songTitle}</p>}
-                      {artistName && <p className="text-md text-gray-600 dark:text-gray-400">by {artistName}</p>}
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-6 text-left">
+                    {coverArtUrl && (
+                      <div className="relative shrink-0">
+                        <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full scale-125"></div>
+                        <img 
+                          src={coverArtUrl} 
+                          alt={songTitle || 'Song Cover'} 
+                          className="w-24 h-24 object-cover rounded-xl border border-white/20 relative z-10 shadow-2xl" 
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }} 
+                        />
+                      </div>
+                    )}
+                    <div className="overflow-hidden">
+                      {songTitle && <p className="text-lg font-black uppercase tracking-tight text-white truncate">{songTitle}</p>}
+                      {artistName && <p className="text-xs font-black uppercase tracking-widest text-gray-500 truncate">by {artistName}</p>}
                     </div>
                   </div>
                 )}
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Analysis for: <strong className="text-green-800 dark:text-green-200">{fileName}</strong></p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-lg text-green-700 dark:text-green-400 font-semibold">Detected Key</p>
-                    <p className="text-4xl font-bold text-gray-900 dark:text-white">{detectedKey || 'N/A'}</p>
+                
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-500 mb-2 opacity-70">Detected Key</p>
+                    <p className="text-4xl font-black uppercase tracking-tighter text-white">{detectedKey || 'N/A'}</p>
                   </div>
-                  <div>
-                    <p className="text-lg text-green-700 dark:text-green-400 font-semibold">Detected BPM</p>
-                    <p className="text-4xl font-bold text-gray-900 dark:text-white">{detectedBpm !== null ? detectedBpm.toFixed(1) : 'N/A'}</p>
+                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-500 mb-2 opacity-70">Detected BPM</p>
+                    <p className="text-4xl font-black uppercase tracking-tighter text-white">{detectedBpm !== null ? Math.round(detectedBpm) : 'N/A'}</p>
                   </div>
                 </div>
               </div>

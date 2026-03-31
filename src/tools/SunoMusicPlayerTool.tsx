@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useCallback, ChangeEvent, useRef } from 'react';
 import { fetchSunoSongsByUsername, fetchSunoPlaylistById } from '@/services/sunoService';
 import type { SunoClip, SunoProfileDetail, SunoPlaylistDetail, SavedCustomPlaylist, PlaylistAnalysis } from '@/types';
@@ -10,9 +8,11 @@ import type { ToolProps } from '@/Layout';
 import { useSunoAudioPlayer } from '@/hooks/useSunoAudioPlayer';
 import { SortCriteriaHook } from '@/hooks/suno/useSunoQueue';
 import PlaylistCreationDateChart from '@/components/sunoUserStats/charts/PlaylistCreationDateChart';
+import Button from '@/components/common/Button';
+import Select from '@/components/common/Select';
 
 import { LOGO_SVG_STRING, FALLBACK_IMAGE_DATA_URI, TOOL_CATEGORY_UI, LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, DEFAULT_PLAYLIST_HEIGHT_PX, MIN_PLAYLIST_HEIGHT_PX, MAX_PLAYLIST_HEIGHT_PX, MIN_SNIPPET_DURATION_SECONDS, MAX_SNIPPET_DURATION_SECONDS, LOCAL_CLICK_CONFIRM_NEEDED, LOCAL_CLICK_TIMEOUT_MS, EQ_PRESETS_FOR_UI } from '@/components/SunoMusicPlayer/constants';
-import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon } from '@/components/SunoMusicPlayer/Icons';
+import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon, ChevronDownIcon, PlayIcon, PauseIcon, SkipBackIcon, SkipForwardIcon, ShuffleIcon } from '@/components/Icons';
 import KeyboardShortcutsModal from '@/components/SunoMusicPlayer/KeyboardShortcutsModal';
 import { ProfileInfoBox, PlaylistInfoBox } from '@/components/SunoMusicPlayer/InfoBoxes';
 
@@ -28,7 +28,8 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     filterQuery, setFilterQuery,
     lastFetchedTimestamp, mainButtonText,
     showDataManagement,
-    clearPlayerCacheClickCount, handleClearPlayerCache, getClearPlayerCacheButtonText,
+    clearSongInfoCacheClickCount, handleClearSongInfoCache, getClearSongInfoCacheButtonText,
+    clearProfileCacheClickCount, handleClearProfileCache, getClearProfileCacheButtonText,
     clearAllHubDataClickCount, handleClearAllHubDataFromPlayer, getClearAllHubDataButtonText,
     dataManagementStatus,
     playerState, analyserNodes, playSong, togglePlayPause, nextTrack, previousTrack,
@@ -43,7 +44,6 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     savedCustomPlaylists, handleExportCurrentPlaylistToFile, handleImportPlaylistFromTxtFile, handleImportPlaylistFromCsvFile,
     handleSaveCurrentPlaylistLocally, handleUpdateSavedPlaylistLocally, handleAppendToSavedPlaylistLocally, handleLoadSavedPlaylistLocally, handleDeleteSavedPlaylistLocally,
     handleClearAllSavedPlaylists, getClearAllSavedPlaylistsButtonText, clearAllSavedPlaylistsClickCount,
-    handleClearSongInfoCache, getClearSongInfoCacheButtonText, clearSongInfoCacheClickCount,
     removeSongFromQueue,
     handleClearQueue, getClearQueueButtonText,
   } = useSunoAudioPlayer({ trackLocalEvent });
@@ -308,31 +308,47 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const onDragEndHandler = (e: React.DragEvent<HTMLLIElement>) => { setDraggedItemId(null); setDropIndicator(null); e.currentTarget.style.opacity = '1'; };
 
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-4 md:p-6 border-2 border-green-500 dark:border-green-600 text-gray-900 dark:text-gray-200 flex flex-col transition-colors duration-300">
-      <header className="mb-6 text-center">
-        <h1 className="text-4xl font-extrabold text-green-600 dark:text-green-400">Music Shuffler</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Enter a Suno Username/Playlist URL or a list of Suno/Riffusion/Producer.AI URLs (one per line). Fetch/Load replaces the queue, Add to Queue appends.
+    <div className="w-full max-w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-1 md:mb-4">Music Shuffler</h1>
+        <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Neural Audio Streamer • AI-generated musical landscapes
         </p>
       </header>
-      <div className="mb-6 flex flex-col sm:flex-row items-stretch gap-2">
+      <div className="mb-8 flex flex-col items-stretch gap-4">
         <textarea
           value={identifierInput}
           onChange={handleIdentifierInputChange}
           onKeyDown={handleIdentifierInputKeyDown}
-          placeholder="Enter Suno Username (@user), Suno Playlist URL, or a list of Suno/Riffusion/Producer.AI URLs (one per line)..."
-          className="flex-grow px-4 py-2.5 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-900 dark:text-white sm:text-sm resize-y min-h-[50px]"
+          placeholder="Enter @username, playlist URL, or song URLs (one per line)..."
+          className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 text-sm sm:text-base font-bold resize-y min-h-[60px] transition-all h-20 md:h-auto"
           rows={3}
           aria-label="Suno Username, Playlist URL, or list of Song URLs"
         />
-        <div className="flex flex-col sm:flex-row sm:items-stretch gap-2">
-          <button onClick={handleMainButtonClick} disabled={isFetchingOrLoading || !identifierInput.trim()} className="px-6 py-2.5 bg-green-500 text-black font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors flex items-center justify-center flex-grow sm:flex-grow-0">
-            {isFetchingOrLoading && !fetchProgress.includes('Appending') ? <><Spinner size="w-5 h-5 mr-2" color="text-black" /> Fetching...</> : mainButtonText}
-          </button>
-          <button onClick={handleAppendSongs} disabled={isFetchingOrLoading || !identifierInput.trim()} className="px-4 py-2.5 bg-teal-600 text-white font-semibold rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors flex items-center justify-center gap-2 flex-grow sm:flex-grow-0">
-            {isFetchingOrLoading && fetchProgress.includes('Appending') ? <Spinner size="w-5 h-5" /> : <AppendIcon className="w-4 h-4" />}
-            Add to Queue
-          </button>
+        <div className="flex flex-col sm:flex-row sm:items-stretch gap-2 md:gap-3">
+          <Button 
+            onClick={handleMainButtonClick} 
+            disabled={isFetchingOrLoading || !identifierInput.trim()} 
+            variant="primary"
+            size="md"
+            className="flex-grow sm:flex-grow-0 sm:min-w-[160px] font-black uppercase tracking-widest text-[8px] sm:text-sm h-10 md:h-auto py-2 sm:py-0 whitespace-nowrap"
+            backgroundColor="#10b981"
+            loading={isFetchingOrLoading && !fetchProgress.includes('Appending')}
+            startIcon={<LoadIcon className="w-5 h-5"/>}
+          >
+            {isFetchingOrLoading && !fetchProgress.includes('Appending') ? 'Fetching' : mainButtonText}
+          </Button>
+          <Button 
+            onClick={handleAppendSongs} 
+            disabled={isFetchingOrLoading || !identifierInput.trim()} 
+            variant="ghost"
+            size="md"
+            startIcon={<AppendIcon className="w-5 h-5" />}
+            className="flex-grow sm:flex-grow-0 sm:min-w-[160px] font-black uppercase tracking-widest border-white/10 hover:bg-white/10 text-[8px] sm:text-sm h-10 md:h-auto py-2 sm:py-0"
+            loading={isFetchingOrLoading && fetchProgress.includes('Appending')}
+          >
+            Add Queue
+          </Button>
         </div>
       </div>
 
@@ -344,168 +360,268 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       {currentIdentifierType === 'playlist' && playlistDetail && (<> <PlaylistInfoBox detail={playlistDetail} /> {lastFetchedTimestamp && (<p className="text-xs text-gray-500 dark:text-gray-400 text-center -mt-4 mb-4"> Data last fetched: {new Date(lastFetchedTimestamp).toLocaleString()} </p>)} </>)}
 
       {playlistAnalysis && (
-        <details className="mb-6 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" open={showAnalysis} onToggle={(e) => setShowAnalysis((e.target as HTMLDetailsElement).open)}>
-          <summary className="p-4 text-lg font-semibold text-green-700 dark:text-green-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-t-lg transition-colors flex justify-between items-center">
+        <details className="mb-8 glass-card border-white/10 overflow-hidden" open={showAnalysis} onToggle={(e) => setShowAnalysis((e.target as HTMLDetailsElement).open)}>
+          <summary className="p-6 text-xs font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400 cursor-pointer hover:bg-white/10 dark:hover:bg-white/5 rounded-t-3xl transition-all flex justify-between items-center group">
             <span>
               {currentIdentifierType === 'playlist' ? 'Playlist Analysis' : 'Song List Analysis'}
             </span>
-            <span className={`transform transition-transform duration-200 ${showAnalysis ? 'rotate-180' : ''}`}>▼</span>
+            <span className={`transform transition-transform duration-500 opacity-40 group-hover:opacity-100 ${showAnalysis ? 'rotate-180' : ''}`}>
+               <ChevronDownIcon className="w-4 h-4" />
+            </span>
           </summary>
-          <div className="p-4 border-t border-gray-300 dark:border-gray-600 space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg"><p className="text-xs text-gray-600 dark:text-gray-400">Total Plays</p><p className="text-xl font-bold text-gray-900 dark:text-white">{playlistAnalysis.totalPlays.toLocaleString()}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg"><p className="text-xs text-gray-600 dark:text-gray-400">Total Upvotes</p><p className="text-xl font-bold text-gray-900 dark:text-white">{playlistAnalysis.totalUpvotes.toLocaleString()}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg"><p className="text-xs text-gray-600 dark:text-gray-400">Total Comments</p><p className="text-xl font-bold text-gray-900 dark:text-white">{playlistAnalysis.totalComments.toLocaleString()}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-3 rounded-lg"><p className="text-xs text-gray-600 dark:text-gray-400">Avg. Plays/Song</p><p className="text-xl font-bold text-gray-900 dark:text-white">{playlistAnalysis.avgPlays.toFixed(1)}</p></div>
+          <div className="p-6 border-t border-white/10 space-y-8 animate-fadeIn">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Plays</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-white tabular-nums">{playlistAnalysis.totalPlays.toLocaleString()}</p>
+              </div>
+              <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Upvotes</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-white tabular-nums">{playlistAnalysis.totalUpvotes.toLocaleString()}</p>
+              </div>
+              <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Comments</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-white tabular-nums">{playlistAnalysis.totalComments.toLocaleString()}</p>
+              </div>
+              <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Avg. Plays</p>
+                <p className="text-2xl font-black text-gray-900 dark:text-white tabular-nums">{playlistAnalysis.avgPlays.toFixed(0)}</p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <h4 className="font-semibold text-green-700 dark:text-green-200 mb-2">Most Common Tags</h4>
-                <ul className="space-y-1 bg-gray-200 dark:bg-gray-700 p-2 rounded-md max-h-40 overflow-y-auto">
-                  {playlistAnalysis.mostCommonTags.length > 0 ? playlistAnalysis.mostCommonTags.map(tag => <li key={tag.name} className="flex justify-between items-center text-gray-800 dark:text-gray-300"><span>{tag.name}</span> <span className="font-mono text-green-700 dark:text-green-400 bg-gray-300 dark:bg-gray-800 px-1.5 py-0.5 rounded-sm">{tag.count}</span></li>) : <li className="text-gray-500 dark:text-gray-400 italic">No common tags found.</li>}
-                </ul>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Top Tags</h4>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
+                  {playlistAnalysis.mostCommonTags.length > 0 ? playlistAnalysis.mostCommonTags.map(tag => (
+                    <div key={tag.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                      <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{tag.name}</span>
+                      <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{tag.count}</span>
+                    </div>
+                  )) : <p className="text-gray-500 italic text-xs">No tags found</p>}
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-green-700 dark:text-green-200 mb-2">Most Common Genres</h4>
-                <ul className="space-y-1 bg-gray-200 dark:bg-gray-700 p-2 rounded-md max-h-40 overflow-y-auto">
-                  {playlistAnalysis.mostCommonGenres.length > 0 ? playlistAnalysis.mostCommonGenres.map(genre => <li key={genre.name} className="flex justify-between items-center text-gray-800 dark:text-gray-300"><span>{genre.name}</span> <span className="font-mono text-green-700 dark:text-green-400 bg-gray-300 dark:bg-gray-800 px-1.5 py-0.5 rounded-sm">{genre.count}</span></li>) : <li className="text-gray-500 dark:text-gray-400 italic">No common genres found.</li>}
-                </ul>
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Genres</h4>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
+                  {playlistAnalysis.mostCommonGenres.length > 0 ? playlistAnalysis.mostCommonGenres.map(genre => (
+                    <div key={genre.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                      <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{genre.name}</span>
+                      <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{genre.count}</span>
+                    </div>
+                  )) : <p className="text-gray-500 italic text-xs">No genres found</p>}
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-green-700 dark:text-green-200 mb-2">Most Featured Artists</h4>
-                <ul className="space-y-1 bg-gray-200 dark:bg-gray-700 p-2 rounded-md max-h-40 overflow-y-auto">
+              <div className="space-y-4">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Artists</h4>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
                   {playlistAnalysis.mostFeaturedArtists.length > 0 ? playlistAnalysis.mostFeaturedArtists.map(artist => (
-                    <li key={artist.handle} className="flex justify-between items-center text-gray-800 dark:text-gray-300">
-                      {artist.profileUrl ? (
-                        <a
-                          href={artist.profileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline truncate"
-                          title={artist.name}
-                        >
-                          {artist.name}
-                        </a>
-                      ) : (
-                        <span className="truncate" title={artist.name}>
-                          {artist.name}
-                        </span>
-                      )}
-                      <span className="font-mono text-green-700 dark:text-green-400 bg-gray-300 dark:bg-gray-800 px-1.5 py-0.5 rounded-sm flex-shrink-0 ml-2">
-                        {artist.count}
-                      </span>
-                    </li>
-                  )) : (
-                    <li className="text-gray-500 dark:text-gray-400 italic">No artists featured.</li>
-                  )}
-                </ul>
+                    <div key={artist.handle} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                      <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{artist.name}</span>
+                       <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{artist.count}</span>
+                    </div>
+                  )) : <p className="text-gray-500 italic text-xs">No artists featured</p>}
+                </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold text-green-700 dark:text-green-200 mb-2 text-center">Song Creation Timeline</h4>
-              <div className="h-64 bg-gray-200 dark:bg-gray-700 p-2 rounded-md">
-                <PlaylistCreationDateChart data={playlistAnalysis.creationDateDistribution} fontColor={document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#1f2937'} gridColor={document.documentElement.classList.contains('dark') ? '#374151' : '#d1d5db'} />
+            <div className="pt-4">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 text-center mb-6">Timeline Analysis</h4>
+              <div className="h-64 p-4 glass-card border-gray-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/20 rounded-3xl">
+                <PlaylistCreationDateChart data={playlistAnalysis.creationDateDistribution} fontColor={document.documentElement.classList.contains('dark') ? '#9ca3af' : '#4b5563'} gridColor={document.documentElement.classList.contains('dark') ? '#37415122' : '#d1d5db22'} />
               </div>
             </div>
           </div>
         </details>
       )}
 
-      {showDataManagement && (<div className="mt-2 mb-6 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"> <h3 className="text-md font-semibold text-green-700 dark:text-green-300 mb-2">Data Management</h3> <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"> <button onClick={handleClearPlayerCache} disabled={isFetchingOrLoading || (!profileDetail && !playlistDetail) || currentIdentifierType === 'custom_list'} className="flex-1 py-1.5 px-3 border border-red-500 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-800 dark:hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors"> {getClearPlayerCacheButtonText()} </button> <button onClick={handleClearSongInfoCache} disabled={isFetchingOrLoading} className="flex-1 py-1.5 px-3 border border-orange-500 text-orange-600 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-700 hover:text-orange-800 dark:hover:text-white rounded-md text-xs font-medium disabled:opacity-50 transition-colors"> {getClearSongInfoCacheButtonText()} </button> <button onClick={handleClearAllHubDataFromPlayer} disabled={isFetchingOrLoading && clearAllHubDataClickCount < (2)} className="flex-1 py-1.5 px-3 bg-gray-200 dark:bg-gray-700 hover:bg-red-100 dark:hover:bg-red-800 text-gray-800 dark:text-gray-200 hover:text-red-800 dark:hover:text-white border border-red-600 rounded-md text-xs font-medium shadow-sm transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed lg:col-span-1" aria-label="Clear all locally stored hub data"> {getClearAllHubDataButtonText()} </button> </div> </div>)}
+      {showDataManagement && (
+        <div className="mt-2 mb-8 p-2 md:p-6 glass-card border-white/10 animate-fadeIn"> 
+          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400 mb-4 md:mb-6">System Management</h3> 
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4"> 
+            <Button 
+              onClick={handleClearProfileCache} 
+              disabled={isFetchingOrLoading} 
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start border-red-500/30 text-red-700 dark:text-red-400 hover:bg-red-500/10 font-bold shadow-none"
+              title="Clears cached User IDs and Playlist Metadata"
+              startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
+            > 
+              {getClearProfileCacheButtonText()} 
+            </Button> 
+            <Button 
+              onClick={handleClearSongInfoCache} 
+              disabled={isFetchingOrLoading} 
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start border-orange-500/30 text-orange-700 dark:text-orange-400 hover:bg-orange-500/10 font-bold shadow-none"
+              title="Clears cached individual song details and stream URLs"
+              startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
+            > 
+              {getClearSongInfoCacheButtonText()} 
+            </Button> 
+            <Button 
+              onClick={handleClearAllHubDataFromPlayer} 
+              disabled={isFetchingOrLoading && clearAllHubDataClickCount < (2)} 
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start border-red-600/30 text-red-600 dark:text-red-500 hover:bg-red-600 hover:text-white font-bold shadow-none"
+              title="WARNING: Clears ALL application data and reloads"
+              startIcon={<TrashIcon className="w-3.5 h-3.5" />}
+            > 
+              {getClearAllHubDataButtonText()} 
+            </Button> 
+          </div> 
+        </div>
+      )}
 
-      <div className="mb-6">
-        <button onClick={() => setShowPlaylistManagement(!showPlaylistManagement)} className="w-full text-left text-md font-medium text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 py-2 px-1 mb-2 flex justify-between items-center" aria-expanded={showPlaylistManagement} aria-controls="playlist-management-panel">
-          Playlist Import/Export & Local Saves
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 transform transition-transform ${showPlaylistManagement ? 'rotate-180' : ''}`}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-        </button>
+      <div className="mb-10">
+        <Button 
+          onClick={() => setShowPlaylistManagement(!showPlaylistManagement)} 
+          variant="ghost"
+          size="lg"
+          className="w-full text-left text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 py-6 px-10 glass-card border-white/10 mb-2 flex justify-between items-center group transition-all" 
+          aria-expanded={showPlaylistManagement}
+        >
+          <span>Library & Export <span className="opacity-40 italic ml-2">Archives</span></span>
+          <ChevronDownIcon className={`w-5 h-5 transform transition-transform duration-500 ${showPlaylistManagement ? 'rotate-180' : ''}`} />
+        </Button>
         {showPlaylistManagement && (
-          <div id="playlist-management-panel" className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 space-y-3 text-xs">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-              <button onClick={handleExportCurrentPlaylistToFile} className="py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md flex items-center justify-center"><FileTxtIcon />Export Current to TXT</button>
+          <div className="p-6 glass-card border-white/10 space-y-6 animate-fadeIn">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Button 
+                onClick={handleExportCurrentPlaylistToFile} 
+                variant="ghost" 
+                className="w-full justify-start border-white/10 hover:bg-white/10 font-bold text-xs uppercase tracking-widest py-3 shadow-none"
+                startIcon={<FileTxtIcon className="w-4 h-4 ml-1" />}
+              >
+                Export TXT
+              </Button>
               <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
-              <label htmlFor="import-txt-playlist" className="py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-md flex items-center justify-center cursor-pointer"><FileTxtIcon />Import from TXT</label>
+              <label htmlFor="import-txt-playlist" className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
+                <FileTxtIcon className="w-4 h-4 ml-1 opacity-60"/> Import TXT
+              </label>
               <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
-              <label htmlFor="import-csv-playlist" className="py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-md flex items-center justify-center cursor-pointer"><FileCsvIcon />Import from CSV</label>
+              <label htmlFor="import-csv-playlist" className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
+                <FileCsvIcon className="w-4 h-4 ml-1 opacity-60"/> Import CSV
+              </label>
             </div>
-            <div className="pt-2 border-t border-gray-300 dark:border-gray-600">
-              <h4 className="text-sm font-medium text-green-700 dark:text-green-300 mb-1.5">Local Named Playlists</h4>
-              <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                <input type="text" value={newPlaylistName} onChange={(e) => setNewPlaylistName(e.target.value)} placeholder="Enter playlist name..." className="flex-grow px-2 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm placeholder-gray-500 focus:ring-green-500 focus:border-green-500 text-gray-900 dark:text-white" />
-                <button onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} disabled={!newPlaylistName.trim()} className="py-1.5 px-3 bg-green-600 hover:bg-green-500 text-white dark:text-black rounded-md flex items-center justify-center disabled:opacity-50"><SaveIcon />Save Current as New</button>
+            
+            <div className="pt-6 border-t border-white/10">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-4 text-center">Local Library</h4>
+              <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                <input 
+                  type="text" 
+                  value={newPlaylistName} 
+                  onChange={(e) => setNewPlaylistName(e.target.value)} 
+                  placeholder="New Playlist Name..." 
+                  className="flex-grow px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" 
+                />
+                <Button 
+                  onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} 
+                  disabled={!newPlaylistName.trim()} 
+                  variant="primary"
+                  className="font-black uppercase tracking-widest px-6"
+                  backgroundColor="#10b981"
+                  size="lg"
+                  startIcon={<SaveIcon className="w-4 h-4" />}
+                >
+                  Save New
+                </Button>
               </div>
+              
               {savedCustomPlaylists.length > 0 && (
-                <div className="max-h-32 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700 space-y-1.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 scrollbar-thin">
                   {savedCustomPlaylists.map(p => (
-                    <div key={p.id} className="flex justify-between items-center p-1.5 bg-gray-200 dark:bg-gray-700 rounded-md">
-                      <div className="flex-grow min-w-0">
-                        <span className="text-gray-800 dark:text-gray-200 truncate" title={p.name}>{p.name}</span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <div key={p.id} className="flex flex-col p-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-3xl hover:border-green-500/30 transition-all group">
+                      <div className="mb-4">
+                        <span className="text-sm font-black text-gray-900 dark:text-white truncate block" title={p.name}>{p.name}</span>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 mt-1">
                           {p.updatedAt ? `Updated: ${new Date(p.updatedAt).toLocaleDateString()}` : `Created: ${new Date(p.createdAt).toLocaleDateString()}`}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 flex items-center space-x-1.5">
-                        <button onClick={() => handleLoadClick(p.id)} className="py-1 px-2 bg-blue-500 hover:bg-blue-400 text-white dark:text-black rounded min-w-[3.5rem] text-center" title="Load Playlist (replaces queue)">
-                          {loadConfirm.id === p.id && loadConfirm.count > 0 ? `Load? (${3 - loadConfirm.count})` : <LoadIcon className="w-3.5 h-3.5 mx-auto" />}
-                        </button>
-                        <button onClick={() => handleAppendClick(p.id)} className="py-1 px-2 bg-teal-500 hover:bg-teal-400 text-white dark:text-black rounded min-w-[3.5rem] text-center" title="Append content from input area to this playlist">
-                          {appendConfirm.id === p.id && appendConfirm.count > 0 ? `Add? (${3 - appendConfirm.count})` : <AppendIcon className="w-4 h-4 mx-auto" />}
-                        </button>
-                        <button onClick={() => handleUpdateClick(p.id)} className="py-1 px-2 bg-yellow-500 hover:bg-yellow-400 text-white dark:text-black rounded min-w-[3.5rem] text-center" title="Overwrite this playlist with the songs currently in your queue">
-                          {updateConfirm.id === p.id && updateConfirm.count > 0 ? `Sure? (${3 - updateConfirm.count})` : <RefreshIcon className="w-3.5 h-3.5 mx-auto" />}
-                        </button>
-                        <button onClick={() => handleDeleteClick(p.id)} className="py-1 px-2 bg-red-500 hover:bg-red-400 text-white rounded min-w-[3.5rem] text-center" title="Delete Playlist">
-                          {deleteConfirm.id === p.id && deleteConfirm.count > 0 ? `Del? (${3 - deleteConfirm.count})` : <TrashIcon className="w-3.5 h-3.5 mx-auto" />}
-                        </button>
+                      <div className="flex items-center gap-2">
+                        <Button onClick={() => handleLoadClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-blue-500/10 border-blue-500/20 text-blue-600 hover:bg-blue-500 hover:text-white" title="Load Playlist">
+                          {loadConfirm.id === p.id && loadConfirm.count > 0 ? `?? (${3 - loadConfirm.count})` : "Load"}
+                        </Button>
+                        <Button onClick={() => handleAppendClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-teal-500/10 border-teal-500/20 text-teal-600 hover:bg-teal-500 hover:text-white" title="Append to Playlist">
+                          {appendConfirm.id === p.id && appendConfirm.count > 0 ? `?? (${3 - appendConfirm.count})` : "Add"}
+                        </Button>
+                        <Button onClick={() => handleUpdateClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-yellow-500/10 border-yellow-500/20 text-yellow-600 hover:bg-yellow-500 hover:text-black" title="Update Playlist">
+                          {updateConfirm.id === p.id && updateConfirm.count > 0 ? `?? (${3 - updateConfirm.count})` : "Refresh"}
+                        </Button>
+                        <Button onClick={() => handleDeleteClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-red-500/10 border-red-500/20 text-red-600 hover:bg-red-500 hover:text-white" title="Delete">
+                          {deleteConfirm.id === p.id && deleteConfirm.count > 0 ? `?? (${3 - deleteConfirm.count})` : "Del"}
+                        </Button>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-              {savedCustomPlaylists.length > 0 && <button onClick={handleClearAllSavedPlaylists} className="mt-2 w-full py-1 px-2 bg-red-700 hover:bg-red-600 text-white rounded-md text-xs">{getClearAllSavedPlaylistsButtonText()}</button>}
+              {savedCustomPlaylists.length > 0 && (
+                <Button onClick={handleClearAllSavedPlaylists} variant="ghost" className="mt-6 w-full border-red-500/20 text-red-600 hover:bg-red-500/10 font-black uppercase tracking-widest text-xs py-3">
+                  {getClearAllSavedPlaylistsButtonText()}
+                </Button>
+              )}
             </div>
-            <div className="pt-2 mt-2 border-t border-gray-300 dark:border-gray-600">
-              <h4 className="text-sm font-medium text-red-600 dark:text-red-400 mb-1.5">Danger Zone</h4>
-              <button
+            
+            <div className="pt-6 border-t border-white/10">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400 mb-4 text-center">Safety</h4>
+              <Button
                 onClick={handleClearQueue}
                 disabled={isFetchingOrLoading || playerState.queue.length === 0}
-                className="w-full py-1.5 px-3 bg-red-700 hover:bg-red-600 text-white rounded-md text-xs font-medium disabled:opacity-50"
+                variant="ghost"
+                className="w-full border-red-600 text-red-600 dark:text-red-500 hover:bg-red-600 hover:text-white font-black uppercase tracking-widest text-xs py-3"
               >
                 {getClearQueueButtonText()}
-              </button>
+              </Button>
             </div>
           </div>
         )}
       </div>
 
       {playerState.currentSong && (
-        <div className="mb-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-              <img
-                src={playerState.currentSong.image_url || FALLBACK_IMAGE_DATA_URI}
-                alt={playerState.currentSong.title}
-                className="w-24 h-24 rounded-md object-cover border-2 border-green-500 shadow-md hover:opacity-80 transition-opacity"
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
-              />
+        <div className="mb-8 p-4 sm:p-8 glass-card border-white/10 shadow-2xl animate-fadeIn relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
+            <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 group/img">
+              <div className="relative">
+                <img
+                  src={playerState.currentSong.image_url || FALLBACK_IMAGE_DATA_URI}
+                  alt={playerState.currentSong.title}
+                  className="w-36 h-36 rounded-3xl object-cover border-2 border-white/10 shadow-2xl transition-all duration-500 group-hover/img:scale-105 group-hover/img:border-emerald-500/50"
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
+                />
+                <div className="absolute inset-0 rounded-3xl bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                   <PlayCountIcon className="w-10 h-10 text-white opacity-80" />
+                </div>
+              </div>
             </a>
-            <div className="flex-1 text-center sm:text-left min-w-0">
-              <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white truncate" title={playerState.currentSong.title}>{playerState.currentSong.title}</h3>
+            <div className="flex-1 text-center sm:text-left min-w-0 space-y-3">
+              <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="inline-block max-w-full">
+                <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white truncate uppercase tracking-tighter italic leading-tight" title={playerState.currentSong.title}>{playerState.currentSong.title}</h3>
               </a>
-              <a href={playerState.currentSong.suno_creator_url || `https://suno.com/@${playerState.currentSong.handle}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate" title={playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}>by {playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}</p>
+              <a href={playerState.currentSong.suno_creator_url || `https://suno.com/@${playerState.currentSong.handle}`} target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 transition-opacity">
+                <p className="text-[11px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 truncate" title={playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}>by {playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}</p>
               </a>
-              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 flex items-center justify-center sm:justify-start gap-x-2 gap-y-0.5 flex-wrap"> <span><PlayCountIcon /> {playerState.currentSong.play_count?.toLocaleString() || 'N/A'}</span> <span><UpvoteCountIcon /> {playerState.currentSong.upvote_count?.toLocaleString() || 'N/A'}</span> <span><CommentCountIcon /> {playerState.currentSong.comment_count?.toLocaleString() || 'N/A'}</span> </div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 flex items-center justify-center sm:justify-start gap-6 pt-2"> 
+                <span className="flex items-center gap-2"><PlayCountIcon className="w-3.5 h-3.5" /> {playerState.currentSong.play_count?.toLocaleString() || '0'}</span> 
+                <span className="flex items-center gap-2"><UpvoteCountIcon className="w-3.5 h-3.5" /> {playerState.currentSong.upvote_count?.toLocaleString() || '0'}</span> 
+                <span className="flex items-center gap-2"><CommentCountIcon className="w-3.5 h-3.5" /> {playerState.currentSong.comment_count?.toLocaleString() || '0'}</span> 
+              </div>
             </div>
-            <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
-              <button onClick={handleShowLyrics} title="Show Lyrics" className="p-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md text-green-700 dark:text-green-300"><LyricsPlayerIcon /></button>
-              <button onClick={handleShowMetadata} title="Song Info" className="p-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md text-green-700 dark:text-green-300"><InfoPlayerIcon /></button>
-              <button onClick={handleShareSong} title={copyShareLinkStatus || "Share Song"} className="p-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-md text-green-700 dark:text-green-300"><SharePlayerIcon /></button>
+            <div className="flex-shrink-0 flex sm:flex-col gap-3">
+              <Button onClick={handleShowLyrics} variant="ghost" size="sm" className="p-4 border-white/10 hover:bg-white/10 rounded-2xl text-emerald-600 dark:text-emerald-400 shadow-none" title="Lyrics" startIcon={<LyricsPlayerIcon />} />
+              <Button onClick={handleShowMetadata} variant="ghost" size="sm" className="p-4 border-white/10 hover:bg-white/10 rounded-2xl text-emerald-600 dark:text-emerald-400 shadow-none" title="Metadata" startIcon={<InfoPlayerIcon />} />
+              <Button onClick={handleShareSong} variant="ghost" size="sm" className="p-4 border-white/10 hover:bg-white/10 rounded-2xl text-emerald-600 dark:text-emerald-400 shadow-none" title={copyShareLinkStatus || "Share"} startIcon={<SharePlayerIcon />} />
             </div>
           </div>
-          {copyShareLinkStatus && <p className="text-xs text-center mt-1 text-purple-600 dark:text-purple-300">{copyShareLinkStatus}</p>}
+          {copyShareLinkStatus && (
+            <div className="absolute bottom-4 right-8 animate-fadeIn">
+              <p className="text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400">{copyShareLinkStatus}</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -513,47 +629,84 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
       <div className="flex items-center justify-between mb-4"> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.currentTime)}</div> <input type="range" min="0" max={playerState.duration || 0} value={playerState.currentTime} onChange={handleSeekSlider} className="flex-grow mx-3 h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500 focus:outline-none focus:ring-1 focus:ring-green-400" aria-label="Seek slider" /> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.duration)}</div> </div>
 
-      <div className="flex items-center justify-center gap-3 mb-6">
-        <button onClick={previousTrack} className="p-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" aria-label="Previous Track"> <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg> </button>
-        <button onClick={togglePlayPause} className="p-4 bg-green-500 hover:bg-green-600 text-black rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 shadow-lg" aria-label={playerState.status === PlaybackStatus.Playing ? "Pause" : "Play"} > {playerState.status === PlaybackStatus.Playing ? <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg> : <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>} </button>
-        <button onClick={() => nextTrack(false)} className="p-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" aria-label="Next Track"> <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" /></svg> </button>
-        <button onClick={toggleShuffle} className={`p-3 rounded-full ${playerState.isShuffle ? 'bg-green-500 text-black' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'} hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-green-500`} aria-pressed={playerState.isShuffle} aria-label="Toggle shuffle">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12M18 6l-2-2m2 2l-2 2M6 18l2 2m-2-2l2-2" />
-          </svg>
-        </button>
+      <div className="flex items-center justify-center gap-8 mb-8 mt-4">
+        <Button onClick={previousTrack} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Previous Track"> <SkipBackIcon className="w-6 h-6" /> </Button>
+        <Button onClick={togglePlayPause} variant="primary" className="p-10 bg-emerald-500 hover:bg-emerald-400 text-black rounded-full shadow-[0_0_40px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all" aria-label={playerState.status === PlaybackStatus.Playing ? "Pause" : "Play"} > {playerState.status === PlaybackStatus.Playing ? <PauseIcon className="w-10 h-10" /> : <PlayIcon className="w-10 h-10" />} </Button>
+        <Button onClick={() => nextTrack(false)} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Next Track"> <SkipForwardIcon className="w-6 h-6" /> </Button>
+        <Button onClick={toggleShuffle} variant="ghost" className={`p-6 rounded-full border ${playerState.isShuffle ? 'bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] border-emerald-500' : 'bg-slate-200/50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-400'}`} aria-pressed={playerState.isShuffle} aria-label="Toggle shuffle">
+          <ShuffleIcon className="w-6 h-6" />
+        </Button>
       </div>
 
       <div className="flex items-center justify-between text-xs mb-4">
-        <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-400 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500" aria-label="Volume control" /> </div>
+        <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500" aria-label="Volume control" /> </div>
         <div className="flex gap-2 items-center">
           <label htmlFor="snippetModeCheckbox" className="text-gray-600 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover:text-green-300">Snippet Mode ({playerState.snippetDurationConfig}s):</label>
           <input type="checkbox" id="snippetModeCheckbox" checked={playerState.isSnippetMode} onChange={toggleSnippetMode} className="form-checkbox h-3.5 w-3.5 text-green-500 bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 rounded focus:ring-green-400 focus:ring-offset-0" />
           <input type="number" value={playerState.snippetDurationConfig} onChange={(e) => setSnippetDurationConfig(parseInt(e.target.value, 10))} min={MIN_SNIPPET_DURATION_SECONDS} max={MAX_SNIPPET_DURATION_SECONDS} className="w-12 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white focus:ring-green-400 focus:border-green-400" aria-label="Snippet duration in seconds" />
 
-          <button onClick={() => setShowEq(!showEq)} className={`p-1.5 rounded-md ${showEq ? 'bg-green-500 text-black' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'} hover:opacity-80`} aria-label="Toggle equalizer" aria-expanded={showEq}> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg> </button>
-          <button onClick={() => setShowShortcutsModal(true)} className="p-1.5 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:opacity-80" aria-label="Show Keyboard Shortcuts"> <KeyboardIcon /> </button>
+          <Button onClick={() => setShowEq(!showEq)} variant="ghost" size="xs" className={`p-2 rounded-xl transition-all shadow-none ${showEq ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-white/5 border-white/10 text-gray-400'} hover:opacity-80`} aria-label="Toggle equalizer" aria-expanded={showEq} startIcon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>} />
+          <Button onClick={() => setShowShortcutsModal(true)} variant="ghost" size="xs" className="p-2 rounded-xl bg-white/5 border-white/10 text-gray-400 hover:opacity-80 shadow-none" aria-label="Show Keyboard Shortcuts" startIcon={<KeyboardIcon className="w-4 h-4" />} />
         </div>
       </div>
 
       {showEq && (
         <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
-          <div className="flex flex-wrap justify-center gap-2 mb-3"> {Object.entries(EQ_PRESETS_FOR_UI).map(([key, { label }]) => (<button key={key} onClick={() => applyEqPreset(key)} className="px-2 py-1 text-xs bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 rounded-md"> {label} </button>))} </div>
+          <div className="flex flex-wrap justify-center gap-3 mb-6"> 
+            {Object.entries(EQ_PRESETS_FOR_UI).map(([key, { label }]) => (
+              <Button 
+                key={key} 
+                onClick={() => applyEqPreset(key)} 
+                variant="ghost" 
+                size="xs" 
+                className="px-4 py-2 bg-white/5 border-white/10 hover:bg-emerald-500/20 text-gray-400 hover:text-emerald-400 rounded-xl transition-all font-black uppercase tracking-widest text-[9px]"
+              > 
+                {label} 
+              </Button>
+            ))} 
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-2 text-xs"> {playerState.eqBands.map(band => (<div key={band.id}> <label htmlFor={band.id} className="block text-gray-600 dark:text-gray-400 text-center mb-0.5">{band.frequency < 1000 ? `${band.frequency}Hz` : `${band.frequency / 1000}kHz`}</label> <input type="range" id={band.id} min="-12" max="12" step="0.1" value={band.gain} onChange={e => setEqGain(band.id, parseFloat(e.target.value))} className="w-full h-1.5 bg-gray-400 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500" /> <p className="text-center text-gray-700 dark:text-gray-300 mt-0.5">{band.gain.toFixed(1)} dB</p> </div>))} </div>
         </div>
       )}
 
-      <div className="mt-4 flex flex-col sm:flex-row justify-between items-start gap-3">
-        <button onClick={() => setShowPlaylist(!showPlaylist)} className="w-full sm:w-auto text-left text-md font-medium text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 py-1 px-1 flex items-center" aria-expanded={showPlaylist} aria-controls="playlist-panel"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 mr-1 transform transition-transform ${showPlaylist ? 'rotate-180' : ''}`}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg> Playlist ({playerState.queue.length} songs) </button>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <select value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value as SortCriteriaHook)} className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500 flex-grow sm:flex-grow-0" aria-label="Sort playlist by"> <option value="default">Default Order</option> <option value="play_count">Most Plays</option> <option value="upvote_count">Most Upvotes</option> <option value="created_at">Newest First</option> <option value="title">Title (A-Z)</option> </select>
-          <input type="text" value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)} placeholder="Filter playlist..." className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500 flex-grow sm:flex-grow-0" aria-label="Filter playlist" />
-          <button onClick={handleExportPlaylistCsv} title="Export current playlist view to CSV" className="p-1.5 text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md disabled:opacity-50" disabled={playerState.queue.length === 0}> <CsvExportIcon /> </button>
+      <div className="mt-8 flex flex-col sm:flex-row justify-between items-start gap-4">
+        <Button onClick={() => setShowPlaylist(!showPlaylist)} variant="ghost" className="w-full sm:w-auto text-left text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 py-3 px-4 border-white/10" aria-expanded={showPlaylist} aria-controls="playlist-panel"> <ChevronDownIcon className={`w-4 h-4 mr-2 transform transition-transform ${showPlaylist ? 'rotate-180' : ''}`} /> Queue List ({playerState.queue.length}) </Button>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto overflow-visible">
+          <Select 
+            id="sortCriteria"
+            options={[
+              { value: 'default', label: 'Default Order' },
+              { value: 'play_count', label: 'Most Plays' },
+              { value: 'upvote_count', label: 'Most Upvotes' },
+              { value: 'created_at', label: 'Newest First' },
+              { value: 'title', label: 'Title (A-Z)' }
+            ]}
+            value={sortCriteria}
+            onChange={(val) => setSortCriteria(val as SortCriteriaHook)}
+            containerClassName="flex-grow sm:min-w-[160px]"
+          />
+          <input 
+            type="text" 
+            value={filterQuery} 
+            onChange={(e) => setFilterQuery(e.target.value)} 
+            placeholder="Filter list..." 
+            className="px-4 py-2.5 bg-white/10 dark:bg-black/20 border border-white/20 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 text-gray-900 dark:text-white sm:text-sm font-bold flex-grow transition-all" 
+            aria-label="Filter playlist" 
+          />
+          <Button 
+            onClick={handleExportPlaylistCsv} 
+            title="Export current list to CSV" 
+            variant="ghost"
+            size="sm"
+            className="p-3 border-white/10 hover:bg-white/10 rounded-xl shadow-none"
+            disabled={playerState.queue.length === 0}
+            startIcon={<CsvExportIcon className="w-4 h-4" />}
+          />
         </div>
       </div>
       {showPlaylist && (
-        <div ref={playlistContainerRef} id="playlist-panel" className="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-850 overflow-hidden relative" style={{ height: playlistHeight }}>
-          <ul className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <div ref={playlistContainerRef} id="playlist-panel" className="mt-4 glass-card border-white/10 overflow-hidden relative" style={{ height: playlistHeight }}>
+          <ul className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 divide-y divide-white/5">
             {playerState.queue.map(song => (
               <li
                 key={song.id}
@@ -563,63 +716,128 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 onDragLeave={onDragLeaveHandler}
                 onDrop={e => onDropHandler(e, song.id)}
                 onDragEnd={onDragEndHandler}
-                className={`p-2 flex items-center gap-3 transition-colors relative 
+                className={`p-4 flex items-center gap-4 transition-all duration-300 relative group
                                     ${playerState.isShuffle
-                    ? 'cursor-not-allowed'
-                    : 'hover:bg-gray-200 dark:hover:bg-gray-700 cursor-grab active:cursor-grabbing'}
-                                    ${playerState.currentSong?.id === song.id ? 'bg-green-100 dark:bg-green-700 bg-opacity-40' : ''} 
-                                    ${dropIndicator?.targetId === song.id ? (dropIndicator.position === 'before' ? 'border-t-2 border-blue-400' : 'border-b-2 border-blue-400') : ''} 
-                                    ${draggedItemId === song.id ? 'opacity-50' : ''}`
+                    ? 'cursor-not-allowed opacity-80'
+                    : 'hover:bg-white/10 cursor-grab active:cursor-grabbing'}
+                                    ${playerState.currentSong?.id === song.id ? 'bg-green-500/10 dark:bg-green-500/5' : ''} 
+                                    ${dropIndicator?.targetId === song.id ? (dropIndicator.position === 'before' ? 'border-t-4 border-green-500/50' : 'border-b-4 border-green-500/50') : ''} 
+                                    ${draggedItemId === song.id ? 'opacity-30' : ''}`
                 }
-                title={playerState.isShuffle ? "Drag & drop reordering is disabled in Shuffle mode." : "Drag to reorder playlist."}
               >
-                <img
-                  src={song.image_url || FALLBACK_IMAGE_DATA_URI}
-                  alt={song.title}
-                  className="w-10 h-10 rounded object-cover flex-shrink-0 border border-gray-300 dark:border-gray-600"
-                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
-                />
-                <div className="flex-1 min-w-0" onClick={() => playSong(song)}> <p className="text-sm text-gray-900 dark:text-white truncate font-medium" title={song.title}>{song.title}</p> <p className="text-xs text-gray-500 dark:text-gray-400 truncate" title={song.display_name || `@${song.handle}`}>{song.display_name || `@${song.handle}`}</p> </div>
-                <div className="text-xs text-gray-500 dark:text-gray-500 flex-shrink-0 flex flex-col sm:flex-row items-end sm:items-center gap-x-2 gap-y-0.5"> <span title="Plays"><PlayCountIcon /> {song.play_count?.toLocaleString() || 'N/A'}</span> <span title="Upvotes"><UpvoteCountIcon /> {song.upvote_count?.toLocaleString() || 'N/A'}</span> <span title="Comments"><CommentCountIcon /> {song.comment_count?.toLocaleString() || 'N/A'}</span> </div>
-                <button onClick={() => removeSongFromQueue(song.id)} className="ml-2 p-1 hover:bg-red-100 dark:hover:bg-red-700 rounded-full focus:outline-none focus:ring-1 focus:ring-red-400 text-red-500 dark:text-red-400" aria-label={`Remove ${song.title} from playlist`}> <PlaylistRemoveIcon /> </button>
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={song.image_url || FALLBACK_IMAGE_DATA_URI}
+                    alt={song.title}
+                    className={`w-12 h-12 rounded-xl object-cover border border-white/10 transition-all duration-500 ${playerState.currentSong?.id === song.id ? 'border-green-500/50 scale-110 shadow-lg' : ''}`}
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
+                  />
+                  {playerState.currentSong?.id === song.id && playerState.status === PlaybackStatus.Playing && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => playSong(song)}> 
+                  <p className={`text-sm truncate font-black uppercase tracking-tight transition-colors ${playerState.currentSong?.id === song.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white group-hover:text-emerald-500'}`} title={song.title}>{song.title}</p> 
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 truncate mt-0.5" title={song.display_name || `@${song.handle}`}>{song.display_name || `@${song.handle}`}</p> 
+                </div>
+                <div className="hidden sm:flex text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 flex-shrink-0 items-center gap-4"> 
+                   <span className="flex items-center gap-1"><PlayCountIcon className="w-3 h-3" /> {song.play_count?.toLocaleString() || '0'}</span> 
+                   <span className="flex items-center gap-1"><UpvoteCountIcon className="w-3 h-3" /> {song.upvote_count?.toLocaleString() || '0'}</span> 
+                </div>
+                <Button onClick={() => removeSongFromQueue(song.id)} variant="ghost" size="xs" className="ml-4 p-3 hover:bg-red-500/20 rounded-xl text-red-500 dark:text-red-400 transition-all opacity-0 group-hover:opacity-100 border-none shadow-none" aria-label={`Remove ${song.title}`} startIcon={<TrashIcon className="w-4 h-4" />} />
               </li>
             ))}
-            {playerState.queue.length === 0 && (<li className="p-3 text-center text-gray-500 dark:text-gray-500 text-sm">No songs in the current playlist view.</li>)}
+            {playerState.queue.length === 0 && (<li className="p-12 text-center text-gray-500 dark:text-gray-600 text-xs font-black uppercase tracking-[0.2em] italic">Queue is empty</li>)}
           </ul>
-          {playlistContainerRef.current && <div onMouseDown={handleMouseDownResize} className="absolute bottom-0 left-0 w-full h-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-ns-resize flex items-center justify-center" title="Resize Playlist"><div className="w-10 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></div></div>}
+          {playlistContainerRef.current && <div onMouseDown={handleMouseDownResize} className="absolute bottom-0 left-0 w-full h-3 bg-white/5 dark:bg-black/20 hover:bg-green-500/20 cursor-ns-resize flex items-center justify-center transition-colors"><div className="w-12 h-1 bg-white/20 rounded-full"></div></div>}
         </div>
       )}
 
       {showLyricsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setShowLyricsModal(false)}>
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-xl max-h-[80vh] flex flex-col border border-green-500" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-lg font-semibold text-green-700 dark:text-green-300">Lyrics for "{playerState.currentSong?.title}"</h3>
-              <button onClick={() => setShowLyricsModal(false)} className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">&times;</button>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowLyricsModal(false)}>
+          <div className="glass-card p-8 border-white/20 shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Lyrics</h2>
+              <Button onClick={() => setShowLyricsModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </Button>
             </div>
-            {lyricsSourceField && <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">Source: <code className="bg-gray-100 dark:bg-gray-700 p-0.5 rounded">{`metadata.${lyricsSourceField}`}</code></p>}
-            <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-y-auto flex-grow p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">{lyricsToDisplay}</pre>
-            <button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} className="mt-3 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm disabled:opacity-60">{copyLyricsStatus || "Copy Lyrics"}</button>
+            <div className="mb-8">
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Lyrics Breakdown</h3>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 mt-1">{playerState.currentSong?.title}</p>
+            </div>
+            
+            <div className="flex-grow overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 mb-8">
+              <pre className="text-base font-bold text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed opacity-90">{lyricsToDisplay}</pre>
+            </div>
+
+            <div className="flex items-center justify-between pt-6 border-t border-white/10">
+               {lyricsSourceField && <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">Source: <span className="text-green-600/50">{lyricsSourceField}</span></p>}
+               <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
+                 {copyLyricsStatus || "Copy Lyrics"}
+               </Button>
+            </div>
           </div>
         </div>
       )}
 
       {showMetadataModal && playerState.currentSong && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setShowMetadataModal(false)}>
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-xl max-h-[80vh] flex flex-col border border-green-500" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-3"> <h3 className="text-lg font-semibold text-green-700 dark:text-green-300">Song Info: {playerState.currentSong.title}</h3> <button onClick={() => setShowMetadataModal(false)} className="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">&times;</button> </div>
-            <div className="overflow-y-auto text-xs text-gray-700 dark:text-gray-300 space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
-              <p><strong className="text-green-600 dark:text-green-200">Tags:</strong> {playerState.currentSong.metadata?.tags || 'N/A'}</p>
-              <p><strong className="text-green-600 dark:text-green-200">Model:</strong> {playerState.currentSong.model_name || 'N/A'}</p>
-              <p><strong className="text-green-600 dark:text-green-200">Full Prompt (GPT Description):</strong> <pre className="whitespace-pre-wrap bg-gray-100 dark:bg-gray-900 p-1 rounded border border-gray-300 dark:border-gray-700 max-h-24 overflow-y-auto">{playerState.currentSong.metadata?.gpt_description_prompt || 'N/A'}</pre></p>
-              <p><strong className="text-green-600 dark:text-green-200">Created:</strong> {new Date(playerState.currentSong.created_at).toLocaleString()}</p>
-              <p><strong className="text-green-600 dark:text-green-200">Duration:</strong> {playerState.currentSong.metadata?.duration ? `${playerState.currentSong.metadata.duration.toFixed(1)}s` : 'N/A'}</p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowMetadataModal(false)}>
+          <div className="glass-card p-4 sm:p-8 border-white/20 shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col relative" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Metadata</h2>
+              <Button onClick={() => setShowMetadataModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              </Button>
+            </div>
+            <div className="mb-8">
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Track Intel</h3>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 mt-1">{playerState.currentSong.title}</p>
+            </div>
+            
+            <div className="overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-white/10 space-y-6">
+              <div className="space-y-4">
+                <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Style tags</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white leading-relaxed">{playerState.currentSong.metadata?.tags || 'None identified'}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Model</p>
+                    <p className="text-sm font-black text-gray-900 dark:text-white">{playerState.currentSong.model_name || 'N/A'}</p>
+                  </div>
+                  <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5 text-center">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Duration</p>
+                    <p className="text-sm font-black text-gray-900 dark:text-white">{playerState.currentSong.metadata?.duration ? `${playerState.currentSong.metadata.duration.toFixed(1)}s` : 'N/A'}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-white/5 dark:bg-black/20 p-4 rounded-2xl border border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Generation Prompt</p>
+                  <pre className="text-xs font-bold text-gray-800 dark:text-gray-300 whitespace-pre-wrap max-h-32 overflow-y-auto scrollbar-thin opacity-80 italic">{playerState.currentSong.metadata?.gpt_description_prompt || 'N/A'}</pre>
+                </div>
+
+                <div className="text-center pt-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600">Generated on {new Date(playerState.currentSong.created_at).toLocaleString()}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
       <KeyboardShortcutsModal isOpen={showShortcutsModal} onClose={() => setShowShortcutsModal(false)} />
-      <div className="mt-6 pt-4 border-t border-gray-300 dark:border-gray-700 text-center"><p className="text-sm text-gray-500 dark:text-gray-400"><strong className="text-yellow-600 dark:text-yellow-300">Troubleshooting Tip:</strong> If audio playback issues occur (e.g., no sound, visualizer not working), ensure your browser has permission to play audio and try interacting with the page (clicking a button) before playing. If issues persist, refreshing the page or clearing data for this specific tool (via Data Management) can often help.</p></div>
+      <div className="mt-12 pt-8 border-t border-white/10 text-center">
+        <div className="max-w-2xl mx-auto p-6 glass-card border-white/5 hover:border-white/10 transition-all group">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-600 dark:text-yellow-500 mb-4 inline-flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+            Troubleshooting Intel
+          </p>
+          <p className="text-xs font-bold text-gray-500 dark:text-gray-400 italic leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+            If audio issues occur, ensure your browser has permission to play audio. Interact with the page before playing. If persistent, try refreshing or clearing data via System Management.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

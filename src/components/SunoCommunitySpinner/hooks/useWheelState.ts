@@ -13,7 +13,7 @@ import {
 import { isValidHexColor, normalizeHexColor } from '../utils';
 
 export function useWheelState(theme: string, trackLocalEvent: (category: string, action: string, label?: string, value?: number) => void) {
-    const [activityWheelTitle, setActivityWheelTitle] = useState<string>('Magic Spin Wheel');
+    const [activityWheelTitle, setActivityWheelTitle] = useState<string>('Magic Spin');
     const [userName, setUserName] = useState<string>('');
     const [activitiesString, setActivitiesString] = useState<string>(defaultActivitiesListEnglish.join('\n'));
     const [activityDetails, setActivityDetails] = useState<Record<string, ActivityDetail>>({});
@@ -25,7 +25,7 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
 
     const [wheelSegments, setWheelSegments] = useState<string[]>([]);
 
-    const [customTitle, setCustomTitle] = useState<string>('Magic Spin Wheel');
+    const [customTitle, setCustomTitle] = useState<string>('Magic Spin');
     const [customLogo, setCustomLogo] = useState<string | null>(null);
     const [selectedLogoSize, setSelectedLogoSize] = useState<string>('96px');
     
@@ -64,7 +64,7 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
     }, [theme]);
 
     const loadConfigData = useCallback((data: Partial<WheelConfigData>, isImporting = false) => {
-        setActivityWheelTitle(data.activityWheelTitle || 'Magic Spin Wheel');
+        setActivityWheelTitle(data.activityWheelTitle || 'Magic Spin');
         setUserName(data.userName || '');
         const importedActivitiesStr = data.activitiesString || defaultActivitiesListEnglish.join('\n');
         setActivitiesString(importedActivitiesStr);
@@ -100,7 +100,7 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
         currentActivitiesForSetup.forEach(act => { newWheelWeights[act] = Math.max(1, Math.min(12, loadedWheelWeights[act] || 1)); });
         setWheelActivityWeights(newWheelWeights);
         
-        if (isImporting || data.customTitle !== undefined) setCustomTitle(data.customTitle || 'Magic Spin Wheel');
+        if (isImporting || data.customTitle !== undefined) setCustomTitle(data.customTitle || 'Magic Spin');
         if (isImporting || data.customLogo !== undefined) setCustomLogo(data.customLogo === undefined ? null : data.customLogo);
         if (isImporting || data.selectedLogoSize !== undefined) setSelectedLogoSize(data.selectedLogoSize || '96px');
         if (isImporting || data.toolBackgroundColor !== undefined) setToolBackgroundColor(data.toolBackgroundColor || DEFAULT_TOOL_BG_COLOR_DARK);

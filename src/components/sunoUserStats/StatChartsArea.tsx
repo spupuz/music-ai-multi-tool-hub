@@ -32,6 +32,12 @@ import { useTheme } from '@/context/ThemeContext'; // Import useTheme
 
 const MIN_PLAYS_FOR_ENGAGEMENT_RATIO = 20; 
 
+const FilterIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+  </svg>
+);
+
 interface StatChartsAreaProps {
   stats: AggregatedStats | null;
   username: string;
@@ -95,10 +101,30 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
       </div>
        <p className="text-xs text-gray-500 mt-1 italic text-center"> "Songs Created Per Day", "Creations by Day of Week", and "Creations by Hour of Day" charts are based on the `created_at` timestamps of the songs fetched from Suno. </p>
       
-      <div className="my-6 p-4 bg-gray-100 dark:bg-gray-850 rounded-lg border border-gray-300 dark:border-gray-700">
-        <label htmlFor="trendPeriodSelect" className="block text-sm font-medium text-green-600 dark:text-green-400 mb-2"> Select Period for Top Song Trends: </label>
-        <select id="trendPeriodSelect" value={selectedPeriod} onChange={(e) => setSelectedPeriod(e.target.value as TrendPeriod)} className="w-full sm:w-auto mt-1 block px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 sm:text-sm text-gray-900 dark:text-white"> {periodOptions.map(option => ( <option key={option.value} value={option.value}>{option.label}</option> ))} </select>
-      </div>
+      <section className="mb-10 p-8 bg-white/5 border border-white/10 rounded-3xl relative group overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <label htmlFor="trendPeriodSelect" className="block text-[10px] font-black uppercase tracking-[0.3em] text-green-500/60 mb-4 flex items-center gap-2">
+           <FilterIcon className="w-3 h-3" /> Temporal Buffer / Analysis Period
+        </label>
+        <div className="relative inline-block w-full sm:w-auto overflow-hidden">
+          <select 
+            id="trendPeriodSelect" 
+            value={selectedPeriod} 
+            onChange={(e) => setSelectedPeriod(e.target.value as TrendPeriod)} 
+            className="w-full sm:w-80 px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white appearance-none focus:outline-none focus:border-green-500/30 transition-all cursor-pointer shadow-xl"
+          >
+            {periodOptions.map(option => (
+              <option key={option.value} value={option.value} className="bg-gray-900 text-white">
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <div className="absolute inset-y-0 right-0 flex items-center px-6 pointer-events-none text-green-500/60">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </div>
+      </section>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <ChartContainer title={topUpvotesChartTitle} heightClassName={chartWithCoverArtMinHeight} tooltipText="Shows songs with the largest increase in upvotes during the selected period. 'Overall' shows top songs by total upvotes."> {selectedPeriod !== "overall" ? ( <SongTrendChart data={topUpvotesChartData as SongTrendData[]} valueLabel={topUpvotesValueLabel} barColor={topUpvotesBarColor} topNValue={topNValue} {...commonChartProps} /> ) : ( <TopSongsChart songs={topUpvotesChartData as SunoClip[]} metric="upvote_count" valueLabel={topUpvotesValueLabel} barColor={topUpvotesBarColor} topN={topNValue} {...commonChartProps} /> )} </ChartContainer>
         <ChartContainer title={topPlaysChartTitle} heightClassName={chartWithCoverArtMinHeight} tooltipText="Shows songs with the largest increase in plays during the selected period. 'Overall' shows top songs by total plays."> {selectedPeriod !== "overall" ? ( <SongTrendChart data={topPlaysChartData as SongTrendData[]} valueLabel={topPlaysValueLabel} barColor={topPlaysBarColor} topNValue={topNValue} {...commonChartProps} /> ) : ( <TopSongsChart songs={topPlaysChartData as SunoClip[]} metric="play_count" valueLabel={topPlaysValueLabel} barColor={topPlaysBarColor} topN={topNValue} {...commonChartProps} /> )} </ChartContainer>
@@ -146,7 +172,9 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
       </div>
       <TagGenrePerformanceTables tagStats={stats.tagStats} genreStats={stats.genreStats} topN={topNValue} />
       <p className="text-xs text-gray-500 mt-1 italic text-center"> "Genres (Derived)" are inferred from common genre keywords found within tags. Usage and vote counts are aggregated based on these derived genres. </p>
-      <p className="text-sm text-gray-500 mt-6 italic text-center"> Note: API limitations mean some detailed historical data (e.g., exact timestamps of individual plays/upvotes for heatmaps) is not available from Suno. Trends are based on data snapshots collected by this tool over time. </p>
+      <p className="text-[9px] font-black uppercase tracking-widest text-gray-600 text-center mt-12 py-8 border-t border-white/5 max-w-2xl mx-auto italic opacity-60">
+        Neural Latency Warning: Signal persistence is verified via local snapshots. Historical granularity is subject to Suno API architectural constraints. 
+      </p>
     </div>
   );
 };

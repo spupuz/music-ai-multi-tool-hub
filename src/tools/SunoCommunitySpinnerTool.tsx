@@ -12,6 +12,10 @@ import { CogIcon, EyeOpenIcon } from '@/components/SunoCommunitySpinner/Icons';
 import { 
     InputField, TextAreaField, CheckboxField, SelectField, ConfirmationButton
 } from '@/components/SunoCommunitySpinner/FormComponents';
+import Button from '@/components/common/Button';
+import { 
+    SaveIcon, LoadIcon, ExportIcon, ImportIcon, TrashIcon, RefreshIcon, CommunitySpinnerIcon 
+} from '@/components/Icons';
 import { LoadModal, ExportModal, ImportModal } from '@/components/SunoCommunitySpinner/SpinnerModals';
 import { useSpinAudio } from '@/components/SunoCommunitySpinner/hooks/useSpinAudio';
 import { useWheelDrawing } from '@/components/SunoCommunitySpinner/hooks/useWheelDrawing';
@@ -312,114 +316,146 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     return (
         <div className="w-full flex flex-col min-h-[calc(100vh-4rem)] overflow-x-hidden" style={{ backgroundColor: toolBackgroundColor, color: toolTextColor }}>
             {/* Top Control Bar */}
-            <div className="sticky top-0 z-20 p-2 mb-3 rounded-b-lg flex flex-wrap items-center justify-center sm:justify-between gap-2" style={{ backgroundColor: lightenDarkenColor(toolBackgroundColor, 5), borderBottom: `1px solid ${toolAccentColor}`}}>
-                <button onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} className="text-xs py-1 px-2.5 rounded-md flex items-center gap-1 font-medium transition-opacity hover:opacity-80" style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}} aria-expanded={isConfigPanelOpen}>
-                    <EyeOpenIcon className="w-3.5 h-3.5"/> {isConfigPanelOpen ? 'Hide Config' : 'Show Config'}
-                </button>
-                <button onClick={() => setShowAppearancePanel(!showAppearancePanel)} className="text-xs py-1 px-2.5 rounded-md flex items-center gap-1 font-medium transition-opacity hover:opacity-80" style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}} aria-expanded={showAppearancePanel}>
-                    <CogIcon className="w-3.5 h-3.5"/> {showAppearancePanel ? 'Hide Appearance' : 'Show Appearance'}
-                </button>
+            <div className="sticky top-0 z-20 p-2 mb-3 rounded-b-lg flex flex-wrap items-center justify-center sm:justify-between gap-4" style={{ backgroundColor: lightenDarkenColor(toolBackgroundColor, 5), borderBottom: `1px solid ${toolAccentColor}`}}>
+                <Button 
+                    onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} 
+                    variant="ghost" 
+                    size="sm" 
+                    startIcon={<EyeOpenIcon className="w-4 h-4"/>}
+                    className="font-black uppercase tracking-widest text-[10px]"
+                    style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}}
+                >
+                    {isConfigPanelOpen ? 'Hide Config' : 'Show Config'}
+                </Button>
+                <Button 
+                    onClick={() => setShowAppearancePanel(!showAppearancePanel)} 
+                    variant="ghost" 
+                    size="sm" 
+                    startIcon={<CogIcon className="w-4 h-4"/>}
+                    className="font-black uppercase tracking-widest text-[10px]"
+                    style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}}
+                >
+                    {showAppearancePanel ? 'Hide Appearance' : 'Show Appearance'}
+                </Button>
             </div>
 
-            <header className="mb-4 text-center pt-4 px-2">
-                 {customLogo && ( <img src={customLogo} alt="Custom Spinner Logo" className="mx-auto mb-2 rounded-md object-contain" style={{ maxHeight: selectedLogoSize, maxWidth: '80%' }} /> )}
-                <h1 className="text-3xl md:text-4xl font-extrabold" style={{ color: toolAccentColor }}>{customTitle}</h1>
-                <p className="mt-1 text-xs md:text-sm max-w-xl mx-auto opacity-80"> Your Daily Fun & Interaction Wheel! Spin for a random activity. </p>
+            <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+                <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Community Spinner</h1>
+                <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Crowdsourced inspiration • Neural style randomization</p>
             </header>
             
             {soundError && ( <div className="w-full max-w-md mx-auto p-2 mb-3 bg-red-700 text-white text-xs text-center rounded-md shadow"> {soundError} </div> )}
             
             <div className="w-full max-w-6xl mx-auto px-4">
                 {isConfigPanelOpen && (
-                    <div id="spinner-config-panel" className={`p-3 md:p-4 rounded-lg shadow-lg border mb-6 transition-all`} style={{borderColor: toolAccentColor, backgroundColor: lightenDarkenColor(toolBackgroundColor, 10)}}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[60vh] lg:max-h-none overflow-y-auto pr-1">
+                    <div id="spinner-config-panel" className="glass-card p-6 md:p-8 border-white/10 shadow-2xl mb-12 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] pointer-events-none"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-h-[70vh] lg:max-h-none overflow-y-auto pr-2 scrollbar-thin">
                             {/* Column 1: Spinner Identity & Wheel Management */}
-                            <div className="space-y-4">
-                                <div> 
-                                    <h3 className="text-lg font-semibold mb-3" style={{color: toolAccentColor}}>Spinner Identity</h3> 
-                                    <InputField id="activityWheelTitle" label="Wheel Title" value={activityWheelTitle} onChange={setActivityWheelTitle} labelTextColor={toolTextColor} className="mb-3"/> 
-                                    <InputField id="userName" label="Your Name" value={userName} onChange={setUserName} labelTextColor={toolTextColor} className="mb-2"/> 
-                                </div>
-                                <div className="pt-2 border-t border-gray-400/20">
-                                    <h3 className="text-lg font-semibold mb-3" style={{color: toolAccentColor}}>Wheel Management</h3>
-                                    <div className="flex flex-col sm:flex-row gap-2 text-sm mb-2"> 
-                                        <button onClick={handleSaveConfiguration} className="flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded transition-colors">Save Setup</button> 
-                                        <button onClick={() => setShowLoadModal(true)} disabled={savedWheels.length === 0} className="flex-1 py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded disabled:opacity-50 transition-colors">Load ({savedWheels.length})</button> 
+                            <div className="space-y-6">
+                                <section> 
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Signal Identity</h3> 
+                                    <InputField id="activityWheelTitle" label="Stream Designation" value={activityWheelTitle} onChange={setActivityWheelTitle} className="mb-4"/> 
+                                    <InputField id="userName" label="Operator Profile" value={userName} onChange={setUserName} className="mb-2"/> 
+                                </section>
+                                <section className="pt-6 border-t border-white/5">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Vault Control</h3>
+                                    <div className="flex flex-col sm:flex-row gap-3"> 
+                                        <Button onClick={handleSaveConfiguration} variant="primary" size="xs" backgroundColor="#10b981" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 rounded-xl shadow-lg border-white/10">Commit</Button> 
+                                        <Button onClick={() => setShowLoadModal(true)} disabled={savedWheels.length === 0} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Archive ({savedWheels.length})</Button> 
                                     </div>
-                                    <div className="flex flex-col sm:flex-row gap-2 text-sm mb-3"> 
-                                        <button onClick={handleExportSetup} className="flex-1 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded transition-colors">Export</button> 
-                                        <button onClick={() => { setImportError(''); setConfigToImportJson(''); setShowImportModal(true);}} className="flex-1 py-1.5 px-3 bg-purple-600 hover:bg-purple-500 text-white rounded transition-colors">Import</button> 
+                                    <div className="flex flex-col sm:flex-row gap-3 mt-4"> 
+                                        <Button onClick={handleExportSetup} variant="ghost" size="xs" startIcon={<ExportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Back Up</Button> 
+                                        <Button onClick={() => { setImportError(''); setConfigToImportJson(''); setShowImportModal(true);}} variant="ghost" size="xs" startIcon={<ImportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Restore</Button> 
                                     </div>
-                                    <ConfirmationButton onConfirm={handleClearCurrentWheel} label="Clear Wheel & Styles" confirmLabel="Confirm Clear?" className="w-full py-2 px-3 bg-red-700 hover:bg-red-600 text-white rounded text-sm transition-colors font-medium" />
-                                </div>
+                                    <div className="mt-6">
+                                        <ConfirmationButton 
+                                            onConfirm={handleClearCurrentWheel} 
+                                            label="Wipe Data Grid" 
+                                            confirmLabel="Confirm Hard Reset?" 
+                                            icon={<TrashIcon className="w-4 h-4 ml-1" />} 
+                                            className="w-full py-4 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-start px-6 transition-all shadow-none" 
+                                        />
+                                    </div>
+                                </section>
                             </div>
 
                             {/* Column 2: Activities & Content Setup */}
-                            <div className="space-y-4">
-                                 <div> 
-                                    <h3 className="text-lg font-semibold mb-3" style={{color: toolAccentColor}}>Activities</h3> 
-                                    <TextAreaField id="activitiesList" label="List (1 per line)" value={activitiesString} onChange={setActivitiesString} labelTextColor={toolTextColor} rows={3}/> 
-                                    <div className="flex items-center justify-between mb-3">
-                                        <ConfirmationButton onConfirm={handleResetToDefault} label="Reset List" confirmLabel="Reset?" className="text-xs py-1 px-3 bg-red-600 hover:bg-red-500 text-white rounded-md transition-colors" /> 
+                            <div className="space-y-6">
+                                 <section> 
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Data Packets</h3> 
+                                    <TextAreaField id="activitiesList" label="Activities (1 per line)" value={activitiesString} onChange={setActivitiesString} rows={6} className="mb-4"/> 
+                                    <div className="flex items-center justify-end mb-4">
+                                        <ConfirmationButton onConfirm={handleResetToDefault} label="Reset to Default Stream" confirmLabel="Confirm?" className="text-[9px] font-black uppercase tracking-widest text-emerald-600/60 hover:text-emerald-500 underline underline-offset-4 transition-all" /> 
                                     </div>
-                                    <CheckboxField id="showAddEditDetails" label="Edit Details & Master Weights" checked={showAddEditDetails} onChange={setShowAddEditDetails} labelTextColor={toolTextColor} className="mb-0"/>
+                                    <CheckboxField id="showAddEditDetails" label="Advanced Neural Mapping" checked={showAddEditDetails} onChange={setShowAddEditDetails} className="mb-0"/>
                                     {showAddEditDetails && activitiesArray.length > 0 && ( 
-                                        <div className="mt-3 p-3 bg-black/5 dark:bg-black/20 rounded-md border border-gray-400/20 max-h-32 overflow-y-auto text-xs space-y-3"> 
+                                        <div className="mt-6 p-4 bg-black/20 rounded-2xl border border-white/5 max-h-48 overflow-y-auto space-y-4 scrollbar-thin"> 
                                             {activitiesArray.map((act, idx) => ( 
-                                                <div key={idx} className="grid grid-cols-3 gap-2 items-end"> 
-                                                    <div className="col-span-2">
-                                                        <label className="block text-[10px] opacity-70 mb-1 truncate" title={act}>{act}</label>
-                                                        <input type="text" value={activityDetails[act]?.detailText || ''} onChange={(e) => handleActivityDetailChange(act, 'detailText', e.target.value)} className="w-full px-2 py-1 bg-white/50 dark:bg-black/50 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-green-400 outline-none"/>
+                                                <div key={idx} className="grid grid-cols-4 gap-3 items-end"> 
+                                                    <div className="col-span-3">
+                                                        <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1 truncate" title={act}>{act}</label>
+                                                        <input type="text" value={activityDetails[act]?.detailText || ''} onChange={(e) => handleActivityDetailChange(act, 'detailText', e.target.value)} className="w-full px-3 py-1.5 bg-white/5 border border-white/5 rounded-xl text-xs font-bold outline-none focus:border-emerald-500/50 transition-all"/>
                                                     </div> 
                                                     <div>
-                                                        <label className="block text-[10px] opacity-70 mb-1">Weight</label>
-                                                        <input type="number" min="1" max="5" value={activityDetails[act]?.weight || 1} onChange={(e) => handleActivityDetailChange(act, 'weight', parseInt(e.target.value))} className="w-full px-2 py-1 bg-white/50 dark:bg-black/50 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-green-400 outline-none"/>
+                                                        <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Bias</label>
+                                                        <input type="number" min="1" max="5" value={activityDetails[act]?.weight || 1} onChange={(e) => handleActivityDetailChange(act, 'weight', parseInt(e.target.value))} className="w-full px-2 py-1.5 bg-white/5 border border-white/5 rounded-xl text-xs font-bold text-center outline-none focus:border-emerald-500/50 transition-all"/>
                                                     </div>
                                                 </div> 
                                             ))}
                                         </div> 
                                     )}
-                                </div>
+                                </section>
                             </div>
 
                             {/* Column 3: Wheel Content & Sounds */}
-                            <div className="space-y-4">
-                                <div className="p-3 bg-black/5 dark:bg-black/20 rounded-md border border-gray-400/20">
-                                    <h3 className="text-lg font-semibold mb-3" style={{color: toolAccentColor}}>Wheel Setup</h3>
-                                    <InputField id="numberOfSegments" label="Segments on Wheel (2-12)" type="number" value={numberOfSegmentsOnWheel} onChange={(val) => setNumberOfSegmentsOnWheel(Math.max(2, Math.min(12, parseInt(val) || 12)))} min={2} max={12} labelTextColor={toolTextColor} className="mb-4" />
+                            <div className="space-y-6">
+                                <section className="p-5 bg-black/20 rounded-2xl border border-white/5">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Wheel Matrix</h3>
+                                    <InputField id="numberOfSegments" label="Grid Segments (2-12)" type="number" value={numberOfSegmentsOnWheel} onChange={(val) => setNumberOfSegmentsOnWheel(Math.max(2, Math.min(12, parseInt(val) || 12)))} min={2} max={12} className="mb-6" />
                                     
-                                    <h4 className="text-sm font-semibold mb-2 opacity-80">Wheel Segments:</h4>
-                                    <div className="max-h-40 overflow-y-auto text-xs pr-1 mb-4 space-y-1"> 
+                                    <h4 className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-3 px-1">Active Clusters</h4>
+                                    <div className="max-h-40 overflow-y-auto pr-1 mb-6 space-y-2 scrollbar-thin"> 
                                         {activitiesArray.map((act, idx) => ( 
-                                            <div key={`config-${idx}`} className="flex items-center justify-between p-2 bg-white/30 dark:bg-black/30 rounded border border-gray-400/10"> 
-                                                <CheckboxField id={`select-act-${idx}`} label={act.length > 25 ? act.substring(0,22)+'...' : act} title={act} checked={selectedActivitiesForWheel[act] || false} onChange={(checked) => setSelectedActivitiesForWheel(prev => ({...prev, [act]: checked}))} className="mb-0 flex-grow" labelTextColor={toolTextColor}/> 
+                                            <div key={`config-${idx}`} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5"> 
+                                                <CheckboxField id={`select-act-${idx}`} label={act.length > 25 ? act.substring(0,22)+'...' : act} title={act} checked={selectedActivitiesForWheel[act] || false} onChange={(checked) => setSelectedActivitiesForWheel(prev => ({...prev, [act]: checked}))} className="mb-0 flex-grow" /> 
                                                 {selectedActivitiesForWheel[act] && ( 
-                                                    <div className="w-16 ml-2">
-                                                        <input type="number" min="1" max="12" value={wheelActivityWeights[act] || 1} onChange={(e) => handleWheelActivityWeightChange(act, e.target.value)} className="w-full px-1.5 py-0.5 bg-white/50 dark:bg-black/50 border border-gray-400/30 rounded text-center focus:ring-1 focus:ring-green-400 outline-none" title="Wheel weight"/>
+                                                    <div className="w-16 ml-3">
+                                                        <input type="number" min="1" max="12" value={wheelActivityWeights[act] || 1} onChange={(e) => handleWheelActivityWeightChange(act, e.target.value)} className="w-full px-2 py-1 bg-black/40 border border-white/10 rounded-lg text-center text-[10px] font-black outline-none focus:border-emerald-500/50 transition-all"/>
                                                     </div> 
                                                 )} 
                                             </div> 
                                         ))} 
                                     </div>
 
-                                    <div className={`text-xs p-3 rounded-md mb-3 ${isSumMismatch ? 'bg-red-500/20 text-red-700 dark:text-red-300' : 'bg-green-500/20 text-green-700 dark:text-green-300'}`}> 
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span>Current Total Weight:</span>
-                                            <span className="font-bold">{currentSumOfWheelWeights}</span>
+                                    <div className={`p-4 rounded-2xl mb-6 border transition-all ${isSumMismatch ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}> 
+                                        <div className="flex justify-between items-center mb-1 text-[9px] font-black uppercase tracking-widest">
+                                            <span>Current Magnitude</span>
+                                            <span className="text-sm">{currentSumOfWheelWeights}</span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                            <span>Required Segments:</span>
-                                            <span className="font-bold">{numberOfSegmentsOnWheel}</span>
+                                        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
+                                            <span>Target Matrix</span>
+                                            <span className="text-sm">{numberOfSegmentsOnWheel}</span>
                                         </div>
-                                        {isSumMismatch && <p className="mt-2 font-semibold">Total must match segments!</p>} 
+                                        {isSumMismatch && <p className="mt-3 text-[8px] font-black uppercase tracking-[0.2em] text-center italic">Mismatch Detected</p>} 
                                     </div>
                                     
-                                    <button onClick={generateWheelSegmentsFromSetup} disabled={isSumMismatch} className="w-full py-2 px-3 text-sm font-bold rounded-md transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed shadow-md" style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}}>Rebuild Wheel</button>
-                                </div>
-                                <div className="p-3 bg-black/5 dark:bg-black/20 rounded-md border border-gray-400/20">
-                                    <h3 className="text-sm font-semibold mb-2 opacity-80">Sound Settings</h3>
-                                    <SelectField id="spinSound" label="Spinning Effect" value={selectedSpinSound} onChange={setSelectedSpinSound} options={spinSoundPresets} labelTextColor={toolTextColor} className="mb-0" />
-                                </div>
+                                    <Button 
+                                        onClick={generateWheelSegmentsFromSetup} 
+                                        disabled={isSumMismatch} 
+                                        variant="primary"
+                                        size="lg"
+                                        backgroundColor="#10b981"
+                                        startIcon={<RefreshIcon className="w-5 h-5" />}
+                                        className="w-full font-black uppercase tracking-[0.3em] text-[10px] py-4 h-auto shadow-emerald-500/20 shadow-xl" 
+                                    >
+                                        Reconstruct Wheel
+                                    </Button>
+                                </section>
+                                <section className="p-5 bg-black/20 rounded-2xl border border-white/5">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-4 px-1">Audio Feedback</h3>
+                                    <SelectField id="spinSound" label="Sonic Signature" value={selectedSpinSound} onChange={setSelectedSpinSound} options={spinSoundPresets} className="mb-0" />
+                                </section>
                             </div>
                         </div>
                     </div>
@@ -442,7 +478,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                                     {logoSizeOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                                 </select>
                                             </div>
-                                            <button onClick={() => setCustomLogo(null)} className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-sm transition-colors">Clear</button>
+                                            <Button onClick={() => setCustomLogo(null)} variant="ghost" size="sm" className="px-5 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest border border-red-500/20 transition-all">Clear</Button>
                                         </div>
                                     )}
                                 </div>
@@ -484,30 +520,32 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-6 pt-4 border-t border-gray-400/20 text-center">
-                            <button onClick={() => setShowAppearancePanel(false)} className="px-8 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-bold transition-colors shadow-md">Close Panel</button>
+                        <div className="mt-10 pt-8 border-t border-white/5 text-center">
+                            <Button onClick={() => setShowAppearancePanel(false)} variant="primary" size="lg" className="px-12 font-black uppercase tracking-[0.3em] text-xs h-14 shadow-lg active:scale-95">Commit Changes</Button>
                         </div>
                     </div>
                 )}
             </div>
 
             {/* MAIN WHEEL DISPLAY AREA - STABLE POSITIONING */}
-            <main className="flex-grow flex flex-col items-center justify-start py-8 px-4 md:py-12 min-h-[650px] relative">
+            <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
                 {wheelSegments.length > 0 && !isSumMismatch ? (
                     <div className="flex flex-col items-center transition-all duration-500 ease-in-out">
                         <div ref={canvasContainerRef} className="relative w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] md:w-[480px] md:h-[480px] rounded-full shadow-[0_0_60px_rgba(0,0,0,0.6)] border-4 border-gray-700/50 bg-gray-900/20">
                             <canvas ref={canvasRef} className="w-full h-full rounded-full cursor-pointer hover:scale-[1.01] transition-transform duration-300" onClick={handleSpin} />
                             
                             {/* Inner Spin Button / Center Piece - PERFECTLY CENTERED */}
-                            <button 
-                                onClick={handleSpin} 
-                                disabled={isSpinning} 
-                                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full z-10 flex flex-col items-center justify-center shadow-2xl transition-all ${isSpinning ? 'scale-90 opacity-40 cursor-not-allowed' : 'hover:scale-110 active:scale-95 animate-pulse'}`} 
-                                style={{ backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor), border: `4px solid ${lightenDarkenColor(toolAccentColor, -25)}` }}
-                            >
-                                <span className="text-lg sm:text-xl font-black uppercase tracking-tighter leading-none">{isSpinning ? '...' : 'SPIN'}</span>
-                                <span className="text-[8px] sm:text-[10px] font-bold opacity-80 mt-1">CLICK ME</span>
-                            </button>
+                                <Button 
+                                    onClick={handleSpin} 
+                                    disabled={isSpinning} 
+                                    variant="ghost"
+                                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 !rounded-full z-10 flex items-center justify-center transition-all focus:outline-none bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 overflow-hidden ${isSpinning ? 'scale-90 opacity-40 cursor-not-allowed' : 'hover:scale-110 active:scale-95 animate-pulse-gentle'}`}
+                                    style={{ boxShadow: `0 0 30px ${toolAccentColor}44, inset 0 0 15px rgba(255,255,255,0.1)` }}
+                                >
+                                    <div className="flex flex-col items-center justify-center">
+                                        <CommunitySpinnerIcon className={`w-10 h-10 sm:w-14 sm:h-14 ${isSpinning ? 'animate-spin' : ''}`} style={{ color: toolAccentColor }} />
+                                    </div>
+                                </Button>
                         </div>
 
                         {/* Result Presentation - Flow-Optimized to prevent jump */}
@@ -524,17 +562,29 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                         </div>
                     </div>
                 ) : (
-                    <div className="max-w-md text-center p-12 bg-black/10 rounded-3xl border-4 border-dashed border-gray-500/30 flex flex-col items-center justify-center">
-                        <CogIcon className="w-20 h-20 opacity-20 mb-6 animate-spin-slow" />
-                        <h2 className="text-2xl font-bold mb-4 opacity-70">Wheel Not Ready</h2>
-                        <p className="text-sm opacity-60 leading-relaxed">{placeholderMessage}</p>
-                        <button onClick={() => setIsConfigPanelOpen(true)} className="mt-8 px-6 py-3 rounded-full font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-all shadow-lg active:scale-95">Open Configuration</button>
+                    <div className="max-w-lg w-full mx-auto text-center p-12 bg-slate-50/50 dark:bg-black/10 rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-500/20 flex flex-col items-center justify-center gap-6 shadow-sm animate-fadeIn">
+                        <div className="mb-2">
+                            <CogIcon className="w-20 h-20 opacity-20 animate-spin-slow transition-all duration-1000 group-hover:opacity-40" />
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter mb-3 opacity-70 italic text-emerald-500">Matrix Off-line</h2>
+                            <p className="text-[10px] uppercase font-black tracking-[0.3em] opacity-40 leading-relaxed max-w-sm mx-auto">{placeholderMessage}</p>
+                            <Button 
+                                onClick={() => setIsConfigPanelOpen(true)} 
+                                variant="primary" 
+                                size="lg" 
+                                className="mt-10 px-12 font-black uppercase text-[11px] tracking-[0.3em] shadow-xl active:scale-95 shadow-emerald-500/20 hover:shadow-emerald-500/40"
+                                backgroundColor="#10b981"
+                            >
+                                Initialize Configuration
+                            </Button>
+                        </div>
                     </div>
                 )}
             </main>
 
-            <footer className="w-full py-8 px-4 bg-black/25 mt-auto text-center border-t border-white/5">
-                <p className="text-[10px] sm:text-xs opacity-40 hover:opacity-100 transition-opacity uppercase tracking-[4px]">Suno Community Magic Spin Wheel • Stay Creative</p>
+            <footer className="w-full py-8 px-4 bg-transparent dark:bg-black/10 border-t border-gray-200 dark:border-white/5 mt-auto text-center">
+                <p className="text-[10px] sm:text-xs text-slate-400 dark:text-gray-500 font-black uppercase tracking-[4px]">Suno Community Magic Spin Wheel • Stay Creative</p>
             </footer>
 
             {/* Modals */}

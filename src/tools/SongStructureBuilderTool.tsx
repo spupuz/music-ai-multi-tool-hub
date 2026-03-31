@@ -1,13 +1,15 @@
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
 import type { SongStructureBlock, SavedArrangement, LyricLineData } from '@/types';
 import { countSyllablesInLine } from '@/utils/lyricUtils';
 import InputField from '@/components/forms/InputField';
 
 
 import { TOOL_CATEGORY, LOCAL_STORAGE_CURRENT_WORK_KEY, LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, predefinedBlockTypes, arrangementTemplates } from '@/components/SongStructureBuilder/constants';
-import { CopyIcon, SaveIcon, LoadIcon, InfoIcon } from '@/components/SongStructureBuilder/Icons';
+import { CopyIcon, SaveIcon, LoadIcon, InfoIcon, TrashIcon, ExportIcon, HistoryIcon } from '@/components/SongStructureBuilder/Icons';
 import { escapeCsvField } from '@/components/SongStructureBuilder/utils';
 import SaveArrangementModal from '@/components/SongStructureBuilder/SaveArrangementModal';
 import LoadArrangementModal from '@/components/SongStructureBuilder/LoadArrangementModal';
@@ -420,16 +422,19 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 setClearAllClickCount(0);
             }, 3000); // Reset after 3 seconds
         }
-    }, [clearAllClickCount, trackLocalEvent]);
+}, [clearAllClickCount, trackLocalEvent]);
 
 
     return (
         <div className="w-full">
-            <header className="mb-10 text-center">
-                <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Song Structure & Lyric Builder</h1>
-                <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto"> Visually build your song's structure, write lyrics with version control, count syllables, and export a formatted prompt for AI music generators. </p>
-            </header>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Structure Builder</h1>
+        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Compositional Architecture • Strategic Song Layout Generator
+        </p>
+      </header>
+
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <StructurePalette
                     blockTypeColors={blockTypeColors}
                     onDragStart={handleDragStart}
@@ -439,91 +444,161 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     setCustomBlockName={setCustomBlockName}
                     onAddCustomBlock={handleAddCustomBlock}
                     onApplyTemplate={handleApplyTemplate}
-                />
+                />                <div className="lg:col-span-3 glass-card p-2 sm:p-6 md:p-10 border-white/10 shadow-2xl relative overflow-hidden flex flex-col transition-all duration-500 animate-fadeIn">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] pointer-events-none"></div>
 
-                <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-4 rounded-lg border-2 border-gray-200 dark:border-green-700 shadow-md">
-                    <div className="flex justify-between items-center mb-3 flex-wrap gap-2"> 
-                        <h2 className="text-lg font-semibold text-green-700 dark:text-green-300">Arrangement Timeline</h2> 
-                        <div className="flex items-center gap-2">
-                            <div className="text-lg font-mono text-green-800 dark:text-green-200 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md border border-gray-300 dark:border-gray-700">
-                                Est. Time: {estimatedTotalTime}
-                            </div>
-                            <InfoIcon tooltip="This is a helpful guideline based on your BPM and bar counts. The final AI-generated song length will vary based on the AI's creative interpretation of tempo, vocal phrasing, and instrumental fills." />
+                    {/* Timeline Header */}
+                    <div className="flex justify-between items-center mb-4 sm:mb-8 flex-wrap gap-4 sm:gap-6 relative z-10"> 
+                        <div>
+                          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 opacity-80 mb-2">Arrangement Timeline</h2>
+                          <div className="flex items-center gap-4">
+                              <div className="text-sm font-black tracking-tighter text-gray-900 dark:text-white bg-white/5 px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+                                  <HistoryIcon className="w-3.5 h-3.5 text-gray-500" />
+                                  <span>{estimatedTotalTime} <span className="text-[8px] uppercase tracking-widest text-gray-500 ml-1">Est. Duration</span></span>
+                              </div>
+                              <InfoIcon tooltip="Helpful guideline based on BPM and bar counts. AI creative interpretation may vary." />
+                          </div>
                         </div>
+
                         <div className="flex gap-2 flex-wrap"> 
-                            <button onClick={() => { setNewArrangementName(''); setErrorSave(null); setShowSaveModal(true); }} className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-xs font-medium flex items-center gap-1"><SaveIcon/>Save As...</button>
-                            <button onClick={() => setShowLoadModal(true)} disabled={savedArrangements.length === 0} className="px-3 py-1 bg-teal-600 hover:bg-teal-500 text-white rounded-md text-xs font-medium flex items-center gap-1 disabled:opacity-50"><LoadIcon/>Load... ({savedArrangements.length})</button>
-                            <button onClick={() => setShowImportExportModal(true)} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md text-xs font-medium">Import/Export</button>
-                            <button onClick={handleClearAll} className="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-md text-xs font-medium"> {getClearAllButtonText()} </button> 
+                            <Button onClick={() => { setNewArrangementName(''); setErrorSave(null); setShowSaveModal(true); }} variant="primary" size="sm" startIcon={<SaveIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 h-9 sm:h-10" backgroundColor="#10b981">Save</Button>
+                            <Button onClick={() => setShowLoadModal(true)} disabled={savedArrangements.length === 0} variant="ghost" size="sm" startIcon={<LoadIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 border-white/10 h-9 sm:h-10">Vault ({savedArrangements.length})</Button>
+                            <Button onClick={() => setShowImportExportModal(true)} variant="ghost" size="sm" startIcon={<ExportIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 border-white/10 h-9 sm:h-10">Signal</Button>
+                            <Button 
+                              onClick={handleClearAll} 
+                              variant={clearAllClickCount > 0 ? "primary" : "ghost"} 
+                              size="sm" 
+                              startIcon={<TrashIcon className="w-3 h-3"/>}
+                              className={`font-black uppercase tracking-widest text-[9px] px-4 h-9 sm:h-10 ${clearAllClickCount > 0 ? '' : 'border-red-500/30 text-red-500 hover:bg-red-500/10'}`}
+                              backgroundColor={clearAllClickCount > 0 ? "#ef4444" : undefined}
+                            > 
+                              {getClearAllButtonText()} 
+                            </Button> 
                         </div> 
                     </div>
-                    {statusMessage && <p className="text-sm text-yellow-600 dark:text-yellow-300 text-center mb-2">{statusMessage}</p>}
+
+                    {statusMessage && <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600 dark:text-yellow-500 text-center mb-6 animate-pulse relative z-10">{statusMessage}</p>}
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 items-end">
-                        <InputField id="songTitle" label="Song Title" value={songTitle} onChange={setSongTitle} placeholder="e.g., Echoes of the Void" className="mb-0" />
-                        <InputField id="tags" label="Tags / Style Prompt" value={tags} onChange={setTags} placeholder="e.g., epic, orchestral" className="mb-0" />
+                    {/* Song Metadata Inputs */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-4 sm:mb-8 p-3 sm:p-6 bg-white/5 dark:bg-black/40 rounded-2xl border border-white/5 items-end relative z-10">
+                        <div className="lg:col-span-1">
+                          <InputField id="songTitle" label="Song Title" value={songTitle} onChange={setSongTitle} placeholder="e.g., Echoes" className="mb-0" />
+                        </div>
+                        <div className="lg:col-span-1">
+                          <InputField id="tags" label="Style / Tags" value={tags} onChange={setTags} placeholder="e.g., epic orchestral" className="mb-0" />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="bpm" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">Tempo (BPM)</label>
+                            <input 
+                              type="number" 
+                              id="bpm" 
+                              value={bpm || ''} 
+                              onChange={(e) => setBpm(parseInt(e.target.value) || 0)} 
+                              className="w-full px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/10 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/20 outline-none transition-all h-[34px] sm:h-[38px]" 
+                              placeholder="120"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <label htmlFor="beatsPerBar" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">Meter (X/4)</label>
+                            <input 
+                              type="number" 
+                              id="beatsPerBar" 
+                              value={beatsPerBar || ''} 
+                              onChange={(e) => setBeatsPerBar(parseInt(e.target.value) || 4)} 
+                              className="w-full px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/10 rounded-xl text-sm font-bold focus:ring-4 focus:ring-green-500/20 outline-none transition-all h-[34px] sm:h-[38px]" 
+                              placeholder="4"
+                            />
+                        </div>
                     </div>
 
                     <BarsExplainer />
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 items-end">
-                        <InputField id="bpm" label="BPM" type="number" value={String(bpm)} onChange={(val) => setBpm(parseInt(val, 10) || 120)} className="mb-0"/>
-                        <InputField id="beatsPerBar" label="Beats Per Bar" type="number" value={String(beatsPerBar)} onChange={(val) => setBeatsPerBar(parseInt(val, 10) || 4)} className="mb-0"/>
+
+                    {/* Timeline Container */}
+                    <div className="flex-grow flex flex-col relative mt-2 sm:mt-6 z-10">
+                      <div 
+                        ref={timelineContainerRef} 
+                        className="relative overflow-hidden bg-black/20 dark:bg-black/60 rounded-3xl border border-white/5 shadow-inner" 
+                        style={{ height: timelineHeight }}
+                      >
+                          <div 
+                              className="space-y-4 p-3 sm:p-6 h-full overflow-y-auto custom-scrollbar"
+                              onDragOver={(e) => handleDragOver(e, null)} 
+                              onDrop={handleDrop}
+                              onDragLeave={handleDragLeaveContainer}
+                          >
+                              {arrangement.length > 0 && dropTargetIndex === 0 && <DropIndicator />}
+                              
+                              {arrangement.map((block, index) => (
+                                  <TimelineBlockItem
+                                      key={block.id}
+                                      block={block}
+                                      index={index}
+                                      blockColor={blockTypeColors[block.type] || '#555'}
+                                      dropTargetIndex={dropTargetIndex}
+                                      isLast={index === arrangement.length - 1}
+                                      onDragOver={handleDragOver}
+                                      onDragStart={handleDragStart}
+                                      onDragEnd={handleDragEnd}
+                                      onTypeChange={handleTypeChange}
+                                      onBarCountChange={handleBarCountChange}
+                                      onDuplicateBlock={handleDuplicateBlock}
+                                      onRemoveBlock={handleRemoveBlock}
+                                      onNotesChange={handleNotesChange}
+                                      onLyricTextChange={handleLyricTextChange}
+                                      onLyricTextFocus={handleLyricTextFocus}
+                                      onLyricTextBlur={handleLyricTextBlur}
+                                      countSyllablesInLine={countSyllablesInLine}
+                                      onReorderLyricLine={handleReorderLyricLine}
+                                      onInsertLyricLineAfter={handleInsertLyricLineAfter}
+                                      onShowHistory={handleShowHistory}
+                                      onDeleteLyricLine={handleDeleteLyricLine}
+                                      onAddLyricLine={handleAddLyricLine}
+                                  />
+                              ))}
+                              
+                              {arrangement.length === 0 && (
+                                  <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-3xl bg-white/5">
+                                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">Timeline Empty. Deploy blocks from palette.</p>
+                                  </div>
+                              )}
+                          </div>
+                      </div>
+                      
+                      {/* Resize Handle */}
+                      <div onMouseDown={handleMouseDownResize} className="w-full h-4 group cursor-ns-resize flex items-center justify-center p-1">
+                          <div className="w-12 h-1 bg-white/10 dark:bg-white/5 rounded-full group-hover:bg-green-500/50 transition-colors"></div>
+                      </div>
                     </div>
-                    
-                    <div ref={timelineContainerRef} className="relative overflow-hidden bg-gray-100 dark:bg-gray-850 rounded-lg border border-gray-200 dark:border-gray-700 shadow-inner" style={{ height: timelineHeight }}>
-                        <div 
-                            className="space-y-0.5 p-2 h-full overflow-y-auto"
-                            onDragOver={(e) => handleDragOver(e, null)} 
-                            onDrop={handleDrop}
-                            onDragLeave={handleDragLeaveContainer}
-                        >
-                            {arrangement.length > 0 && dropTargetIndex === 0 && <DropIndicator />}
-                            {arrangement.length === 0 && (
-                                <div className="text-center text-gray-500 dark:text-gray-500 py-10 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center h-full">
-                                    Drag blocks from the palette to start building your song here.
-                                </div>
-                            )}
-                            {arrangement.map((block, index) => (
-                                <TimelineBlockItem
-                                    key={block.id}
-                                    block={block}
-                                    index={index}
-                                    blockColor={blockTypeColors[block.type] || '#4A5568'}
-                                    dropTargetIndex={dropTargetIndex}
-                                    isLast={index === arrangement.length - 1}
-                                    onDragOver={handleDragOver}
-                                    onDragStart={handleDragStart}
-                                    onDragEnd={handleDragEnd}
-                                    onTypeChange={handleTypeChange}
-                                    onBarCountChange={handleBarCountChange}
-                                    onDuplicateBlock={handleDuplicateBlock}
-                                    onRemoveBlock={handleRemoveBlock}
-                                    onNotesChange={handleNotesChange}
-                                    onLyricTextChange={handleLyricTextChange}
-                                    onLyricTextFocus={handleLyricTextFocus}
-                                    onLyricTextBlur={handleLyricTextBlur}
-                                    countSyllablesInLine={countSyllablesInLine}
-                                    onReorderLyricLine={handleReorderLyricLine}
-                                    onInsertLyricLineAfter={handleInsertLyricLineAfter}
-                                    onShowHistory={handleShowHistory}
-                                    onDeleteLyricLine={handleDeleteLyricLine}
-                                    onAddLyricLine={handleAddLyricLine}
-                                />
-                            ))}
+
+                    {/* Neural Network Export */}
+                    <div className="mt-8 sm:mt-12 pt-6 sm:pt-10 border-t border-white/5 relative z-10">
+                        <div className="flex justify-between items-center mb-4 sm:mb-6">
+                          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500">Neural Network Export</h3>
+                          <Button 
+                            onClick={handleCopyToClipboard} 
+                            disabled={!outputPrompt} 
+                            variant="primary" 
+                            size="xs" 
+                            startIcon={<CopyIcon className="w-3 h-3" />}
+                            className="font-black uppercase tracking-widest text-[8px] bg-indigo-600 h-9 sm:h-10"
+                          >
+                            {copyStatus || 'Copy Signal'}
+                          </Button>
                         </div>
-                        <div onMouseDown={handleMouseDownResize} className="absolute bottom-0 left-0 w-full h-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-ns-resize flex items-center justify-center" title="Resize Timeline">
-                            <div className="w-10 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
+                        <div className="relative group">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-3xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                          <textarea
+                              readOnly
+                              value={outputPrompt}
+                              className="relative w-full p-4 sm:p-6 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-2xl text-xs font-mono text-green-500/90 leading-relaxed min-h-[200px] sm:min-h-[300px] outline-none"
+                              aria-label="Generated AI Prompt"
+                          />
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div className="mt-8 bg-white dark:bg-gray-900 p-4 rounded-lg border-2 border-gray-200 dark:border-green-700 shadow-md">
-                <div className="flex justify-between items-center mb-2"> <h2 className="text-lg font-semibold text-green-700 dark:text-green-300">Formatted AI Prompt</h2> <button onClick={handleCopyToClipboard} disabled={!outputPrompt} className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-black rounded-md text-sm font-medium flex items-center gap-2 disabled:opacity-50 transition-colors"> <CopyIcon /> {copyStatus || 'Copy'} </button> </div>
-                <textarea readOnly value={outputPrompt} rows={Math.max(8, arrangement.length * 3 + (songTitle ? 2 : 0) + (tags ? 2 : 0))} className="w-full p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md font-mono text-sm focus:ring-green-500 focus:border-green-500" aria-label="Generated song structure prompt" />
-            </div>
 
+            {/* Modals */}
             <SaveArrangementModal
                 show={showSaveModal}
                 onClose={() => setShowSaveModal(false)}
@@ -562,4 +637,5 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </div>
     );
 };
+
 export default SongStructureBuilderTool;

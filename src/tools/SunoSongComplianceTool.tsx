@@ -7,6 +7,8 @@ import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from '@/
 import { getCountryDetails, getFlagEmoji } from '@/utils/countryData';
 import type { SunoClip, SingleSongComplianceResult, TitleCheckResult, LyricsLanguageCheckResult, ContentRatingCheckResult, RatingLevel, DurationCheckResult } from '@/types';
 import Spinner from '@/components/Spinner';
+import Button from '@/components/common/Button';
+import { ComplianceCheckIcon, SaveIcon, LoadIcon, DownloadIcon, RefreshIcon, LyricsIcon } from '@/components/Icons';
 import { downloadSunoComplianceResultsAsCsv } from '@/services/csvExportService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 
@@ -396,69 +398,86 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
     }
 
     return (
-      <div className={`p-3 rounded-md border ${bgColor}`}>
-        <h4 className={`text-md font-semibold mb-1 ${textColor} flex items-center`}><span className="mr-2 text-lg">{icon}</span>{title}</h4>
-        <p className={`text-sm ${detailTextColor}`}>{message}</p>
-        {detailContent && (<div className="mt-2 pt-2 border-t border-opacity-20 border-current">{detailContent}</div>)}
+      <div className={`p-4 rounded-3xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] ${bgColor}`}>
+        <h4 className={`text-sm font-black uppercase tracking-tight mb-2 ${textColor} flex items-center`}>
+          <span className="mr-3">{icon}</span>
+          {title}
+        </h4>
+        <p className={`text-xs font-medium opacity-80 ${detailTextColor}`}>{message}</p>
+        {detailContent && (<div className="mt-3 pt-3 border-t border-white/10">{detailContent}</div>)}
       </div>
     )
   };
 
   return (
-    <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Song Compliance Checker</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Verify Suno, Riffusion, or Producer.AI song titles, duration, and analyze lyrics using Google Gemini API.
-          Enter one song URL per line in the text area below to check multiple songs.
+    <div className="w-full max-w-5xl mx-auto">
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Compliance Check</h1>
+        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Heuristic Enforcement Hub • Validate metadata and content against contest protocols
         </p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300">
-        <div className="space-y-6">
-          <div className="mb-4">
-            <label htmlFor="committeePassword" className="block text-lg font-medium text-yellow-600 dark:text-yellow-400 mb-1">Committee Access Password</label>
-            <div className="flex gap-2 mt-1">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn">
+        <div className="space-y-4 md:space-y-8">
+          <div className="mb-2 md:mb-4">
+            <label htmlFor="committeePassword" className="block text-[10px] font-black uppercase tracking-[0.3em] text-yellow-600 dark:text-yellow-400 mb-1 ml-1 leading-none">Committee Access Password</label>
+            <div className="flex gap-3">
               <input type="password" id="committeePassword" value={enteredPassword} onChange={handlePasswordChange}
                 onKeyDown={(e) => e.key === 'Enter' && handleVerifyPassword()}
-                placeholder="Enter access password"
-                className="block flex-grow px-3 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-yellow-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 sm:text-lg text-gray-900 dark:text-white" />
-              <button onClick={handleVerifyPassword} disabled={isVerifying || !enteredPassword.trim()}
-                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-md disabled:opacity-50 flex items-center gap-1 flex-shrink-0">
-                {isVerifying ? <Spinner size="w-4 h-4" color="text-black" /> : isPasswordCorrect ? '✅' : '🔑'}
-                {isVerifying ? 'Verifying...' : 'Verify'}
-              </button>
+                placeholder="TOKEN REQUIRED"
+                className="flex-grow px-3 py-2 md:px-4 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold transition-all h-10 md:h-auto" />
+              <Button 
+                onClick={handleVerifyPassword} 
+                disabled={isVerifying || !enteredPassword.trim()}
+                variant="warning"
+                className="px-3 py-1.5 md:px-6 md:py-3 flex-shrink-0 font-black uppercase tracking-widest text-[10px] h-10 md:h-auto"
+                startIcon={isVerifying ? null : (isPasswordCorrect ? '✅' : <RefreshIcon className="w-4 h-4" />)}
+              >
+                {isVerifying ? <Spinner size="w-4 h-4" color="text-black" /> : ''}
+                {isVerifying ? 'Verifying' : 'Verify'}
+              </Button>
             </div>
-            <p className="text-xs text-yellow-600 dark:text-yellow-500 mt-1 italic">For SSC Committee Usage Only. Password verified server-side.</p>
+            <p className="text-[8px] font-black uppercase tracking-widest text-yellow-600/60 mt-2 ml-1 italic">For SSC Committee Usage Only. Password verified server-side.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 mb-2">
-            <button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} className="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Save URLs to File</button>
+          <div className="flex flex-row gap-2 md:gap-4">
+            <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
             <input type="file" ref={fileInputRef} onChange={handleLoadUrlsFromFile} accept=".txt" style={{ display: 'none' }} id="load-urls-file" />
-            <label htmlFor="load-urls-file" className="flex-1 py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-md text-sm font-medium cursor-pointer text-center disabled:opacity-50">Load URLs from File</label>
+            <Button onClick={() => fileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-white/10 p-2 md:p-3 h-8 md:h-auto">LOAD CACHE</Button>
           </div>
           <div>
-            <label htmlFor="sunoUrlsInput" className="block text-lg font-medium text-green-600 dark:text-green-400 mb-1">Song URLs (Suno/Riffusion/Producer.AI - One per line)</label>
-            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or Producer.AI song URLs here, one per line..." rows={5} className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 sm:text-lg text-gray-900 dark:text-white resize-y" disabled={isLoading} />
+            <label htmlFor="sunoUrlsInput" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-1 ml-1 leading-none">Song Signal Vectors (One per line)</label>
+            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or Producer.AI song URLs here..." rows={3} className="block w-full px-4 py-2.5 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold resize-y transition-all min-h-[60px] md:min-h-auto" disabled={isLoading} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="titleFormatPattern" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Pattern Schema <InfoIcon tooltip="Define the title structure. Use <number> for SSC version and <country/code> for country. E.g., '[SSC<number>] My Song (<country/code>)'" /></label>
+              <input type="text" id="titleFormatPattern" value={titleFormatPattern} onChange={(e) => setTitleFormatPattern(e.target.value)} className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
+            </div>
+            <div>
+              <label htmlFor="durationLimit" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Temporal Constraint (sec) <InfoIcon tooltip="Maximum allowed song duration in seconds." /></label>
+              <input type="number" id="durationLimit" value={durationLimitSeconds} onChange={(e) => setDurationLimitSeconds(Math.max(1, parseInt(e.target.value)) || 300)} min="1" className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
+            </div>
           </div>
           <div>
-            <label htmlFor="titleFormatPattern" className="block text-lg font-medium text-green-600 dark:text-green-400 mb-1">Title Format Pattern <InfoIcon tooltip="Define the title structure. Use <number> for SSC version and <country/code> for country. E.g., '[SSC<number>] My Song (<country/code>)' or 'Song for <country/code> - SSC<number> Edition'" /></label>
-            <input type="text" id="titleFormatPattern" value={titleFormatPattern} onChange={(e) => setTitleFormatPattern(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 sm:text-lg text-gray-900 dark:text-white" disabled={isLoading} />
-          </div>
-          <div>
-            <label htmlFor="durationLimit" className="block text-lg font-medium text-green-600 dark:text-green-400 mb-1">Duration Limit (seconds) <InfoIcon tooltip="Maximum allowed song duration in seconds. Default is 300 (5 minutes)." /></label>
-            <input type="number" id="durationLimit" value={durationLimitSeconds} onChange={(e) => setDurationLimitSeconds(Math.max(1, parseInt(e.target.value)) || 300)} min="1" className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 sm:text-lg text-gray-900 dark:text-white" disabled={isLoading} />
-          </div>
-          <div>
-            <label htmlFor="contentRating" className="block text-lg font-medium text-green-600 dark:text-green-400 mb-1">Content Rating Standard</label>
-            <select id="contentRating" value={selectedRating} onChange={(e) => setSelectedRating(e.target.value as RatingLevel)} className="mt-1 block w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border-2 border-green-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 sm:text-lg text-gray-900 dark:text-white" disabled={isLoading}>
-              {ratingOptions.map(option => (<option key={option.value} value={option.value}>{option.label}</option>))}
+            <label htmlFor="contentRating" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Rating Protocol</label>
+            <select id="contentRating" value={selectedRating} onChange={(e) => setSelectedRating(e.target.value as RatingLevel)} className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all appearance-none" disabled={isLoading}>
+              {ratingOptions.map(option => (<option key={option.value} value={option.value} className="bg-gray-900">{option.label}</option>))}
             </select>
           </div>
-          <p className="text-sm text-gray-500 mt-1">Lyrics analysis performed via secure Gemini Worker proxy.</p>
-          <button onClick={handleRunChecks} disabled={isLoading || !isPasswordCorrect || !sunoUrlsInput.trim() || !titleFormatPattern.trim()} className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-black bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors">
-            {isLoading ? <><Spinner size="w-6 h-6 mr-2" color="text-black" />PROCESSING...</> : 'RUN COMPLIANCE CHECKS'}
-          </button>
+          <p className="text-[8px] font-black uppercase tracking-widest text-gray-500/60 mt-1 ml-1">Lyrics analysis performed via secure Gemini Worker proxy protocol.</p>
+          <Button 
+            onClick={handleRunChecks} 
+            disabled={isLoading || !isPasswordCorrect || !sunoUrlsInput.trim() || !titleFormatPattern.trim()} 
+            variant="primary"
+            size="lg"
+            backgroundColor="#10b981"
+            className="w-full font-black uppercase tracking-[0.3em] text-sm py-5 h-auto shadow-emerald-500/20 rounded-3xl"
+            startIcon={isLoading ? null : <ComplianceCheckIcon className="w-6 h-6" />}
+          >
+            {isLoading ? 'ANALYZING SIGNAL...' : 'RUN COMPLIANCE CHECKS'}
+          </Button>
         </div>
 
         {isLoading && progressMessage && (<div className="mt-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-green-600 dark:text-green-300 text-center animate-pulse" role="status">{progressMessage}</div>)}
@@ -466,47 +485,68 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
         {exportStatusMessage && <p className={`mt-2 text-sm text-center ${exportStatusMessage.includes('Error') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-300'}`}>{exportStatusMessage}</p>}
 
         {batchSummary && !isLoading && (
-          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-2 text-center">Batch Summary</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-sm">
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Total Processed</p><p className="font-bold text-gray-900 dark:text-white text-lg">{batchSummary.totalProcessed}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Passed All Checks</p><p className="font-bold text-green-600 dark:text-green-200 text-lg">{batchSummary.passedAllChecks}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Title Issues</p><p className="font-bold text-yellow-600 dark:text-yellow-200 text-lg">{batchSummary.titleIssues}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Duration Issues</p><p className="font-bold text-cyan-600 dark:text-cyan-300 text-lg">{batchSummary.durationIssues}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Content Rating Issues</p><p className="font-bold text-orange-600 dark:text-orange-300 text-lg">{batchSummary.contentRatingIssues}</p></div>
-              <div className="bg-gray-200 dark:bg-gray-700 p-2 rounded"><p className="text-gray-700 dark:text-gray-300">Processing Errors</p><p className="font-bold text-red-600 dark:text-red-300 text-lg">{batchSummary.processingErrors}</p></div>
+          <div className="mt-8 p-6 glass-card border-white/10 animate-fadeIn">
+            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-6 text-center">Batch Intelligence Summary</h3>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Processed</p><p className="font-black text-gray-900 dark:text-white text-lg">{batchSummary.totalProcessed}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-green-500 mb-1">Passed</p><p className="font-black text-green-600 dark:text-green-200 text-lg">{batchSummary.passedAllChecks}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Titles</p><p className="font-black text-yellow-600 dark:text-yellow-200 text-lg">{batchSummary.titleIssues}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-cyan-500 mb-1">Time</p><p className="font-black text-cyan-600 dark:text-cyan-300 text-lg">{batchSummary.durationIssues}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-orange-500 mb-1">Rating</p><p className="font-black text-orange-600 dark:text-orange-300 text-lg">{batchSummary.contentRatingIssues}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-red-500 mb-1">Errors</p><p className="font-black text-red-600 dark:text-red-300 text-lg">{batchSummary.processingErrors}</p></div>
             </div>
           </div>
         )}
 
         {batchRunResults.length > 0 && (
-          <div className="mt-8 space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-semibold text-green-700 dark:text-green-300 border-b-2 border-gray-300 dark:border-gray-600 pb-3">Batch Results</h2>
-              <button onClick={handleExportToCsv} disabled={isLoading} className="py-2 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Export Results to CSV</button>
+          <div className="mt-12 space-y-8">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <h2 className="text-xl font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Analysis Logs</h2>
+               <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-white/10">Export Summary</Button>
             </div>
             {batchRunResults.map((result, index) => (
-              <div key={result.inputUrl + index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md transition-colors duration-300">
-                <div className="flex justify-between items-start">
-                  <p className="text-sm text-blue-600 dark:text-blue-300 mb-2 truncate flex-grow" title={result.inputUrl}>Checking: {result.inputUrl}</p>
-                  {result.processingError && <button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} className="ml-2 text-xs py-1 px-2 bg-yellow-500 hover:bg-yellow-400 text-black rounded disabled:opacity-50">Retry</button>}
+              <div key={result.inputUrl + index} className="p-6 glass-card border-white/10 shadow-xl transition-all duration-300 animate-fadeIn">
+                <div className="flex justify-between items-start mb-4">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow" title={result.inputUrl}>Signal: {result.inputUrl}</p>
+                  {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Signal</Button>}
                 </div>
                 {result.processingError && !result.clipData && (<ResultDisplay title="Processing Error" status={false} message={result.processingError} />)}
                 {result.clipData && (
-                  <>
-                    <div className="mb-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-md border border-gray-300 dark:border-gray-600"><div className="flex flex-col sm:flex-row gap-4 items-center">{result.clipData.image_url && (<img src={result.clipData.image_url} alt="Cover Art" className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-md border-2 border-gray-400 dark:border-gray-500 flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />)} <div className="flex-1 text-center sm:text-left"><h3 className="text-xl md:text-2xl font-bold text-green-700 dark:text-green-200 break-words" title={result.clipData.title}>{result.clipData.title || "Untitled"}</h3><p className="text-md text-gray-700 dark:text-gray-300">by <a href={result.clipData.suno_creator_url} target="_blank" rel="noopener noreferrer" className="text-green-600 dark:text-green-400 hover:underline">{result.clipData.display_name || `@${result.clipData.handle}` || "Unknown"}</a></p><a href={result.clipData.suno_song_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 underline inline-block mt-1">View on Source</a></div></div></div>
-                    {result.clipData.audio_url && (<div className="my-3"><audio controls src={result.clipData.audio_url} className="w-full">Audio not supported.</audio></div>)}
-                    {result.songLyrics && (<div className="my-3"><h4 className="text-md font-medium text-green-700 dark:text-green-200 mb-1">Lyrics:</h4><div className="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md max-h-40 overflow-y-auto text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{result.songLyrics}</div>
-                      <button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} className="mt-2 text-xs py-1 px-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded">Process These Lyrics</button>
-                    </div>)}
-                    <div className="space-y-3 mt-3">
+                  <div className="space-y-6">
+                    <div className="p-4 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5">
+                      <div className="flex flex-col sm:flex-row gap-6 items-center">
+                        {result.clipData.image_url && (
+                          <img src={result.clipData.image_url} alt="Cover Art" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                        )} 
+                        <div className="flex-1 text-center sm:text-left min-w-0">
+                          <h3 className="text-xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-400 truncate" title={result.clipData.title}>{result.clipData.title || "UNTITLED_SIGNAL"}</h3>
+                          <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mt-1">by <a href={result.clipData.suno_creator_url} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">{result.clipData.display_name || `@${result.clipData.handle}` || "ANONYMOUS_ENTITY"}</a></p>
+                          <a href={result.clipData.suno_song_url} target="_blank" rel="noopener noreferrer" className="text-[8px] font-black uppercase tracking-[0.2em] text-emerald-500 hover:text-emerald-400 mt-2 inline-block">SOURCE_LINK</a>
+                        </div>
+                      </div>
+                    </div>
+                    {result.clipData.audio_url && (
+                      <div className="my-4 p-2 bg-white/5 rounded-2xl border border-white/5">
+                        <audio controls src={result.clipData.audio_url} className="w-full h-8 opacity-40 hover:opacity-100 transition-opacity">Audio not supported.</audio>
+                      </div>
+                    )}
+                    {result.songLyrics && (
+                      <div className="space-y-3">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 ml-1">Lyrical Content</h4>
+                        <div className="p-4 bg-white/5 dark:bg-black/20 border border-white/5 rounded-2xl max-h-40 overflow-y-auto text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed scrollbar-thin">
+                          {result.songLyrics}
+                        </div>
+                        <Button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} variant="ghost" size="xs" startIcon={<LyricsIcon className="w-3 h-3" />} className="w-full font-black uppercase tracking-widest text-[8px] border-white/5 hover:bg-white/5">Inject into Lyric Lab</Button>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {result.titleCheck && <ResultDisplay title="Title Format Check" status={result.titleCheck.passed} message={result.titleCheck.message} details={result.titleCheck} />}
                       {result.durationCheck && <ResultDisplay title="Duration Check" status={result.durationCheck.passed} message={result.durationCheck.message} details={result.durationCheck} />}
                       {result.languageCheck && <ResultDisplay title="Lyrics Language Analysis (Gemini)" status={!result.languageCheck.primaryLanguageCode.includes('Error')} message={result.languageCheck.message || 'Analysis complete.'} details={result.languageCheck} />}
                       {result.contentRatingCheck && <ResultDisplay title={`Content Rating Check (${selectedRating})`} status={result.contentRatingCheck.is_appropriate} message={result.contentRatingCheck.message || 'Analysis complete.'} details={result.contentRatingCheck.explanation} />}
                       {result.processingError && result.clipData && <ResultDisplay title="Processing Error during analysis" status={false} message={result.processingError} />}
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             ))}

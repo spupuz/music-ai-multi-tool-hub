@@ -41,6 +41,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   }, [getCacheKey]);
 
   const [clearPlayerCacheClickCount, setClearPlayerCacheClickCount] = useState(0);
+  const [clearProfileCacheClickCount, setClearProfileCacheClickCount] = useState(0);
   const [clearAllHubDataClickCount, setClearAllHubDataClickCount] = useState(0);
 
   // Load from localStorage on mount
@@ -79,11 +80,11 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     }
   }, [songInfoCache]);
 
-  const handleClearPlayerCache = useCallback(() => {
+  const handleClearSongInfoCache = useCallback(() => {
     if (clearPlayerCacheClickCount < CLEAR_CLICKS_NEEDED - 1) {
       const newCount = clearPlayerCacheClickCount + 1;
       setClearPlayerCacheClickCount(newCount);
-      setDataManagementStatus(`Click ${CLEAR_CLICKS_NEEDED - newCount} more times to clear player cache.`);
+      setDataManagementStatus(`Click ${CLEAR_CLICKS_NEEDED - newCount} more times to clear song info cache.`);
       setTimeout(() => {
           setClearPlayerCacheClickCount(0);
           setDataManagementStatus('');
@@ -93,14 +94,44 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     try {
       localStorage.removeItem(LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY);
       setSongInfoCache(new Map());
-      setDataManagementStatus("Player cache cleared successfully.");
-      trackLocalEvent(TOOL_CATEGORY_PLAYER, 'cacheCleared', 'playerCache');
+      setDataManagementStatus("Song info cache (individual clips) cleared.");
+      trackLocalEvent(TOOL_CATEGORY_PLAYER, 'cacheCleared', 'songInfoCache');
       setTimeout(() => setDataManagementStatus(''), 3000);
     } catch (e) {
-      setErrorPlayer("Failed to clear player cache.");
+      setErrorPlayer("Failed to clear song info cache.");
     }
     setClearPlayerCacheClickCount(0);
   }, [clearPlayerCacheClickCount, trackLocalEvent, setErrorPlayer]);
+
+  const handleClearProfileCache = useCallback(() => {
+    if (clearProfileCacheClickCount < CLEAR_CLICKS_NEEDED - 1) {
+      const newCount = clearProfileCacheClickCount + 1;
+      setClearProfileCacheClickCount(newCount);
+      setDataManagementStatus(`Click ${CLEAR_CLICKS_NEEDED - newCount} more times to clear profile/playlist metadata cache.`);
+      setTimeout(() => {
+          setClearProfileCacheClickCount(0);
+          setDataManagementStatus('');
+      }, CLEAR_TIMEOUT_MS);
+      return;
+    }
+    try {
+      const allKeys = Object.keys(localStorage);
+      const prefixesToClear = [LOCAL_STORAGE_PREFIX_USER, LOCAL_STORAGE_PREFIX_PLAYLIST];
+      let clearedCount = 0;
+      allKeys.forEach(key => {
+        if (prefixesToClear.some(prefix => key.startsWith(prefix))) {
+          localStorage.removeItem(key);
+          clearedCount++;
+        }
+      });
+      setDataManagementStatus(`${clearedCount} profile/playlist records removed from cache.`);
+      trackLocalEvent(TOOL_CATEGORY_PLAYER, 'cacheCleared', 'profileCache', clearedCount);
+      setTimeout(() => setDataManagementStatus(''), 3000);
+    } catch (e) {
+      setErrorPlayer("Failed to clear profile cache.");
+    }
+    setClearProfileCacheClickCount(0);
+  }, [clearProfileCacheClickCount, trackLocalEvent, setErrorPlayer]);
 
   const handleClearAllHubDataFromPlayer = useCallback(() => {
     if (clearAllHubDataClickCount < CLEAR_CLICKS_NEEDED - 1) {
@@ -130,10 +161,15 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     setClearAllHubDataClickCount(0);
   }, [clearAllHubDataClickCount, trackLocalEvent, setErrorPlayer]);
 
-  const getClearPlayerCacheButtonText = useCallback(() => {
-    if (clearPlayerCacheClickCount === 0) return "Clear Player Cache";
-    return `Confirm Clear Song Cache (${CLEAR_CLICKS_NEEDED - clearPlayerCacheClickCount} left)`;
+  const getClearSongInfoCacheButtonText = useCallback(() => {
+    if (clearPlayerCacheClickCount === 0) return "Clear Song Detail Cache";
+    return `Confirm Song Clear (${CLEAR_CLICKS_NEEDED - clearPlayerCacheClickCount} left)`;
   }, [clearPlayerCacheClickCount]);
+
+  const getClearProfileCacheButtonText = useCallback(() => {
+    if (clearProfileCacheClickCount === 0) return "Clear Profile/Playlist Cache";
+    return `Confirm Profile Clear (${CLEAR_CLICKS_NEEDED - clearProfileCacheClickCount} left)`;
+  }, [clearProfileCacheClickCount]);
 
   const getClearAllHubDataButtonText = useCallback(() => {
     if (clearAllHubDataClickCount === 0) return "Clear All Hub Data";
@@ -326,9 +362,12 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     setSongInfoCache,
     dataManagementStatus,
     setDataManagementStatus,
-    clearPlayerCacheClickCount,
-    handleClearPlayerCache,
-    getClearPlayerCacheButtonText,
+    clearPlayerCacheClickCount, // Represents song detail cache
+    handleClearSongInfoCache,
+    getClearSongInfoCacheButtonText,
+    clearProfileCacheClickCount,
+    handleClearProfileCache,
+    getClearProfileCacheButtonText,
     clearAllHubDataClickCount,
     handleClearAllHubDataFromPlayer,
     getClearAllHubDataButtonText,

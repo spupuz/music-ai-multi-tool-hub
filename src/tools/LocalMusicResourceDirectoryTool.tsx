@@ -1,6 +1,14 @@
 
 import React, { useState, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
+import { 
+  SearchIcon, 
+  GlobeAltIcon, 
+  SparklesIcon, 
+  FilterIcon, 
+  ChevronRightIcon 
+} from '@/components/Icons';
 
 const TOOL_CATEGORY = 'LocalMusicResourceDirectory';
 
@@ -104,13 +112,16 @@ const initialResourceCategories: ResourceCategory[] = [
 ];
 
 const SearchBar: React.FC<{ searchTerm: string; onSearchChange: (term: string) => void }> = ({ searchTerm, onSearchChange }) => (
-  <div className="mb-6">
+  <div className="mb-8 relative group z-10">
+    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+      <SearchIcon className="w-5 h-5 text-gray-500 group-focus-within:text-green-500 transition-colors" />
+    </div>
     <input
       type="search"
       value={searchTerm}
       onChange={(e) => onSearchChange(e.target.value)}
-      placeholder="Search resources..."
-      className="w-full px-4 py-2 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 text-gray-900 dark:text-white sm:text-sm"
+      placeholder="Search cross-platform resources..."
+      className="w-full pl-12 pr-4 py-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all"
       aria-label="Search music resources"
     />
   </div>
@@ -121,23 +132,27 @@ const CategoryFilterButtons: React.FC<{
   selectedCategoryId: string | null;
   onSelectCategory: (categoryId: string | null) => void;
 }> = ({ categories, selectedCategoryId, onSelectCategory }) => (
-  <div className="mb-6 flex flex-wrap gap-2">
-    <button
+  <div className="mb-10 flex flex-wrap gap-2 z-10 relative">
+    <Button
       onClick={() => onSelectCategory(null)}
-      className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors
-                        ${!selectedCategoryId ? 'bg-green-500 text-black' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+      variant={!selectedCategoryId ? "primary" : "ghost"}
+      size="xs"
+      className="font-black uppercase tracking-widest text-[9px] px-4"
+      backgroundColor={!selectedCategoryId ? "#10b981" : undefined}
     >
       All Resources
-    </button>
+    </Button>
     {categories.map(category => (
-      <button
+      <Button
         key={category.id}
         onClick={() => onSelectCategory(category.id)}
-        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors
-                            ${selectedCategoryId === category.id ? 'bg-green-500 text-black' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
+        variant={selectedCategoryId === category.id ? "primary" : "ghost"}
+        size="xs"
+        className="font-black uppercase tracking-widest text-[9px] px-4 border-white/5"
+        backgroundColor={selectedCategoryId === category.id ? "#10b981" : undefined}
       >
         {category.name}
-      </button>
+      </Button>
     ))}
   </div>
 );
@@ -200,14 +215,16 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
 
   return (
     <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Local Music Resource Directory</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          A curated list of useful websites and tools for music creators. All links open in a new tab.
+      <header className="mb-14 text-center pt-8 px-4 animate-fadeIn">
+        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">Resource Nexus</h1>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+          Elite directory of professional tools and clandestine networks for music pioneers
         </p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-8 border-2 border-green-500 dark:border-green-500">
+      <main className="w-full glass-card p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/5 blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
         <CategoryFilterButtons
           categories={allCategoriesForFiltering}
@@ -216,17 +233,20 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
         />
 
         {filteredCategories.length === 0 && (
-          <p className="text-gray-500 dark:text-gray-400 text-center py-6">
-            No resources match your current search or filter criteria.
-          </p>
+          <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-3xl bg-white/5 animate-fadeIn">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">No resources matched the current filter vector.</p>
+          </div>
         )}
 
-        <div className="space-y-8">
+        <div className="space-y-12 relative z-10">
           {filteredCategories.map(category => (
-            <section key={category.id} aria-labelledby={`category-title-${category.id}`}>
-              <h2 id={`category-title-${category.id}`} className="text-2xl font-semibold text-green-700 dark:text-green-300 mb-4 border-b-2 border-green-600 dark:border-green-700 pb-2">
-                {category.name}
-              </h2>
+            <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn">
+              <div className="flex items-center gap-4 mb-8">
+                <h2 id={`category-title-${category.id}`} className="text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-green-600 dark:text-green-500">
+                  {category.name}
+                </h2>
+                <div className="h-px w-full bg-white/5"></div>
+              </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {category.items.map(item => (
                   <a
@@ -235,11 +255,17 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackLocalEvent(TOOL_CATEGORY, 'resourceLinkClicked', item.title)}
-                    className="block bg-gray-50 dark:bg-gray-800 p-5 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-500 hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900"
+                    className="group flex flex-col p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 hover:border-green-500/30 hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"
                   >
-                    <h3 className="text-lg font-semibold text-green-700 dark:text-green-200 mb-1.5">{item.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.description}</p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-2 hover:underline">Visit Site &rarr;</p>
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white group-hover:text-green-500 transition-colors">{item.title}</h3>
+                      <GlobeAltIcon className="w-4 h-4 text-gray-500 group-hover:text-green-500/50 transition-colors" />
+                    </div>
+                    <p className="text-xs font-bold text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{item.description}</p>
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-500 opacity-40 group-hover:opacity-100 transition-opacity">
+                      Open Nexus
+                      <ChevronRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </a>
                 ))}
               </div>
@@ -247,9 +273,11 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-gray-500 dark:text-gray-400 text-center">
-          Disclaimer: This directory provides links to external sites. We are not responsible for the content or practices of these sites. Please review their terms and licenses before use.
-        </p>
+        <div className="mt-12 pt-8 border-t border-white/5 text-center relative z-10">
+          <p className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 opacity-40">
+            Nexus Disclaimer: External vectors lead to non-affiliated domains. Review terms before deployment.
+          </p>
+        </div>
       </main>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import ReactCrop, { type Crop } from 'react-image-crop';
+import Button from '@/components/common/Button';
 
 interface ImageUploadProps {
   onImageUpload: (base64Image: string) => void;
@@ -134,8 +135,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
     fileInputRef.current?.click();
   };
   
-  const UploadIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-green-500 group-hover:text-green-400">
+  const UploadIcon: React.FC<{ className?: string }> = ({ className = "w-10 h-10 text-green-500 group-hover:text-green-400" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
     </svg>
   );
@@ -144,7 +145,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
     <div className="w-full">
       <label className="block text-sm font-medium text-green-400 mb-1">{label}</label>
       <div
-        className="group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-green-500 border-dashed rounded-md cursor-pointer hover:border-green-400 transition-colors bg-gray-800 hover:bg-gray-700"
+        className="group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-green-500 border-dashed rounded-xl cursor-pointer hover:border-green-400 transition-all bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 shadow-inner"
         onClick={handleUploadClick}
         onDrop={(e) => {
           e.preventDefault();
@@ -170,14 +171,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
           aria-label="Upload inspiration image"
         />
         {preview ? (
-          <img src={preview} alt="Preview" className="max-h-40 rounded-md object-contain" />
+          <img src={preview} alt="Preview" className="max-h-40 rounded-lg object-contain shadow-2xl" />
         ) : (
-          <div className="space-y-1 text-center py-4">
-            <UploadIcon />
-            <div className="flex text-sm text-gray-400 group-hover:text-gray-300">
-              <p className="pl-1">Drag & drop or click to upload</p>
+          <div className="flex flex-row items-center gap-6 py-6 px-4">
+            <UploadIcon className="w-12 h-12 text-green-600 dark:text-green-500 group-hover:text-green-500 dark:group-hover:text-green-400 flex-shrink-0" />
+            <div className="flex flex-col items-start text-left">
+              <p className="text-sm font-black uppercase tracking-widest text-gray-800 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Drag & drop or click</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300">PNG, JPG, GIF up to 5MB</p>
             </div>
-            <p className="text-xs text-gray-500 group-hover:text-gray-400">PNG, JPG, GIF up to 5MB</p>
           </div>
         )}
       </div>
@@ -201,9 +202,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
                     />
                 </ReactCrop>
             </div>
-            <div className="mt-4 flex justify-end gap-4">
-              <button onClick={handleCancelCrop} className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-md transition-colors">Cancel</button>
-              <button onClick={handleApplyCrop} className="px-6 py-2 bg-green-600 hover:bg-green-500 text-black font-semibold rounded-md transition-colors">Apply Crop</button>
+            <div className="mt-6 flex justify-end gap-3">
+              <Button onClick={handleCancelCrop} variant="ghost" className="px-8 py-3 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-white border-white/10 hover:bg-white/5 shadow-none">Cancel</Button>
+              <Button onClick={handleApplyCrop} variant="primary" backgroundColor="#10b981" className="px-10 py-3 text-xs font-black uppercase tracking-widest shadow-lg shadow-green-500/20">Apply Crop</Button>
             </div>
           </div>
         </div>

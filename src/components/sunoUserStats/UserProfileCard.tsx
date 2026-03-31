@@ -40,62 +40,67 @@ const TotalCommentsIcon: React.FC<{ className?: string }> = ({ className = "w-5 
 const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
   if (!profile) {
     return (
-      <div className="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
-        <p className="text-gray-500 dark:text-gray-400">No profile data loaded.</p>
+      <div className="mb-10 bg-white/5 p-8 rounded-3xl border border-white/5 text-center animate-pulse">
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">Waiting for neural link... No profile data detected.</p>
       </div>
     );
   }
 
   return (
-    <div className="mb-6 bg-gray-50 dark:bg-gray-800 p-4 md:p-6 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
-      <img 
-        src={profile.image_url || FALLBACK_IMAGE_DATA_URI} 
-        alt={`${profile.display_name}'s avatar`} 
-        className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-green-500 shadow-md flex-shrink-0"
-        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
-      />
-      <div className="flex-1 text-center md:text-left min-w-0">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white truncate" title={profile.display_name}>
-          {profile.display_name}
-        </h2>
-        <p className="text-lg text-green-600 dark:text-green-400 mb-1 truncate" title={`@${profile.handle}`}>
-          <a href={`https://suno.com/@${profile.handle}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+    <div className="mb-10 glass-card p-8 md:p-10 border-white/10 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/20 to-transparent"></div>
+      
+      <div className="relative shrink-0">
+        <div className="absolute -inset-1 bg-gradient-to-tr from-green-500/20 to-emerald-500/20 rounded-full blur-sm group-hover:blur-md transition-all duration-500"></div>
+        <img 
+          src={profile.image_url || FALLBACK_IMAGE_DATA_URI} 
+          alt={`${profile.display_name}'s avatar`} 
+          className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10 brightness-90 group-hover:brightness-100 transition-all duration-500"
+          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
+        />
+      </div>
+
+      <div className="flex-1 text-center md:text-left min-w-0 z-10">
+        <div className="mb-2">
+          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-green-500/60 mb-1 block">Creator Entity</span>
+          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none truncate" title={profile.display_name}>
+            {profile.display_name}
+          </h2>
+        </div>
+        
+        <p className="text-sm font-black uppercase tracking-[0.2em] text-green-500/80 mb-6 truncate group-hover:text-green-400 transition-colors" title={`@${profile.handle}`}>
+          <a href={`https://suno.com/@${profile.handle}`} target="_blank" rel="noopener noreferrer" className="hover:line-through decoration-2">
             @{profile.handle}
           </a>
         </p>
-        {profile.bio && <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 leading-relaxed max-h-20 overflow-y-auto">{profile.bio}</p>}
+
+        {profile.bio && (
+          <div className="mb-8 relative">
+            <div className="absolute left-0 top-0 w-0.5 h-full bg-green-500/10 hidden md:block"></div>
+            <p className="text-[11px] font-medium text-gray-400 leading-relaxed md:pl-6 italic max-w-xl">
+              {profile.bio}
+            </p>
+          </div>
+        )}
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-2 text-sm text-gray-700 dark:text-gray-200 mt-2">
-          {typeof profile.total_plays === 'number' && (
-            <div className="flex items-center" title={`Total Plays: ${profile.total_plays.toLocaleString()}`}>
-              <TotalPlaysIcon /> 
-              <span className="ml-1.5 truncate">{profile.total_plays.toLocaleString()}</span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 mt-2">
+          {[
+            { label: 'Signals', value: profile.num_total_clips, icon: <ClipsIcon className="w-3 h-3" /> },
+            { label: 'Observers', value: profile.num_followers, icon: <FollowersIcon className="w-3 h-3" /> },
+            { label: 'Flux', value: profile.total_plays, icon: <TotalPlaysIcon className="w-3 h-3" /> },
+            { label: 'Affinity', value: profile.total_upvotes, icon: <TotalUpvotesIcon className="w-3 h-3" /> },
+            { label: 'Echoes', value: profile.total_comments, icon: <TotalCommentsIcon className="w-3 h-3" /> },
+          ].map((stat, idx) => (
+            <div key={idx} className="flex flex-col gap-1 group/stat">
+              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover/stat:text-green-500 transition-colors">
+                {stat.icon}
+                {stat.label}
+              </div>
+              <div className="text-sm font-black text-white tracking-widest">
+                {typeof stat.value === 'number' ? stat.value.toLocaleString() : '---'}
+              </div>
             </div>
-          )}
-          {typeof profile.total_upvotes === 'number' && (
-            <div className="flex items-center" title={`Total Upvotes: ${profile.total_upvotes.toLocaleString()}`}>
-              <TotalUpvotesIcon /> 
-              <span className="ml-1.5 truncate">{profile.total_upvotes.toLocaleString()}</span>
-            </div>
-          )}
-          {typeof profile.total_comments === 'number' && (
-            <div className="flex items-center" title={`Total Comments: ${profile.total_comments.toLocaleString()}`}>
-              <TotalCommentsIcon /> 
-              <span className="ml-1.5 truncate">{profile.total_comments.toLocaleString()}</span>
-            </div>
-          )}
-          {typeof profile.num_followers === 'number' && (
-            <div className="flex items-center" title={`Followers: ${profile.num_followers.toLocaleString()}`}>
-              <FollowersIcon /> 
-              <span className="ml-1.5 truncate">{profile.num_followers.toLocaleString()}</span>
-            </div>
-          )}
-          {typeof profile.num_total_clips === 'number' && (
-            <div className="flex items-center" title={`Total Clips: ${profile.num_total_clips.toLocaleString()}`}>
-              <ClipsIcon /> 
-              <span className="ml-1.5 truncate">{profile.num_total_clips.toLocaleString()}</span>
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

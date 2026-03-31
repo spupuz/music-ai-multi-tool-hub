@@ -1,7 +1,7 @@
 import React from 'react';
 import TextAreaField from '@/components/forms/TextAreaField';
 import Button from '@/components/common/Button';
-import { PlusCircleIcon, TrashIcon, ArrowUturnLeftIcon, CogIcon } from '@/components/Icons';
+import { PlusCircleIcon, TrashIcon, ArrowUturnLeftIcon, RefreshIcon } from '@/components/Icons';
 import { lightenDarkenColor } from '@/utils/imageUtils';
 
 interface DeckControlsProps {
@@ -135,8 +135,8 @@ export const DeckControls: React.FC<DeckControlsProps> = ({
                     variant="warning" 
                     size="sm" 
                     onClick={handleClearSongInfoCache} 
-                    startIcon={<CogIcon />}
-                    className="min-w-[150px]"
+                    startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
+                    className="min-w-[150px] font-bold uppercase tracking-widest shadow-sm"
                     aria-label={getClearSongInfoCacheButtonText()}
                 >
                     {getClearSongInfoCacheButtonText()}

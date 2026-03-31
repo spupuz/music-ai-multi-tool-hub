@@ -1,9 +1,11 @@
 
 import React from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import Button from '@/components/common/Button';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
+  isSidebarOpen: boolean;
   appName: string;
 }
 
@@ -33,7 +35,7 @@ const MoonIcon = () => (
   </svg>
 );
 
-const Header: React.FC<HeaderProps> = ({ onToggleSidebar, appName }) => {
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName }) => {
   const { theme, toggleTheme } = useTheme();
 
   // Split the appName for styling
@@ -45,7 +47,9 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, appName }) => {
       <>
         <span className="text-green-600 dark:text-green-400">{nameParts[0]}</span>{' '}
         <span className="text-green-500 dark:text-green-300">{nameParts[1]}</span>{' '}
-        <span className="text-gray-700 dark:text-gray-200">{nameParts.slice(2, -1).join(' ')}</span>{' '}
+        <span className="hidden min-[380px]:inline text-gray-700 dark:text-gray-200">
+          {nameParts.slice(2, -1).join(' ')}{' '}
+        </span>
         <span className="text-green-700 dark:text-green-500 font-bold">{nameParts.slice(-1)}</span>
       </>
     );
@@ -55,37 +59,47 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, appName }) => {
 
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 shadow-md h-16 flex items-center px-4 sm:px-6 border-b border-gray-200 dark:border-green-700 transition-colors duration-300"
-      style={{
-        background: theme === 'dark' ? 'linear-gradient(to bottom, #0D1F23, #0A0D1F)' : '#ffffff', 
-      }}
+      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-2 sm:px-4 glass-nav transition-all duration-300"
     >
-      <button
-        onClick={onToggleSidebar}
-        className="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-green-400 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        aria-label="Toggle sidebar"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-      </button>
-      <div className="ml-1 sm:ml-3 flex items-center flex-grow overflow-hidden">
-        <div className="hidden min-[340px]:block">
-          <AppLogo />
+      <div className="flex items-center px-2 flex-grow overflow-hidden">
+        <Button
+          onClick={onToggleSidebar}
+          variant="ghost"
+          className="p-2 rounded-xl text-gray-600 hover:bg-slate-200/50 dark:text-green-400 dark:hover:bg-white/5 transition-all duration-200 active:scale-95 border-0 ring-0 outline-none shadow-none mr-2 focus:ring-0 focus:outline-none"
+          aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+        >
+          {isSidebarOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          )}
+        </Button>
+
+        <div className="flex items-center flex-grow overflow-hidden">
+          <div className="hidden min-[400px]:block transition-transform hover:scale-110 duration-300">
+            <AppLogo />
+          </div>
+          <h1 className="text-[8px] min-[320px]:text-[10px] min-[360px]:text-xs min-[420px]:text-sm sm:text-lg md:text-xl font-bold sm:font-black uppercase tracking-tight sm:tracking-tighter whitespace-normal sm:whitespace-nowrap overflow-hidden text-ellipsis ml-1 min-[400px]:ml-2 max-w-[140px] min-[360px]:max-w-none">
+            {styledName}
+          </h1>
         </div>
-        <h1 className="text-sm min-[380px]:text-base sm:text-lg md:text-xl font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
-          {styledName}
-        </h1>
       </div>
       
-      <button
-        onClick={toggleTheme}
-        className="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-yellow-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
-        aria-label="Toggle dark mode"
-        title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      >
-        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-      </button>
+      <div className="px-2">
+        <Button
+          onClick={toggleTheme}
+          variant="ghost"
+          className="p-2.5 rounded-xl text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-yellow-300 hover:bg-slate-200/50 dark:hover:bg-white/10 transition-all duration-300 active:rotate-12 border-none shadow-none"
+          aria-label="Toggle dark mode"
+          title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+        </Button>
+      </div>
     </header>
   );
 };

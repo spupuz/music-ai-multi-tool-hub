@@ -57,9 +57,12 @@ export interface UseSunoAudioPlayerReturn {
   lastFetchedTimestamp: string | null;
   mainButtonText: string;
   showDataManagement: boolean;
-  clearPlayerCacheClickCount: number;
-  handleClearPlayerCache: () => void;
-  getClearPlayerCacheButtonText: () => string;
+  clearSongInfoCacheClickCount: number;
+  handleClearSongInfoCache: () => void;
+  getClearSongInfoCacheButtonText: () => string;
+  clearProfileCacheClickCount: number;
+  handleClearProfileCache: () => void;
+  getClearProfileCacheButtonText: () => string;
   clearAllHubDataClickCount: number;
   handleClearAllHubDataFromPlayer: () => void;
   getClearAllHubDataButtonText: () => string;
@@ -98,9 +101,6 @@ export interface UseSunoAudioPlayerReturn {
   handleClearAllSavedPlaylists: () => void;
   getClearAllSavedPlaylistsButtonText: () => string;
   clearAllSavedPlaylistsClickCount: number;
-  handleClearSongInfoCache: () => void;
-  getClearSongInfoCacheButtonText: () => string;
-  clearSongInfoCacheClickCount: number;
   removeSongFromQueue: (songId: string) => void;
   handleClearQueue: () => void;
   getClearQueueButtonText: () => string;
@@ -128,8 +128,6 @@ export const useSunoAudioPlayer = ({
   
   const [showDataManagement, setShowDataManagement] = useState<boolean>(true);
 
-  const [clearPlayerCacheClickCount, setClearPlayerCacheClickCount] = useState(0);
-  const [clearAllHubDataClickCount, setClearAllHubDataClickCount] = useState(0);
   const clearDataTimeoutRef = useRef<number | null>(null);
 
   const snippetTimeoutRef = useRef<number | null>(null);
@@ -181,8 +179,9 @@ export const useSunoAudioPlayer = ({
     savedCustomPlaylists, setSavedCustomPlaylists,
     songInfoCache, setSongInfoCache,
     dataManagementStatus, setDataManagementStatus,
-    handleClearPlayerCache, getClearPlayerCacheButtonText,
-    handleClearAllHubDataFromPlayer, getClearAllHubDataButtonText,
+    handleClearSongInfoCache, getClearSongInfoCacheButtonText, clearPlayerCacheClickCount,
+    handleClearProfileCache, getClearProfileCacheButtonText, clearProfileCacheClickCount,
+    handleClearAllHubDataFromPlayer, getClearAllHubDataButtonText, clearAllHubDataClickCount,
     handleSaveCurrentPlaylistLocally: handleSaveCurrentPlaylistLocallyInternal,
     handleUpdateSavedPlaylistLocally: handleUpdateSavedPlaylistLocallyInternal,
     handleDeleteSavedPlaylistLocally,
@@ -716,13 +715,16 @@ export const useSunoAudioPlayer = ({
     lastFetchedTimestamp,
     mainButtonText,
     showDataManagement,
-    clearPlayerCacheClickCount,
-    handleClearPlayerCache,
-    getClearPlayerCacheButtonText,
     clearAllHubDataClickCount,
     handleClearAllHubDataFromPlayer,
     getClearAllHubDataButtonText,
     dataManagementStatus,
+    clearSongInfoCacheClickCount: clearPlayerCacheClickCount,
+    handleClearSongInfoCache,
+    getClearSongInfoCacheButtonText,
+    clearProfileCacheClickCount,
+    handleClearProfileCache,
+    getClearProfileCacheButtonText,
     playerState,
     analyserNodes,
     playSong,
@@ -753,7 +755,6 @@ export const useSunoAudioPlayer = ({
     handleUpdateSavedPlaylistLocally, handleAppendToSavedPlaylistLocally,
     handleLoadSavedPlaylistLocally, handleDeleteSavedPlaylistLocally: handleDeleteSavedPlaylistLocallyInternal,
     handleClearAllSavedPlaylists, getClearAllSavedPlaylistsButtonText, clearAllSavedPlaylistsClickCount,
-    handleClearSongInfoCache: handleClearPlayerCache, getClearSongInfoCacheButtonText: getClearPlayerCacheButtonText, clearSongInfoCacheClickCount: clearPlayerCacheClickCount,
     removeSongFromQueue,
     handleClearQueue, getClearQueueButtonText,
   };

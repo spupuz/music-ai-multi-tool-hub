@@ -2,93 +2,41 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
-import { resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
-import { fetchSunoClipById } from '@/services/sunoService';
+import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 import type { SynchronizedLyricLine } from '@/types';
+import InputField from '@/components/forms/InputField';
+import TextAreaField from '@/components/forms/TextAreaField';
+import CheckboxField from '@/components/forms/CheckboxField';
+import Button from '@/components/common/Button';
+import { 
+  RefreshIcon, 
+  TrashIcon, 
+  DownloadIcon, 
+  SaveIcon, 
+  LoadIcon, 
+  ExportIcon, 
+  ImportIcon, 
+  LinkIcon, 
+  PlayIcon, 
+  PauseIcon, 
+  VolumeUpIcon, 
+  VolumeMuteIcon,
+  SparklesIcon,
+  MusicNoteIcon,
+  EditIcon,
+  CheckIcon
+} from '@/components/Icons';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
-
 
 // Local type extending the one from types.ts to include the ref
 interface LyricLine extends SynchronizedLyricLine {
   ref: React.RefObject<HTMLDivElement>;
 }
 
-// Simplified InputField for this tool
-const InputField: React.FC<{
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  type?: string;
-  required?: boolean;
-  className?: string;
-}> = ({ id, label, value, onChange, placeholder, type = "text", required = false, className = "" }) => (
-  <div className={`mb-6 ${className}`}>
-    <label htmlFor={id} className="block text-sm font-medium text-green-600 dark:text-green-400 mb-1">
-      {label}
-    </label>
-    <input
-      type={type}
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 sm:text-sm text-gray-900 dark:text-white"
-      required={required}
-      aria-label={label}
-    />
-  </div>
-);
 
-const TextAreaField: React.FC<{
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  rows?: number;
-  required?: boolean;
-  textareaRef?: React.RefObject<HTMLTextAreaElement>; // Added ref prop
-}> = ({ id, label, value, onChange, placeholder, rows = 10, required = false, textareaRef }) => (
-  <div className="mb-6">
-    <label htmlFor={id} className="block text-sm font-medium text-green-600 dark:text-green-400 mb-1">
-      {label}
-    </label>
-    <textarea
-      id={id}
-      ref={textareaRef} // Assign ref
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      rows={rows}
-      className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 sm:text-sm text-gray-900 dark:text-white resize-y font-mono"
-      required={required}
-      aria-label={label}
-    />
-  </div>
-);
-
-const InfoIcon: React.FC<{ tooltip: string, className?: string }> = ({ tooltip, className = "" }) => (
-  <div className={`inline-block relative group ${className}`}>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-400 hover:text-green-600 dark:hover:text-green-300 cursor-help">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-    </svg>
-    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs text-gray-800 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
-      {tooltip}
-    </div>
-  </div>
-);
-
-const LinkIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>);
-
-const PlayIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M8 5v14l11-7z" /></svg>);
-const PauseIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>);
-const VolumeUpIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>);
-const VolumeMuteIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-3L9 12.75" /><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.5l16.5 16.5m-16.5 0L20.25 4.5" /></svg>);
 
 const structuralKeywordsArray = ["Verse", "Chorus", "Intro", "Outro", "Bridge", "Pre-Chorus", "Post-Chorus", "Instrumental", "Guitar Solo", "Keyboard Solo", "Drum Solo", "Bass Solo", "Sax Solo", "Trumpet Solo", "Violin Solo", "Cello Solo", "Flute Solo", "Solo", "Hook", "Refrain", "Interlude", "Skit", "Spoken", "Adlib", "Vamp", "Coda", "Pre-Verse", "Post-Verse", "Pre-Bridge", "Post-Bridge", "Breakdown", "Build-up", "Drop", "Section", "Part", "Prelude", "Segway"];
 const structuralMarkerPattern = new RegExp(`^(${structuralKeywordsArray.join('|')})(?:\\s+[A-Za-z0-9#]+)*(?:\\s*x\\d+)?$`, 'i');
@@ -335,69 +283,277 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full">
-      <header className="mb-10 text-center"><h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Lyrics Synchronizer</h1><p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">Create time-stamped lyrics for karaoke or LRC files. Load audio (MP3, Suno, Riffusion, or Producer.AI URL), paste/type lyrics (supports <code className="text-xs bg-gray-200 dark:bg-gray-700 p-0.5 rounded text-gray-800 dark:text-gray-200">[MM:SS.mmm - MM:SS.mmm] TEXT</code> format import), and sync!</p></header>
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
-        {/* Section 1: Load Audio & Lyrics */}
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-3">1. Load Audio & Lyrics</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3"> {(songTitle || artistName) && (<div className="flex flex-col items-center mb-3"><img src={sunoCoverArtUrl || FALLBACK_IMAGE_DATA_URI} alt={songTitle || 'Cover Art'} className="w-32 h-32 object-cover rounded-md border-2 border-gray-300 dark:border-gray-600" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }} /></div>)} <InputField id="songTitleInput" label="Song Title" value={songTitle} onChange={setSongTitle} placeholder="Enter song title" /> <InputField id="artistNameInput" label="Artist Name" value={artistName} onChange={setArtistName} placeholder="Enter artist name" /> </div>
-            <div className="space-y-3"> <div> <label htmlFor="sunoUrlInput" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Load from Suno/Riffusion/Producer.AI Song URL</label> <div className="mt-1 flex rounded-md shadow-sm"> <input type="text" name="sunoUrlInput" id="sunoUrlInput" value={sunoUrlInput} onChange={(e) => setSunoUrlInput(e.target.value)} className="block w-full flex-1 rounded-none rounded-l-md border-gray-300 bg-white dark:bg-gray-700 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-green-500 focus:ring-green-500 sm:text-sm" placeholder="Paste Suno, Riffusion, or Producer.AI URL..." disabled={isUrlLoading} /> <button type="button" onClick={handleLoadFromUrl} disabled={isUrlLoading || !sunoUrlInput.trim()} className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:opacity-50"> {isUrlLoading ? <Spinner size="w-4 h-4" color="text-white" /> : <span>Load</span>} </button> </div> {urlLoadingProgress && <p className="text-xs text-yellow-600 dark:text-yellow-300 mt-1">{urlLoadingProgress}</p>} </div> <div className="flex items-center"><div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div><span className="flex-shrink mx-4 text-gray-500">OR</span><div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div></div> <div> <label htmlFor="audioFile" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload MP3 Audio File</label> <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-black hover:file:bg-green-500" /> </div> </div>
-          </div>
-          <div className="mt-6"> <div className="flex justify-between items-center mb-1"> <label htmlFor="lyricsInputArea" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Paste/Type Lyrics (one line per entry)</label> <input type="file" ref={lrcFileInputRef} onChange={handleLrcFileChange} accept=".lrc" style={{ display: 'none' }} id="load-lrc-file" /> <label htmlFor="load-lrc-file" className="py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white rounded-md text-xs cursor-pointer">Load LRC File</label> </div> <textarea id="lyricsInputArea" value={rawLyrics} onChange={(e) => setRawLyrics(e.target.value)} rows={10} className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-900 dark:text-white" placeholder="Enter lyrics here... e.g., [00:05.123 - 00:10.000] This line will import with timestamp." /> </div> {(error || statusMessage) && <div className={`mt-4 p-3 rounded-md text-sm ${error ? 'bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200' : 'bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200'}`}>{error || statusMessage}</div>}
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyrics Synchronizer</h1>
+        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Temporal Alignment Hub • Map lyrics to audio timestamps
+        </p>
+      </header>
 
-          {audioSrc && (
-            <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">Playing: <span className="text-green-600 dark:text-green-300">{audioFileName || 'Audio File'}</span></p>
-              <audio ref={audioRef} src={audioSrc} className="hidden" preload="metadata"></audio>
-              <div className="flex items-center gap-3 mb-2"> <button onClick={togglePlayPause} className="p-2 bg-green-500 hover:bg-green-600 text-black rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50" disabled={!duration}> {isPlaying ? <PauseIcon /> : <PlayIcon />} </button> <div className="text-xs text-gray-700 dark:text-gray-300 w-16 text-center">{formatTime(currentTime)}</div> <input type="range" ref={seekBarRef} min="0" max={duration || 0} value={currentTime} onChange={handleSeek} onClick={handleSeek} className="flex-grow h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500 focus:outline-none focus:ring-1 focus:ring-green-400 disabled:opacity-50" disabled={!duration} aria-label="Audio seek bar" /> <div className="text-xs text-gray-700 dark:text-gray-300 w-16 text-center">{formatTime(duration)}</div> </div>
-              <div className="flex items-center justify-center gap-2 text-sm"> <button onClick={() => audioRef.current && (audioRef.current.volume = 0)} className="p-1 text-gray-600 dark:text-gray-400" aria-label="Mute"> <VolumeMuteIcon /> </button> <input type="range" min="0" max="1" step="0.01" value={playerVolume} onChange={handleVolumeChange} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-400" aria-label="Volume control" /> <button onClick={() => audioRef.current && (audioRef.current.volume = 1)} className="p-1 text-gray-600 dark:text-gray-400" aria-label="Max Volume"> <VolumeUpIcon /> </button> </div>
-            </div>
-          )}
-        </section>
-
-        {/* Section 2: Synchronize Lyrics */}
-        <section className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-3">2. Synchronize Lyrics</h2>
-          <div className="flex flex-col sm:flex-row gap-4 items-center mb-4"> <CheckboxField id="karaokeMode" label="Enable Karaoke Preview Mode" checked={isKaraokeMode} onChange={setIsKaraokeMode} /> <button onClick={handleClearAllTimestamps} className="py-1.5 px-3 bg-red-600 hover:bg-red-500 text-white rounded-md text-sm whitespace-nowrap"> Clear All Timestamps </button> </div>
-
-          <div className="max-h-96 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
-            {parsedLines.length > 0 ? (parsedLines.map((line, index) => {
-              let lineClassName = 'p-2 my-1 rounded flex items-center justify-between transition-all duration-150 ease-in-out border-2 ';
-              if (isKaraokeMode && highlightedLineIndex === index) lineClassName += 'bg-yellow-100 dark:bg-yellow-400 text-black font-bold shadow-lg scale-[1.02] border-yellow-500';
-              else if (!isKaraokeMode && selectedLineForMarkingId === line.id) lineClassName += 'bg-yellow-200 dark:bg-yellow-300 text-black font-semibold shadow-md border-yellow-500';
-              else lineClassName += 'bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 border-transparent';
-              const canMarkLine = !isKaraokeMode && audioSrc && editingLineId !== line.id && line.text.trim() !== '' && !structuralMarkerPattern.test(line.text.trim());
-              return (
-                <div key={line.id} ref={line.ref} className={lineClassName} onClick={() => canMarkLine && handleLyricLineClick(line.id, line.text)} style={{ cursor: canMarkLine ? 'pointer' : 'default' }} title={canMarkLine ? "Click to select this line for marking" : ""}>
-                  <span className={`flex-grow text-sm min-w-0 break-words ${isKaraokeMode && highlightedLineIndex === index ? 'text-black' : (!isKaraokeMode && selectedLineForMarkingId === line.id ? 'text-black' : 'text-gray-900 dark:text-gray-100')}`}> {line.text.trim() || <span className="italic text-gray-400 dark:text-gray-500">(Empty line)</span>} </span>
-                  <div className="flex items-center flex-shrink-0 ml-2 space-x-1">
-                    {editingLineId === line.id && !isKaraokeMode ? (
-                      <input type="text" ref={manualInputRef} value={manualTimestampValue} onChange={(e) => handleManualTimestampChange(e.target.value)} onBlur={handleManualTimestampSubmit} onKeyDown={(e) => { if (e.key === 'Enter') handleManualTimestampSubmit(); if (e.key === 'Escape') setEditingLineId(null); }} className="w-20 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-600 border border-green-500 rounded text-gray-900 dark:text-white" autoFocus />
-                    ) : (<span className={`text-xs w-20 text-right mr-1 ${isKaraokeMode && highlightedLineIndex === index ? 'text-gray-900' : 'text-gray-500 dark:text-gray-400'}`}>{formatTime(line.timestamp)}</span>)}
-                    {!isKaraokeMode && (<> {editingLineId !== line.id && <button onClick={() => handleEditTimestamp(line.id)} className="px-1 py-0.5 text-xs bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-300 rounded" title="Edit Timestamp">✏️</button>} <button onClick={() => audioSrc && handleMarkTimestamp(line.id)} disabled={!audioSrc} className="px-1.5 py-0.5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded disabled:opacity-50" title="Mark Current Time">Mark</button> <button onClick={() => handleClearTimestamp(line.id)} className="px-1.5 py-0.5 text-xs bg-red-600 hover:bg-red-500 text-white rounded" title="Clear Timestamp">Clear</button> <button onClick={() => handleRemoveLyricLine(line.id)} className="px-1.5 py-0.5 text-xs bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded" title="Delete Line">&times;</button> </>)}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Configuration & Content */}
+        <div className="xl:col-span-4 space-y-8">
+          <section className="glass-card p-8 border-white/10 shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-[40px] pointer-events-none"></div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6">Identity & Signal</h3>
+            
+            {(songTitle || artistName) && (
+              <div className="flex flex-col items-center mb-8 animate-in fade-in zoom-in-95 duration-500">
+                <div className="relative group">
+                  <img
+                    src={sunoCoverArtUrl || FALLBACK_IMAGE_DATA_URI}
+                    alt={songTitle || 'Cover Art'}
+                    className="w-40 h-40 object-cover rounded-3xl border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
+                  />
+                  <div className="absolute inset-0 bg-black/40 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-white/60">Live Signal</span>
                   </div>
                 </div>
-              );
-            })) : (<p className="text-gray-500 dark:text-gray-400 text-sm italic text-center py-4">Paste lyrics above to begin synchronization.</p>)}
-          </div>
-          <button onClick={handleMarkNextUnsyncedLine} disabled={!audioSrc || isKaraokeMode || isUrlLoading} className="w-full mt-3 py-3 px-6 bg-yellow-500 hover:bg-yellow-600 text-black rounded-md text-lg font-semibold disabled:opacity-50"> Mark Next Line &amp; Advance <span className="text-sm font-normal">(Spacebar)</span> </button>
-          <div className="mt-6 flex flex-col sm:flex-row gap-2"> <button onClick={exportToLRC} disabled={!parsedLines.some(l => l.timestamp !== null)} className="flex-1 py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Export to LRC File</button> <button onClick={handleExportToRangeFormatTxt} disabled={!parsedLines.some(l => l.timestamp !== null)} className="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Export TXT (Range Format)</button> <button onClick={handleCopyToClipboardRangeFormat} disabled={!parsedLines.some(l => l.timestamp !== null)} className="flex-1 py-2 px-4 bg-sky-600 hover:bg-sky-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Copy Range Format</button> </div>
-          {exportCopyStatus && <p className="text-xs text-center mt-2 text-green-600 dark:text-green-300">{exportCopyStatus}</p>}
-        </section>
-      </main>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <InputField id="songTitleInput" label="Composition Title" value={songTitle} onChange={setSongTitle} placeholder="Neon Dreams" className="mb-0" />
+              <InputField id="artistNameInput" label="Primary Artist" value={artistName} onChange={setArtistName} placeholder="The Matrix" className="mb-0" />
+              
+              <div className="pt-6 mt-6 border-t border-white/5 space-y-6">
+                <div className="space-y-4">
+                  <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Network Injection</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={sunoUrlInput}
+                      onChange={(e) => setSunoUrlInput(e.target.value)}
+                      placeholder="Suno / Riffusion / Producer.AI URL"
+                      className="flex-grow px-4 py-2 bg-white/5 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold focus:ring-4 focus:ring-green-500/20 outline-none transition-all placeholder:opacity-30 disabled:opacity-50"
+                      disabled={isUrlLoading}
+                    />
+                      <Button
+                        onClick={handleLoadFromUrl}
+                        disabled={isUrlLoading || !sunoUrlInput.trim()}
+                        variant="primary"
+                        size="xs"
+                        startIcon={isUrlLoading ? null : <LinkIcon className="w-3 h-3 ml-0.5" />}
+                      >
+                        {isUrlLoading ? <Spinner size="w-3 h-3" color="text-white" /> : 'LOAD'}
+                      </Button>
+                  </div>
+                  {urlLoadingProgress && <p className="text-[8px] font-black uppercase tracking-widest text-yellow-500/60 animate-pulse">{urlLoadingProgress}</p>}
+                </div>
+
+                <div className="flex items-center gap-4 py-2">
+                  <div className="h-px flex-grow bg-white/5"></div>
+                  <span className="text-[8px] font-black uppercase tracking-widest text-gray-600">OR</span>
+                  <div className="h-px flex-grow bg-white/5"></div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Static Audio File</label>
+                  <div className="p-4 bg-white/5 border border-dashed border-white/10 rounded-2xl text-center group hover:bg-white/10 transition-all cursor-pointer relative">
+                    <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                    <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-green-500 transition-colors uppercase leading-relaxed">
+                      {audioFileName ? audioFileName : 'Deploy MP3 Buffer'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="glass-card p-8 border-white/10 shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500">Lyric Data Buffer</h3>
+              <div className="flex gap-2">
+                <input type="file" ref={lrcFileInputRef} onChange={handleLrcFileChange} accept=".lrc" className="hidden" id="load-lrc-file" />
+                <Button onClick={() => lrcFileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<ImportIcon className="w-3 h-3" />} className="font-black uppercase tracking-widest text-[8px] border-white/10 flex items-center justify-center">Import LRC</Button>
+              </div>
+            </div>
+            <TextAreaField 
+              id="lyricsInputArea" 
+              label="Raw Syntax Input" 
+              value={rawLyrics} 
+              onChange={setRawLyrics} 
+              rows={12} 
+              placeholder="Enter lyrics here...&#10;Supports [MM:SS.mmm - MM:SS.mmm] format injection" 
+              className="mb-0 font-mono text-[11px] leading-relaxed"
+            />
+            
+            {(error || statusMessage) && (
+              <div className={`mt-6 p-4 rounded-2xl animate-in slide-in-from-top-2 duration-300 border ${error ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400'}`}>
+                <p className="text-[9px] font-black uppercase tracking-widest text-center">{error || statusMessage}</p>
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Right Column: Synchronization Console */}
+        <div className="xl:col-span-8 space-y-8">
+          <section className="glass-card p-2 sm:p-6 md:p-10 border-white/10 shadow-2xl relative overflow-hidden flex flex-col h-[calc(100vh-280px)] xl:h-[calc(100vh-220px)] min-h-[600px]">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+              <div>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-500">Temporal Synchronization</h3>
+                <p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mt-2 opacity-60 italic">Mapping vocal signals to metadata vectors</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <CheckboxField id="karaokeMode" label="Karaoke Interface" checked={isKaraokeMode} onChange={setIsKaraokeMode} className="text-[8px]" />
+                <Button onClick={handleClearAllTimestamps} variant="danger" size="xs" startIcon={<TrashIcon className="w-3 h-3" />} className="font-black uppercase tracking-widest text-[8px] bg-red-500/10 text-red-400 border-red-500/20 flex items-center justify-center">Wipe Timestamps</Button>
+              </div>
+            </div>
+
+            <div className="flex-grow overflow-y-auto space-y-2 pr-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+              {parsedLines.length > 0 ? (
+                parsedLines.map((line, index) => {
+                  const isActive = isKaraokeMode && highlightedLineIndex === index;
+                  const isSelected = !isKaraokeMode && selectedLineForMarkingId === line.id;
+                  const canMarkLine = !isKaraokeMode && audioSrc && editingLineId !== line.id && line.text.trim() !== '' && !structuralMarkerPattern.test(line.text.trim());
+                  
+                  return (
+                    <div 
+                      key={line.id} 
+                      ref={line.ref} 
+                      onClick={() => canMarkLine && handleLyricLineClick(line.id, line.text)}
+                      className={`
+                        group relative p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border-2
+                        ${isActive ? 'bg-yellow-500/10 border-yellow-500 shadow-2xl shadow-yellow-500/10' : 
+                          isSelected ? 'bg-white/10 border-blue-500 shadow-xl' : 
+                          'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10'}
+                      `}
+                      style={{ cursor: canMarkLine ? 'pointer' : 'default' }}
+                    >
+                      <div className="flex flex-col gap-1 min-w-0 flex-grow">
+                        <span className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? 'text-yellow-400 text-[13px] italic' : isSelected ? 'text-blue-400' : 'text-white/60 group-hover:text-white/90'}`}>
+                          {line.text.trim() || <span className="opacity-20 italic">NULL_BUFFER</span>}
+                        </span>
+                        {line.timestamp !== null && (
+                          <span className={`text-[7px] font-black uppercase tracking-[0.2em] ${isActive ? 'text-yellow-500/60' : 'text-gray-500'}`}>
+                             Pos: {formatTime(line.timestamp)}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2 flex-shrink-0 ml-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {!isKaraokeMode && (
+                          <>
+                            {editingLineId === line.id ? (
+                              <input 
+                                type="text" 
+                                ref={manualInputRef} 
+                                value={manualTimestampValue} 
+                                onChange={(e) => handleManualTimestampChange(e.target.value)} 
+                                onBlur={handleManualTimestampSubmit} 
+                                onKeyDown={(e) => { if (e.key === 'Enter') handleManualTimestampSubmit(); if (e.key === 'Escape') setEditingLineId(null); }} 
+                                className="w-20 px-2 py-1 bg-black/40 border border-blue-500/50 rounded-lg text-[9px] font-mono text-blue-400 outline-none" 
+                                autoFocus 
+                              />
+                            ) : (
+                              <Button onClick={(e) => { e.stopPropagation(); handleEditTimestamp(line.id); }} variant="ghost" size="xs" startIcon={<EditIcon className="w-3 h-3" />} className="px-3 border-white/10 text-[8px] font-black uppercase tracking-widest text-gray-500 hover:text-white">Edit</Button>
+                            )}
+                            <Button onClick={(e) => { e.stopPropagation(); audioSrc && handleMarkTimestamp(line.id); }} disabled={!audioSrc} variant="ghost" size="xs" startIcon={<CheckIcon className="w-3 h-3 text-green-500" />} className="px-3 border-green-500/20 text-green-500 text-[8px] font-black uppercase tracking-widest hover:bg-green-500/10">Mark</Button>
+                            <Button onClick={(e) => { e.stopPropagation(); handleClearTimestamp(line.id); }} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-red-500" />} className="px-3 border-red-500/20 text-red-500 text-[8px] font-black uppercase tracking-widest hover:bg-red-500/10">Clear</Button>
+                            <Button onClick={(e) => { e.stopPropagation(); handleRemoveLyricLine(line.id); }} variant="ghost" size="xs" startIcon={<TrashIcon className="w-3 h-3" />} className="px-3 border-white/10 text-white/40 text-[8px] font-black uppercase tracking-widest hover:text-white">Del</Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="h-full flex flex-row items-center justify-center opacity-20 gap-6 p-8">
+                  <div className="w-16 h-16 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center shrink-0">
+                    <LinkIcon className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em]">System Idle</p>
+                    <p className="text-[8px] font-bold uppercase tracking-widest mt-1">Awaiting Data Feed</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-auto space-y-8 pt-8">
+              <Button 
+                startIcon={<SparklesIcon className="w-5 h-5 text-black/40" />}
+                className="w-full h-16 font-black uppercase tracking-[0.3em] text-xs shadow-yellow-500/10 shadow-2xl rounded-3xl"
+                backgroundColor="#eab308"
+                textColor="#000"
+              >
+                SYNC VECTOR <span className="ml-4 opacity-40 font-normal">[Spacebar]</span>
+              </Button>
+
+              <div className="space-y-6">
+                {audioSrc && (
+                  <div className="glass-card p-6 bg-white/5 border-white/10 rounded-3xl relative group overflow-hidden">
+                    <div className="absolute top-0 left-0 h-1 bg-green-500/20" style={{ width: `${(currentTime / duration) * 100}%` }}></div>
+                    <audio ref={audioRef} src={audioSrc} className="hidden" preload="metadata"></audio>
+                    
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center justify-between px-2">
+                        <span className="text-[7px] font-black uppercase tracking-widest text-gray-500">Oscilloscope: {audioFileName?.substring(0, 30) || 'Active Signal'}</span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-[9px] font-mono font-bold text-green-500">{formatTime(currentTime)}</span>
+                          <span className="text-gray-600">/</span>
+                          <span className="text-[9px] font-mono text-gray-500">{formatTime(duration)}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-6">
+                        <Button 
+                          onClick={togglePlayPause} 
+                          variant="primary" 
+                          size="sm" 
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/10 hover:bg-white text-white hover:text-black transition-all shadow-xl"
+                        >
+                          {isPlaying ? <PauseIcon className="w-5 h-5"/> : <PlayIcon className="w-5 h-5 ml-1"/>}
+                        </Button>
+                        
+                        <div className="flex-grow relative h-8 flex items-center">
+                          <input 
+                            type="range" 
+                            ref={seekBarRef} 
+                            min="0" 
+                            max={duration || 0} 
+                            value={currentTime} 
+                            onChange={handleSeek}
+                            className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-green-500 focus:outline-none" 
+                            aria-label="Audio seek bar" 
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-white/5 p-2 rounded-2xl border border-white/5">
+                           <VolumeMuteIcon className="w-3 h-3 text-gray-500"/>
+                           <input 
+                             type="range" 
+                             min="0" 
+                             max="1" 
+                             step="0.01" 
+                             value={playerVolume} 
+                             onChange={handleVolumeChange} 
+                             className="w-20 h-1 bg-gray-700 rounded-full appearance-none accent-gray-400" 
+                           />
+                           <VolumeUpIcon className="w-3 h-3 text-gray-500"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button onClick={exportToLRC} disabled={!parsedLines.some(l => l.timestamp !== null)} variant="ghost" startIcon={<DownloadIcon className="w-3.5 h-3.5" />} className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-purple-500/10 hover:text-purple-400 hover:border-purple-500/20 flex items-center justify-center">Archivate LRC</Button>
+                  <Button onClick={handleExportToRangeFormatTxt} disabled={!parsedLines.some(l => l.timestamp !== null)} variant="ghost" startIcon={<ExportIcon className="w-3.5 h-3.5" />} className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-indigo-500/10 hover:text-indigo-400 hover:border-indigo-500/20 flex items-center justify-center">Export TXT Vector</Button>
+                  <Button onClick={handleCopyToClipboardRangeFormat} disabled={!parsedLines.some(l => l.timestamp !== null)} variant="ghost" startIcon={<SaveIcon className="w-3.5 h-3.5" />} className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-sky-500/10 hover:text-sky-400 hover:border-sky-500/20 flex items-center justify-center">Clone Range Syntax</Button>
+                </div>
+                {exportCopyStatus && <p className="text-[8px] font-black uppercase tracking-widest text-center text-green-500 animate-pulse">{exportCopyStatus}</p>}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   );
 };
-
-const CheckboxField: React.FC<{ id: string; label: string; checked: boolean; onChange: (checked: boolean) => void; }> =
-  ({ id, label, checked, onChange }) => (
-    <div className="flex items-center">
-      <input id={id} type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 text-green-600 dark:text-green-500 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-400 bg-white dark:bg-gray-700 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800" />
-      <label htmlFor={id} className="ml-2 block text-sm text-gray-700 dark:text-gray-300">{label}</label>
-    </div>
-  );
 
 const parseTimeInputToSeconds = (timeStr: string): number | null => {
   const trimmedTimeStr = timeStr.trim();

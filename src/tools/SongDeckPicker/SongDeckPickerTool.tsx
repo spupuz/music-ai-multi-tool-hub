@@ -2,6 +2,7 @@ import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import type { ToolProps } from '@/Layout';
 import { useSongDeckPickerLogic } from '@/hooks/useSongDeckPickerLogic';
 import Button from '@/components/common/Button';
+import Select from '@/components/common/Select';
 import { EyeIcon as EyeOpenIcon, DiceIcon as DiceFiveIcon, CogIcon as ConfigIcon } from '@/components/Icons';
 import { getAdjustedTextColor, lightenDarkenColor } from '@/utils/imageUtils';
 import { SongCardInterface, PickerMode } from '@/types'; 
@@ -75,22 +76,22 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             backgroundColor: card.color || logic.cardBackgroundColor,
             borderColor: String(logic.cardBorderColor),
             transform: 'scale(1)',
-            transition: 'transform 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.3s ease-out',
+            transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease',
             width: '100%', 
         };
         if (logic.animatedSelectionStage === 'cardFocused') {
             if (isTheSelectedCardInRow) {
                 cardStyle.borderColor = logic.toolAccentColor;
-                cardStyle.transform = 'scale(1.03)';
-                cardStyle.boxShadow = `0 0 8px ${logic.toolAccentColor}`;
-            } else { cardStyle.opacity = 0.7; }
+                cardStyle.transform = 'scale(1.05)';
+                cardStyle.boxShadow = `0 15px 30px -10px ${logic.toolAccentColor}66`;
+            } else { cardStyle.opacity = 0.5; }
         } else if (logic.arrowPositionIndex === index && logic.animatedSelectionStage === 'animatingArrow') {
            cardStyle.borderColor = logic.toolAccentColor;
-           cardStyle.transform = 'scale(1.03)';
+           cardStyle.transform = 'scale(1.02)';
         } else if (logic.finallyChosenCardFromAnimation?.id === card.id && logic.animatedSelectionStage === 'arrowLanded') {
-            cardStyle.transform = 'scale(1.05) translateY(-3px)';
+            cardStyle.transform = 'scale(1.08) translateY(-5px)';
             cardStyle.borderColor = logic.toolAccentColor; 
-            cardStyle.boxShadow = `0 0 12px ${logic.toolAccentColor}`;
+            cardStyle.boxShadow = `0 20px 40px -12px ${logic.toolAccentColor}88`;
         }
         return cardStyle;
     };
@@ -101,59 +102,53 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '0.375rem', 
+        borderRadius: '1.5rem', 
         minHeight: '18rem', 
         color: getAdjustedTextColor(lightenDarkenColor(logic.toolBackgroundColor, theme === 'light' ? -5 : -20), logic.toolTextColor),
         fontFamily: logic.cardTextFont,
     };
 
+    const modeOptions = [
+        { value: PickerMode.Standard, label: 'Standard' },
+        { value: PickerMode.Reveal, label: 'Reveal' },
+        { value: PickerMode.RankingReveal, label: 'Ranking' }
+    ];
+
     return (
-      <div className="w-full min-h-screen p-3 md:p-6 transition-colors duration-500 font-sans" style={{ backgroundColor: logic.toolBackgroundColor, color: logic.toolTextColor }}>
-        <div className="max-w-6xl mx-auto space-y-6">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className="max-w-6xl mx-auto space-y-12">
         
         <nav 
-            className="sticky top-4 z-30 p-3 md:p-4 mb-8 rounded-2xl flex flex-wrap items-center justify-between gap-4 border backdrop-blur-md shadow-2xl transition-all duration-300" 
-            style={{ 
-                backgroundColor: `${lightenDarkenColor(logic.toolBackgroundColor, theme === 'light' ? -5 : 10)}cc`, 
-                borderColor: `${logic.toolAccentColor}44`,
-                boxShadow: `0 8px 32px 0 ${logic.toolAccentColor}33`
-            }}
+            className="sticky top-4 z-[60] p-3 md:p-4 mb-12 rounded-3xl flex flex-wrap items-center justify-between gap-6 glass-card border-white/20 shadow-2xl transition-all duration-500 overflow-visible" 
         >
-            <div className="flex items-center gap-3">
-                <label htmlFor="pickerModeSelect" className="text-xs font-bold uppercase tracking-wider opacity-80" style={{ color: logic.toolTextColor }}>Mode</label>
-                <select 
-                    id="pickerModeSelect" 
-                    value={logic.pickerMode} 
-                    onChange={(e) => logic.setPickerMode(e.target.value as PickerMode)} 
-                    className="text-sm px-3 py-1.5 rounded-lg border bg-transparent font-bold focus:ring-2 focus:outline-none transition-all" 
-                    style={{
-                        borderColor: `${logic.toolAccentColor}66`, 
-                        color: logic.toolTextColor,
-                    }}
-                >
-                    <option value={PickerMode.Standard} style={{backgroundColor: logic.toolBackgroundColor}}>Standard</option>
-                    <option value={PickerMode.Reveal} style={{backgroundColor: logic.toolBackgroundColor}}>Reveal</option>
-                    <option value={PickerMode.RankingReveal} style={{backgroundColor: logic.toolBackgroundColor}}>Ranking</option>
-                </select>
+            <div className="flex items-center gap-4 min-w-[200px]">
+                <Select 
+                    id="pickerModeSelect"
+                    label="Picker Mode"
+                    options={modeOptions}
+                    value={logic.pickerMode}
+                    onChange={(val) => logic.setPickerMode(val as PickerMode)}
+                    containerClassName="w-full"
+                />
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
                 <Button 
                     onClick={() => logic.setShowInputs(!logic.showInputs)} 
                     variant="ghost"
                     size="sm"
                     startIcon={<EyeOpenIcon className="w-4 h-4"/>}
-                    className="hover:bg-white/10"
+                    className="hover:bg-white/10 dark:hover:bg-white/5 rounded-xl px-4 py-2"
                     textColor={logic.toolTextColor}
                 >
-                    {logic.showInputs ? 'Inputs' : 'Inputs'}
+                    {logic.showInputs ? 'Hide Inputs' : 'Show Inputs'}
                 </Button>
                 <Button 
-                    onClick={() => logic.setShowCustomization(!logic.showCustomization)} 
+                    onClick={() => logic.setShowCustomization(!logic.setShowCustomization)} 
                     variant="ghost"
                     size="sm"
                     startIcon={<ConfigIcon className="w-4 h-4"/>}
-                    className="hover:bg-white/10"
+                    className="hover:bg-white/10 dark:hover:bg-white/5 rounded-xl px-4 py-2"
                     textColor={logic.toolTextColor}
                 >
                     {logic.showCustomization ? 'Config' : 'Config'}
@@ -161,37 +156,33 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
         </nav>
         
-        <header className="mb-10 text-center animate-fadeIn">
              {logic.customLogo && ( 
                 <img 
                     src={logic.customLogo} 
                     alt="Custom Deck Picker Logo" 
-                    className="mx-auto mb-4 rounded-2xl object-contain shadow-lg" 
+                    className="mx-auto mb-8 rounded-3xl object-contain shadow-2xl" 
                     style={{ maxHeight: logic.selectedLogoSize, maxWidth: '80%' }} 
                 /> 
              )}
-            <h1 className="text-4xl md:text-5xl font-[900] tracking-tight mb-2" style={{ color: logic.toolAccentColor }}>
-                {logic.customTitle}
-            </h1>
-            <p className="text-sm md:text-base max-w-xl mx-auto opacity-70 font-medium italic">
-                Build your song deck, apply bonuses, pick cards, and reveal your destiny!
-            </p>
-        </header>
+            <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Song Deck Picker</h1>
+        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Curated song libraries • Advanced filtering • Interactive Decks</p>
+      </header>
         
         <DeckControls {...logic} theme={theme} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
 
         <DeckSettings {...logic} theme={theme} />
 
         {logic.pickerMode === PickerMode.Standard && (
-            <div className="flex items-center justify-center my-10">
+            <div className="flex items-center justify-center my-16">
                 <Button 
                     onClick={logic.pickRandomCard} 
                     disabled={logic.isLoading || logic.isPickingRandomCard || logic.unloggedDeckForDisplay.length === 0} 
                     loading={logic.isPickingRandomCard && logic.animatedSelectionStage !== 'idle'}
                     variant="primary"
                     size="lg"
-                    startIcon={<DiceFiveIcon className="w-6 h-6"/>}
-                    className="font-[900] !px-12 !py-6 !text-xl uppercase tracking-widest shadow-2xl transform hover:scale-105 active:scale-95 transition-all"
+                    startIcon={<DiceFiveIcon className="w-7 h-7"/>}
+                    className="font-black !px-16 !py-8 !text-2xl uppercase tracking-[0.2em] shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300"
                     backgroundColor="#FACC15"
                     textColor="#000000"
                 >
@@ -210,17 +201,12 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         </div>
         <style>{`
-        .card-container { perspective: 1000px; }
-        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 0.375rem; }
+        .card-container { perspective: 2000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); transform-style: preserve-3d; }
+        .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 1.5rem; }
         .card-back { transform: rotateY(180deg); }
-        .animate-fadeIn { animation: fadeIn 0.5s ease-out; } @keyframes fadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0px); } }
-        .confetti-piece { position: absolute; width: 8px; height: 16px; background-color: #facc15; opacity: 0; animation: fall 3s ease-out forwards; }
-        @keyframes fall { 0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; } }
-        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } } .animate-flash { animation: flash 1.5s infinite ease-in-out; }
-        @keyframes pulse-border-yellow { 0%, 100% { box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7); border-color: rgba(253, 224, 71, 1); } 50% { box-shadow: 0 0 0 4px rgba(253, 224, 71, 0); border-color: rgba(253, 224, 71, 0.5); } } .animate-pulse-border { animation: pulse-border-yellow 2s infinite; }
       `}</style>
-      </div>
+      </main>
     );
 };
 export default SongDeckPickerTool;

@@ -8,6 +8,9 @@ import {
   DiatonicChordInfo
 } from '@/utils/musicTheoryUtils';
 import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
+import Select from '@/components/common/Select';
+import { MusicNoteIcon, SparklesIcon, SparkTuneIcon as SpeakerIcon } from '@/components/Icons';
 
 const TOOL_CATEGORY = 'ScaleChordViewer';
 
@@ -17,30 +20,7 @@ const scaleTypeOptions = Object.keys(SCALE_INTERVALS).map(modeName => ({
     label: modeName.replace(/([A-Z])/g, ' $1').replace('Natural M', 'M').trim()
 }));
 
-const SelectField: React.FC<{
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Array<{ value: string; label: string }>;
-  className?: string;
-}> = ({ id, label, value, onChange, options, className }) => (
-  <div className={`mb-4 ${className}`}>
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-green-400 mb-1">
-      {label}
-    </label>
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-green-500 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 dark:focus:border-green-400 sm:text-sm text-gray-900 dark:text-white"
-    >
-      {options.map(option => (
-        <option key={option.value} value={option.value}>{option.label}</option>
-      ))}
-    </select>
-  </div>
-);
+
 
 const calculateFrequencyForNote = (noteName: string, octave: number = 4): number => {
     const noteNameOnly = noteName.replace(/[0-9]/g, '').trim();
@@ -59,11 +39,7 @@ const calculateFrequencyForNote = (noteName: string, octave: number = 4): number
     return 440 * Math.pow(2, (midiNoteNumber - 69) / 12);
 };
 
-const SpeakerIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-  </svg>
-);
+
 
 const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const [rootNote, setRootNote] = useState<string>('C');
@@ -174,63 +150,68 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   }, [stopAllSounds]);
 
   const ChordDisplayCard: React.FC<{chord: DiatonicChordInfo}> = ({ chord }) => (
-    <button 
+    <Button 
         key={chord.name + chord.roman} 
         onClick={() => handlePlayChord(chord)} 
         disabled={!!playingChordName}
-        className={`p-3 bg-white dark:bg-gray-700 rounded shadow group relative transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed flex flex-col justify-between min-h-[110px] ${playingChordName === chord.name ? 'bg-green-100 dark:bg-green-600 ring-2 ring-green-400' : ''}`}
+        variant="ghost"
+        className={`p-4 bg-slate-50/50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/10 group relative transition-all duration-300 hover:bg-white/10 hover:border-emerald-500/30 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex flex-row items-center justify-between gap-3 shadow-none h-auto w-full ${playingChordName === chord.name ? 'ring-2 ring-emerald-500/50 bg-emerald-500/5 border-emerald-500/20' : ''}`}
         aria-label={`Play chord ${chord.name} (${chord.roman})`}
+        endIcon={<SpeakerIcon className={`shrink-0 w-4 h-4 transition-all duration-300 ${playingChordName === chord.name ? 'text-emerald-500 scale-125' : 'text-gray-400 group-hover:text-emerald-500 opacity-20 group-hover:opacity-80'}`} />}
     >
-        <div className="flex-grow flex flex-col items-center justify-center text-center">
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{chord.name}</p>
-            <p className="text-sm text-green-600 dark:text-green-400">{chord.roman}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">({chord.notes.join(', ')})</p>
+        <div className="text-left min-w-0">
+            <p className="text-sm font-black uppercase tracking-tighter text-gray-900 dark:text-white truncate">{chord.name}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500">{chord.roman}</p>
+            <p className="text-[8px] font-bold text-gray-500 dark:text-gray-600 truncate opacity-40 group-hover:opacity-100 transition-opacity">({chord.notes.join(', ')})</p>
         </div>
-        <SpeakerIcon className={`self-end mt-1 w-5 h-5 ${playingChordName === chord.name ? 'text-green-700 dark:text-white' : 'text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-200'} transition-colors`} />
-    </button>
+    </Button>
   );
 
   return (
     <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Scale & Chord Viewer</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Select a root note and scale type to see its notes and diatonic chords. Click chords to hear them.
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Scale & Chord Viewer</h1>
+        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Musical Theory Matrix • Interactive Harmonic Map
         </p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <SelectField id="rootNote" label="Root Note" value={rootNote} onChange={setRootNote} options={rootNoteOptions} />
-          <SelectField id="scaleType" label="Scale/Mode Type" value={scaleType} onChange={setScaleType} options={scaleTypeOptions} />
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-10 relative z-10">
+          <Select label="Root Note" value={rootNote} onChange={setRootNote} options={rootNoteOptions} />
+          <Select label="Scale/Mode" value={scaleType} onChange={setScaleType} options={scaleTypeOptions} />
         </div>
 
         {error && <div className="mb-6 p-3 bg-red-100 dark:bg-red-800 bg-opacity-70 text-red-800 dark:text-red-300 rounded-md text-sm text-center border border-red-300 dark:border-red-700" role="alert">{error}</div>}
 
         {scaleNotesDisplay.length > 0 && (
-          <div className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-inner border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-3 text-center">
-              Notes in {rootNote} {scaleType.replace(/([A-Z])/g, ' $1').trim()}:
+          <div className="mb-10 p-8 bg-slate-50/50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-white/5 animate-fadeIn relative z-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 text-center opacity-70 flex items-center justify-center gap-3">
+              <SparklesIcon className="w-4 h-4" />
+              Scale Profile: {rootNote} {scaleType.replace(/([A-Z])/g, ' $1').trim()}
             </h3>
-            <p className="text-2xl text-gray-900 dark:text-white font-mono text-center tracking-wider">
-              {scaleNotesDisplay.join(' - ')}
+            <p className="text-3xl md:text-5xl text-gray-900 dark:text-white font-black uppercase tracking-tighter leading-none text-center">
+              {scaleNotesDisplay.join(' · ')}
             </p>
           </div>
         )}
 
         {diatonicTriads.length > 0 && (
-          <div className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-inner border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-4 text-center">Diatonic Triads</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="mb-10 p-8 bg-slate-50/50 dark:bg-black/10 rounded-3xl border border-gray-100 dark:border-white/5 shadow-inner relative z-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">Diatonic Triads</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {diatonicTriads.map(chord => <ChordDisplayCard key={`triad-${chord.name}`} chord={chord} />)}
             </div>
           </div>
         )}
 
         {diatonicSeventhChords.length > 0 && (
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-inner border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-4 text-center">Diatonic Seventh Chords</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="p-8 bg-slate-50/50 dark:bg-black/10 rounded-3xl border border-gray-100 dark:border-white/5 shadow-inner relative z-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">Diatonic Seventh Chords</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {diatonicSeventhChords.map(chord => <ChordDisplayCard key={`seventh-${chord.name}`} chord={chord} />)}
             </div>
           </div>

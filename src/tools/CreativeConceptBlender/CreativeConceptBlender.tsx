@@ -1,8 +1,12 @@
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
 import type { BlendedConceptParts, CreativeLockableCategoryKey, CreativeLockedCategoriesState, CreativeSavedConceptEntry, CreativeCustomItemCategoryKey, CreativeCustomItemsState, OptionalCreativeCategoryToggleState } from '@/types';
+import Button from '@/components/common/Button';
+import { 
+    LockOpenIcon, LockClosedIcon, RefreshIcon, StarIcon, 
+    TrashIcon, CopyIcon, NoteIcon, PlusCircleIcon, UserStatsIcon as UserIcon, RecordIcon, ExportIcon, ImportIcon, LoadIcon 
+} from '@/components/Icons';
 import { 
     categoryDataSources, 
     initialLockedCategories, 
@@ -15,47 +19,41 @@ import {
     OPTIONAL_TOGGLES_STORAGE_KEY,
     getRandomElement
 } from './CreativeConceptBlender.constants';
-import { 
-    LockOpenIcon, LockClosedIcon, RefreshIcon, StarEmptyIcon, StarFilledIcon, 
-    TrashIcon, CopyIcon, NoteIcon, PlusCircleIcon, UserIcon, RecordIcon, ExportIcon, ImportIcon 
-} from './CreativeConceptBlender.icons';
-
 
 const ToggleSwitch: React.FC<{ id: string; label: string; checked: boolean; onChange: () => void; className?: string }> = ({ id, label, checked, onChange, className = "" }) => (
-    <div className={`flex items-center justify-between w-full py-2 ${className}`}>
-        <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none flex-grow" onClick={onChange}>{label}</label>
-        <button
-            type="button"
-            role="switch"
-            aria-checked={checked}
-            onClick={onChange}
-            className={`${checked ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 flex-shrink-0 ml-4`}
-            id={id}
+    <div className={`flex items-center justify-between w-full py-2 group cursor-pointer ${className}`} onClick={onChange}>
+        <label htmlFor={id} className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white transition-colors cursor-pointer select-none flex-grow pointer-events-none">{label}</label>
+        <div 
+            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-300 focus:outline-none flex-shrink-0 ml-4 border active:scale-95 shadow-none ${checked ? 'bg-emerald-500 border-transparent shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-slate-200 dark:bg-white/10 border-slate-300 dark:border-white/10'}`}
         >
-            <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform`} />
-        </button>
+            <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 shadow-sm`} />
+        </div>
     </div>
 );
-
 
 const ItemPalettes: React.FC<{
   onItemSelect: (category: CreativeCustomItemCategoryKey, value: string) => void;
   customItems: CreativeCustomItemsState;
   optionalToggles: OptionalCreativeCategoryToggleState;
 }> = ({ onItemSelect, customItems, optionalToggles }) => (
-    <div className="mt-6 w-full p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3 text-center">Click an item to build your concept</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="mt-8 w-full p-6 glass-card border-white/10">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-700 dark:text-green-500 mb-6 text-center">Blueprint Repository</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {(Object.keys(categoryDataSources) as CreativeCustomItemCategoryKey[]).filter(k => k !== 'twist' && (['theme','style','texture'].includes(k) || optionalToggles[`include${k.charAt(0).toUpperCase() + k.slice(1)}` as keyof OptionalCreativeCategoryToggleState])).map(catKey => (
                 <div key={catKey}>
-                    <h4 className="font-bold text-green-600 dark:text-green-400 capitalize mb-2">{catKey}</h4>
-                    <div className="max-h-48 overflow-y-auto space-y-1 pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 px-1">{catKey}</h4>
+                    <div className="max-h-48 overflow-y-auto space-y-1.5 pr-2 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20">
                         {[...categoryDataSources[catKey], ...customItems[catKey]].map((item, idx) => (
-                            <button key={`${catKey}-${idx}`} onClick={() => onItemSelect(catKey, item)}
-                                    className="w-full text-left p-1.5 text-xs text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-700 rounded hover:bg-green-100 dark:hover:bg-green-700 hover:text-green-800 dark:hover:text-white transition-colors">
-                                {item}
-                                {customItems[catKey].includes(item) && <UserIcon className="inline-block ml-1 mb-0.5 w-3 h-3 text-yellow-500 dark:text-yellow-400" title="Custom Item" />}
-                            </button>
+                            <Button 
+                                key={`${catKey}-${idx}`} 
+                                onClick={() => onItemSelect(catKey, item)}
+                                variant="ghost"
+                                size="xs"
+                                className="w-full text-left p-2 text-[10px] font-bold text-gray-800 dark:text-gray-300 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl hover:border-emerald-500/30 hover:bg-emerald-500/10 transition-all justify-start"
+                            >
+                                <span className="truncate flex-1">{item}</span>
+                                {customItems[catKey].includes(item) && <UserIcon className="ml-1 w-3 h-3 text-emerald-500/60" title="Custom Item" />}
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -64,13 +62,11 @@ const ItemPalettes: React.FC<{
     </div>
 );
 
-// FIX: Changed to a named export
 export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const [currentConcept, setCurrentConcept] = useState<BlendedConceptParts | null>(null);
   const [currentLockedCategories, setCurrentLockedCategories] = useState<CreativeLockedCategoriesState>(initialLockedCategories);
   const [optionalCategoryToggles, setOptionalCategoryToggles] = useState<OptionalCreativeCategoryToggleState>(initialOptionalCategoryToggles);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [showTwistButton, setShowTwistButton] = useState<boolean>(false);
   const [copiedFeedback, setCopiedFeedback] = useState<{id: string | null, type: 'main' | 'history' | 'favorite', text: string}>({ id: null, type: 'main', text: 'COPY TO CLIPBOARD'});
   
   const [history, setHistory] = useState<CreativeSavedConceptEntry[]>([]);
@@ -98,7 +94,6 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
         const newId = Date.now().toString();
         const prevConcept = currentConcept;
         
-        // FIX: Using traditional function syntax for generic inside arrow function to avoid JSX ambiguity
         function getNewValueForCategory<K extends CreativeLockableCategoryKey>(catKey: K, generatorFn: () => BlendedConceptParts[K]): BlendedConceptParts[K] {
             if (rerollCatKey === catKey) return generatorFn();
             if (rerollCatKey !== null && prevConcept) return prevConcept[catKey];
@@ -158,7 +153,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     if (currentConcept && (history.length === 0 || history[0].concept.id !== currentConcept.id)) {
         setHistory(prev => [{ concept: currentConcept, lockedCategories: currentLockedCategories, optionalCategoryToggles }, ...prev.slice(0, 19)]);
     }
-    generateConceptInternal(null, true); setShowTwistButton(false);
+    generateConceptInternal(null, true);
   }, [currentConcept, history, currentLockedCategories, optionalCategoryToggles, generateConceptInternal]);
 
   const toggleLock = useCallback((category: CreativeLockableCategoryKey) => {
@@ -199,6 +194,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     if(isNowFavorited) trackLocalEvent(TOOL_CATEGORY, 'conceptFavoriteAdded', undefined, 1);
     else trackLocalEvent(TOOL_CATEGORY, 'conceptFavoriteRemoved', undefined, 1);
   }, [trackLocalEvent]);
+
   const handleLoadSavedConcept = useCallback((savedEntry: CreativeSavedConceptEntry) => { setCurrentConcept(savedEntry.concept); setCurrentLockedCategories(savedEntry.lockedCategories); if (savedEntry.optionalCategoryToggles) { setOptionalCategoryToggles(savedEntry.optionalCategoryToggles); } trackLocalEvent(TOOL_CATEGORY, 'conceptLoadedFromSaved', undefined, 1);}, [trackLocalEvent]);
   
   const handleClearHistory = useCallback(() => {
@@ -207,7 +203,8 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     if (newClickCount >= 3) { try { localStorage.removeItem(HISTORY_STORAGE_KEY); } catch(e){} setHistory([]); trackLocalEvent(TOOL_CATEGORY, 'conceptHistoryCleared'); setClearHistoryClickCount(0); } 
     else { setClearHistoryClickCount(newClickCount); clearHistoryTimeoutRef.current = window.setTimeout(() => setClearHistoryClickCount(0), 2000); }
   }, [clearHistoryClickCount, trackLocalEvent]);
-  const getClearHistoryButtonText = (): string => { if(clearHistoryClickCount === 1) return "Sure? (2 more)"; if(clearHistoryClickCount === 2) return "Last Chance!"; return "Clear History (3 clicks)"; };
+
+  const getClearHistoryButtonText = (): string => { if(clearHistoryClickCount === 1) return "Sure? (2 more)"; if(clearHistoryClickCount === 2) return "Last Chance!"; return "Clear History"; };
   const handleNoteChange = (conceptId: string, newNote: string) => { setFavorites(prev => prev.map(favEntry => favEntry.concept.id === conceptId ? {...favEntry, note: newNote} : favEntry)); };
   const handleSaveNote = (conceptId: string) => { setEditingNoteForId(null); trackLocalEvent(TOOL_CATEGORY, 'conceptNoteSaved'); };
 
@@ -285,25 +282,39 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     onToggleLock: () => void;
     onReroll: () => void;
   }> = ({ label, value, categoryKey, isOptional = false, isLocked, onToggleLock, onReroll }) => {
-    if (isOptional && !value && activeMode === 'generate') return null; // Don't show empty optional in generate mode unless it has value (shouldn't happen with current logic but safe)
+    if (isOptional && !value && activeMode === 'generate') return null;
     
     return (
-        <div className={`flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-all ${isLocked ? 'border-green-500 dark:border-green-500 shadow-sm' : ''}`}>
+        <div className={`group flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 ${isLocked ? 'border-green-500/50 shadow-inner bg-green-500/5' : 'hover:border-green-500/20'}`}>
             <div className="flex-grow min-w-0 mr-4">
-                <span className="text-xs uppercase text-green-600 dark:text-green-400 font-bold tracking-wider block mb-1">
+                <span className="text-[11px] uppercase text-emerald-600 dark:text-emerald-400 font-bold tracking-wider block mb-1.5 opacity-90">
                     {label}
-                    {isItemCustom(categoryKey as CreativeCustomItemCategoryKey, value) && <UserIcon className="inline-block ml-1 mb-0.5 w-3 h-3 text-yellow-500" title="Custom Item"/>}
+                    {isItemCustom(categoryKey as CreativeCustomItemCategoryKey, value) && <UserIcon className="inline-block ml-1.5 mb-0.5 w-3.5 h-3.5 text-yellow-500" title="Custom Item"/>}
                 </span>
-                <span className="text-gray-900 dark:text-gray-100 text-sm md:text-base font-medium break-words leading-tight">
-                    {value || (activeMode === 'record' ? <span className="text-gray-400 dark:text-gray-600 italic">Select below...</span> : '')}
+                <span className="text-gray-900 dark:text-gray-100 text-sm md:text-base font-bold break-words leading-tight uppercase tracking-tight">
+                    {value || (activeMode === 'record' ? <span className="text-gray-400 dark:text-gray-600 italic font-medium lowercase tracking-normal">Select below...</span> : '')}
                 </span>
             </div>
             {activeMode === 'generate' && (
-                <div className="flex items-center space-x-2 flex-shrink-0">
-                    <button onClick={onReroll} disabled={isGenerating || isLocked} className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 disabled:opacity-50 transition-colors" title="Reroll this category"><RefreshIcon className="w-4 h-4"/></button>
-                    <button onClick={onToggleLock} disabled={isGenerating} className={`p-1.5 rounded-full transition-colors ${isLocked ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400'}`} title={isLocked ? "Unlock" : "Lock"}>
-                        {isLocked ? <LockClosedIcon className="w-4 h-4" /> : <LockOpenIcon className="w-4 h-4" />}
-                    </button>
+                <div className="flex items-center space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button 
+                        onClick={onReroll} 
+                        disabled={isGenerating || isLocked} 
+                        variant="ghost" 
+                        size="xs" 
+                        className="p-2 text-gray-500 dark:text-gray-400 hover:text-emerald-500 transition-all active:scale-90"
+                        title="Reroll this category"
+                        startIcon={<RefreshIcon className="w-4 h-4"/>}
+                    />
+                    <Button 
+                        onClick={onToggleLock} 
+                        disabled={isGenerating} 
+                        variant="ghost" 
+                        size="xs" 
+                        className={`p-2 rounded-xl transition-all active:scale-90 ${isLocked ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'text-gray-400 hover:text-emerald-500'}`}
+                        title={isLocked ? "Unlock" : "Lock"}
+                        startIcon={isLocked ? <LockClosedIcon className="w-4 h-4" /> : <LockOpenIcon className="w-4 h-4" />}
+                    />
                 </div>
             )}
         </div>
@@ -311,110 +322,169 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
   };
   
   return (
-    <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Creative Concept Blender</h1>
-        <p className="mt-3 text-md text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Spark wildly original musical ideas by blending disparate concepts. Use 'Record New' to build manually!
-        </p>
+    <div className="w-full text-gray-900 dark:text-white animate-fadeIn">
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Concept Blender</h1>
+        <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Architectural Prompt Fusion • Neural Concept Mapping</p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-500 dark:border-green-600 transition-colors duration-300">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] pointer-events-none rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none rounded-full"></div>
         
         {/* Mode Switcher */}
-        <div className="flex justify-center mb-8">
-            <div className="bg-gray-200 dark:bg-gray-800 p-1 rounded-lg inline-flex">
-                <button 
+        <div className="flex justify-center mb-10 px-2">
+            <div className="bg-slate-100 dark:bg-white/10 p-1.5 rounded-2xl flex flex-wrap justify-center border border-slate-200 dark:border-white/10 shadow-inner gap-1 sm:gap-0">
+                <Button 
                     onClick={() => handleModeChange('generate')}
-                    className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${activeMode === 'generate' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
+                    variant={activeMode === 'generate' ? 'primary' : 'ghost'}
+                    size="md"
+                    className={`px-4 sm:px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMode === 'generate' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'text-gray-500 hover:text-gray-800 dark:hover:text-white border-none'}`}
+                    startIcon={<RefreshIcon className="w-4 h-4"/>}
                 >
                     Generate Mode
-                </button>
-                <button 
+                </Button>
+                <Button 
                     onClick={() => handleModeChange('record')}
-                    className={`px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${activeMode === 'record' ? 'bg-red-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}
+                    variant={activeMode === 'record' ? 'primary' : 'ghost'}
+                    size="md"
+                    className={`px-4 sm:px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center ${activeMode === 'record' ? 'bg-red-600 text-white shadow-lg shadow-red-500/20' : 'text-gray-500 hover:text-gray-800 dark:hover:text-white border-none'}`}
+                    startIcon={<RecordIcon className="w-4 h-4"/>}
                 >
-                    <RecordIcon className="w-4 h-4 mr-1.5"/> Record New
-                </button>
+                    Record New
+                </Button>
             </div>
         </div>
 
         {activeMode === 'generate' && (
-            <div className="flex flex-col items-center mb-8">
+            <div className="flex flex-col lg:flex-row items-stretch gap-8 mb-12">
                 
                 {/* Optional Categories Box */}
-                <div className="mb-6 w-full max-w-md bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
-                     <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 text-center">Customize Your Blend</h3>
-                     <div className="flex flex-col gap-3">
-                        <ToggleSwitch id="toggle-musicality" label="Include Musicality" checked={optionalCategoryToggles.includeMusicality} onChange={() => handleOptionalCategoryToggle('includeMusicality')} />
-                        <ToggleSwitch id="toggle-conflict" label="Include Core Conflict" checked={optionalCategoryToggles.includeConflict} onChange={() => handleOptionalCategoryToggle('includeConflict')} />
-                        <ToggleSwitch id="toggle-character" label="Include Character" checked={optionalCategoryToggles.includeCharacter} onChange={() => handleOptionalCategoryToggle('includeCharacter')} />
-                        <ToggleSwitch id="toggle-setting" label="Include Setting" checked={optionalCategoryToggles.includeSetting} onChange={() => handleOptionalCategoryToggle('includeSetting')} />
-                        <ToggleSwitch id="toggle-catalyst" label="Include Catalyst" checked={optionalCategoryToggles.includeCatalyst} onChange={() => handleOptionalCategoryToggle('includeCatalyst')} />
+                <div className="flex-1 glass-card border-slate-200 dark:border-white/10 p-6 bg-slate-50 dark:bg-white/5">
+                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-6 text-center">Customize Your Blend</h3>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                        <ToggleSwitch id="toggle-musicality" label="Musicality" checked={optionalCategoryToggles.includeMusicality} onChange={() => handleOptionalCategoryToggle('includeMusicality')} />
+                        <ToggleSwitch id="toggle-conflict" label="Core Conflict" checked={optionalCategoryToggles.includeConflict} onChange={() => handleOptionalCategoryToggle('includeConflict')} />
+                        <ToggleSwitch id="toggle-character" label="Character" checked={optionalCategoryToggles.includeCharacter} onChange={() => handleOptionalCategoryToggle('includeCharacter')} />
+                        <ToggleSwitch id="toggle-setting" label="Setting" checked={optionalCategoryToggles.includeSetting} onChange={() => handleOptionalCategoryToggle('includeSetting')} />
+                        <ToggleSwitch id="toggle-catalyst" label="Catalyst" checked={optionalCategoryToggles.includeCatalyst} onChange={() => handleOptionalCategoryToggle('includeCatalyst')} />
                     </div>
                 </div>
 
-                <button onClick={() => handleFullGenerate()} disabled={isGenerating} className="w-full md:w-auto flex justify-center items-center py-3 px-8 border border-transparent rounded-md shadow-sm text-lg font-medium text-black bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 transition-colors">
-                    {isGenerating ? <><Spinner size="w-6 h-6 mr-2" color="text-black"/>BLENDING...</> : 'BLEND NEW CONCEPT'}
-                </button>
+                <div className="flex flex-col justify-center items-center gap-4">
+                  <Button 
+                    onClick={() => handleFullGenerate()} 
+                    disabled={isGenerating} 
+                    variant="primary"
+                    size="lg"
+                    className="w-full lg:w-auto font-black uppercase tracking-[0.2em] sm:min-w-[280px] shadow-[0_0_30px_rgba(16,185,129,0.2)]"
+                    backgroundColor="#10b981"
+                    loading={isGenerating}
+                  >
+                    Blend New Concept
+                  </Button>
+                  
+                   <Button 
+                    onClick={() => setManageCustomModalOpen(true)} 
+                    variant="ghost"
+                    size="sm"
+                    className="text-[10px] uppercase font-black tracking-widest text-gray-400 hover:text-indigo-400 transition-colors border-white/5"
+                    startIcon={<UserIcon className="w-4 h-4" />}
+                  >
+                    Manage My Repository
+                  </Button>
+                </div>
             </div>
         )}
 
         {activeMode === 'record' && (
-            <div className="flex flex-col items-center mb-8">
-                 <button onClick={handleResetRecord} className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-md text-sm font-medium transition-colors">Clear & Restart Recording</button>
+            <div className="flex flex-col items-center mb-10">
+                 <Button onClick={handleResetRecord} variant="danger" size="sm" className="font-black uppercase tracking-widest px-6 rounded-full">
+                   Reset Recording
+                 </Button>
             </div>
         )}
 
         {currentConcept && (
-            <div className="bg-gray-100 dark:bg-gray-850 p-6 rounded-xl border-2 border-gray-300 dark:border-gray-700 relative overflow-hidden transition-colors duration-300">
-                 <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-green-400 to-blue-500"></div>
+            <div className="relative p-4 sm:p-8 glass-card border-white/10 shadow-inner group/concept overflow-hidden">
+                 <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-500 via-blue-500 to-purple-600 opacity-50"></div>
                  
-                 <div className="flex justify-between items-start mb-6 pl-4">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Current Concept</h2>
-                    <div className="flex gap-2">
-                        <button onClick={() => handleCopyToClipboard(currentConcept, 'main')} disabled={!!copiedFeedback} className="flex items-center text-xs py-1.5 px-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-medium transition-colors">
-                            <CopyIcon className="w-3.5 h-3.5 mr-1.5"/> {copiedFeedback && copiedFeedback.type === 'main' ? copiedFeedback.text : 'COPY'}
-                        </button>
-                         <button onClick={() => handleToggleFavorite(currentConcept, currentLockedCategories, optionalCategoryToggles)} className={`p-2 rounded-full transition-colors ${isFavorite(currentConcept.id) ? 'bg-yellow-500 text-black hover:bg-yellow-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
-                            {isFavorite(currentConcept.id) ? <StarFilledIcon /> : <StarEmptyIcon />}
-                        </button>
+                 <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-10 pl-4">
+                    <div>
+                      <h2 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter leading-none mb-1">Current Formula</h2>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 opacity-60">ID: {currentConcept.id}</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
+                        <Button 
+                            onClick={() => handleCopyToClipboard(currentConcept, 'main')} 
+                            disabled={!!copiedFeedback && copiedFeedback.type === 'main' && copiedFeedback.text === 'COPIED!'} 
+                            variant="secondary"
+                            size="md"
+                            className="flex-grow font-black uppercase tracking-widest text-[10px] w-full sm:w-auto"
+                            startIcon={<CopyIcon className="w-4 h-4" />}
+                        >
+                            {copiedFeedback && copiedFeedback.type === 'main' ? copiedFeedback.text : 'Copy to Clipboard'}
+                        </Button>
+                        <Button 
+                            onClick={() => handleToggleFavorite(currentConcept, currentLockedCategories, optionalCategoryToggles)} 
+                            variant="ghost" 
+                            size="md" 
+                            title={isFavorite(currentConcept.id) ? "Remove from Vault" : "Save to Neural Vault"}
+                            startIcon={isFavorite(currentConcept.id) ? <StarIcon className="w-3.5 h-3.5 fill-current" /> : <StarIcon className="w-3.5 h-3.5" />}
+                            className={`h-11 px-6 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest w-full sm:w-auto ${isFavorite(currentConcept.id) ? 'bg-yellow-500 text-black shadow-[0_0_15px_rgba(234,179,8,0.3)] border-transparent' : 'bg-white/10 border border-white/10 text-gray-400 hover:text-white'}`}
+                        >
+                            {isFavorite(currentConcept.id) ? 'Saved' : 'Fav'}
+                        </Button>
                     </div>
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pl-4">
-                    <ConceptCategoryDisplay label="Theme / Scenario" value={currentConcept.theme} categoryKey="theme" isLocked={currentLockedCategories.theme} onToggleLock={() => toggleLock('theme')} onReroll={() => handleRerollCategory('theme')} />
-                    <ConceptCategoryDisplay label="Artistic Style / Mood" value={currentConcept.style} categoryKey="style" isLocked={currentLockedCategories.style} onToggleLock={() => toggleLock('style')} onReroll={() => handleRerollCategory('style')} />
-                    <ConceptCategoryDisplay label="Sensory Texture" value={currentConcept.texture} categoryKey="texture" isLocked={currentLockedCategories.texture} onToggleLock={() => toggleLock('texture')} onReroll={() => handleRerollCategory('texture')} />
+                    <ConceptCategoryDisplay label="Theme" value={currentConcept.theme} categoryKey="theme" isLocked={currentLockedCategories.theme} onToggleLock={() => toggleLock('theme')} onReroll={() => handleRerollCategory('theme')} />
+                    <ConceptCategoryDisplay label="Style" value={currentConcept.style} categoryKey="style" isLocked={currentLockedCategories.style} onToggleLock={() => toggleLock('style')} onReroll={() => handleRerollCategory('style')} />
+                    <ConceptCategoryDisplay label="Texture" value={currentConcept.texture} categoryKey="texture" isLocked={currentLockedCategories.texture} onToggleLock={() => toggleLock('texture')} onReroll={() => handleRerollCategory('texture')} />
                     
-                    {optionalCategoryToggles.includeMusicality && <ConceptCategoryDisplay label="Musicality & Soundscape" value={currentConcept.musicality} categoryKey="musicality" isOptional isLocked={currentLockedCategories.musicality} onToggleLock={() => toggleLock('musicality')} onReroll={() => handleRerollCategory('musicality')} />}
-                    {optionalCategoryToggles.includeConflict && <ConceptCategoryDisplay label="Core Conflict" value={currentConcept.conflict} categoryKey="conflict" isOptional isLocked={currentLockedCategories.conflict} onToggleLock={() => toggleLock('conflict')} onReroll={() => handleRerollCategory('conflict')} />}
-                    {optionalCategoryToggles.includeCharacter && <ConceptCategoryDisplay label="Character / Perspective" value={currentConcept.character} categoryKey="character" isOptional isLocked={currentLockedCategories.character} onToggleLock={() => toggleLock('character')} onReroll={() => handleRerollCategory('character')} />}
-                    {optionalCategoryToggles.includeSetting && <ConceptCategoryDisplay label="Setting Specifics" value={currentConcept.setting} categoryKey="setting" isOptional isLocked={currentLockedCategories.setting} onToggleLock={() => toggleLock('setting')} onReroll={() => handleRerollCategory('setting')} />}
-                    {optionalCategoryToggles.includeCatalyst && <ConceptCategoryDisplay label="Key Object / Catalyst" value={currentConcept.catalyst} categoryKey="catalyst" isOptional isLocked={currentLockedCategories.catalyst} onToggleLock={() => toggleLock('catalyst')} onReroll={() => handleRerollCategory('catalyst')} />}
+                    <ConceptCategoryDisplay label="Musicality" value={currentConcept.musicality} categoryKey="musicality" isOptional isLocked={currentLockedCategories.musicality} onToggleLock={() => toggleLock('musicality')} onReroll={() => handleRerollCategory('musicality')} />
+                    <ConceptCategoryDisplay label="Conflict" value={currentConcept.conflict} categoryKey="conflict" isOptional isLocked={currentLockedCategories.conflict} onToggleLock={() => toggleLock('conflict')} onReroll={() => handleRerollCategory('conflict')} />
+                    <ConceptCategoryDisplay label="Character" value={currentConcept.character} categoryKey="character" isOptional isLocked={currentLockedCategories.character} onToggleLock={() => toggleLock('character')} onReroll={() => handleRerollCategory('character')} />
+                    <ConceptCategoryDisplay label="Setting" value={currentConcept.setting} categoryKey="setting" isOptional isLocked={currentLockedCategories.setting} onToggleLock={() => toggleLock('setting')} onReroll={() => handleRerollCategory('setting')} />
+                    <ConceptCategoryDisplay label="Catalyst" value={currentConcept.catalyst} categoryKey="catalyst" isOptional isLocked={currentLockedCategories.catalyst} onToggleLock={() => toggleLock('catalyst')} onReroll={() => handleRerollCategory('catalyst')} />
                  </div>
 
                  {currentConcept.twist ? (
-                    <div className="mt-6 ml-4 p-4 bg-purple-100 dark:bg-purple-900/30 border-l-4 border-purple-500 rounded-r-lg animate-fadeIn">
-                        <div className="flex justify-between items-center mb-1">
-                             <h4 className="text-sm font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider">The Twist</h4>
+                    <div className="mt-8 ml-4 p-6 bg-purple-600/10 border border-purple-500/20 rounded-2xl animate-fadeIn relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-20">
+                          <PlusCircleIcon className="w-12 h-12" />
+                        </div>
+                        <div className="flex justify-between items-center mb-4 relative z-10">
+                             <h4 className="text-[10px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-[0.3em]">The Catalyst Twist</h4>
                              {activeMode === 'generate' && (
-                                <div className="flex space-x-2">
-                                    <button onClick={() => handleRerollCategory('twist')} disabled={isGenerating || currentLockedCategories.twist} className="p-1 text-purple-400 hover:text-purple-200"><RefreshIcon className="w-4 h-4"/></button>
-                                    <button onClick={() => toggleLock('twist')} className={`p-1 rounded-full ${currentLockedCategories.twist ? 'text-purple-200 bg-purple-700' : 'text-purple-400 hover:text-purple-200'}`}>
-                                        {currentLockedCategories.twist ? <LockClosedIcon className="w-4 h-4" /> : <LockOpenIcon className="w-4 h-4" />}
-                                    </button>
+                                <div className="flex space-x-1">
+                                    <Button 
+                                        onClick={() => handleRerollCategory('twist')} 
+                                        disabled={isGenerating || currentLockedCategories.twist} 
+                                        variant="ghost" 
+                                        size="xs" 
+                                        className="p-2 text-purple-400 hover:text-purple-300 transition-all active:scale-90"
+                                        startIcon={<RefreshIcon className="w-4 h-4"/>}
+                                    />
+                                    <Button 
+                                        onClick={() => toggleLock('twist')} 
+                                        variant="ghost" 
+                                        size="xs" 
+                                        className={`p-2 rounded-xl transition-all active:scale-90 ${currentLockedCategories.twist ? 'text-purple-100 bg-purple-600 shadow-lg shadow-purple-500/20' : 'text-purple-400 hover:bg-purple-500/10'}`}
+                                        startIcon={currentLockedCategories.twist ? <LockClosedIcon className="w-4 h-4" /> : <LockOpenIcon className="w-4 h-4" />}
+                                    />
                                 </div>
                              )}
                         </div>
-                        <p className="text-lg text-purple-900 dark:text-purple-100 italic">{currentConcept.twist}</p>
+                        <p className="text-xl text-purple-900 dark:text-purple-100 font-black uppercase tracking-tight italic leading-tight relative z-10">"{currentConcept.twist}"</p>
                     </div>
                  ) : (
                     activeMode === 'generate' && (
-                        <div className="mt-6 ml-4 flex justify-center">
-                            <button onClick={handleAddTwist} className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-full text-sm font-medium shadow-md transition-all hover:scale-105">
-                                ✨ Add a Surprise Twist?
-                            </button>
+                        <div className="mt-8 ml-4 flex justify-center">
+                            <Button onClick={handleAddTwist} variant="ghost" className="bg-purple-600/10 text-purple-600 hover:bg-purple-600 hover:text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-sm transition-all border border-purple-500/30" startIcon={<PlusCircleIcon className="w-4 h-4" />}>
+                                Active Surprise Component
+                            </Button>
                         </div>
                     )
                  )}
@@ -424,41 +494,31 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
         {activeMode === 'record' && (
             <ItemPalettes onItemSelect={handleRecordItemSelect} customItems={customItems} optionalToggles={optionalCategoryToggles} />
         )}
-        
-        {activeMode === 'generate' && (
-             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 w-full flex justify-center">
-                <button onClick={() => setManageCustomModalOpen(true)} className="py-2.5 px-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md text-sm font-medium shadow-lg transition-colors flex items-center gap-2">
-                    <UserIcon className="w-4 h-4"/> Manage My Custom Items
-                </button>
-            </div>
-        )}
-        
-        <AddCustomItemModal isOpen={showAddCustomItemModal} category={customItemCategory} value={customItemValue} setValue={setCustomItemValue} onSave={handleSaveCustomItem} onClose={() => setShowAddCustomItemModal(false)} />
-        <ManageCustomItemsModal isOpen={manageCustomModalOpen} customItems={customItems} onDelete={handleDeleteCustomItem} onClose={() => setManageCustomModalOpen(false)} onExport={handleExportCustomItems} onImportFileSelected={handleImportFileSelected} importStatusMessage={importStatusMessage} fileInputRef={fileInputRef} />
-        <ImportConfirmationModal isOpen={importConfirmationModalOpen} onClose={() => { setImportConfirmationModalOpen(false); setImportedCustomItemsData(null); }} onConfirmImport={processImport} />
 
-         {/* History & Favorites Section */}
-         {(history.length > 0 || favorites.length > 0) && (
-            <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-                <div className="grid md:grid-cols-2 gap-8">
+        {/* History & Favorites Section */}
+        {(history.length > 0 || favorites.length > 0) && (
+            <div className="mt-16 pt-12 border-t border-white/10">
+                <div className="grid md:grid-cols-2 gap-10">
                      {/* History Column */}
-                     <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-green-700 dark:text-green-400">Recent Concepts ({history.length})</h3>
-                            {history.length > 0 && <button onClick={handleClearHistory} className="py-1 px-2 text-xs bg-red-600 hover:bg-red-500 text-white rounded transition-colors">{getClearHistoryButtonText()}</button>}
+                     <div className="space-y-6">
+                        <div className="flex justify-between items-center px-2">
+                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-gray-500">Echo History</h3>
+                            {history.length > 0 && (
+                              <Button onClick={handleClearHistory} variant="ghost" size="xs" className="text-red-500 hover:bg-red-500/10 opacity-70 hover:opacity-100">
+                                {getClearHistoryButtonText()}
+                              </Button>
+                            )}
                         </div>
-                        <div className="space-y-3 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-900">
-                            {history.length === 0 ? <p className="text-gray-500 dark:text-gray-400 italic text-sm">No recent history.</p> : history.map((entry, idx) => (
-                                <div key={entry.concept.id + idx} className="bg-white dark:bg-gray-700 p-3 rounded border border-gray-200 dark:border-gray-600 text-sm shadow-sm hover:shadow-md transition-shadow">
-                                    <p className="text-gray-800 dark:text-gray-200 mb-2 line-clamp-3">{formatConceptForClipboard(entry.concept)}</p>
+                        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                            {history.length === 0 ? <p className="text-gray-500 dark:text-gray-600 italic text-[10px] font-black uppercase tracking-widest text-center py-10 opacity-50">Empty static</p> : history.map((entry, idx) => (
+                                <div key={entry.concept.id + idx} className="glass-card bg-slate-50 dark:bg-white/5 p-4 border-slate-200 dark:border-white/10 space-y-4 hover:border-green-500/20 transition-all">
+                                    <p className="text-xs font-bold text-gray-700 dark:text-gray-300 leading-relaxed uppercase tracking-tight line-clamp-3">{formatConceptForClipboard(entry.concept)}</p>
                                     <div className="flex gap-2">
-                                        <button onClick={() => handleLoadSavedConcept(entry)} className="text-xs py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Load</button>
-                                        <button onClick={() => handleCopyToClipboard(entry.concept, 'history')} disabled={!!copiedFeedback && copiedFeedback.id === entry.concept.id} className="text-xs py-1 px-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-700 dark:text-white rounded">
-                                            {copiedFeedback && copiedFeedback.id === entry.concept.id && copiedFeedback.type === 'history' ? copiedFeedback.text : 'Copy'}
-                                        </button>
-                                        <button onClick={() => handleToggleFavorite(entry.concept, entry.lockedCategories, entry.optionalCategoryToggles)} className={`text-xs py-1 px-2 rounded text-white ${isFavorite(entry.concept.id) ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-gray-400 hover:bg-gray-300 dark:bg-gray-500 dark:hover:bg-gray-400'}`}>
-                                            {isFavorite(entry.concept.id) ? 'Unfav' : 'Fav'}
-                                        </button>
+                                        <Button onClick={() => handleLoadSavedConcept(entry)} size="xs" variant="ghost" className="bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white px-4 border-none" startIcon={<LoadIcon className="w-3 h-3" />}>Load</Button>
+                                        <Button onClick={() => handleCopyToClipboard(entry.concept, 'history')} size="xs" variant="ghost" className="bg-white/10 text-gray-400 hover:bg-white/20 px-4 border-none" startIcon={<CopyIcon className="w-3 h-3" />}>Copy</Button>
+                                        <Button onClick={() => handleToggleFavorite(entry.concept, entry.lockedCategories, entry.optionalCategoryToggles)} size="xs" variant="ghost" className={`px-4 border-none transition-all ${isFavorite(entry.concept.id) ? 'bg-yellow-500/20 text-yellow-500' : 'bg-gray-500/10 text-gray-500 hover:bg-yellow-500/10 hover:text-yellow-500'}`} startIcon={<StarIcon className={`w-3 h-3 ${isFavorite(entry.concept.id) ? 'fill-current' : ''}`} />}>
+                                            {isFavorite(entry.concept.id) ? 'Vaulted' : 'Vault'}
+                                        </Button>
                                     </div>
                                 </div>
                             ))}
@@ -466,31 +526,38 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
                      </div>
                      
                      {/* Favorites Column */}
-                     <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-green-700 dark:text-green-400">Favorites ({favorites.length})</h3>
-                            <button onClick={() => setShowFavoritesView(!showFavoritesView)} className="text-xs text-blue-500 hover:underline">{showFavoritesView ? 'Hide' : 'Show'}</button>
+                     <div className="space-y-6">
+                         <div className="flex justify-between items-center px-2">
+                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-yellow-600 dark:text-yellow-500">Vault Concepts</h3>
+                            <Button onClick={() => setShowFavoritesView(!showFavoritesView)} variant="ghost" size="xs" className="text-[10px] font-black uppercase tracking-widest text-blue-500/70 hover:text-blue-400 py-1 transition-all"> {showFavoritesView ? 'Compact' : 'Expand'} </Button>
                         </div>
                         {showFavoritesView && (
-                            <div className="space-y-3 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-900">
-                                {favorites.length === 0 ? <p className="text-gray-500 dark:text-gray-400 italic text-sm">No favorites saved yet.</p> : favorites.map((entry) => (
-                                    <div key={entry.concept.id} className="bg-white dark:bg-gray-700 p-3 rounded border border-yellow-500/50 shadow-sm hover:shadow-md transition-shadow">
-                                        <p className="text-gray-900 dark:text-gray-100 mb-2 line-clamp-4">{formatConceptForClipboard(entry.concept)}</p>
+                            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
+                                {favorites.length === 0 ? <p className="text-gray-500 dark:text-gray-600 italic text-[10px] font-black uppercase tracking-widest text-center py-10 opacity-50">Vault is sealed</p> : favorites.map((entry) => (
+                                    <div key={entry.concept.id} className="glass-card bg-yellow-500/5 dark:bg-yellow-500/5 p-4 border-yellow-500/20 space-y-4 hover:border-yellow-500/40 transition-all">
+                                        <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-relaxed uppercase tracking-tight line-clamp-4">{formatConceptForClipboard(entry.concept)}</p>
                                         {editingNoteForId === entry.concept.id ? (
-                                            <div className="flex gap-1 items-center mb-2">
-                                                <input ref={noteInputRef} type="text" defaultValue={entry.note || ''} onChange={(e) => handleNoteChange(entry.concept.id, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(entry.concept.id)} onBlur={() => setTimeout(() => { if (document.activeElement !== noteInputRef.current) handleSaveNote(entry.concept.id); }, 100)} className="flex-grow p-1 text-xs bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500" placeholder="Add a note..."/>
-                                                <button onClick={() => handleSaveNote(entry.concept.id)} className="text-xs py-1 px-1.5 bg-green-600 hover:bg-green-500 text-white rounded">Save</button>
+                                            <div className="flex gap-2 items-center">
+                                                <input 
+                                                  ref={noteInputRef} 
+                                                  type="text" 
+                                                  defaultValue={entry.note || ''} 
+                                                  onChange={(e) => handleNoteChange(entry.concept.id, e.target.value)} 
+                                                  onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(entry.concept.id)} 
+                                                  onBlur={() => setTimeout(() => { if (document.activeElement !== noteInputRef.current) handleSaveNote(entry.concept.id); }, 100)} 
+                                                  className="flex-grow px-3 py-1.5 text-xs bg-white/10 border border-white/5 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-green-500 font-bold" 
+                                                  placeholder="Add track note..."
+                                                />
+                                                <Button onClick={() => handleSaveNote(entry.concept.id)} size="xs" variant="success" className="px-3">Save</Button>
                                             </div>
                                         ) : (
-                                            entry.note && <p className="text-xs text-yellow-600 dark:text-yellow-200 italic mb-2 p-1 bg-yellow-50 dark:bg-gray-600 rounded cursor-pointer" onClick={() => setEditingNoteForId(entry.concept.id)}>{entry.note}</p>
+                                            entry.note && <p className="text-[10px] font-bold text-yellow-600 dark:text-yellow-500 italic bg-yellow-500/10 p-2 rounded-xl cursor-pointer hover:bg-yellow-500/20 transition-all" onClick={() => setEditingNoteForId(entry.concept.id)}>// {entry.note}</p>
                                         )}
-                                        <div className="flex gap-2">
-                                            <button onClick={() => handleLoadSavedConcept(entry)} className="text-xs py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Load</button>
-                                            <button onClick={() => handleCopyToClipboard(entry.concept, 'favorite')} disabled={!!copiedFeedback && copiedFeedback.id === entry.concept.id} className="text-xs py-1 px-2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-700 dark:text-white rounded">
-                                                {copiedFeedback && copiedFeedback.id === entry.concept.id && copiedFeedback.type === 'favorite' ? copiedFeedback.text : 'Copy'}
-                                            </button>
-                                            <button onClick={() => setEditingNoteForId(entry.concept.id)} className="text-xs py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white rounded flex items-center"><NoteIcon className="w-3 h-3 mr-1"/>Note</button>
-                                            <button onClick={() => handleToggleFavorite(entry.concept, entry.lockedCategories, entry.optionalCategoryToggles)} className="text-xs py-1 px-2 bg-red-600 hover:bg-red-500 text-white rounded">Delete</button>
+                                        <div className="flex flex-wrap gap-2">
+                                            <Button onClick={() => handleLoadSavedConcept(entry)} size="xs" variant="ghost" className="bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white px-3 flex-1 border-none" startIcon={<LoadIcon className="w-3 h-3" />}>Load</Button>
+                                            <Button onClick={() => handleCopyToClipboard(entry.concept, 'favorite')} size="xs" variant="ghost" className="bg-white/10 text-gray-400 hover:bg-white/20 px-3 flex-1 border-none" startIcon={<CopyIcon className="w-3 h-3" />}>Copy</Button>
+                                            <Button onClick={() => setEditingNoteForId(entry.concept.id)} size="xs" variant="ghost" className="bg-teal-600/10 text-teal-600 hover:bg-teal-600 hover:text-white px-3 flex-1 border-none" startIcon={<NoteIcon className="w-3 h-3"/>}>Note</Button>
+                                            <Button onClick={() => handleToggleFavorite(entry.concept, entry.lockedCategories, entry.optionalCategoryToggles)} size="xs" variant="ghost" className="bg-red-600/10 text-red-600 hover:bg-red-600 hover:text-white px-3 flex-1 border-none" startIcon={<TrashIcon className="w-3 h-3" />}>Del</Button>
                                         </div>
                                     </div>
                                 ))}
@@ -500,8 +567,11 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
                 </div>
             </div>
          )}
-
       </main>
+      
+      <AddCustomItemModal isOpen={showAddCustomItemModal} category={customItemCategory} value={customItemValue} setValue={setCustomItemValue} onSave={handleSaveCustomItem} onClose={() => setShowAddCustomItemModal(false)} />
+      <ManageCustomItemsModal isOpen={manageCustomModalOpen} customItems={customItems} onDelete={handleDeleteCustomItem} onClose={() => setManageCustomModalOpen(false)} onExport={handleExportCustomItems} onImportFileSelected={handleImportFileSelected} importStatusMessage={importStatusMessage} fileInputRef={fileInputRef} />
+      <ImportConfirmationModal isOpen={importConfirmationModalOpen} onClose={() => { setImportConfirmationModalOpen(false); setImportedCustomItemsData(null); }} onConfirmImport={processImport} />
     </div>
   );
 };
@@ -516,11 +586,22 @@ export const AddCustomItemModal: React.FC<{
 }> = ({ isOpen, category, value, setValue, onSave, onClose }) => {
     if (!isOpen || !category) return null;
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-green-500">
-                <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-4">Add Custom Item to "{category.charAt(0).toUpperCase() + category.slice(1)}"</h3>
-                <input type="text" value={value} onChange={(e) => setValue(e.target.value)} className="w-full p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white mb-4 focus:ring-green-500 focus:border-green-500" placeholder="Enter your custom item" aria-label="Custom item value"/>
-                <div className="flex justify-end gap-3"> <button onClick={onClose} className="py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Cancel</button> <button onClick={onSave} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white dark:text-black rounded">Save Item</button> </div>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className="glass-card p-8 border-white/20 shadow-2xl w-full max-w-md relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-[50px] pointer-events-none rounded-full"></div>
+                <h3 className="text-xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-6">Forge Item into <span className="text-green-600 dark:text-green-500">{category}</span></h3>
+                <input 
+                  type="text" 
+                  value={value} 
+                  onChange={(e) => setValue(e.target.value)} 
+                  className="w-full px-4 py-3 bg-white/5 dark:bg-black/40 border border-white/10 rounded-2xl text-gray-900 dark:text-white mb-6 focus:ring-2 focus:ring-green-500/50 outline-none font-bold" 
+                  placeholder="Blueprint input..." 
+                  aria-label="Custom item value"
+                />
+                <div className="flex justify-end gap-3"> 
+                  <Button onClick={onClose} variant="ghost" className="font-black uppercase tracking-widest text-gray-500">Cancel</Button> 
+                  <Button onClick={onSave} variant="primary" backgroundColor="#10b981" className="font-black uppercase tracking-widest px-8">Save Item</Button> 
+                </div>
             </div>
         </div>
     );
@@ -540,27 +621,46 @@ export const ManageCustomItemsModal: React.FC<{
     const customItemEntries = Object.entries(customItems) as [CreativeCustomItemCategoryKey, string[]][]; 
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-lg border border-green-500 max-h-[80vh] flex flex-col">
-                <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-4 sticky top-0 bg-white dark:bg-gray-800 pb-2 z-10">Manage My Custom Items</h3>
-                <div className="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800 flex-grow">
-                    {customItemEntries.filter(([_, items]) => items.length > 0).length === 0 ? ( <p className="text-gray-500 dark:text-gray-400 italic">You haven't added any custom items yet.</p> ) : (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className="glass-card p-10 border-white/20 shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[50px] pointer-events-none rounded-full"></div>
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-8">Repository Core</h3>
+                <div className="overflow-y-auto pr-4 scrollbar-thin flex-grow space-y-6">
+                    {customItemEntries.filter(([_, items]) => items.length > 0).length === 0 ? ( 
+                      <p className="text-gray-500 dark:text-gray-600 italic font-black text-center py-12 uppercase tracking-widest opacity-50">Local storage empty</p> 
+                    ) : (
                         customItemEntries.map(([catKey, items]) => items.length > 0 && (
-                            <div key={catKey} className="mb-4">
-                                <h4 className="text-md font-semibold text-green-600 dark:text-green-200 mb-1">{catKey.charAt(0).toUpperCase() + catKey.slice(1)}:</h4>
-                                <ul className="list-disc list-inside pl-4 space-y-1"> {items.map(item => ( <li key={item} className="text-sm text-gray-800 dark:text-gray-300 flex justify-between items-center"> {item} <button onClick={() => onDelete(catKey, item)} className="ml-2 p-1 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300" aria-label={`Delete ${item}`}> <TrashIcon className="w-3.5 h-3.5"/> </button> </li> ))} </ul>
+                            <div key={catKey} className="space-y-4">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-700 dark:text-green-500 border-b border-white/5 pb-2">{catKey}</h4>
+                                <ul className="space-y-2"> 
+                                  {items.map(item => ( 
+                                    <li key={item} className="text-xs font-bold text-gray-800 dark:text-gray-300 flex justify-between items-center group/item hover:bg-white/5 p-2 rounded-xl transition-all"> 
+                                      <span className="truncate">{item}</span> 
+                                      <Button 
+                                        onClick={() => onDelete(catKey, item)} 
+                                        variant="ghost" 
+                                        size="xs" 
+                                        className="ml-2 p-1.5 text-red-500/30 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover/item:opacity-100" 
+                                        aria-label={`Delete ${item}`}
+                                        startIcon={<TrashIcon className="w-3.5 h-3.5"/>}
+                                      />
+                                    </li> 
+                                  ))} 
+                                </ul>
                             </div>
                         ))
                     )}
                 </div>
-                {importStatusMessage && <p className={`text-xs mt-2 text-center ${importStatusMessage.includes("Error") ? 'text-red-500' : 'text-green-600 dark:text-green-300'}`}>{importStatusMessage}</p>}
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 sticky bottom-0 bg-white dark:bg-gray-800 z-10 space-y-2">
-                    <div className="flex gap-2">
-                            <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file"/>
-                        <button onClick={onExport} className="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded text-sm flex items-center justify-center gap-2"><ExportIcon className="w-4 h-4"/>Export All</button>
-                        <label htmlFor="import-custom-items-file" className="flex-1 py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded text-sm flex items-center justify-center gap-2 cursor-pointer"><ImportIcon className="w-4 h-4"/>Import</label>
+                {importStatusMessage && <p className={`text-[10px] font-black uppercase tracking-widest mt-4 text-center ${importStatusMessage.includes("Error") ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>{importStatusMessage}</p>}
+                <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
+                    <div className="flex gap-3">
+                        <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file"/>
+                        <Button onClick={onExport} variant="ghost" className="flex-1 font-black uppercase tracking-widest bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white" startIcon={<ExportIcon />}>Export</Button>
+                        <label htmlFor="import-custom-items-file" className="flex-1 inline-flex items-center justify-center p-2.5 bg-teal-600/10 text-teal-600 hover:bg-teal-600 hover:text-white rounded-lg border border-teal-500/20 cursor-pointer text-[10px] font-black uppercase tracking-widest transition-all">
+                          <ImportIcon className="w-4 h-4 mr-2"/>Import
+                        </label>
                     </div>
-                    <button onClick={onClose} className="py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded w-full text-sm">Close</button>
+                    <Button onClick={onClose} variant="ghost" className="w-full font-black uppercase tracking-widest text-gray-500 hover:bg-white/10 transition-all">Close Control Panel</Button>
                 </div>
             </div>
         </div>
@@ -574,15 +674,15 @@ export const ImportConfirmationModal: React.FC<{
 }> = ({ isOpen, onClose, onConfirmImport }) => {
     if (!isOpen) return null;
     return (
-            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60] p-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-green-500">
-                <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-4">Confirm Import</h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-1 text-sm">A valid custom items file has been loaded.</p>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm">How would you like to import these items?</p>
-                <div className="flex flex-col space-y-3">
-                    <button onClick={() => onConfirmImport('merge')} className="py-2 px-4 bg-sky-600 hover:bg-sky-500 text-white rounded">Merge with Existing Items</button>
-                    <button onClick={() => onConfirmImport('replace')} className="py-2 px-4 bg-orange-600 hover:bg-orange-500 text-white rounded">Replace All Existing Items</button>
-                    <button onClick={onClose} className="py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Cancel</button>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[60] p-4 animate-fadeIn">
+            <div className="glass-card p-10 border-white/20 shadow-2xl w-full max-w-md relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 blur-[50px] pointer-events-none rounded-full"></div>
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-6">Transmission Received</h3>
+                <p className="text-xs font-bold text-gray-700 dark:text-gray-400 mb-8 uppercase tracking-widest leading-loose">A valid custom library blueprint has been detected. Select protocol:</p>
+                <div className="flex flex-col gap-3">
+                    <Button onClick={() => onConfirmImport('merge')} variant="success" size="lg" className="font-black uppercase tracking-widest">Merge Streams</Button>
+                    <Button onClick={() => onConfirmImport('replace')} variant="danger" size="lg" className="font-black uppercase tracking-widest">Override All Data</Button>
+                    <Button onClick={onClose} variant="ghost" className="mt-4 font-black uppercase tracking-widest text-gray-500">Abort Import</Button>
                 </div>
             </div>
         </div>

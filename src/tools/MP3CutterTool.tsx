@@ -1,21 +1,15 @@
-
 import React from 'react';
 import type { ToolProps } from '@/Layout';
 import { useMP3CutterLogic } from '@/hooks/useMP3CutterLogic';
 import Spinner from '@/components/Spinner';
+import Button from '@/components/common/Button';
+import { LinkIcon, UploadIcon, DownloadIcon, PlayIcon, PauseIcon, StopIcon, CropIcon, ImportIcon } from '@/components/Icons';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
 
 
-// Icons
-const UploadIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" /></svg>);
-const PlayIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M8 5v14l11-7z"/></svg>);
-const PauseIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>);
-const StopIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M6 6h12v12H6z"/></svg>);
-const DownloadIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>);
-const CropIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M7.875 14.25l1.214 1.942a2.25 2.25 0 003.822 0l1.214-1.942M2.41 9h4.638a2.25 2.25 0 011.906 1.058l.867 1.306M21.59 9h-4.638a2.25 2.25 0 00-1.906 1.058l-.867 1.306m0 0L12 12.75m0 0l-1.214 1.822M12 12.75V9M12 12.75V6A2.25 2.25 0 009.75 3.75h-.75A2.25 2.25 0 006.75 6v3" /></svg>);
-const LinkIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>);
+
 
 
 const TimeInput: React.FC<{ label: string; value: string; onChange: (val: string) => void; id: string }> = ({ label, value, onChange, id }) => (
@@ -67,40 +61,46 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">MP3 Cutter & Cropper</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Upload an MP3 file or load from a Suno, Riffusion, or Producer.AI song URL. Visualize its waveform, select a region (max 50% of total duration), and download the cropped audio as an MP3 file.
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-lg sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">MP3 Cutter</h1>
+        <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Precision Audio Trimming • Non-Destructive Signal Editing
         </p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-[100px] pointer-events-none"></div>
         <div className="space-y-4 mb-6">
           {/* URL Input Section */}
           <div>
-            <label htmlFor="sunoUrlInput" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Enter Suno/Riffusion/Producer.AI Song URL
+            <label htmlFor="sunoUrlInput" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">
+              Import from Source URL
             </label>
-            <div className="mt-1 flex rounded-md shadow-sm">
+            <div className="mt-1 flex flex-col sm:flex-row rounded-md shadow-sm gap-2 sm:gap-0 w-full max-w-full">
               <input
                 type="text"
                 name="sunoUrlInput"
                 id="sunoUrlInput"
                 value={sunoUrlInput}
                 onChange={(e) => setSunoUrlInput(e.target.value)}
-                className="block w-full flex-1 rounded-none rounded-l-md border-gray-300 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="block w-full flex-1 rounded-2xl sm:rounded-none sm:rounded-l-2xl border-white/10 bg-white/10 dark:bg-black/20 px-4 py-3.5 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
                 placeholder="suno.com/..., riffusion.com/..., producer.ai/..."
                 disabled={isLoading}
               />
-              <button
-                type="button"
+              <Button
                 onClick={handleLoadFromUrl}
                 disabled={isLoading || !sunoUrlInput.trim()}
-                className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-purple-600 px-2 sm:px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="primary"
+                size="md"
+                startIcon={<ImportIcon className="h-4 w-4" />}
+                className="w-full sm:w-auto rounded-2xl sm:rounded-l-none font-black uppercase tracking-widest text-[8px] sm:text-[10px] py-4 sm:py-0 whitespace-nowrap"
+                backgroundColor="#8b5cf6"
+                loading={isLoading && !!sunoUrlInput}
               >
-                <LinkIcon className="h-5 w-5" />
-                <span className="hidden sm:inline">Load URL</span>
-              </button>
+                LOAD
+              </Button>
             </div>
           </div>
 
@@ -112,24 +112,37 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
 
           {/* File Upload Section */}
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-row items-center justify-center gap-6 p-4 bg-white/5 dark:bg-black/20 rounded-2xl border border-white/5">
             <input type="file" accept=".mp3" onChange={handleFileChange} className="hidden" ref={fileInputRef} aria-label="Upload MP3 file"/>
-            <button
+            <Button
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
-              className="inline-flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-black bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+              variant="primary"
+              size="md"
+              startIcon={<UploadIcon className="w-4 h-4 ml-0.5" />}
+              className="px-6 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px]"
+              backgroundColor="#22c55e"
             >
-              <UploadIcon className="mr-2" /> Upload MP3 File
-            </button>
+              Upload
+            </Button>
             {fileName && (
-              <p className="mt-3 text-lg font-semibold text-gray-800 dark:text-gray-300 text-center">
-                Current Audio: <span className="text-green-600 dark:text-green-300">{fileName}</span>
-              </p>
+              <div className="text-left flex-1 min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 opacity-60">Source File</p>
+                <p className="text-sm font-black text-green-600 dark:text-green-300 truncate max-w-[150px] sm:max-w-[400px]" title={fileName}>{fileName}</p>
+              </div>
             )}
           </div>
         </div>
 
-        {isLoading && <div className="flex flex-col items-center justify-center my-4"><Spinner /><p className="mt-2 text-green-600 dark:text-green-300">{urlLoadingProgress || 'Loading audio...'}</p></div>}
+        {isLoading && (
+          <div className="flex flex-row items-center justify-center gap-6 my-6 p-4 bg-green-500/5 rounded-2xl animate-pulse">
+            <Spinner color="text-green-600" />
+            <div className="text-left">
+              <p className="text-[10px] font-black uppercase tracking-widest text-green-600">Processing Audio</p>
+              <p className="text-xs font-bold text-green-600/60 uppercase tracking-tighter">{urlLoadingProgress || 'Hydrating stream...'}</p>
+            </div>
+          </div>
+        )}
         {error && <div className="my-4 p-3 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-md text-sm text-center">{error}</div>}
         
         {sunoArtistName && (
@@ -142,19 +155,22 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             />
             {sunoArtistName && <p className="text-md text-green-700 dark:text-green-300">Artist: {sunoArtistName}</p>}
             {sunoCoverArtUrl && (
-              <button
+              <Button
                 onClick={handleDownloadCoverArt}
-                className="inline-flex items-center justify-center py-1.5 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded-md text-xs"
+                variant="info"
+                size="xs"
+                startIcon={<DownloadIcon className="w-3.5 h-3.5" />}
+                className="font-black uppercase tracking-widest text-[9px]"
               >
-                <DownloadIcon className="mr-1.5" /> Download Cover Art
-              </button>
+                Download Cover Art
+              </Button>
             )}
           </div>
         )}
 
 
-        <div id="waveform-container" ref={wavesurferRef} className="w-full h-32 bg-gray-100 dark:bg-gray-800 rounded-md border-2 border-green-600 my-4">
-          {!waveformReady && !isLoading && <div className="flex items-center justify-center h-full text-gray-500">Waveform will appear here</div>}
+        <div id="waveform-container" ref={wavesurferRef} className="w-full h-32 bg-white/5 dark:bg-black/40 rounded-2xl border border-white/10 my-8 shadow-inner overflow-hidden">
+          {!waveformReady && !isLoading && <div className="flex items-center justify-center h-full text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 opacity-40">Waveform will appear here</div>}
         </div>
         
         {waveformReady && (
@@ -168,28 +184,42 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <button 
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              <Button 
                 onClick={handlePlayPause} 
-                className="py-2 px-4 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-md text-sm flex items-center justify-center gap-2 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900"
+                variant="primary"
+                size="md"
+                startIcon={isPlaying ? <PauseIcon className="w-4 h-4" /> : <PlayIcon className="w-4 h-4" />}
+                backgroundColor="#22c55e"
+                className="font-black uppercase tracking-widest text-[10px]"
                 aria-label={isPlaying ? "Pause" : "Play"}
               >
-                {isPlaying ? <PauseIcon /> : <PlayIcon />} {isPlaying ? 'Pause' : 'Play'}
-              </button>
-              <button 
+                {isPlaying ? 'Pause' : 'Play'}
+              </Button>
+              <Button 
                 onClick={handleStop} 
-                className="py-2 px-4 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-md text-sm flex items-center justify-center gap-2 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900"
+                variant="primary"
+                size="md"
+                startIcon={<StopIcon className="w-4 h-4" />}
+                backgroundColor="#22c55e"
+                className="font-black uppercase tracking-widest text-[10px]"
                 aria-label="Stop"
               >
-                <StopIcon /> Stop
-              </button>
-              <button 
+                Stop
+              </Button>
+              <Button 
                 onClick={handlePlaySelection} 
                 disabled={selection.end <= selection.start} 
-                className="py-2 px-4 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-md text-sm flex items-center justify-center gap-2 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400"
+                variant="primary"
+                size="md"
+                startIcon={<PlayIcon className="w-3.5 h-3.5 ml-0.5" />}
+                backgroundColor="#22c55e"
+                className="font-black uppercase tracking-widest text-[10px]"
                 aria-label="Play selection"
               >
-                <PlayIcon /> Play Selection
-              </button>
+                Play Selection
+              </Button>
+            </div>
             </div>
             
             <div className="flex items-center justify-center gap-2 mb-6 text-sm">
@@ -206,23 +236,28 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     aria-label="Volume control"
                 />
             </div>
-            <div className="flex flex-col items-center justify-center">
-                <button
+            <div className="flex flex-row items-center justify-center gap-6 p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 shadow-inner">
+                <Button
                   onClick={handleCropAndDownload}
                   disabled={isLoading || !waveformReady || selection.end <= selection.start || isSelectionTooLong}
-                  className="inline-flex items-center justify-center py-1.5 px-3 bg-green-500 hover:bg-green-600 text-black font-semibold rounded-md text-sm transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400"
+                  variant="primary"
+                  size="lg"
+                  startIcon={isLoading ? null : <CropIcon className="w-5 h-5 ml-0.5" />}
+                  backgroundColor="#22c55e"
+                  className="px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs"
                 >
-                  {isLoading ? <Spinner color="text-black" /> : <><CropIcon className="mr-2" /> Crop & Download MP3</>}
-                </button>
-                <p className="text-xs text-center text-yellow-600 dark:text-yellow-300 mt-2 bg-yellow-100 dark:bg-gray-800 p-1 rounded">
-                  Cropping is limited to a maximum of 50% of the total audio duration.
-                </p>
+                  {isLoading ? <Spinner color="text-black" /> : "Crop & Export"}
+                </Button>
+                <div className="text-left space-y-1">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600">Legal Limit</p>
+                  <p className="text-[8px] font-bold uppercase tracking-widest opacity-40 max-w-[200px]">Max selection: 50% of total duration</p>
+                </div>
+            </div>
                 {isSelectionTooLong && (
                     <p className="text-sm text-red-500 dark:text-red-400 mt-2 text-center animate-pulse">
                         Selection exceeds 50% of total audio duration ({formatTime(duration * 0.5)}). Please select a shorter region.
                     </p>
                 )}
-            </div>
             <p className="text-xs text-center text-gray-500 mt-2">
               Note: Cropped audio will be downloaded as an MP3 file.
             </p>

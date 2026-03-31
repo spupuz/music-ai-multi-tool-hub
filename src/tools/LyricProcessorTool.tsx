@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import Button from '@/components/common/Button';
 import { resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
 import { fetchSunoClipById } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
@@ -8,6 +9,7 @@ import { countSyllablesInLine } from '@/utils/lyricUtils';
 import InputField from '@/components/forms/InputField';
 import TextAreaField from '@/components/forms/TextAreaField';
 import CheckboxField from '@/components/forms/CheckboxField';
+import { ImportIcon, StatsIcon, SparklesIcon, RefreshIcon, CopyIcon } from '@/components/Icons';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
@@ -23,7 +25,7 @@ const InfoIcon: React.FC<{ tooltip: string, className?: string }> = ({ tooltip, 
   </div>
 );
 
-const LinkIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>);
+
 
 
 const structuralKeywordsArray = ["Verse", "Chorus", "Intro", "Outro", "Bridge", "Pre-Chorus", "Post-Chorus", "Instrumental", "Guitar Solo", "Keyboard Solo", "Drum Solo", "Bass Solo", "Sax Solo", "Trumpet Solo", "Violin Solo", "Cello Solo", "Flute Solo", "Solo", "Hook", "Refrain", "Interlude", "Skit", "Spoken", "Adlib", "Vamp", "Coda", "Pre-Verse", "Post-Verse", "Pre-Bridge", "Post-Bridge", "Breakdown", "Build-up", "Drop", "Section", "Part", "Prelude", "Segway"];
@@ -366,37 +368,44 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full">
-      <header className="mb-10 text-center">
-        <h1 className="text-5xl font-extrabold text-green-600 dark:text-green-400">Lyric Processor</h1>
-        <p className="mt-3 text-md text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Clean, format, analyze, and perfect your lyrics. Import from Suno/Riffusion, count syllables, find & replace, and more.
-        </p>
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyric Lab</h1>
+        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">High-fidelity lyric engine • Intelligent restructuring</p>
       </header>
 
-      <main className="w-full bg-white dark:bg-gray-900 shadow-2xl rounded-lg p-6 md:p-10 border-2 border-green-600 dark:border-green-500">
+      <main className="w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
+
         {/* URL Load Section */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Load from Suno/Riffusion/Producer.AI URL</label>
-          <div className="flex rounded-md shadow-sm">
-            <input
-              type="text"
-              value={sunoUrlInput}
-              onChange={(e) => setSunoUrlInput(e.target.value)}
-              placeholder="suno.com/..., riffusion.com/..., producer.ai/..."
-              className="block w-full flex-1 rounded-none rounded-l-md border-gray-300 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-500 focus:ring-green-500 sm:text-sm"
+        <div className="flex flex-col sm:flex-row items-end gap-2 mb-8 bg-white/5 p-4 rounded-2xl border border-white/10 animate-fadeIn relative z-10">
+          <div className="flex-grow w-full">
+            <InputField 
+              id="sunoUrlInput" 
+              label="Import from Source URL" 
+              value={sunoUrlInput} 
+              onChange={setSunoUrlInput} 
+              placeholder="Suno, Riffusion, or Producer.ai song link" 
+              className="mb-0" 
               disabled={isUrlLoading}
             />
-            <button
-              type="button"
-              onClick={handleLoadFromUrl}
-              disabled={isUrlLoading || !sunoUrlInput.trim()}
-              className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:opacity-50"
-            >
-              {isUrlLoading ? <Spinner size="w-4 h-4" color="text-white" /> : <span>Load</span>}
-            </button>
           </div>
-          {urlLoadingProgress && <p className="text-xs text-yellow-600 dark:text-yellow-300 mt-1">{urlLoadingProgress}</p>}
-          {error && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{error}</p>}
+          <Button 
+            onClick={handleLoadFromUrl} 
+            disabled={isUrlLoading || !sunoUrlInput.trim()} 
+            variant="primary" 
+            size="md" 
+            className="w-full sm:w-auto h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
+            backgroundColor="#22c55e"
+            startIcon={isUrlLoading ? null : <ImportIcon className="w-4 h-4" />}
+          >
+            {isUrlLoading ? <Spinner size="w-3 h-3" color="text-white" /> : "Load Data"}
+          </Button>
+        </div>
+        <div className="relative z-10">
+          {urlLoadingProgress && <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600 dark:text-yellow-500 mt-3 ml-1 animate-pulse">{urlLoadingProgress}</p>}
+          {error && <p className="text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-400 mt-3 ml-1">{error}</p>}
         </div>
 
         {/* Song Info (Optional) */}
@@ -406,91 +415,110 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </div>
 
         {/* Lyrics Input */}
-        <div className="mb-6 relative">
-          <div className="flex justify-between items-center mb-1">
-            <label htmlFor="lyricsInput" className="block text-sm font-medium text-green-600 dark:text-green-400">Lyrics Input</label>
-            <div className="text-xs text-gray-500 dark:text-gray-400 space-x-3">
-              <span>Words: {wordCount}</span>
-              <span>Chars: {charCount}</span>
-              <label className="inline-flex items-center cursor-pointer">
-                <input type="checkbox" checked={showLineNumbers} onChange={(e) => setShowLineNumbers(e.target.checked)} className="form-checkbox h-3 w-3 text-green-500 rounded border-gray-300 focus:ring-green-500" />
-                <span className="ml-1">Line Numbers</span>
-              </label>
+        <div className="mb-10 relative z-10">
+          <div className="flex justify-between items-end mb-4 px-1">
+            <div>
+              <label htmlFor="lyricsInput" className="block text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 opacity-80 mb-1">Lyrics Workspace</label>
+              <div className="flex gap-4 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-600">
+                <span>Words: {wordCount}</span>
+                <span>Chars: {charCount}</span>
+              </div>
             </div>
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <input 
+                type="checkbox" 
+                checked={showLineNumbers} 
+                onChange={(e) => setShowLineNumbers(e.target.checked)} 
+                className="w-4 h-4 rounded-md border-white/20 bg-white/5 text-green-500 focus:ring-green-500/20 transition-all"
+              />
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-green-500 transition-colors">Line Numbers</span>
+            </label>
           </div>
-          <TextAreaField
-            id="lyricsInput"
-            textareaRef={lyricsInputRef}
-            label=""
-            value={showLineNumbers ? addLineNumbers(lyricsInput) : lyricsInput}
-            onChange={handleLyricsInputChange}
-            placeholder="Paste your lyrics here..."
-            rows={12}
-          />
-
-          {/* Formatting Toolbar */}
-          <div className="flex flex-wrap gap-2 mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 justify-center sm:justify-start">
-            <button onClick={handleUpperCase} className="px-2 py-1 text-xs font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded" title="Convert to Uppercase">AA</button>
-            <button onClick={handleLowerCase} className="px-2 py-1 text-xs font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded" title="Convert to Lowercase">aa</button>
-            <button onClick={handleTitleCase} className="px-2 py-1 text-xs font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded" title="Convert to Title Case">Aa</button>
+          
+          <div className="relative group">
+            <TextAreaField
+              id="lyricsInput"
+              textareaRef={lyricsInputRef}
+              label=""
+              value={showLineNumbers ? addLineNumbers(lyricsInput) : lyricsInput}
+              onChange={handleLyricsInputChange}
+              placeholder="Paste your lyrics here..."
+              rows={14}
+              className="mb-0 focus-within:ring-4 focus-within:ring-green-500/10 transition-all"
+            />
+            
+            {/* Formatting Toolbar */}
+            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <Button onClick={handleUpperCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="UPPERCASE">AA</Button>
+              <Button onClick={handleLowerCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="lowercase">aa</Button>
+              <Button onClick={handleTitleCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="Title Case">Aa</Button>
+            </div>
           </div>
         </div>
 
         {/* Controls */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-          {/* Clean & Format */}
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-md font-semibold text-green-700 dark:text-green-300 mb-3 border-b border-gray-300 dark:border-gray-600 pb-2">Format & Analyze</h3>
-            <div className="space-y-2 mb-4">
-              <CheckboxField id="removeSquare" label="Remove Square Brackets [ ]" checked={removeSquareBrackets} onChange={setRemoveSquareBrackets} />
-              <CheckboxField id="removeRound" label="Remove Round Brackets ( )" checked={removeRoundBrackets} onChange={setRemoveRoundBrackets} />
-              <CheckboxField id="removeCurly" label="Remove Curly Brackets { }" checked={removeCurlyBrackets} onChange={setRemoveCurlyBrackets} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 relative z-10">
+          {/* Format & Analyze */}
+          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 opacity-70 mb-2">Refinery & Analysis</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <CheckboxField id="removeSquare" label="Strip [ ]" checked={removeSquareBrackets} onChange={setRemoveSquareBrackets} />
+              <CheckboxField id="removeRound" label="Strip ( )" checked={removeRoundBrackets} onChange={setRemoveRoundBrackets} />
+              <CheckboxField id="removeCurly" label="Strip { }" checked={removeCurlyBrackets} onChange={setRemoveCurlyBrackets} />
             </div>
-            <div className="flex gap-2">
-              <button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} className="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Count Syllables</button>
-              <button onClick={handleCleanLyrics} disabled={isLoading || !lyricsInput.trim()} className="flex-1 py-2 px-3 bg-green-600 hover:bg-green-500 text-white rounded-md text-sm font-medium disabled:opacity-50">Clean Lyrics</button>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} variant="ghost" startIcon={<StatsIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-blue-500/20 text-blue-500">Count Syllables</Button>
+              <Button onClick={handleCleanLyrics} disabled={isLoading || !lyricsInput.trim()} variant="primary" startIcon={<SparklesIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px]" backgroundColor="#10b981">Clean & Header</Button>
             </div>
           </div>
 
           {/* Find & Replace */}
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between items-center mb-3 border-b border-gray-300 dark:border-gray-600 pb-2">
-              <h3 className="text-md font-semibold text-green-700 dark:text-green-300">Find & Replace</h3>
-              <button onClick={() => setShowAdvancedOptions(!showAdvancedOptions)} className="text-xs text-blue-500 hover:text-blue-400 underline">{showAdvancedOptions ? 'Hide Options' : 'Show Options'}</button>
+          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 opacity-70">Find & Replace</h3>
+              <Button onClick={() => setShowAdvancedOptions(!showAdvancedOptions)} variant="ghost" size="xs" className="text-[8px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors underline underline-offset-4 border-none shadow-none">{showAdvancedOptions ? 'Simple mode' : 'Advanced regex'}</Button>
             </div>
-            <div className="space-y-3">
-              <InputField id="findText" label="Find" value={findText} onChange={setFindText} placeholder="Text to find..." className="mb-0" />
-              <InputField id="replaceText" label="Replace With" value={replaceText} onChange={setReplaceText} placeholder="Replacement text..." className="mb-0" />
-
-              {showAdvancedOptions && (
-                <div className="flex gap-4 mt-2">
-                  <CheckboxField id="caseSensitive" label="Case Sensitive" checked={isCaseSensitive} onChange={setIsCaseSensitive} className="mb-0" />
-                  <CheckboxField id="useRegex" label="Use Regex" checked={useRegex} onChange={setUseRegex} className="mb-0" />
-                </div>
-              )}
-
-              <button onClick={handleReplaceAll} disabled={isLoading || !findText} className="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md text-sm font-medium disabled:opacity-50 mt-2">Replace All</button>
-              {replaceMessage && <p className={`text-xs text-center mt-1 ${replaceMessage.includes('Error') ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>{replaceMessage}</p>}
+            
+            <div className="grid grid-cols-2 gap-4">
+              <InputField id="findText" label="" value={findText} onChange={setFindText} placeholder="Find..." className="mb-0" />
+              <InputField id="replaceText" label="" value={replaceText} onChange={setReplaceText} placeholder="Replace..." className="mb-0" />
             </div>
+
+            {showAdvancedOptions && (
+              <div className="flex gap-6 py-2">
+                <CheckboxField id="caseSensitive" label="Case Sensitive" checked={isCaseSensitive} onChange={setIsCaseSensitive} className="mb-0" />
+                <CheckboxField id="useRegex" label="Use Regex" checked={useRegex} onChange={setUseRegex} className="mb-0" />
+              </div>
+            )}
+
+            <Button onClick={handleReplaceAll} disabled={isLoading || !findText} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
+            {replaceMessage && <p className="text-[10px] font-black uppercase tracking-widest text-center mt-2 text-green-500 animate-fadeIn">{replaceMessage}</p>}
           </div>
         </div>
 
         {/* Output */}
         {processedOutput && (
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 animate-fadeIn">
-            <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-3">Processed Output</h3>
+          <div className="mt-12 pt-10 border-t border-white/10 animate-fadeIn relative z-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 text-center opacity-70">Processed Output</h3>
             <TextAreaField
               id="outputArea"
               label=""
               value={showLineNumbers ? addLineNumbers(processedOutput) : processedOutput}
               onChange={() => { }}
               readOnly
-              rows={12}
-              className="mb-3"
+              rows={14}
+              className="mb-6 bg-slate-50/50 dark:bg-black/30 ring-1 ring-gray-200 dark:ring-white/5"
             />
-            <button onClick={handleCopyToClipboard} className="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-md shadow-md transition-colors">
-              {copyButtonText}
-            </button>
+            <Button 
+                onClick={handleCopyToClipboard} 
+                variant="primary" 
+                size="lg" 
+                startIcon={<CopyIcon className="w-6 h-6 text-black" />}
+                className="w-full font-black uppercase tracking-[0.2em] py-6 shadow-2xl"
+                backgroundColor="#eab308"
+            >
+              <span className="text-black">{copyButtonText}</span>
+            </Button>
           </div>
         )}
       </main>

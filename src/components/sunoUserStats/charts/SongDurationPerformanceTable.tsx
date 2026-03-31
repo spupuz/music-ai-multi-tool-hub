@@ -23,34 +23,41 @@ const SongDurationPerformanceTable: React.FC<SongDurationPerformanceTableProps> 
   };
 
   return (
-    <ChartContainer title="Song Performance by Duration Bucket" heightClassName="h-auto">
-      <div className="overflow-x-auto text-xs">
-        <table className="min-w-full divide-y divide-gray-600">
-          <thead className="bg-gray-750">
+    <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 blur-3xl pointer-events-none"></div>
+      
+      <div className="mb-6 flex items-center gap-3">
+        <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
+        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">Temporal Span Performance</h3>
+      </div>
+
+      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-white/5 bg-white/2">
+        <table className="min-w-full divide-y divide-white/5 border-collapse">
+          <thead className="bg-[#0a0a0a]/80 backdrop-blur-md">
             <tr>
-              <th scope="col" className="px-3 py-2 text-left font-medium text-green-300 tracking-wider">Duration Bucket</th>
-              <th scope="col" className="px-3 py-2 text-right font-medium text-green-300 tracking-wider">Songs</th>
-              <th scope="col" className="px-3 py-2 text-right font-medium text-green-300 tracking-wider">Avg Plays</th>
-              <th scope="col" className="px-3 py-2 text-right font-medium text-green-300 tracking-wider">Avg Upvotes</th>
-              <th scope="col" className="px-3 py-2 text-right font-medium text-green-300 tracking-wider">Avg Comments</th>
-              <th scope="col" className="px-3 py-2 text-right font-medium text-green-300 tracking-wider" title="For songs with >20 plays in this bucket">Avg Upvote %</th>
+              <th scope="col" className="px-6 py-4 text-left text-[8px] font-black text-gray-500 uppercase tracking-[0.3em]">Temporal Bucket</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Nodes</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Flux</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Affinity</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Echoes</th>
+              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in this bucket">Affinity%</th>
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-600">
+          <tbody className="divide-y divide-white/5">
             {durationPerformanceData.map((bucket) => (
-              <tr key={bucket.bucketName}>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200">{bucket.bucketName}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200 text-right">{bucket.songCount.toLocaleString()}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200 text-right">{formatNumberDisplay(bucket.avgPlays)}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200 text-right">{formatNumberDisplay(bucket.avgUpvotes)}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200 text-right">{formatNumberDisplay(bucket.avgComments)}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-gray-200 text-right">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
+              <tr key={bucket.bucketName} className="group hover:bg-white/5 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap text-[10px] font-black text-white/90 uppercase tracking-widest">{bucket.bucketName}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-400 tracking-widest">{bucket.songCount.toLocaleString()}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgPlays)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgUpvotes)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgComments)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/80 tracking-widest">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </ChartContainer>
+    </div>
   );
 };
 

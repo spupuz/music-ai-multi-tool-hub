@@ -1,5 +1,6 @@
 import React from 'react';
 import InputField from '@/components/forms/InputField';
+import Button from '@/components/common/Button';
 
 export interface SaveArrangementModalProps {
     show: boolean;
@@ -14,14 +15,32 @@ const SaveArrangementModal: React.FC<SaveArrangementModalProps> = ({ show, onClo
     if (!show) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-green-500">
-                <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-4">Save Current Arrangement</h3>
-                <InputField id="newArrangementName" label="Arrangement Name" value={arrangementName} onChange={setArrangementName} placeholder="e.g., My Awesome Rock Song" />
-                {errorSave && <p className="text-red-500 dark:text-red-400 text-xs mb-3">{errorSave}</p>}
-                <div className="flex justify-end gap-3 mt-4">
-                    <button onClick={onClose} className="py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Cancel</button>
-                    <button onClick={onSave} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white dark:text-black rounded">Save Arrangement</button>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
+            <div className="glass-card p-10 max-w-md w-full border-white/10 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 blur-[60px] pointer-events-none"></div>
+                
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8">Save Blueprint</h3>
+                
+                <div className="space-y-6">
+                    <InputField 
+                      id="newArrangementName" 
+                      label="Arrangement Designation" 
+                      value={arrangementName} 
+                      onChange={setArrangementName} 
+                      placeholder="e.g., Project Nova" 
+                      className="mb-0" 
+                    />
+                    
+                    {errorSave && (
+                        <p className="text-[10px] font-black uppercase tracking-widest text-red-500 animate-pulse">
+                            Error: {errorSave}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex justify-end gap-3 mt-10">
+                    <Button onClick={onClose} variant="ghost" size="sm" className="font-black uppercase tracking-widest text-[9px] px-6 border-white/10">Discard</Button>
+                    <Button onClick={onSave} variant="primary" size="sm" className="font-black uppercase tracking-widest text-[9px] px-6" backgroundColor="#10b981">Commit Save</Button>
                 </div>
             </div>
         </div>
