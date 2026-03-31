@@ -14,237 +14,20 @@ import SliderField from '../../components/forms/SliderField';
 import TextAreaField from '../../components/forms/TextAreaField';
 
 
-const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
-const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
+import {
+  SparklesIcon, PaletteIcon, SaveIcon, LoadIcon, ConfigIcon, ImportIcon
+} from '../components/SongCoverArt/Icons';
 
+import {
+  ExtendedTextOptions, ArtStyleSettings, ArtStylePreset, SAVED_PRESETS_LOCAL_STORAGE_KEY,
+  TOOL_CATEGORY, FALLBACK_IMAGE_DATA_URI, availableFonts, textPositionOptions, overlayPositionOptions,
+  relativeFontSizeOptions, textEffectPresets, overlayBlendModeOptions, textColorModeOptions,
+  gradientDirectionOptions, textAlignOptions
+} from '../components/SongCoverArt/constants';
 
-// Extended TextOptions to include new fields
-interface ExtendedTextOptions extends TextOptions {
-  songNameXOffset: number;
-  songNameYOffset: number;
-  songNameRotation: number;
-  artistNameXOffset: number;
-  artistNameYOffset: number;
-  artistNameRotation: number;
-  // Shadow properties are now part of TextOptions directly
-  // Alignment properties also part of TextOptions
-  // Letter spacing properties also part of TextOptions
-}
+import { imageUrlToBase64, isValidHexColor, normalizeHexColor } from '../components/SongCoverArt/utils';
+import PresetModals from '../components/SongCoverArt/PresetModals';
 
-// --- Art Style Preset System Types ---
-interface ArtStyleSettings {
-  fontFamily: string;
-  fontColor: string;
-  hasStroke: boolean;
-  strokeThickness: number;
-  strokeColor: string;
-  songNamePosition: string;
-  artistNamePosition: string;
-  relativeFontSize: string;
-  featuredArtistName?: string;
-  textColorMode: 'solid' | 'gradient';
-  gradientColor1?: string;
-  gradientColor2?: string;
-  gradientDirection?: string;
-  songNameXOffset: number;
-  songNameYOffset: number;
-  songNameRotation: number;
-  artistNameXOffset: number;
-  artistNameYOffset: number;
-  artistNameRotation: number;
-
-  // Text Shadow Properties
-  hasTextShadow?: boolean;
-  textShadowColor?: string;
-  textShadowBlur?: number;
-  textShadowOffsetX?: number;
-  textShadowOffsetY?: number;
-
-  // Text Alignment Properties
-  songNameTextAlign?: CanvasTextAlign | 'auto';
-  artistNameTextAlign?: CanvasTextAlign | 'auto';
-
-  // Letter Spacing Properties
-  songNameLetterSpacing?: number;
-  artistNameLetterSpacing?: number;
-
-  brightness: number;
-  contrast: number;
-  saturation: number;
-  grayscale: number;
-  sepia: number;
-  hueRotate: number;
-  blur: number;
-
-  overlayActive: boolean;
-  overlayPosition?: string;
-  overlaySizePercent?: number;
-  overlayOpacity?: number;
-  overlayBlendMode?: string;
-
-  // New Advanced Effects
-  vignetteIntensity: number;
-  vignetteColor: string;
-  noiseAmount: number;
-  duotone: boolean;
-  duotoneColor1: string;
-  duotoneColor2: string;
-}
-
-interface ArtStylePreset {
-  id: string;
-  name: string;
-  settings: ArtStyleSettings;
-  createdAt: string;
-}
-
-const SAVED_PRESETS_LOCAL_STORAGE_KEY = 'songCoverArt_savedStylePresets_v1';
-// --- End Art Style Preset System Types ---
-
-
-const imageUrlToBase64 = (url: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        reject(new Error('Failed to create canvas context'));
-        return;
-      }
-      ctx.drawImage(img, 0, 0);
-      try {
-        const dataUrl = canvas.toDataURL('image/png');
-        resolve(dataUrl);
-      } catch (e) {
-        reject(new Error(`Could not get data URL from canvas. Error: ${e}`));
-      }
-    };
-    img.onerror = (err) => {
-      // This can happen due to CORS issues if the server doesn't send the right headers.
-      // We will attempt to use a proxy as a fallback.
-      console.warn("Direct image fetch failed, trying proxy. Error:", err);
-      const proxiedUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
-      const proxyImg = new Image();
-      proxyImg.crossOrigin = 'Anonymous';
-      proxyImg.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = proxyImg.width;
-        canvas.height = proxyImg.height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) { reject(new Error('Failed to create canvas context via proxy')); return; }
-        ctx.drawImage(proxyImg, 0, 0);
-        try { resolve(canvas.toDataURL('image/png')); }
-        catch (e) { reject(new Error(`Could not get data URL from canvas via proxy. Error: ${e}`)); }
-      };
-      proxyImg.onerror = () => {
-        reject(new Error(`Failed to load image from URL directly and via proxy. The URL may be invalid or blocked by CORS.`));
-      };
-      proxyImg.src = proxiedUrl;
-    };
-    img.src = url;
-  });
-};
-
-
-const SparklesIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.562L16.5 21.75l-.398-1.188a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.188-.398a2.25 2.25 0 001.423-1.423l.398-1.188.398 1.188a2.25 2.25 0 001.423 1.423l1.188.398-1.188.398a2.25 2.25 0 00-1.423 1.423z" />
-  </svg>
-);
-
-
-// --- Icons for Presets Section ---
-const PaletteIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.39m3.421 3.421a3 3 0 00 1.128 5.78l-.707 1.707M9.53 16.122l1.707-.707a3 3 0 002.245-2.4m1.707.707l-.707-1.707m6-13.5V4.5A2.25 2.25 0 0013.5 2.25H4.5A2.25 2.25 0 002.25 4.5v13.5A2.25 2.25 0 004.5 20.25h9a2.25 2.25 0 002.25-2.25v-1.5M16.5 5.25v3.75m0 0A2.25 2.25 0 0114.25 11.25h-1.5a2.25 2.25 0 01-2.25-2.25V5.25m3 0h3" /></svg>);
-const SaveIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>);
-const LoadIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" transform="rotate(180 12 12)" /></svg>);
-const DeleteIcon: React.FC<{ className?: string }> = ({ className = "w-3 h-3" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12.56 0c1.153 0 2.243.096 3.222.261m3.478-.397a48.217 48.217 0 01-4.244 0M11.25 9h1.5v9h-1.5V9z" /></svg>);
-const ExportIcon: React.FC<{ className?: string }> = ({ className = "w-3 h-3" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75v6.75m0 0l-3-3m3 3l3-3m-8.25 6a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>);
-const ImportIcon: React.FC<{ className?: string }> = ({ className = "w-3 h-3" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>);
-const ConfigIcon: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ className = "w-4 h-4", style }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.223.893c.05.199.121.39.209.572.088.182.202.35.34.501.138.15.297.281.47.392.173.112.364.204.568.276l.672.224c.543.181.94.692.94 1.27v1.154c0 .579-.397 1.09-.94 1.27l-.672.224c-.204.072-.395.164-.568.276-.173.111-.332.242-.47.392-.138.151-.252.319-.34.501-.088.182-.159.373-.209.572l-.223.893c-.09.542-.56.94-1.11-.94h-2.593c-.55 0-1.02-.398-1.11-.94l-.223-.893a6.002 6.002 0 01-.209-.572c-.088-.182-.202.35-.34-.501s-.297-.281-.47-.392c-.173-.112-.364-.204-.568-.276l-.672-.224c-.543-.181-.94-.692-.94-1.27V9.409c0-.579.397-1.09.94-1.27l.672-.224c.204-.072.395-.164-.568-.276.173-.111.332.242.47.392.138-.151.252.319.34.501.088.182.159.373.209.572l.223-.893z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-// --- End Icons ---
-
-
-const availableFonts = [
-  { value: 'Arial', label: 'Arial' }, { value: 'Arial Black', label: 'Arial Black' },
-  { value: 'Verdana', label: 'Verdana' }, { value: 'Tahoma', label: 'Tahoma' },
-  { value: 'Trebuchet MS', label: 'Trebuchet MS' }, { value: 'Impact', label: 'Impact' },
-  { value: 'Georgia', label: 'Georgia' }, { value: 'Times New Roman', label: 'Times New Roman' },
-  { value: 'Courier New', label: 'Courier New' }, { value: 'Lucida Console', label: 'Lucida Console' },
-  { value: 'Comic Sans MS', label: 'Comic Sans MS (Use with caution!)' },
-  { value: 'Brush Script MT', label: 'Brush Script MT' }, { value: 'Helvetica', label: 'Helvetica' },
-  { value: 'Futura', label: 'Futura (Modern Sans-Serif)' }, { value: 'Garamond', label: 'Garamond (Classic Serif)' },
-  { value: 'Palatino', label: 'Palatino (Serif)' }, { value: 'Optima', label: 'Optima (Humanist Sans-Serif)' }
-];
-const textPositionOptions = [
-  { value: 'top-left', label: 'Top Left' }, { value: 'top-center', label: 'Top Center' },
-  { value: 'top-right', label: 'Top Right' }, { value: 'middle-left', label: 'Middle Left' },
-  { value: 'middle-center', label: 'Middle Center' }, { value: 'middle-right', label: 'Middle Right' },
-  { value: 'bottom-left', label: 'Bottom Left' }, { value: 'bottom-center', label: 'Bottom Center' },
-  { value: 'bottom-right', label: 'Bottom Right' },
-];
-const overlayPositionOptions = [
-  { value: 'top-left', label: 'Top Left' }, { value: 'top-right', label: 'Top Right' },
-  { value: 'bottom-left', label: 'Bottom Left' }, { value: 'bottom-right', label: 'Bottom Right' },
-  { value: 'center', label: 'Center' },
-];
-const relativeFontSizeOptions = [
-  { value: 'tiny', label: 'Tiny (60%)' }, { value: 'xsmall', label: 'X-Small (70%)' },
-  { value: 'small', label: 'Small (80%)' }, { value: 'medium', label: 'Medium (100%)' },
-  { value: 'large', label: 'Large (120%)' }, { value: 'xlarge', label: 'X-Large (150%)' },
-  { value: 'huge', label: 'Huge (180%)' }, { value: 'giant', label: 'Giant (220%)' },
-];
-interface TextPreset { value: string; label: string; settings: Partial<ExtendedTextOptions>; }
-const textEffectPresets: TextPreset[] = [
-  { value: 'none', label: 'Custom Settings', settings: { textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'classicWhiteOutline', label: 'Classic White (Black Outline)', settings: { fontFamily: 'Impact', fontColor: '#FFFFFF', hasStroke: true, strokeThickness: 3, strokeColor: '#000000', relativeFontSize: 'medium', textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'boldYellowImpact', label: 'Bold Yellow Impact', settings: { fontFamily: 'Impact', fontColor: '#FFD700', hasStroke: true, strokeThickness: 4, strokeColor: '#4A2E00', relativeFontSize: 'large', textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'elegantThinWhite', label: 'Elegant Thin White (No Outline)', settings: { fontFamily: 'Garamond', fontColor: '#FAFAFA', hasStroke: false, strokeThickness: 1, strokeColor: '#000000', relativeFontSize: 'medium', textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'cyberGreen', label: 'Cyber Green Glow', settings: { fontFamily: 'Futura', fontColor: '#39FF14', hasStroke: true, strokeThickness: 2, strokeColor: '#0F510F', relativeFontSize: 'medium', textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: true, textShadowColor: '#39FF14', textShadowBlur: 5, textShadowOffsetX: 0, textShadowOffsetY: 0, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'minimalistBlack', label: 'Minimalist Black (No Outline)', settings: { fontFamily: 'Helvetica', fontColor: '#1A1A1A', hasStroke: false, strokeThickness: 1, strokeColor: '#FFFFFF', relativeFontSize: 'small', textColorMode: 'solid', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } },
-  { value: 'sunsetGradient', label: 'Sunset Gradient', settings: { fontFamily: 'Arial Black', textColorMode: 'gradient', gradientColor1: '#FF8C00', gradientColor2: '#FF0080', gradientDirection: 'top-to-bottom', hasStroke: true, strokeColor: '#000000', strokeThickness: 2, relativeFontSize: 'large', songNameXOffset: 0, songNameYOffset: 0, songNameRotation: 0, artistNameXOffset: 0, artistNameYOffset: 0, artistNameRotation: 0, hasTextShadow: false, songNameTextAlign: 'auto', artistNameTextAlign: 'auto', songNameLetterSpacing: 0, artistNameLetterSpacing: 0 } }
-];
-const overlayBlendModeOptions = [
-  { value: 'source-over', label: 'Normal' }, { value: 'multiply', label: 'Multiply' },
-  { value: 'screen', label: 'Screen' }, { value: 'overlay', label: 'Overlay' },
-  { value: 'darken', label: 'Darken' }, { value: 'lighten', label: 'Lighten' },
-  { value: 'color-dodge', label: 'Color Dodge' }, { value: 'color-burn', label: 'Color Burn' },
-  { value: 'hard-light', label: 'Hard Light' }, { value: 'soft-light', label: 'Soft Light' },
-  { value: 'difference', label: 'Difference' }, { value: 'exclusion', label: 'Exclusion' },
-  { value: 'hue', label: 'Hue' }, { value: 'saturation', label: 'Saturation' },
-  { value: 'color', label: 'Color' }, { value: 'luminosity', label: 'Luminosity' }
-];
-const textColorModeOptions = [{ value: 'solid', label: 'Solid Color' }, { value: 'gradient', label: 'Gradient Color' },];
-const gradientDirectionOptions = [
-  { value: 'top-to-bottom', label: 'Top to Bottom' }, { value: 'bottom-to-top', label: 'Bottom to Top' },
-  { value: 'left-to-right', label: 'Left to Right' }, { value: 'right-to-left', label: 'Right to Left' },
-  { value: 'top-left-to-bottom-right', label: 'Diagonal (Top-Left to Bottom-Right)' },
-  { value: 'bottom-left-to-top-right', label: 'Diagonal (Bottom-Left to Top-Right)' },
-  { value: 'top-right-to-bottom-left', label: 'Diagonal (Top-Right to Bottom-Left)' },
-  { value: 'bottom-right-to-top-left', label: 'Diagonal (Bottom-Right to Top-Left)' },
-];
-const textAlignOptions: Array<{ value: CanvasTextAlign | 'auto'; label: string }> = [
-  { value: 'auto', label: 'Auto (from Position)' },
-  { value: 'left', label: 'Left' },
-  { value: 'center', label: 'Center' },
-  { value: 'right', label: 'Right' },
-];
-
-const TOOL_CATEGORY = 'SongCoverArt';
-const isValidHexColor = (color: string): boolean => /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(color);
-const normalizeHexColor = (color: string): string => {
-  if (!color.startsWith('#')) color = '#' + color;
-  if (color.length === 4) { color = `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`; }
-  return color.toUpperCase();
-};
 
 const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const [songUrlInput, setSongUrlInput] = useState<string>('');
@@ -893,9 +676,20 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
         </div>
 
-        {showSavePresetModal && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"> <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-green-500"> <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-4">Save Current Art Style Preset</h3> <InputField id="newPresetName" label="Preset Name" value={newPresetName} onChange={setNewPresetName} placeholder="e.g., Retro VHS Look" className="mb-4" /> {presetErrorMessage && <p className="text-red-500 dark:text-red-400 text-xs mb-3">{presetErrorMessage}</p>} <div className="flex justify-end gap-3"> <button onClick={() => { setShowSavePresetModal(false); setPresetErrorMessage(null); }} className="py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Cancel</button> <button onClick={handleSavePreset} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white dark:text-black rounded">Save Preset</button> </div> </div> </div>)}
-        {showLoadPresetModal && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"> <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-lg border border-green-500 max-h-[80vh] flex flex-col"> <h3 className="text-xl font-semibold text-green-700 dark:text-green-300 mb-4 sticky top-0 bg-white dark:bg-gray-800 pb-2 z-10">Load Saved Art Style</h3> {savedArtStylePresets.length > 0 ? (<ul className="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800 flex-grow space-y-2"> {savedArtStylePresets.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(preset => (<li key={preset.id} className="p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 transition-all"> <div className="flex justify-between items-center"> <div> <p className="font-semibold text-green-700 dark:text-green-200">{preset.name}</p> <p className="text-xs text-gray-500 dark:text-gray-400">Saved: {new Date(preset.createdAt).toLocaleDateString()}</p> </div> <div className="flex-shrink-0 space-x-2"> <button onClick={() => handleLoadPreset(preset.id)} className="text-xs py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Load</button> <button onClick={() => handleDeletePreset(preset.id)} className="text-xs py-1 px-2 bg-red-600 hover:bg-red-500 text-white rounded flex items-center"><DeleteIcon className="w-3 h-3 mr-1" />Del</button> </div> </div> </li>))} </ul>) : (<p className="text-gray-500 dark:text-gray-400 text-center py-4">No art style presets saved yet.</p>)} <div className="mt-4 sticky bottom-0 bg-white dark:bg-gray-800 pt-2 z-10"> <button onClick={() => setShowLoadPresetModal(false)} className="w-full py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Close</button> </div> </div> </div>)}
-        {showImportExportModal && (<div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"> <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-green-500"> <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-4">Import/Export Art Style Presets</h3> <button onClick={handleExportPresets} disabled={savedArtStylePresets.length === 0} className="w-full py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded mb-4 disabled:opacity-50 flex items-center justify-center gap-1.5"><ExportIcon />Export All Presets to JSON</button> <TextAreaField id="importPresetJsonTextArea" label="Paste Presets JSON here OR Upload File Below" value={configToImportJson} onChange={setConfigToImportJson} rows={5} /> <input type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-600 file:text-black hover:file:bg-green-500 mb-2" /> {importPresetError && <p className="text-red-500 dark:text-red-400 text-xs mb-2">{importPresetError}</p>} <div className="flex justify-between gap-2 mb-3"> <button onClick={() => processPresetImport('merge')} className="flex-1 py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white rounded text-sm">Merge with Existing</button> <button onClick={() => processPresetImport('replace')} className="flex-1 py-2 px-3 bg-orange-600 hover:bg-orange-500 text-white rounded text-sm">Replace All Existing</button> </div> <button onClick={() => setShowImportExportModal(false)} className="w-full py-2 px-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded">Close</button> </div> </div>)}
+        <PresetModals
+          showSavePresetModal={showSavePresetModal} setShowSavePresetModal={setShowSavePresetModal}
+          newPresetName={newPresetName} setNewPresetName={setNewPresetName}
+          presetErrorMessage={presetErrorMessage} setPresetErrorMessage={setPresetErrorMessage}
+          handleSavePreset={handleSavePreset}
+          showLoadPresetModal={showLoadPresetModal} setShowLoadPresetModal={setShowLoadPresetModal}
+          savedArtStylePresets={savedArtStylePresets} handleLoadPreset={handleLoadPreset}
+          handleDeletePreset={handleDeletePreset}
+          showImportExportModal={showImportExportModal} setShowImportExportModal={setShowImportExportModal}
+          handleExportPresets={handleExportPresets} configToImportJson={configToImportJson}
+          setConfigToImportJson={setConfigToImportJson} importPresetFileRef={importPresetFileRef}
+          handleImportFileChange={handleImportFileChange} importPresetError={importPresetError}
+          processPresetImport={processPresetImport}
+        />
       </main>
     </div>
   );
