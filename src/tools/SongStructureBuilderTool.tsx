@@ -6,15 +6,19 @@ import { countSyllablesInLine } from '../../utils/lyricUtils';
 import InputField from '../../components/forms/InputField';
 
 
-import { TOOL_CATEGORY, LOCAL_STORAGE_CURRENT_WORK_KEY, LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, LOCAL_STORAGE_TIMELINE_HEIGHT_KEY, DEFAULT_TIMELINE_HEIGHT_PX, MIN_TIMELINE_HEIGHT_PX, MAX_TIMELINE_HEIGHT_PX, predefinedBlockTypes, arrangementTemplates } from '../components/SongStructureBuilder/constants';
+import { TOOL_CATEGORY, LOCAL_STORAGE_CURRENT_WORK_KEY, LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, predefinedBlockTypes, arrangementTemplates } from '../components/SongStructureBuilder/constants';
 import { CopyIcon, SaveIcon, LoadIcon, InfoIcon } from '../components/SongStructureBuilder/Icons';
-import { escapeCsvField, guessBarCount } from '../components/SongStructureBuilder/utils';
+import { escapeCsvField } from '../components/SongStructureBuilder/utils';
 import SaveArrangementModal from '../components/SongStructureBuilder/SaveArrangementModal';
 import LoadArrangementModal from '../components/SongStructureBuilder/LoadArrangementModal';
 import ImportExportModal from '../components/SongStructureBuilder/ImportExportModal';
 import LyricHistoryModal from '../components/SongStructureBuilder/LyricHistoryModal';
 import StructurePalette from '../components/SongStructureBuilder/StructurePalette';
 import TimelineBlockItem, { DropIndicator } from '../components/SongStructureBuilder/TimelineBlockItem';
+import BarsExplainer from '../components/SongStructureBuilder/BarsExplainer';
+import { useTimelineResize } from '../components/SongStructureBuilder/hooks/useTimelineResize';
+import { useLyricManager } from '../components/SongStructureBuilder/hooks/useLyricManager';
+import { useImportExport } from '../components/SongStructureBuilder/hooks/useImportExport';
 
 
 const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -38,11 +42,6 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         "Build-up": "#d38c5f", "Breakdown": "#8e7cc3",
     });
 
-    const [timelineHeight, setTimelineHeight] = useState<string>(`${DEFAULT_TIMELINE_HEIGHT_PX}px`);
-    const [isResizing, setIsResizing] = useState<boolean>(false);
-    const timelineContainerRef = useRef<HTMLDivElement>(null);
-    const initialDragDataRef = useRef<{ startY: number; initialHeight: number } | null>(null);
-
     const [savedArrangements, setSavedArrangements] = useState<SavedArrangement[]>([]);
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [showLoadModal, setShowLoadModal] = useState(false);
@@ -57,11 +56,20 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     // New state for 3-click clear
     const [clearAllClickCount, setClearAllClickCount] = useState(0);
     const clearAllTimeoutRef = useRef<number | null>(null);
-    
-    // New state for lyric management
-    const [editingLineOriginalText, setEditingLineOriginalText] = useState<string | null>(null);
-    const [historyModalOpen, setHistoryModalOpen] = useState(false);
-    const [historyModalContent, setHistoryModalContent] = useState<{ blockId: string; line: LyricLineData } | null>(null);
+
+    const { timelineHeight, timelineContainerRef, handleMouseDownResize } = useTimelineResize();
+    const {
+        historyModalOpen, setHistoryModalOpen, historyModalContent,
+        handleAddLyricLine, handleInsertLyricLineAfter, handleLyricTextChange,
+        handleLyricTextFocus, handleLyricTextBlur, handleDeleteLyricLine,
+        handleReorderLyricLine, handleShowHistory, handleRevertToVersion
+    } = useLyricManager(arrangement, setArrangement, trackLocalEvent);
+
+    const { handleExport, handleImportFromPastedText, handleFileImport } = useImportExport({
+        arrangement, setArrangement, songTitle, setSongTitle, tags, setTags,
+        outputPrompt, setStatusMessage, trackLocalEvent, setShowImportExportModal,
+        pastedImportText, setPastedImportText, importFileRef
+    });
 
     const estimatedTotalTime = useMemo(() => {
         if (!bpm || bpm <= 0 || !beatsPerBar || beatsPerBar <= 0) {
@@ -79,76 +87,6 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }, [arrangement, bpm, beatsPerBar]);
-
-    const parseTextToArrangement = (content: string): { arrangement: SongStructureBlock[], songTitle: string, tags: string, barCountsWereGuessed: boolean } => {
-        let newBlocks: SongStructureBlock[] = [];
-        let newTitle = '';
-        let newTags = '';
-        let barCountsWereGuessed = false;
-    
-        const lines = content.split('\n');
-        let currentBlock: SongStructureBlock | null = null;
-        
-        const titleRegex = /^\s*\[Title:\s*(.*?)\]\s*$/i;
-        const tagsRegex = /^\s*\[Tags:\s*(.*?)\]\s*$/i;
-        const blockHeaderRegex = /^\s*\[(.*?)(?:\s*\(\s*(\d+)\s*bars?\s*\))?\]\s*$/;
-    
-        const processCurrentBlock = () => {
-            if (currentBlock) {
-                if (currentBlock.barCount === undefined) {
-                    const guessedCount = guessBarCount(currentBlock);
-                    if (guessedCount !== undefined) {
-                        currentBlock.barCount = guessedCount;
-                        barCountsWereGuessed = true;
-                    }
-                }
-                newBlocks.push(currentBlock);
-            }
-        };
-
-        for (const line of lines) {
-            const trimmedLine = line.trim();
-            const titleMatch = trimmedLine.match(titleRegex);
-            const tagsMatch = trimmedLine.match(tagsRegex);
-            
-            if (titleMatch) {
-                newTitle = titleMatch[1].trim();
-                continue;
-            }
-            if (tagsMatch) {
-                newTags = tagsMatch[1].trim();
-                continue;
-            }
-    
-            const blockHeaderMatch = trimmedLine.match(blockHeaderRegex);
-            if (blockHeaderMatch) {
-                processCurrentBlock();
-                currentBlock = {
-                    id: `${Date.now()}-${Math.random()}`,
-                    type: blockHeaderMatch[1].trim(),
-                    barCount: blockHeaderMatch[2] ? parseInt(blockHeaderMatch[2], 10) : undefined,
-                    notes: '',
-                    lyrics: []
-                };
-            } else if (currentBlock) {
-                if (trimmedLine.startsWith('//')) {
-                    const noteText = trimmedLine.substring(2).trim();
-                    currentBlock.notes = currentBlock.notes ? `${currentBlock.notes}\n${noteText}` : noteText;
-                } else if (trimmedLine) {
-                    currentBlock.lyrics.push({
-                        id: `imported-lyric-${Date.now()}-${Math.random()}`,
-                        currentText: trimmedLine,
-                        history: []
-                    });
-                }
-            }
-        }
-        
-        processCurrentBlock();
-        
-        return { arrangement: newBlocks, songTitle: newTitle, tags: newTags, barCountsWereGuessed };
-    };
-    
 
     const handleApplyTemplate = useCallback((template: { name: string; structure: { type: string; notes: string; barCount?: number }[] }, mode: 'replace' | 'append') => {
         const newBlocks: SongStructureBlock[] = template.structure.map(block => ({
@@ -214,17 +152,6 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             console.error("Failed to load data from local storage", error);
             setStatusMessage("Failed to load saved data.");
         }
-
-        const savedHeight = localStorage.getItem(LOCAL_STORAGE_TIMELINE_HEIGHT_KEY);
-        if (savedHeight) {
-          const numericHeight = parseInt(savedHeight, 10);
-          const currentMaxHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight * 0.8) : MAX_TIMELINE_HEIGHT_PX;
-          if (!isNaN(numericHeight) && numericHeight >= MIN_TIMELINE_HEIGHT_PX && numericHeight <= currentMaxHeight) {
-            setTimelineHeight(savedHeight);
-          } else if (!isNaN(numericHeight) && numericHeight > currentMaxHeight) {
-            setTimelineHeight(`${currentMaxHeight}px`); 
-          }
-        }
         
         return () => {
             if (clearAllTimeoutRef.current) clearTimeout(clearAllTimeoutRef.current);
@@ -242,50 +169,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     }, [savedArrangements]);
 
 
-    const handleMouseDownResize = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        if (timelineContainerRef.current) {
-            initialDragDataRef.current = {
-                startY: e.clientY,
-                initialHeight: timelineContainerRef.current.offsetHeight,
-            };
-            setIsResizing(true);
-        }
-    }, []);
 
-    useEffect(() => {
-        const handleMove = (e: MouseEvent) => {
-            if (!timelineContainerRef.current || !initialDragDataRef.current) return;
-    
-            const deltaY = e.clientY - initialDragDataRef.current.startY;
-            let newHeight = initialDragDataRef.current.initialHeight + deltaY;
-            newHeight = Math.max(MIN_TIMELINE_HEIGHT_PX, Math.min(newHeight, MAX_TIMELINE_HEIGHT_PX));
-            setTimelineHeight(`${newHeight}px`);
-        };
-    
-        const handleUp = () => {
-            setIsResizing(false); 
-            if (timelineContainerRef.current) {
-                localStorage.setItem(LOCAL_STORAGE_TIMELINE_HEIGHT_KEY, timelineContainerRef.current.style.height);
-            }
-        };
-    
-        if (isResizing) {
-            document.addEventListener('mousemove', handleMove);
-            document.addEventListener('mouseup', handleUp);
-            window.addEventListener('blur', handleUp); 
-            document.body.style.userSelect = 'none';
-            document.body.style.cursor = 'ns-resize';
-        }
-    
-        return () => {
-            document.removeEventListener('mousemove', handleMove);
-            document.removeEventListener('mouseup', handleUp);
-            window.removeEventListener('blur', handleUp);
-            document.body.style.userSelect = '';
-            document.body.style.cursor = '';
-        };
-    }, [isResizing]);
     
     const handleConfirmSave = () => {
         setErrorSave(null);
@@ -409,97 +293,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         setBlockTypeColors(prev => ({ ...prev, [type]: color }));
     };
 
-    // --- Lyric Management Handlers ---
-    const handleAddLyricLine = (blockId: string) => {
-        const newLine: LyricLineData = { id: `lyric-${Date.now()}-${Math.random()}`, currentText: '', history: [] };
-        setArrangement(prev => prev.map(block =>
-            block.id === blockId ? { ...block, lyrics: [...block.lyrics, newLine] } : block
-        ));
-        trackLocalEvent(TOOL_CATEGORY, 'lyricLineAdded');
-    };
-    
-    const handleInsertLyricLineAfter = (blockId: string, afterIndex: number) => {
-        const newLine: LyricLineData = { id: `lyric-${Date.now()}-${Math.random()}`, currentText: '', history: [] };
-        setArrangement(prev => prev.map(block => {
-            if (block.id !== blockId) return block;
-    
-            const newLyrics = [...block.lyrics];
-            newLyrics.splice(afterIndex + 1, 0, newLine);
-            
-            return { ...block, lyrics: newLyrics };
-        }));
-        trackLocalEvent(TOOL_CATEGORY, 'lyricLineInsertedAfter');
-    };
 
-    const handleLyricTextChange = (blockId: string, lineId: string, newText: string) => {
-        setArrangement(prev => prev.map(block =>
-            block.id === blockId ? {
-                ...block,
-                lyrics: block.lyrics.map(lyric =>
-                    lyric.id === lineId ? { ...lyric, currentText: newText } : lyric
-                )
-            } : block
-        ));
-    };
-
-    const handleLyricTextFocus = (originalText: string) => {
-        setEditingLineOriginalText(originalText);
-    };
-
-    const handleLyricTextBlur = (blockId: string, lineId: string) => {
-        const currentBlock = arrangement.find(b => b.id === blockId);
-        const currentLine = currentBlock?.lyrics.find(l => l.id === lineId);
-    
-        if (currentLine && editingLineOriginalText !== null && currentLine.currentText !== editingLineOriginalText && editingLineOriginalText.trim() !== "") {
-            setArrangement(prev => prev.map(block => {
-                if (block.id === blockId) {
-                    return {
-                        ...block,
-                        lyrics: block.lyrics.map(lyric => 
-                            lyric.id === lineId ? { ...lyric, history: [...lyric.history, editingLineOriginalText] } : lyric
-                        )
-                    };
-                }
-                return block;
-            }));
-        }
-        setEditingLineOriginalText(null);
-    };
-
-    const handleDeleteLyricLine = (blockId: string, lineId: string) => {
-        setArrangement(prev => prev.map(block => 
-            block.id === blockId ? { ...block, lyrics: block.lyrics.filter(lyric => lyric.id !== lineId) } : block
-        ));
-        trackLocalEvent(TOOL_CATEGORY, 'lyricLineDeleted');
-    };
-
-    const handleReorderLyricLine = (blockId: string, lineIndex: number, direction: 'up' | 'down') => {
-        setArrangement(prev => prev.map(block => {
-            if (block.id !== blockId) return block;
-            const newLyrics = [...block.lyrics];
-            const targetIndex = direction === 'up' ? lineIndex - 1 : lineIndex + 1;
-            if (targetIndex < 0 || targetIndex >= newLyrics.length) return block; // Out of bounds
-            const [movedItem] = newLyrics.splice(lineIndex, 1);
-            newLyrics.splice(targetIndex, 0, movedItem);
-            return { ...block, lyrics: newLyrics };
-        }));
-        trackLocalEvent(TOOL_CATEGORY, 'lyricLineReordered');
-    };
-
-    const handleShowHistory = (blockId: string, line: LyricLineData) => {
-        setHistoryModalContent({ blockId, line });
-        setHistoryModalOpen(true);
-    };
-
-    const handleRevertToVersion = (versionText: string) => {
-        if (!historyModalContent) return;
-        const { blockId, line } = historyModalContent;
-        handleLyricTextChange(blockId, line.id, versionText);
-        setHistoryModalOpen(false);
-        setHistoryModalContent(null);
-        trackLocalEvent(TOOL_CATEGORY, 'lyricVersionReverted');
-    };
-    // --- End Lyric Management Handlers ---
 
     useEffect(() => {
         const titleLine = songTitle.trim() ? `[Title: ${songTitle.trim()}]` : '';
@@ -593,176 +387,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         }
     };
 
-    const handleExport = (format: 'txt' | 'csv') => {
-        if (arrangement.length === 0 && !songTitle && !tags) {
-            setStatusMessage("Nothing to export.");
-            setTimeout(() => setStatusMessage(''), 3000);
-            return;
-        }
 
-        let content = '';
-        let mimeType = '';
-        let filename = '';
-        const dateStr = new Date().toISOString().slice(0, 10);
-
-        if (format === 'txt') {
-            content = outputPrompt;
-            mimeType = 'text/plain;charset=utf-8;';
-            filename = `song_structure_${songTitle || dateStr}.txt`;
-        } else {
-            const metaRows = [];
-            if (songTitle.trim()) metaRows.push(`meta,title,${escapeCsvField(songTitle.trim())}`);
-            if (tags.trim()) metaRows.push(`meta,tags,${escapeCsvField(tags.trim())}`);
-            const headers = "type,notes,lyrics";
-            const blockRows = arrangement.map(b => {
-                const lyricString = b.lyrics.map(l => l.currentText).join('\\n');
-                return `${escapeCsvField(b.type)},${escapeCsvField(b.notes)},${escapeCsvField(lyricString)}`;
-            });
-            content = `${metaRows.join('\n')}\n${headers}\n${blockRows.join('\n')}`.trim();
-            mimeType = 'text/csv;charset=utf-8;';
-            filename = `song_structure_${songTitle || dateStr}.csv`;
-        }
-
-        const blob = new Blob([content], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        setStatusMessage(`Successfully exported to ${format.toUpperCase()}!`);
-        trackLocalEvent(TOOL_CATEGORY, 'exportedToFile', format);
-        setTimeout(() => setStatusMessage(''), 3000);
-    };
-
-    const handleImportFromPastedText = () => {
-        if (!pastedImportText.trim()) {
-            setStatusMessage("No text to import.");
-            setTimeout(() => setStatusMessage(''), 3000);
-            return;
-        }
-
-        if (arrangement.length > 0 && !window.confirm("Importing will overwrite your current timeline and fields. Continue?")) {
-            return;
-        }
-
-        try {
-            const { arrangement: newBlocks, songTitle: newTitle, tags: newTags, barCountsWereGuessed } = parseTextToArrangement(pastedImportText);
-
-            setSongTitle(newTitle);
-            setTags(newTags);
-            setArrangement(newBlocks);
-            
-            let importStatus = `Imported ${newBlocks.length} blocks from pasted text.`;
-            if (barCountsWereGuessed) {
-                importStatus += " Bar counts were estimated for a rough time calculation.";
-            }
-            setStatusMessage(importStatus);
-
-            trackLocalEvent(TOOL_CATEGORY, 'importedFromPastedText');
-            setShowImportExportModal(false);
-            setPastedImportText('');
-        } catch (err) {
-            console.error("Import error from pasted text:", err);
-            setStatusMessage(`Error importing text: ${err instanceof Error ? err.message : 'Unknown error.'}`);
-        } finally {
-            setTimeout(() => setStatusMessage(''), 4000);
-        }
-    };
-
-    const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        if (arrangement.length > 0 && !window.confirm("Importing will overwrite your current timeline and fields. Continue?")) {
-            if (importFileRef.current) importFileRef.current.value = ""; 
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const content = e.target?.result as string;
-                let newBlocks: SongStructureBlock[] = [];
-                let newTitle = '';
-                let newTags = '';
-                let wasGuessed = false;
-
-                if (file.name.endsWith('.txt')) {
-                    const parsed = parseTextToArrangement(content);
-                    newBlocks = parsed.arrangement;
-                    newTitle = parsed.songTitle;
-                    newTags = parsed.tags;
-                    wasGuessed = parsed.barCountsWereGuessed;
-                    trackLocalEvent(TOOL_CATEGORY, 'importedFromFile', 'txt');
-
-                } else if (file.name.endsWith('.csv')) {
-                    const lines = content.split('\n').filter(line => line.trim() !== '');
-                    const dataLines: string[] = [];
-                    lines.forEach(line => {
-                        const parts = line.split(',');
-                        if (parts[0]?.toLowerCase().trim() === 'meta') {
-                            const metaKey = parts[1]?.toLowerCase().trim();
-                            const metaValue = parts.slice(2).join(',').trim();
-                            if (metaKey === 'title') newTitle = metaValue;
-                            if (metaKey === 'tags') newTags = metaValue;
-                        } else if (!(parts[0]?.toLowerCase().trim() === 'type' && parts[1]?.toLowerCase().trim() === 'notes')) {
-                            dataLines.push(line);
-                        }
-                    });
-
-                    newBlocks = dataLines.map(line => {
-                        const parts = line.match(/(?:"[^"]*(?:""[^"]*)*"|[^,]*),?/g)?.map(p => p.endsWith(',') ? p.slice(0, -1) : p).map(p => p.startsWith('"') && p.endsWith('"') ? p.slice(1, -1).replace(/""/g, '"') : p) || [];
-
-                        const type = (parts[0] || 'Untitled').trim();
-                        const notesContent = (parts[1] || '').trim();
-                        const lyricsContent = (parts[2] || '').trim().replace(/\\n/g, '\n');
-
-                        const lyricsData: LyricLineData[] = lyricsContent.split('\n').map(lineText => ({
-                          id: `imported-csv-lyric-${Date.now()}-${Math.random()}`,
-                          currentText: lineText.trim(),
-                          history: []
-                        }));
-                        const tempBlock: SongStructureBlock = { id: `${Date.now()}-${Math.random()}`, type, notes: notesContent, lyrics: lyricsData };
-                        
-                        // Apply guessing for CSV import as well
-                        const guessedCount = guessBarCount(tempBlock);
-                        if(guessedCount !== undefined) {
-                            tempBlock.barCount = guessedCount;
-                            wasGuessed = true;
-                        }
-
-                        return tempBlock;
-                    });
-                    trackLocalEvent(TOOL_CATEGORY, 'importedFromFile', 'csv');
-                } else {
-                    throw new Error("Unsupported file type. Please use .txt or .csv.");
-                }
-                
-                setSongTitle(newTitle); setTags(newTags); setArrangement(newBlocks);
-                let importStatus = `Imported ${newBlocks.length} blocks from ${file.name}.`;
-                if (wasGuessed) {
-                    importStatus += " Bar counts were estimated for a rough time calculation.";
-                }
-                setStatusMessage(importStatus);
-
-                setShowImportExportModal(false);
-
-            } catch (err) {
-                console.error("Import error:", err);
-                setStatusMessage(`Error importing file: ${err instanceof Error ? err.message : 'Unknown error.'}`);
-            } finally {
-                setTimeout(() => setStatusMessage(''), 4000);
-            }
-        };
-
-        reader.onerror = () => { setStatusMessage("Error reading file."); setTimeout(() => setStatusMessage(''), 3000); };
-        reader.readAsText(file);
-        if (importFileRef.current) importFileRef.current.value = "";
-    };
 
     const getClearAllButtonText = () => {
         if (clearAllClickCount === 0) return "Clear All";
@@ -839,29 +464,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                         <InputField id="tags" label="Tags / Style Prompt" value={tags} onChange={setTags} placeholder="e.g., epic, orchestral" className="mb-0" />
                     </div>
 
-                    <details className="mb-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg group">
-                      <summary className="p-3 cursor-pointer text-md font-semibold text-green-700 dark:text-green-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg transition-colors flex justify-between items-center">
-                        <span>What Are Bars & How Do They Work?</span>
-                        <span className="transform transition-transform duration-200 group-open:rotate-180">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                          </svg>
-                        </span>
-                      </summary>
-                      <div className="p-4 border-t border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                        <p>A <strong className="font-semibold text-green-700 dark:text-green-200">bar</strong> (or <strong className="font-semibold text-green-700 dark:text-green-200">measure</strong>) is a basic unit of time in music. Think of it as a container that holds a specific number of beats.</p>
-                        <p>The <strong className="font-semibold text-green-700 dark:text-green-200">Beats Per Bar</strong> setting (from the time signature, e.g., the first '4' in 4/4) determines how many beats fit into one bar. The <strong className="font-semibold text-green-700 dark:text-green-200">BPM</strong> (Beats Per Minute) sets the speed of those beats.</p>
-                        <div className="p-2 my-1 bg-white dark:bg-gray-900 rounded-md text-xs border border-gray-200 dark:border-gray-700">
-                          <strong className="text-yellow-600 dark:text-yellow-300">Example:</strong> At 120 BPM in 4/4 time:
-                          <ul className="list-disc list-inside pl-2 mt-1">
-                            <li>Each bar has 4 beats.</li>
-                            <li>Each beat lasts 0.5 seconds (<code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-gray-800 dark:text-gray-200">60s / 120 BPM</code>).</li>
-                            <li>Therefore, one 8-bar verse will last <strong className="text-yellow-600 dark:text-yellow-300">16 seconds</strong> (<code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-gray-800 dark:text-gray-200">8 bars × 4 beats/bar × 0.5s/beat</code>).</li>
-                          </ul>
-                        </div>
-                        <p>Using bar counts helps you control the pacing and length of your song sections. Including them in your final prompt (e.g., <code className="bg-gray-100 dark:bg-gray-700 text-yellow-600 dark:text-yellow-300 px-1.5 py-0.5 rounded-md font-mono">[Verse] (16 bars)</code>) gives the AI valuable structural information.</p>
-                      </div>
-                    </details>
+                    <BarsExplainer />
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 items-end">
                         <InputField id="bpm" label="BPM" type="number" value={String(bpm)} onChange={(val) => setBpm(parseInt(val, 10) || 120)} className="mb-0"/>
