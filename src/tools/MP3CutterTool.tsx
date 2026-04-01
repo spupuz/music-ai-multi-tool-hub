@@ -239,14 +239,15 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <div className="flex flex-row items-center justify-center gap-6 p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 shadow-inner">
                 <Button
                   onClick={handleCropAndDownload}
-                  disabled={isLoading || !waveformReady || selection.end <= selection.start || isSelectionTooLong}
+                  disabled={!waveformReady || selection.end <= selection.start || isSelectionTooLong}
+                  loading={isLoading}
                   variant="primary"
                   size="lg"
-                  startIcon={isLoading ? null : <CropIcon className="w-5 h-5 ml-0.5" />}
+                  startIcon={<CropIcon className="w-5 h-5 ml-0.5" />}
                   backgroundColor="#22c55e"
                   className="px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs"
                 >
-                  {isLoading ? <Spinner color="text-black" /> : "Crop & Export"}
+                  Crop & Export
                 </Button>
                 <div className="text-left space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-widest text-yellow-600">Legal Limit</p>

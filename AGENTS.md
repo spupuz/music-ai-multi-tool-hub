@@ -101,6 +101,20 @@ The application prioritizes a seamless mobile experience (320px+). Follow these 
   - Use `ticks.padding` and `ticks.font.size` to prevent labels from hitting container edges.
 - **Text Scaling**: Use responsive font sizes for titles (e.g., `text-xl sm:text-2xl`) and ensure single-line headers use `truncate` or `text-ellipsis` to prevent wrapping.
 
+### UI/UX Design Standards
+
+To maintain a consistent and professional look across all tools, follow these design rules:
+
+- **Icon Placement**: Icons (including loading spinners) MUST always be placed **before** (to the left of) the text, never above or below it.
+  - **Good**: `[Icon] Processing...`
+  - **Bad**: 
+    ```
+    [Icon]
+    Processing...
+    ```
+  - Use `flex-row` and `items-center` to ensure horizontal alignment.
+  - When using the `Button` component, prefer the `startIcon` prop for loading indicators or action icons.
+
 ### Anti-Pattern 1: Direct Fetch in Components
 **Bad**: Calling `fetch()` or heavy logic directly inside a `useEffect` or event handler in a UI component.
 ```tsx

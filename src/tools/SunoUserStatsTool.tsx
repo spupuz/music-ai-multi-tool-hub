@@ -247,14 +247,14 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
           <Button 
             type="submit" 
-            disabled={isLoading || !username.trim()} 
+            disabled={!username.trim()} 
+            loading={isLoading}
             variant="primary" 
             size="md" 
             className="w-full h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
             backgroundColor="#22c55e"
-            startIcon={isLoading ? null : <StatsIcon className="w-4 h-4" />}
+            startIcon={<StatsIcon className="w-4 h-4" />}
           >
-            {isLoading ? <Spinner size="w-3 h-3" color="text-black" /> : null}
             {mainButtonText}
           </Button>
         </form>
