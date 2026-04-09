@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { MetronomeIcon, StopIcon } from '@/components/Icons';
@@ -16,6 +17,7 @@ type SubdivisionType = 'none' | 'eighth' | 'sixteenth' | 'triplet';
 type ClickSoundType = 'classic' | 'woodblock' | 'digital';
 
 const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [bpm, setBpm] = useState<number>(() => {
     const savedBpm = localStorage.getItem(LOCAL_STORAGE_BPM_KEY);
     return savedBpm ? parseInt(savedBpm, 10) : 120;
@@ -216,30 +218,42 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const handleClickSoundChange = (e: React.ChangeEvent<HTMLSelectElement>) => setClickSound(e.target.value as ClickSoundType);
 
   const visualBeatClass = () => { 
-      if (visualBeat === 2) return 'bg-green-300 dark:bg-green-300 scale-110 border-green-500 dark:border-green-400'; // Accent
-      if (visualBeat === 1) return 'bg-green-500 dark:bg-green-500 scale-105 border-green-600 dark:border-green-500'; // Normal
+      if (visualBeat === 2) return 'bg-emerald-300 dark:bg-emerald-300 scale-110 border-emerald-500 dark:border-emerald-400'; // Accent
+      if (visualBeat === 1) return 'bg-emerald-500 dark:bg-emerald-500 scale-105 border-emerald-600 dark:border-emerald-500'; // Normal
       return 'bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600'; // Off
   };
 
-  return (
-    <div className="w-full max-w-lg mx-auto">
-      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-2xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Metronome</h1>
-        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-            Temporal Synchronization Core • Precision Rhythmic Alignment
-        </p>
-      </header>
 
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-green-500/10 blur-[80px] pointer-events-none"></div>
+    return (
+      <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white px-4 pb-20' : 'text-gray-900 dark:text-white'} animate-fadeIn`}>
+        {uiMode === 'classic' ? (
+          <header className="mb-10 text-center pt-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+              Metronome
+            </h1>
+            <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+              Temporal Synchronization Core • Precision Rhythmic Alignment
+            </p>
+          </header>
+        ) : (
+          <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Metronome</h1>
+            <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+                Temporal Synchronization Core • Precision Rhythmic Alignment
+            </p>
+          </header>
+        )}
+
+        <main className="w-full max-w-lg mx-auto glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 blur-[80px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 blur-[80px] pointer-events-none"></div>
 
         <div className="mb-12 flex justify-center"> 
             <div className={`w-32 h-32 rounded-3xl transition-all duration-75 flex items-center justify-center border-2 border-white/5 shadow-2xl
                             ${visualBeat === 2 
-                              ? 'bg-green-500 shadow-[0_0_50px_rgba(34,197,94,0.4)] scale-110' 
+                              ? 'bg-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.4)] scale-110' 
                               : visualBeat === 1 
-                                ? 'bg-green-500/40 shadow-[0_0_30px_rgba(34,197,94,0.2)] scale-105' 
+                                ? 'bg-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.2)] scale-105' 
                                 : 'bg-white/5 backdrop-blur-xl opacity-20'}`} 
                  aria-hidden="true">
               <div className={`w-4 h-4 rounded-full ${visualBeat > 0 ? 'bg-white' : 'bg-transparent'}`}></div>
@@ -248,7 +262,7 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         <div className="mb-10 text-left"> 
             <label htmlFor="bpm" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4 ml-1">
-                Tempo · <span className="text-green-600 dark:text-green-500 font-black">{bpm} BPM</span>
+                Tempo · <span className="text-emerald-600 dark:text-emerald-500 font-black">{bpm} BPM</span>
             </label> 
             <input 
               type="range" 
@@ -258,7 +272,7 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               min="20" 
               max="300" 
               step="1" 
-              className="w-full h-1.5 bg-slate-200/50 dark:bg-white/5 rounded-full appearance-none cursor-pointer accent-green-500 focus:outline-none" 
+              className="w-full h-1.5 bg-slate-200/50 dark:bg-white/5 rounded-full appearance-none cursor-pointer accent-emerald-500 focus:outline-none" 
             /> 
         </div>
         
@@ -304,12 +318,12 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           startIcon={isPlaying ? <StopIcon className="w-5 h-5 ml-1" /> : <MetronomeIcon className="w-6 h-6 ml-0.5" />}
           className={`w-full font-black uppercase tracking-[0.3em] py-6 shadow-2xl transition-all duration-300
                      ${isPlaying ? 'border-red-500/50 text-red-500 hover:bg-red-500/10' : ''}`}
-          backgroundColor={isPlaying ? undefined : "#10b981"}
+          backgroundColor={isPlaying ? undefined : "#059669"}
         >
           {isPlaying ? 'Disable Pulse' : 'Initiate Pulse'}
         </Button>
       </main>
     </div>
-  );
+    );
 };
 export default MetronomeTool;

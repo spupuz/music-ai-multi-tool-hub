@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ToolProps } from '@/Layout';
 import type { SparkTuneChallengeData } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
 import InputField from '@/components/forms/InputField';
 import TextAreaField from '@/components/forms/TextAreaField';
 import Button from '@/components/common/Button';
@@ -72,6 +73,7 @@ const CollapsibleSection: React.FC<{
 };
 
 const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+    const { uiMode } = useTheme();
     const [challengeName, setChallengeName] = useState('');
     const [organizedBy, setOrganizedBy] = useState('');
     const [dueDate, setDueDate] = useState('');
@@ -219,14 +221,26 @@ Synchronize your efforts. The deadline is absolute. ⚡️
         setShowLoadModal(false);
     };
 
+
     return (
-        <div className="w-full">
-            <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-                <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">SparkTune</h1>
-                <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-                    AI Prompt Refinement • Musical Prompt Engineering Hub
-                </p>
-            </header>
+        <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+            {uiMode === 'classic' ? (
+                <header className="mb-10 text-center pt-8">
+                    <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+                        SparkTune
+                    </h1>
+                    <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+                        AI Prompt Refinement • Musical Prompt Engineering Hub
+                    </p>
+                </header>
+            ) : (
+                <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">SparkTune</h1>
+                    <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+                        AI Prompt Refinement • Musical Prompt Engineering Hub
+                    </p>
+                </header>
+            )}
 
             <main className="w-full relative">
                 <div className="grid lg:grid-cols-12 gap-8 items-start">
@@ -240,23 +254,23 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                         <CollapsibleSection title="Sonic DNA" defaultOpen icon={<MusicNoteIcon className="w-4 h-4" />}>
                             <div className="flex items-end gap-3">
                                 <InputField id="genre" label="Genre Vector" value={genre} onChange={setGenre} placeholder="e.g., Cosmic Disco" className="flex-grow mb-0" />
-                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-green-500"></Button>
+                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="mood" label="Vibe Spectrum" value={mood} onChange={setMood} placeholder="e.g., Euphoric & Spacey" className="flex-grow mb-0" />
-                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-green-500"></Button>
+                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="instrumentation" label="Arsenal Gear" value={instrumentation} onChange={setInstrumentation} placeholder="e.g., Laser Harps & Funky Basslines" className="flex-grow mb-0" />
-                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-green-500"></Button>
+                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="themeOrKeyword" label="Core Theme" value={themeOrKeyword} onChange={setThemeOrKeyword} placeholder="e.g., Alien Jungle Party" className="flex-grow mb-0" />
-                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-green-500"></Button>
+                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                              <div className="flex items-end gap-3">
                                 <InputField id="vocalStyle" label="Vocal Signal" value={vocalStyle} onChange={setVocalStyle} placeholder="e.g., Female Vocals, Instrumental" className="flex-grow mb-0" />
-                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-green-500"></Button>
+                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField id="tempo" label="Pulse (BPM)" value={tempo} onChange={setTempo} placeholder="e.g., 120 BPM" className="mb-0" />
@@ -280,7 +294,7 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                 variant="primary" 
                                 size="lg" 
                                 startIcon={<SparklesIcon className="w-5 h-5 text-black/50" />}
-                                className="font-black uppercase tracking-widest text-xs h-16 shadow-2xl shadow-green-500/20"
+                                className="font-black uppercase tracking-widest text-xs h-16 shadow-2xl shadow-emerald-500/20"
                                 backgroundColor="#10b981"
                              >
                                 ACTIVATE SPARK
@@ -300,14 +314,14 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                     <div className="lg:col-span-12 xl:col-span-5 space-y-2">
                         {(generatedAnnouncementPost || generatedReminderPost) ? (
                             <div className="animate-fadeIn glass-card p-10 border-white/10 shadow-2xl relative overflow-hidden h-full flex flex-col min-h-[600px]">
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+                                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
                                 
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center">
-                                        <CopyIcon className="w-4 h-4 text-green-500" />
+                                    <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+                                        <CopyIcon className="w-4 h-4 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 leading-none">Transmission Ready</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 leading-none">Transmission Ready</h3>
                                         <p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mt-2 opacity-60 italic">Copy to your distribution networks</p>
                                     </div>
                                 </div>
@@ -334,7 +348,7 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                 </div>
 
                                 <div className="relative flex-grow group">
-                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-3xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-3xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
                                     <textarea
                                         readOnly
                                         value={activePostTab === 'announcement' ? generatedAnnouncementPost : generatedReminderPost}
@@ -367,14 +381,14 @@ Synchronize your efforts. The deadline is absolute. ⚡️
 
                 {showLoadModal && (
                     <div className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-[100] p-4 animate-fadeIn">
-                        <div className="glass-card p-10 border-green-500/30 w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl shadow-green-500/10">
+                        <div className="glass-card p-10 border-emerald-500/30 w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl shadow-emerald-500/10">
                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center">
-                                        <HistoryIcon className="w-6 h-6 text-green-500" />
+                                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+                                        <HistoryIcon className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-green-600 dark:text-green-500 leading-none">Chrono Vault</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600 dark:text-emerald-500 leading-none">Chrono Vault</h3>
                                         <p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mt-2 opacity-60">Retrieved historical challenge records</p>
                                     </div>
                                 </div>
@@ -387,10 +401,10 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                         <div 
                                             key={challenge.id} 
                                             onClick={() => loadChallengeToForm(challenge)}
-                                            className="group relative p-6 bg-white/5 border border-white/5 rounded-3xl hover:border-green-500/50 hover:bg-white/10 cursor-pointer transition-all duration-300"
+                                            className="group relative p-6 bg-white/5 border border-white/5 rounded-3xl hover:border-emerald-500/50 hover:bg-white/10 cursor-pointer transition-all duration-300"
                                         >
                                             <div className="flex justify-between items-center mb-2">
-                                                <p className="text-sm font-black uppercase tracking-tight text-white group-hover:text-green-500 transition-colors">{challenge.challengeName}</p>
+                                                <p className="text-sm font-black uppercase tracking-tight text-white group-hover:text-emerald-500 transition-colors">{challenge.challengeName}</p>
                                                 <StarIcon className="w-4 h-4 text-yellow-500/20 group-hover:text-yellow-500 transition-colors" />
                                             </div>
                                             <div className="flex items-center gap-4 text-[8px] font-black uppercase tracking-[0.2em] text-gray-500">

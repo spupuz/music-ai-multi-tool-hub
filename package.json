@@ -10,7 +10,8 @@
     "build": "npm run build:tw && vite build",
     "build:tw": "npx tailwindcss -i ./src/index.css -o ./dist/index.css",
     "preview": "vite preview",
-    "sync-notes": "node scripts/sync-release-notes.js"
+    "sync-notes": "node scripts/sync-release-notes.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "@google/genai": "1.5.1",

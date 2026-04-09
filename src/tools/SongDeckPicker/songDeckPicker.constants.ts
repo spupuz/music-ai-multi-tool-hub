@@ -30,7 +30,7 @@ export const DEFAULT_CARD_TEXT_COLOR = DEFAULT_CARD_TEXT_COLOR_DARK;
 export const DEFAULT_TOOL_ACCENT_COLOR = '#059669';
 export const DEFAULT_CUSTOM_TITLE = 'Song Deck Picker';
 export const DEFAULT_SELECTED_LOGO_SIZE = '96px';
-export const DEFAULT_CARD_TEXT_FONT = "'Inter', sans-serif";
+export const DEFAULT_CARD_TEXT_FONT = "inherit";
 export const DEFAULT_NUMBER_OF_CARDS_TO_DRAW = 5; 
 
 // New Defaults for Reveal Cards Mode
@@ -55,7 +55,8 @@ export const logoSizeOptions = [
 ];
 
 export const cardTextFontOptions = [
-    { value: "'Inter', sans-serif", label: "Default (Inter)" },
+    { value: "inherit", label: "Inherit from Theme (Default)" },
+    { value: "'Inter', sans-serif", label: "Inter" },
     { value: "Arial, Helvetica, sans-serif", label: "Arial" },
     { value: "'Times New Roman', Times, serif", label: "Times New Roman" },
     { value: "Georgia, serif", label: "Georgia" },

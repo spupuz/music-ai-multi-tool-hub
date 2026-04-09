@@ -21,6 +21,11 @@ export default {
           900: '#111827',
           950: '#030712',
         }
+      },
+      fontFamily: {
+        architect: ['Inter', 'sans-serif'],
+        'classic-header': ['Orbitron', 'sans-serif'],
+        'classic-body': ['Rajdhani', 'sans-serif'],
       }
     },
   },

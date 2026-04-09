@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 import type { SynchronizedLyricLine } from '@/types';
@@ -28,7 +29,7 @@ import {
   CheckIcon
 } from '@/components/Icons';
 
-const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
+const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#10B981'/><circle cx='35' cy='65' r='6' fill='#10B981'/><circle cx='65' cy='65' r='6' fill='#10B981'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
 
 // Local type extending the one from types.ts to include the ref
@@ -44,6 +45,7 @@ const structuralMarkerPattern = new RegExp(`^(${structuralKeywordsArray.join('|'
 const TOOL_CATEGORY = 'LyricsSynchronizer';
 
 const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [songTitle, setSongTitle] = useState<string>('');
   const [artistName, setArtistName] = useState<string>('');
   const [sunoUrlInput, setSunoUrlInput] = useState<string>('');
@@ -281,21 +283,33 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>) => { if (audioRef.current && duration > 0) { const newTime = parseFloat((event.target as HTMLInputElement).value); audioRef.current.currentTime = newTime; setCurrentTime(newTime); } };
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => { if (audioRef.current) { const newVolume = parseFloat(event.target.value); setPlayerVolume(newVolume); audioRef.current.volume = newVolume; } };
 
+
   return (
-    <div className="w-full">
-      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyrics Synchronizer</h1>
-        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+    <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white' : 'text-white'} animate-fadeIn px-4 pb-20`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Lyrics Synchronizer
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
             Temporal Alignment Hub • Map lyrics to audio timestamps
-        </p>
-      </header>
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyrics Sync</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+              Temporal Alignment Hub • Map lyrics to audio timestamps
+          </p>
+        </header>
+      )}
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
         {/* Left Column: Configuration & Content */}
         <div className="xl:col-span-4 space-y-8">
           <section className="glass-card p-8 border-white/10 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-[40px] pointer-events-none"></div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6">Identity & Signal</h3>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] pointer-events-none"></div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6">Identity & Signal</h3>
             
             {(songTitle || artistName) && (
               <div className="flex flex-col items-center mb-8 animate-in fade-in zoom-in-95 duration-500">
@@ -326,7 +340,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                       value={sunoUrlInput}
                       onChange={(e) => setSunoUrlInput(e.target.value)}
                       placeholder="Suno / Riffusion / Producer.AI URL"
-                      className="flex-grow px-4 py-2 bg-white/5 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold focus:ring-4 focus:ring-green-500/20 outline-none transition-all placeholder:opacity-30 disabled:opacity-50"
+                      className="flex-grow px-4 py-2 bg-white/5 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all placeholder:opacity-30 disabled:opacity-50"
                       disabled={isUrlLoading}
                     />
                       <Button
@@ -352,7 +366,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Static Audio File</label>
                   <div className="p-4 bg-white/5 border border-dashed border-white/10 rounded-2xl text-center group hover:bg-white/10 transition-all cursor-pointer relative">
                     <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
-                    <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-green-500 transition-colors uppercase leading-relaxed">
+                    <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-emerald-500 transition-colors uppercase leading-relaxed">
                       {audioFileName ? audioFileName : 'Deploy MP3 Buffer'}
                     </div>
                   </div>
@@ -363,7 +377,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
           <section className="glass-card p-8 border-white/10 shadow-xl">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500">Lyric Data Buffer</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500">Lyric Data Buffer</h3>
               <div className="flex gap-2">
                 <input type="file" ref={lrcFileInputRef} onChange={handleLrcFileChange} accept=".lrc" className="hidden" id="load-lrc-file" />
                 <Button onClick={() => lrcFileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<ImportIcon className="w-3 h-3" />} className="font-black uppercase tracking-widest text-[8px] border-white/10 flex items-center justify-center">Import LRC</Button>
@@ -390,7 +404,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         {/* Right Column: Synchronization Console */}
         <div className="xl:col-span-8 space-y-8">
           <section className="glass-card p-2 sm:p-6 md:p-10 border-white/10 shadow-2xl relative overflow-hidden flex flex-col h-[calc(100vh-280px)] xl:h-[calc(100vh-220px)] min-h-[600px]">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
             
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
               <div>
@@ -451,7 +465,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                             ) : (
                               <Button onClick={(e) => { e.stopPropagation(); handleEditTimestamp(line.id); }} variant="ghost" size="xs" startIcon={<EditIcon className="w-3 h-3" />} className="px-3 border-white/10 text-[8px] font-black uppercase tracking-widest text-gray-500 hover:text-white">Edit</Button>
                             )}
-                            <Button onClick={(e) => { e.stopPropagation(); audioSrc && handleMarkTimestamp(line.id); }} disabled={!audioSrc} variant="ghost" size="xs" startIcon={<CheckIcon className="w-3 h-3 text-green-500" />} className="px-3 border-green-500/20 text-green-500 text-[8px] font-black uppercase tracking-widest hover:bg-green-500/10">Mark</Button>
+                            <button onClick={(e) => { e.stopPropagation(); audioSrc && handleMarkTimestamp(line.id); }} disabled={!audioSrc} className={`px-3 py-1 flex items-center justify-center gap-1.5 border border-emerald-500/20 bg-emerald-500/5 text-emerald-500 text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-500/10 transition-all ${!audioSrc ? 'opacity-30' : ''}`}><CheckIcon className="w-3 h-3" /> Mark</button>
                             <Button onClick={(e) => { e.stopPropagation(); handleClearTimestamp(line.id); }} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-red-500" />} className="px-3 border-red-500/20 text-red-500 text-[8px] font-black uppercase tracking-widest hover:bg-red-500/10">Clear</Button>
                             <Button onClick={(e) => { e.stopPropagation(); handleRemoveLyricLine(line.id); }} variant="ghost" size="xs" startIcon={<TrashIcon className="w-3 h-3" />} className="px-3 border-white/10 text-white/40 text-[8px] font-black uppercase tracking-widest hover:text-white">Del</Button>
                           </>
@@ -486,14 +500,14 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <div className="space-y-6">
                 {audioSrc && (
                   <div className="glass-card p-6 bg-white/5 border-white/10 rounded-3xl relative group overflow-hidden">
-                    <div className="absolute top-0 left-0 h-1 bg-green-500/20" style={{ width: `${(currentTime / duration) * 100}%` }}></div>
+                    <div className="absolute top-0 left-0 h-1 bg-emerald-500/20" style={{ width: `${(currentTime / duration) * 100}%` }}></div>
                     <audio ref={audioRef} src={audioSrc} className="hidden" preload="metadata"></audio>
                     
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between px-2">
                         <span className="text-[7px] font-black uppercase tracking-widest text-gray-500">Oscilloscope: {audioFileName?.substring(0, 30) || 'Active Signal'}</span>
                         <div className="flex items-center gap-4">
-                          <span className="text-[9px] font-mono font-bold text-green-500">{formatTime(currentTime)}</span>
+                          <span className="text-[9px] font-mono font-bold text-emerald-500">{formatTime(currentTime)}</span>
                           <span className="text-gray-600">/</span>
                           <span className="text-[9px] font-mono text-gray-500">{formatTime(duration)}</span>
                         </div>
@@ -517,7 +531,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                             max={duration || 0} 
                             value={currentTime} 
                             onChange={handleSeek}
-                            className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-green-500 focus:outline-none" 
+                            className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-emerald-500 focus:outline-none" 
                             aria-label="Audio seek bar" 
                           />
                         </div>
@@ -545,7 +559,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <Button onClick={handleExportToRangeFormatTxt} disabled={!parsedLines.some(l => l.timestamp !== null)} variant="ghost" startIcon={<ExportIcon className="w-3.5 h-3.5" />} className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-indigo-500/10 hover:text-indigo-400 hover:border-indigo-500/20 flex items-center justify-center">Export TXT Vector</Button>
                   <Button onClick={handleCopyToClipboardRangeFormat} disabled={!parsedLines.some(l => l.timestamp !== null)} variant="ghost" startIcon={<SaveIcon className="w-3.5 h-3.5" />} className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-sky-500/10 hover:text-sky-400 hover:border-sky-500/20 flex items-center justify-center">Clone Range Syntax</Button>
                 </div>
-                {exportCopyStatus && <p className="text-[8px] font-black uppercase tracking-widest text-center text-green-500 animate-pulse">{exportCopyStatus}</p>}
+                {exportCopyStatus && <p className="text-[8px] font-black uppercase tracking-widest text-center text-emerald-500 animate-pulse">{exportCopyStatus}</p>}
               </div>
             </div>
           </section>

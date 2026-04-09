@@ -46,8 +46,21 @@ describe('useSunoAudioSystem', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    // @ts-ignore
-    window.AudioContext = vi.fn().mockImplementation(() => mockAudioContextInstance);
+    
+    class MockAudioContext {
+      state = 'running';
+      resume = vi.fn().mockResolvedValue(undefined);
+      createGain = vi.fn().mockReturnValue({ gain: { value: 1, setValueAtTime: vi.fn() }, connect: vi.fn(), disconnect: vi.fn() });
+      createAnalyser = vi.fn().mockReturnValue({ fftSize: 256, connect: vi.fn(), disconnect: vi.fn() });
+      createChannelSplitter = vi.fn().mockReturnValue({ connect: vi.fn(), disconnect: vi.fn() });
+      createChannelMerger = vi.fn().mockReturnValue({ connect: vi.fn(), disconnect: vi.fn() });
+      createBiquadFilter = vi.fn().mockReturnValue({ type: 'peaking', frequency: { value: 0 }, gain: { value: 0, setValueAtTime: vi.fn() }, Q: { value: 1 }, connect: vi.fn(), disconnect: vi.fn() });
+      destination = {};
+      currentTime = 0;
+      close = vi.fn().mockResolvedValue(undefined);
+    }
+
+    vi.stubGlobal('AudioContext', MockAudioContext);
   });
 
   it('should initialize with audio system NOT ready', () => {
@@ -63,6 +76,7 @@ describe('useSunoAudioSystem', () => {
       ready = await result.current.ensureAudioSystemReady();
     });
 
+    expect(setErrorPlayer).not.toHaveBeenCalled();
     expect(ready).toBe(true);
     expect(result.current.isAudioSystemReady).toBe(true);
   });

@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
 import { useSunoUserStatsData } from '@/hooks/useSunoUserStatsData';
+import { useTheme } from '@/context/ThemeContext';
 import Spinner from '@/components/Spinner';
 import UserProfileCard from '@/components/sunoUserStats/UserProfileCard';
 import StatDisplayCard from '@/components/sunoUserStats/StatDisplayCard';
@@ -20,48 +21,48 @@ const AlertIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 mr-2
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
     </svg>
 );
-const TotalPlaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const TotalPlaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
   </svg>
 );
-const TotalUpvotesIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const TotalUpvotesIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
   </svg>
 );
-const TotalCommentsIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => ( 
+const TotalCommentsIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => ( 
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.158 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-1.978c.26-.191.687-.435 1.153-.67 1.09-.086 2.17-.206 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
   </svg>
 );
-const DurationIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const DurationIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
-const SongIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const SongIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
   </svg>
 );
-const CalendarDaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const CalendarDaysIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-3.75h.008v.008H12v-.008z" />
   </svg>
 );
-const ClockIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const ClockIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
-const GrowthIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const GrowthIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.0049L8.13187 12.1231C8.52043 11.7345 9.1536 11.7345 9.54216 12.1231L13.2071 15.7881C13.5976 16.1786 14.2308 16.1786 14.6213 15.7881L21.75 8.66116M21.75 8.66116V13.1612M21.75 8.66116H17.25" />
     </svg>
 );
 // (AlertIcon moved to central Icons)
-const TargetIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => (
+const TargetIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-2.474-1.956-2.225H11.25M16.6 16.6l-2.225-2.51.569-2.474-2.225-1.956v2.687M16.6 16.6L19.5 14m-2.928 2.628L17.071 13m-4.242 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zm0 0h.008v.008H12.83v-.008zM12 21a9 9 0 110-18 9 9 0 010 18z" />
   </svg>
@@ -71,14 +72,14 @@ const TableIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) 
     <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125V6.375m1.125 13.125A1.125 1.125 0 005.25 21h13.5A1.125 1.125 0 0020.625 19.5m-17.25 0V6.375m0 0A1.125 1.125 0 015.25 5.25h13.5A1.125 1.125 0 0120.625 6.375m0 0v11.25A1.125 1.125 0 0118.75 19.5m-16.5-13.125a1.125 1.125 0 00-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125M20.625 6.375c0-.621-.504-1.125-1.125-1.125M18.75 5.25c.621 0 1.125.504 1.125 1.125M3.375 5.25c-.621 0-1.125.504-1.125 1.125M5.25 5.25c.621 0 1.125.504 1.125 1.125m0 0v0M12 5.25v0m6.75 0v0m-6.75 13.125V6.375m0 13.125v0m0 0H5.25m6.75 0H18.75m-13.5 0V6.375m13.5 0V6.375" />
   </svg>
 );
-const SigmaIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => ( 
+const SigmaIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => ( 
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636M15.75 5.25H8.25" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 3.75H9"/>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 20.25H9"/>
     </svg>
 );
-const BullseyeIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" }) => ( 
+const BullseyeIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" }) => ( 
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
       <circle cx="12" cy="12" r="6" stroke="currentColor" strokeWidth="1.5"/>
@@ -121,6 +122,7 @@ const knownAppLocalStoragePrefixes = [
 
 
 const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const {
     username,
     setUsername,
@@ -221,17 +223,29 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     importFileRef.current?.click();
   };
 
+
   return (
-    <div className="w-full">
-      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-        <h1 className="text-lg sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
-          User Stats
-        </h1>
-        <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto opacity-60">High-fidelity profile analytics • Neural performance mapping</p>
-      </header>
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            User Statistics
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+            High-fidelity profile analytics • Neural performance mapping
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
+            User Stats
+          </h1>
+          <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto opacity-60">High-fidelity profile analytics • Neural performance mapping</p>
+        </header>
+      )}
 
       <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[100px] pointer-events-none"></div>
         
         <form onSubmit={handleSubmit} className="mb-10 flex flex-col sm:flex-row items-stretch sm:items-end gap-3 animate-in fade-in slide-in-from-top-4 duration-500 w-full max-w-full overflow-hidden">
           <div className="flex-grow w-full">
@@ -251,8 +265,8 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             loading={isLoading}
             variant="primary" 
             size="md" 
-            className="w-full h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
-            backgroundColor="#22c55e"
+            className="w-full h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-emerald-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
+            backgroundColor="#10b981"
             startIcon={<StatsIcon className="w-4 h-4" />}
           >
             {mainButtonText}
@@ -260,7 +274,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </form>
 
         <section className="mb-10 p-8 bg-white/5 border border-white/10 rounded-3xl relative group overflow-hidden">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 flex items-center gap-2">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6 flex items-center gap-2">
             <TargetIcon className="w-3 h-3" /> System Intelligence / Data Node
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
@@ -308,7 +322,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
           {(dataManagementStatus || exportImportStatusMessage) && (
             <div className="mt-6 text-center animate-pulse">
-              <p className={`text-[8px] font-black uppercase tracking-widest ${ (dataManagementStatus?.includes('Failed') || exportImportStatusMessage?.includes('failed')) ? 'text-red-400' : 'text-green-500' }`}>
+              <p className={`text-[8px] font-black uppercase tracking-widest ${ (dataManagementStatus?.includes('Failed') || exportImportStatusMessage?.includes('failed')) ? 'text-red-400' : 'text-emerald-500' }`}>
                 {dataManagementStatus || exportImportStatusMessage}
               </p>
             </div>
@@ -316,7 +330,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </section>
 
         {isLoading && progressMessage && (
-          <div className="my-8 p-6 bg-green-500/5 border border-green-500/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-green-500 text-center animate-pulse">
+          <div className="my-8 p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-emerald-500 text-center animate-pulse">
             Neural Mapping in Progress: {progressMessage}
           </div>
         )}
@@ -331,7 +345,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <UserProfileCard profile={storedData.profile} />
              {storedData.lastFetched && ( <p className="text-xs text-gray-500 dark:text-gray-500 text-center -mt-4 mb-6"> Data last fetched: {formatLastFetched(storedData.lastFetched)} </p> )}
             <section className="my-10 space-y-8">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 border-b border-white/5 pb-4">Composition Analytics</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 border-b border-white/5 pb-4">Composition Analytics</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <StatDisplayCard title="Neural Library" value={formatNumber(storedData.aggregatedStats?.totalSongs)} icon={<SongIcon />} tooltipText="Total public songs retrieved." />
                 <StatDisplayCard title="Temporal Mass" value={formatDuration(storedData.aggregatedStats?.totalDurationSec)} icon={<DurationIcon />} tooltipText="Total duration of all fetched content." />
@@ -361,11 +375,11 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     variant="ghost" 
                     className="w-full flex items-center justify-between py-6 px-8 bg-white/5 border-white/10 rounded-3xl group hover:bg-white/10 transition-all shadow-xl"
                   >
-                    <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-green-500">
+                    <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">
                       <TableIcon className="mr-4 w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" /> 
                       Detailed Signal Performance Repository
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 text-green-600 transform transition-transform duration-500 ${isDetailedTableOpen ? 'rotate-180' : ''}`}> <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /> </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 text-emerald-600 transform transition-transform duration-500 ${isDetailedTableOpen ? 'rotate-180' : ''}`}> <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /> </svg>
                   </Button>
                   {activeTableFilters && isDetailedTableOpen && (
                     <Button onClick={handleClearFilters} variant="danger" size="xs" className="ml-4 font-black uppercase tracking-widest text-[8px] bg-red-500/10 text-red-400 border-red-500/20">

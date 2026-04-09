@@ -4,6 +4,7 @@
 
 import React from 'react';
 import type { ToolId } from '@/Layout'; 
+import { useTheme } from '@/context/ThemeContext';
 
 interface SidebarTool {
   id: ToolId;
@@ -60,6 +61,7 @@ const categoryOrder = [
 
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, tools, activeToolId, onNavigate, trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const emailAddress = "qwqwojij0@mozmail.com";
   const emailSubject = "Music AI Multi-Tool Hub Feedback/Suggestion";
   const emailBody = `Hello Music AI Multi-Tool Hub Team,
@@ -117,8 +119,12 @@ Thanks,
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 pt-16 flex flex-col bg-gray-800 text-white w-64 transform transition-transform duration-300 ease-in-out border-r border-green-700
-                    ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-40 pt-16 flex flex-col transform transition-all duration-300 ease-in-out w-64
+                    ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+                    ${uiMode === 'classic' 
+                        ? 'bg-gray-900 border-r-2 border-emerald-600 shadow-2xl text-white' 
+                        : 'bg-gray-800/90 backdrop-blur-xl border-r border-white/5 text-gray-100'
+                    }`}
         aria-label="Main navigation"
       >
         <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
@@ -135,10 +141,10 @@ Thanks,
                   <button
                     key={tool.id}
                     onClick={(e) => handleToolButtonClick(e, tool.id)}
-                    className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors
+                    className={`w-full flex items-center px-4 py-3 rounded-none text-sm font-medium transition-all group
                                 ${ activeToolId === tool.id 
-                                    ? 'bg-green-600 text-white' 
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                    ? (uiMode === 'classic' ? 'bg-emerald-600 text-white border-l-4 border-white' : 'bg-emerald-500/20 text-emerald-400 border-l-4 border-emerald-500')
+                                    : (uiMode === 'classic' ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white')
                                 }`}
                     aria-current={activeToolId === tool.id ? 'page' : undefined}
                   >
@@ -193,8 +199,8 @@ Thanks,
                     onClick={(e) => handleToolButtonClick(e, 'releaseNotes')}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors mb-1
                                 ${ activeToolId === 'releaseNotes' 
-                                    ? 'bg-green-600 text-white' 
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                    ? (uiMode === 'classic' ? 'bg-emerald-600 text-white' : 'bg-emerald-500/20 text-emerald-400') 
+                                    : (uiMode === 'classic' ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white')
                                 }`}
                     aria-current={activeToolId === 'releaseNotes' ? 'page' : undefined}
                 >
@@ -205,8 +211,8 @@ Thanks,
                     onClick={(e) => handleToolButtonClick(e, 'specialMentions')}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
                                 ${ activeToolId === 'specialMentions' 
-                                    ? 'bg-green-600 text-white' 
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                    ? (uiMode === 'classic' ? 'bg-emerald-600 text-white' : 'bg-emerald-500/20 text-emerald-400') 
+                                    : (uiMode === 'classic' ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white')
                                 }`}
                     aria-current={activeToolId === 'specialMentions' ? 'page' : undefined}
                 >
@@ -217,8 +223,8 @@ Thanks,
                     onClick={(e) => handleToolButtonClick(e, 'stats')}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
                                 ${ activeToolId === 'stats' 
-                                    ? 'bg-green-600 text-white' 
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                    ? (uiMode === 'classic' ? 'bg-emerald-600 text-white' : 'bg-emerald-500/20 text-emerald-400') 
+                                    : (uiMode === 'classic' ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white')
                                 }`}
                     aria-current={activeToolId === 'stats' ? 'page' : undefined}
                 >

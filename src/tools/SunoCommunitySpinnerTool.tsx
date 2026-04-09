@@ -23,7 +23,7 @@ import { useWheelState } from '@/components/SunoCommunitySpinner/hooks/useWheelS
 import { WheelConfigData } from '@/components/SunoCommunitySpinner/types';
 
 const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-    const { theme } = useTheme();
+    const { theme, uiMode } = useTheme();
 
     // -- HOOKS --
     const {
@@ -313,36 +313,24 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     // -- RENDER --
     const placeholderMessage = wheelSegments.length === 0 ? "Configure activities and weights to activate the wheel!" : "Wheel configuration error. Ensure sum of selected activity weights matches the number of segments on the wheel.";
 
-    return (
-        <div className="w-full flex flex-col min-h-[calc(100vh-4rem)] overflow-x-hidden" style={{ backgroundColor: toolBackgroundColor, color: toolTextColor }}>
-            {/* Top Control Bar */}
-            <div className="sticky top-0 z-20 p-2 mb-3 rounded-b-lg flex flex-wrap items-center justify-center sm:justify-between gap-4" style={{ backgroundColor: lightenDarkenColor(toolBackgroundColor, 5), borderBottom: `1px solid ${toolAccentColor}`}}>
-                <Button 
-                    onClick={() => setIsConfigPanelOpen(!isConfigPanelOpen)} 
-                    variant="ghost" 
-                    size="sm" 
-                    startIcon={<EyeOpenIcon className="w-4 h-4"/>}
-                    className="font-black uppercase tracking-widest text-[10px]"
-                    style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}}
-                >
-                    {isConfigPanelOpen ? 'Hide Config' : 'Show Config'}
-                </Button>
-                <Button 
-                    onClick={() => setShowAppearancePanel(!showAppearancePanel)} 
-                    variant="ghost" 
-                    size="sm" 
-                    startIcon={<CogIcon className="w-4 h-4"/>}
-                    className="font-black uppercase tracking-widest text-[10px]"
-                    style={{backgroundColor: toolAccentColor, color: getAdjustedTextColorForContrast(toolAccentColor)}}
-                >
-                    {showAppearancePanel ? 'Hide Appearance' : 'Show Appearance'}
-                </Button>
-            </div>
 
-            <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-                <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Community Spinner</h1>
-                <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Crowdsourced inspiration • Neural style randomization</p>
-            </header>
+    return (
+        <div className={`w-full flex flex-col min-h-[calc(100vh-4rem)] overflow-x-hidden ${uiMode === 'classic' ? 'pb-20 px-4' : ''}`} style={{ backgroundColor: toolBackgroundColor, color: toolTextColor }}>
+            {uiMode === 'classic' ? (
+                <header className="mb-6 text-center pt-8">
+                    <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+                        Community Spinner
+                    </h1>
+                    <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+                        Crowdsourced inspiration • Neural style randomization
+                    </p>
+                </header>
+            ) : (
+                <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Community Spinner</h1>
+                    <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Crowdsourced inspiration • Neural style randomization</p>
+                </header>
+            )}
             
             {soundError && ( <div className="w-full max-w-md mx-auto p-2 mb-3 bg-red-700 text-white text-xs text-center rounded-md shadow"> {soundError} </div> )}
             
@@ -474,7 +462,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                         <div className="mt-3 flex items-end gap-3 p-3 bg-black/10 rounded-md">
                                             <div className="flex-grow">
                                                 <label className="block text-xs font-semibold mb-1" style={{color:toolTextColor}}>Size</label>
-                                                <select value={selectedLogoSize} onChange={e => setSelectedLogoSize(e.target.value)} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-green-400">
+                                                <select value={selectedLogoSize} onChange={e => setSelectedLogoSize(e.target.value)} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
                                                     {logoSizeOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                                 </select>
                                             </div>
@@ -484,7 +472,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-2" style={{color:toolTextColor}}>Typography</label>
-                                    <select value={wheelTextFont} onChange={e => setWheelTextFont(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-green-400">
+                                    <select value={wheelTextFont} onChange={e => setWheelTextFont(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
                                         {cardTextFontOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                     </select>
                                 </div>

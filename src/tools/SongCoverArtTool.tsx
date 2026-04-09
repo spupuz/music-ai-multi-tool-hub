@@ -12,6 +12,7 @@ import SelectField from '@/components/forms/SelectField';
 import CheckboxField from '@/components/forms/CheckboxField';
 import SliderField from '@/components/forms/SliderField';
 import Button from '@/components/common/Button';
+import { useTheme } from '@/context/ThemeContext';
 
 
 import {
@@ -29,6 +30,7 @@ import PresetModals from '@/components/SongCoverArt/PresetModals';
 
 
 const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [songUrlInput, setSongUrlInput] = useState<string>('');
   const [songName, setSongName] = useState<string>('');
   const [artistTitle, setArtistTitle] = useState<string>('');
@@ -359,14 +361,26 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const isLoading = appState === AppState.Processing;
   const canSubmit = songName.trim() && artistTitle.trim() && inputImageBase64;
 
+
   return (
-    <div className="w-full">
-      <header className="mb-8 md:mb-16 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Visual Synth</h1>
-        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 opacity-60 mx-auto max-w-2xl">
-          High-Fidelity Cover Art • Cinematic Signal Processing
-        </p>
-      </header>
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Cover Art Lab
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+            High-Fidelity Cover Art • Cinematic Signal Processing
+          </p>
+        </header>
+      ) : (
+        <header className="mb-8 md:mb-16 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Cover Art Lab</h1>
+          <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 opacity-60 mx-auto max-w-2xl">
+            High-Fidelity Cover Art • Cinematic Signal Processing
+          </p>
+        </header>
+      )}
 
       <canvas ref={previewCanvasRef} style={{ display: 'none' }}></canvas>
 
@@ -374,7 +388,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         {/* Column 1: Generation & Input */}
         <div className="space-y-8">
           <section className="glass-card p-8 border-white/10 shadow-xl">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6">Source Signal</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6">Source Signal</h3>
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500">Remote Stream</label>
@@ -391,7 +405,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </section>
 
           <section className="glass-card p-8 border-white/10 shadow-xl">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 mb-6">Visual Core</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-6">Visual Core</h3>
             <ImageUpload onImageUpload={handleImageUpload} label="Deploy Main Canvas" />
           </section>
 
@@ -499,7 +513,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         {/* Column 2: Mastering & Output */}
         <div className="space-y-8">
           <section className="glass-card p-8 border-white/10 shadow-2xl relative overflow-hidden flex flex-col">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 mb-8">Processed Output</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-8">Processed Output</h3>
             <div className="aspect-square w-full bg-black/40 rounded-3xl overflow-hidden border border-white/10 shadow-inner relative group">
               {filteredPreviewUrl ? (
                 <img src={filteredPreviewUrl} alt="Preview" className="w-full h-full object-contain" />
@@ -511,7 +525,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               )}
               {isLoading && (
                 <div className="absolute inset-0 bg-black/80 flex items-center justify-center gap-4">
-                  <Spinner size="w-8 h-8" color="text-green-500" />
+                  <Spinner size="w-8 h-8" color="text-emerald-500" />
                   <span className="text-xs font-bold uppercase text-white/60">Processing Signal...</span>
                 </div>
               )}
@@ -524,7 +538,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="primary"
               size="lg"
               className="mt-8 w-full h-16 font-black uppercase tracking-widest text-xs shadow-2xl flex items-center justify-center"
-              backgroundColor="#22c55e"
+              backgroundColor="#10b981"
               startIcon={<SparklesIcon className="w-5 h-5" />}
             >
               Synthesize Master

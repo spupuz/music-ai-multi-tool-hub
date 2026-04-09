@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface CheckboxFieldProps {
   id: string;
@@ -17,7 +17,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   id, label, checked, onChange, disabled,
   className = "mb-4", description, title, labelTextColor
 }) => {
-  const labelColorClass = labelTextColor ? labelTextColor : "text-gray-700 dark:text-green-300";
+  const { uiMode } = useTheme();
+  const labelColorClass = labelTextColor 
+    ? labelTextColor 
+    : (uiMode === 'architect' ? "text-gray-800 dark:text-gray-200" : "text-gray-700 dark:text-emerald-300");
 
   return (
     <div className={`flex items-start ${className}`}>
@@ -28,7 +31,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
                 checked={checked}
                 onChange={(e) => onChange(e.target.checked)}
                 disabled={disabled}
-                className="h-4 w-4 text-green-600 dark:text-green-500 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-400 bg-white dark:bg-gray-700 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`h-4 w-4 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                  ${uiMode === 'architect' 
+                    ? 'text-emerald-600 border-white/20 focus:ring-emerald-500/30 bg-white/5' 
+                    : 'text-emerald-600 dark:text-emerald-500 border-gray-300 dark:border-gray-600 focus:ring-emerald-500 dark:focus:ring-emerald-400 bg-white dark:bg-gray-700'}`}
                 title={title}
                 aria-describedby={description ? `${id}-description` : undefined}
             />
@@ -36,7 +42,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         <div className="ml-3 text-sm">
             <label
               htmlFor={id}
-              className={`font-medium ${labelColorClass} ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              className={`text-xs font-black uppercase tracking-widest ${labelColorClass} ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
               title={title}
             >
                 {label}

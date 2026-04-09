@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import { 
   SearchIcon, 
@@ -114,14 +115,14 @@ const initialResourceCategories: ResourceCategory[] = [
 const SearchBar: React.FC<{ searchTerm: string; onSearchChange: (term: string) => void }> = ({ searchTerm, onSearchChange }) => (
   <div className="mb-8 relative group z-10">
     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-      <SearchIcon className="w-5 h-5 text-gray-500 group-focus-within:text-green-500 transition-colors" />
+      <SearchIcon className="w-5 h-5 text-gray-500 group-focus-within:text-emerald-500 transition-colors" />
     </div>
     <input
       type="search"
       value={searchTerm}
       onChange={(e) => onSearchChange(e.target.value)}
       placeholder="Search cross-platform resources..."
-      className="w-full pl-12 pr-4 py-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all"
+      className="w-full pl-12 pr-4 py-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
       aria-label="Search music resources"
     />
   </div>
@@ -158,6 +159,7 @@ const CategoryFilterButtons: React.FC<{
 );
 
 const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
@@ -213,17 +215,31 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
   };
 
 
+
   return (
-    <div className="w-full">
-      <header className="mb-14 text-center pt-8 px-4 animate-fadeIn">
-        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">Resource Nexus</h1>
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-          Elite directory of professional tools and clandestine networks for music pioneers
-        </p>
-      </header>
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Resource Nexus
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+            Elite directory of professional tools and clandestine networks for music pioneers
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
+            Resource Nexus
+          </h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Elite directory of professional tools and clandestine networks for music pioneers
+          </p>
+        </header>
+      )}
 
       <main className="w-full glass-card p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/5 blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
         <CategoryFilterButtons
@@ -242,7 +258,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
           {filteredCategories.map(category => (
             <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn">
               <div className="flex items-center gap-4 mb-8">
-                <h2 id={`category-title-${category.id}`} className="text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-green-600 dark:text-green-500">
+                <h2 id={`category-title-${category.id}`} className="text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-emerald-600 dark:text-emerald-500">
                   {category.name}
                 </h2>
                 <div className="h-px w-full bg-white/5"></div>
@@ -255,14 +271,14 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackLocalEvent(TOOL_CATEGORY, 'resourceLinkClicked', item.title)}
-                    className="group flex flex-col p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 hover:border-green-500/30 hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"
+                    className="group flex flex-col p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 hover:border-emerald-500/30 hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"
                   >
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white group-hover:text-green-500 transition-colors">{item.title}</h3>
-                      <GlobeAltIcon className="w-4 h-4 text-gray-500 group-hover:text-green-500/50 transition-colors" />
+                      <h3 className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white group-hover:text-emerald-500 transition-colors">{item.title}</h3>
+                      <GlobeAltIcon className="w-4 h-4 text-gray-500 group-hover:text-emerald-500/50 transition-colors" />
                     </div>
                     <p className="text-xs font-bold text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{item.description}</p>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-600 dark:text-green-500 opacity-40 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity">
                       Open Nexus
                       <ChevronRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>

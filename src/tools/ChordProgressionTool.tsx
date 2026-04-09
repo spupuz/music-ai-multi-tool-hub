@@ -12,6 +12,7 @@ import {
 } from '@/utils/musicTheoryUtils';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { 
@@ -97,6 +98,7 @@ const calculateFrequencyForNote = (noteName: string, octave: number = 4): number
 
 
 const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [rootNote, setRootNote] = useState<string>('C');
   const [mode, setMode] = useState<string>('Major');
   const [chordType, setChordType] = useState<'triad' | 'seventh'>('triad');
@@ -486,15 +488,28 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   }, [stopAllSounds]);
 
 
+
   return (
-    <div className="w-full">
-      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Chord Progressions</h1>
-        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto opacity-60">Generate progressions • Explore diatonic depths • Build sequences</p>
-      </header>
+    <div className="w-full text-gray-900 dark:text-white pb-20 px-4 animate-fadeIn">
+      {uiMode === 'classic' ? (
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Chord Lab
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+            Generate progressions • Explore diatonic depths • Build sequences
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Chord Lab</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">Generate progressions • Explore diatonic depths • Build sequences</p>
+        </header>
+      )}
+
 
       <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
         
         <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -552,7 +567,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {generatedProgression.length > 0 && !isLoading && (
           <div className="mb-12 p-8 bg-black/5 dark:bg-black/20 rounded-3xl border border-white/5 animate-fadeIn">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-8 text-center opacity-70">
                 {isRecording ? "Capture Active" : "Current Sequence"}
             </h3>
             <div className="text-center space-y-2 mb-10 overflow-hidden">
@@ -575,7 +590,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {diatonicChordsInKey.length > 0 && (
           <div className="p-8 bg-slate-50/50 dark:bg-black/10 rounded-3xl border border-gray-100 dark:border-white/5 shadow-inner">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-500 mb-8 text-center opacity-70">
               Chord Library: {rootNote} {mode.replace('Natural', '')}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
@@ -643,7 +658,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                         defaultValue={fav.note || ''} 
                                         onChange={(e) => handleNoteChange(fav.id, e.target.value)} 
                                         onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(fav.id)} 
-                                        className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-green-500/10 outline-none" 
+                                        className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/10 outline-none" 
                                         placeholder="Note..." 
                                       />
                                       <Button onClick={() => handleSaveNote(fav.id)} variant="primary" size="sm" className="font-black" backgroundColor="#10b981">OK</Button>
@@ -678,7 +693,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           animation: pulse-border 0.3s ease-out;
         }
         @keyframes pulse-border {
-          0% { border-color: #34D399; border-width: 4px; } /* green-400 */
+          0% { border-color: #10B981; border-width: 4px; } /* emerald-500 */
           100% { border-color: #4A5568; border-width: 2px; } /* gray-600 or your default */
         }
       `}</style>

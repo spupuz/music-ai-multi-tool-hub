@@ -123,8 +123,8 @@ const PerformanceTable = <T extends { name: string; count: number; avgPlays: num
                 <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{(item.avgPlays as number).toFixed(1)}</td>
                 <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{(item.avgUpvotes as number).toFixed(1)}</td>
                 <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{(item.avgComments as number).toFixed(1)}</td>
-                <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-green-500/80 tracking-widest hidden lg:table-cell">{item.avgUpvoteRate !== undefined ? `${item.avgUpvoteRate.toFixed(1)}%` : '---'}</td>
-                <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-green-500/60 tracking-widest hidden lg:table-cell">{item.avgCommentRate !== undefined ? `${item.avgCommentRate.toFixed(1)}%` : '---'}</td>
+                <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/80 tracking-widest hidden lg:table-cell">{item.avgUpvoteRate !== undefined ? `${item.avgUpvoteRate.toFixed(1)}%` : '---'}</td>
+                <td className="px-2 py-3 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/60 tracking-widest hidden lg:table-cell">{item.avgCommentRate !== undefined ? `${item.avgCommentRate.toFixed(1)}%` : '---'}</td>
                 <td className="px-4 py-3 whitespace-nowrap text-right text-[10px] font-black text-gray-400 tracking-widest">{item.count.toLocaleString()}</td>
               </tr>
             ))}

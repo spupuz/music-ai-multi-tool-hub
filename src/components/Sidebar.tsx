@@ -2,6 +2,8 @@
 import React from 'react';
 import type { ToolId } from '@/Layout';
 import Button from '@/components/common/Button';
+import { useTheme } from '@/context/ThemeContext';
+import { GithubIcon } from '@/components/Icons';
 
 interface SidebarTool {
   id: ToolId;
@@ -52,6 +54,7 @@ const categoryOrder = [
 
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, tools, activeToolId, onNavigate, trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const emailAddress = "qwqwojij0@mozmail.com";
   const emailSubject = "Music AI Multi-Tool Hub Feedback/Suggestion";
   const emailBody = `Hello Music AI Multi-Tool Hub Team,
@@ -107,11 +110,17 @@ Thanks,
         ></div>
       )}
 
-      <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-900 shadow-2xl z-40 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] border-r border-gray-200/50 dark:border-gray-800 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full invisible pointer-events-none'}`} aria-label="Main navigation">
-        <header className="p-4 border-b border-gray-200/50 dark:border-white/5 flex items-center justify-between gap-4 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl z-20">
+      <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-900 shadow-2xl z-40 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] border-r border-gray-200 dark:border-gray-800 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full invisible pointer-events-none'}`} aria-label="Main navigation">
+        <header className={`p-4 border-b flex items-center justify-between gap-4 z-20 ${
+          uiMode === 'architect' 
+            ? 'border-gray-200/50 dark:border-white/5 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl' 
+            : 'border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800'
+        }`}>
            <div className="flex items-center flex-grow overflow-hidden">
-             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 dark:text-gray-500 ml-2">
-                Hub Menu
+             <h2 className={`font-black uppercase tracking-[0.3em] ml-2 ${
+               uiMode === 'architect' ? 'text-[10px] text-gray-400 dark:text-gray-500' : 'text-xs text-green-700 dark:text-green-400'
+             }`}>
+                {uiMode === 'architect' ? 'Hub Menu' : 'Main Menu'}
              </h2>
            </div>
         </header>
@@ -137,10 +146,15 @@ Thanks,
                           {tool.icon}
                         </span>
                       ) : null}
-                      className={`w-full flex flex-row items-center justify-start px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all duration-200 group border-none shadow-none whitespace-nowrap
+                      className={`w-full flex flex-row items-center justify-start px-4 py-3 text-[11px] font-black uppercase tracking-wider transition-all duration-200 group border-none shadow-none whitespace-nowrap
+                                  ${uiMode === 'architect' ? 'rounded-xl' : 'rounded-md md:rounded-lg'}
                                   ${activeToolId === tool.id
-                          ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400 shadow-sm border border-white/20'
-                          : 'text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
+                          ? (uiMode === 'architect' 
+                              ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm border border-emerald-500/20' 
+                              : 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700')
+                          : (uiMode === 'architect'
+                              ? 'text-gray-600 dark:text-gray-400 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white')
                         }`}
                       aria-current={activeToolId === tool.id ? 'page' : undefined}
                     >
@@ -153,20 +167,46 @@ Thanks,
           })}
         </nav>
 
-        <div className="px-4 py-6 border-t border-gray-200/50 dark:border-white/10 space-y-4 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl z-20">
+        <div className={`px-4 py-6 border-t space-y-4 z-20 ${
+          uiMode === 'architect' 
+            ? 'border-white/10 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl' 
+            : 'border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800'
+        }`}>
           <div>
-            <h4 className="px-4 text-[9px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-[0.2em] mb-2">Feedback</h4>
-            <Button
-              href={mailtoLink}
-              as="a"
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start px-4 text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-green-600 dark:hover:text-green-400 border-none shadow-none"
-              startIcon={<EmailIcon className="w-4 h-4 opacity-60" />}
-              aria-label="Send suggestions or feedback via email"
-            >
-              Email Feedback
-            </Button>
+            <h4 className={`px-4 font-black uppercase tracking-[0.2em] mb-2 ${
+              uiMode === 'architect' ? 'text-[9px] text-gray-400 dark:text-gray-500' : 'text-[10px] text-green-700 dark:text-green-400'
+            }`}>Feedback</h4>
+            <div className="space-y-1">
+              <Button
+                href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
+                target="_blank"
+                as="a"
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start px-4 border-none shadow-none text-[10px] font-bold uppercase tracking-widest transition-colors
+                           ${uiMode === 'architect' 
+                              ? 'text-gray-500 dark:text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400' 
+                              : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-green-600 dark:hover:text-green-400'}`}
+                startIcon={<GithubIcon className="w-4 h-4 opacity-70" />}
+                aria-label="Report issues or suggestions on GitHub"
+              >
+                Feedback su GitHub
+              </Button>
+              <Button
+                href={mailtoLink}
+                as="a"
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start px-4 border-none shadow-none text-[10px] font-bold uppercase tracking-widest transition-colors
+                           ${uiMode === 'architect' 
+                              ? 'text-gray-500 dark:text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400' 
+                              : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-green-600 dark:hover:text-green-400'}`}
+                startIcon={<EmailIcon className="w-4 h-4 opacity-60" />}
+                aria-label="Send suggestions or feedback via email"
+              >
+                Email Support
+              </Button>
+            </div>
           </div>
           <div className="space-y-2">
             <a
@@ -189,8 +229,10 @@ Thanks,
                 size="sm"
                 className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none
                                   ${activeToolId === 'releaseNotes'
-                    ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400'
-                    : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white'
+                    ? (uiMode === 'architect' ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400')
+                    : (uiMode === 'architect' 
+                        ? 'text-gray-500 dark:text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400' 
+                        : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white')
                   }`}
                 startIcon={<ReleaseNotesLinkIcon className="w-3.5 h-3.5 opacity-60" />}
               >
@@ -202,8 +244,10 @@ Thanks,
                 size="sm"
                 className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none
                                   ${activeToolId === 'specialMentions'
-                    ? 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400'
-                    : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white'
+                    ? (uiMode === 'architect' ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-white/20 dark:bg-white/10 text-green-600 dark:text-green-400')
+                    : (uiMode === 'architect' 
+                        ? 'text-gray-500 dark:text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400' 
+                        : 'text-gray-500 dark:text-gray-400 hover:bg-white/10 hover:text-gray-900 dark:hover:text-white')
                   }`}
                 startIcon={<HeartLinkIcon className="w-3.5 h-3.5 opacity-60" />}
               >

@@ -40,7 +40,7 @@ const SongDurationPerformanceTable: React.FC<SongDurationPerformanceTableProps> 
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Flux</th>
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Affinity</th>
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Echoes</th>
-              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in this bucket">Affinity%</th>
+              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-emerald-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in this bucket">Affinity%</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -51,7 +51,7 @@ const SongDurationPerformanceTable: React.FC<SongDurationPerformanceTableProps> 
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgPlays)}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgUpvotes)}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgComments)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/80 tracking-widest">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/80 tracking-widest">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
               </tr>
             ))}
           </tbody>

@@ -159,7 +159,7 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
             <img
               src={song.image_url || FALLBACK_IMAGE_DATA_URI}
               alt={song.title}
-              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover rounded border border-gray-600 group-hover:border-green-500 group-hover:shadow-lg transition-all"
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover rounded border border-gray-600 group-hover:border-emerald-500 group-hover:shadow-lg transition-all"
               onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
             />
           </a>

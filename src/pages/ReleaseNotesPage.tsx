@@ -2,14 +2,44 @@
 import React, { useEffect } from 'react';
 import type { ToolProps } from '@/Layout';
 import { releaseNotes } from '@/data/releaseNotesData';
+import { useTheme } from '@/context/ThemeContext';
 
 const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
+
   useEffect(() => {
     if (trackLocalEvent) {
       trackLocalEvent('Navigation', 'viewedPage', 'ReleaseNotes');
     }
   }, [trackLocalEvent]);
   
+  if (uiMode === 'classic') {
+    return (
+      <div className="w-full text-gray-900 dark:text-white pb-20 px-4 animate-fadeIn">
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Updates
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+            Track the evolution of the Music AI Multi-Tool Hub
+          </p>
+        </header>
+
+        <main className="space-y-8">
+          {releaseNotes.map((note) => (
+            <div key={note.version} className="glass-card p-6 md:p-10 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-50/50 dark:bg-gray-800/20 shadow-sm">
+              {note.content}
+            </div>
+          ))}
+        </main>
+
+        <footer className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
+          <p className="text-sm text-gray-500">Music AI Multi-Tool Hub &copy; {new Date().getFullYear()}</p>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto glass-card p-6 md:p-12 border-white/10 shadow-2xl transition-all duration-500 animate-fadeIn relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>

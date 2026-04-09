@@ -141,13 +141,13 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="lifecycle-modal-title">
-      <div className="bg-gray-850 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-green-500" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-gray-850 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-emerald-500" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-3">
-          <h2 id="lifecycle-modal-title" className="text-xl font-semibold text-green-300">Song Lifecycle Analysis</h2>
+          <h2 id="lifecycle-modal-title" className="text-xl font-semibold text-emerald-300">Song Lifecycle Analysis</h2>
           <button onClick={onClose} className="p-1 rounded-md hover:bg-gray-700 text-gray-400 hover:text-white" aria-label="Close modal">&times;</button>
         </div>
         <div className="flex-shrink-0 mb-3">
-          <p className="text-sm text-gray-400">Song: <strong className="text-green-200">{song.title}</strong> by @{song.handle}</p>
+          <p className="text-sm text-gray-400">Song: <strong className="text-emerald-200">{song.title}</strong> by @{song.handle}</p>
           <p className="text-xs text-gray-500">Created: {new Date(song.created_at).toLocaleDateString()} ({daysSinceCreation} days ago)</p>
         </div>
         <div className="flex-grow h-64 sm:h-80 md:h-96 mb-3">
@@ -158,12 +158,12 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
           )}
         </div>
         <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-gray-300">
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Avg. Daily Plays:</strong> {avgDailyPlays !== null ? avgDailyPlays.toFixed(2) : 'N/A'}</div>
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Avg. Daily Upvotes:</strong> {avgDailyUpvotes !== null ? avgDailyUpvotes.toFixed(2) : 'N/A'}</div>
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Avg. Daily Comments:</strong> {avgDailyComments !== null ? avgDailyComments.toFixed(2) : 'N/A'}</div>
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Peak Plays Increase (period):</strong> {peakPlaysIncrease !== null ? peakPlaysIncrease.toLocaleString() : 'N/A'}</div>
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Peak Upvotes Increase (period):</strong> {peakUpvotesIncrease !== null ? peakUpvotesIncrease.toLocaleString() : 'N/A'}</div>
-          <div className="bg-gray-700 p-2 rounded"><strong className="text-green-200">Peak Comments Increase (period):</strong> {peakCommentsIncrease !== null ? peakCommentsIncrease.toLocaleString() : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Avg. Daily Plays:</strong> {avgDailyPlays !== null ? avgDailyPlays.toFixed(2) : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Avg. Daily Upvotes:</strong> {avgDailyUpvotes !== null ? avgDailyUpvotes.toFixed(2) : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Avg. Daily Comments:</strong> {avgDailyComments !== null ? avgDailyComments.toFixed(2) : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Peak Plays Increase (period):</strong> {peakPlaysIncrease !== null ? peakPlaysIncrease.toLocaleString() : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Peak Upvotes Increase (period):</strong> {peakUpvotesIncrease !== null ? peakUpvotesIncrease.toLocaleString() : 'N/A'}</div>
+          <div className="bg-gray-700 p-2 rounded"><strong className="text-emerald-200">Peak Comments Increase (period):</strong> {peakCommentsIncrease !== null ? peakCommentsIncrease.toLocaleString() : 'N/A'}</div>
         </div>
       </div>
     </div>

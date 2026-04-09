@@ -3,23 +3,39 @@
 @tailwind utilities;
 
 :root {
-  /* Premium Frosted Glass Tokens - Light Mode */
+  /* --- Architect Mode Tokens (Light) --- */
   --premium-bg: #f8fafc;
   --premium-glass: rgba(255, 255, 255, 0.4);
   --premium-border: rgba(255, 255, 255, 0.3);
   --premium-text: #0f172a;
   --premium-accent: #059669;
   --premium-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+
+  /* --- Classic Mode Tokens (Light) --- */
+  --classic-bg: #f9fafb;          /* gray-50 */
+  --classic-surface: #ffffff;     /* white */
+  --classic-border: #d1fae5;      /* green-100 */
+  --classic-accent: #16a34a;      /* green-600 */
+  --classic-text: #111827;        /* gray-900 */
+  --classic-text-muted: #6b7280;  /* gray-500 */
 }
 
 .dark {
-  /* Premium Frosted Glass Tokens - Dark Mode */
+  /* --- Architect Mode Tokens (Dark) --- */
   --premium-bg: #020617;
   --premium-glass: rgba(15, 23, 42, 0.3);
   --premium-border: rgba(255, 255, 255, 0.08);
   --premium-text: #f1f5f9;
   --premium-accent: #10b981;
   --premium-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.5);
+
+  /* --- Classic Mode Tokens (Dark) --- */
+  --classic-bg: #030712;          /* gray-950 */
+  --classic-surface: #111827;     /* gray-900 */
+  --classic-border: #16a34a;      /* green-600 */
+  --classic-accent: #22c55e;      /* green-500 */
+  --classic-text: #f9fafb;        /* gray-50 */
+  --classic-text-muted: #9ca3af;  /* gray-400 */
 }
 
 /* Custom styles */
@@ -40,7 +56,7 @@ body {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  @apply font-architect;
   background-color: var(--premium-bg);
   color: var(--premium-text);
   overflow-x: hidden;
@@ -114,6 +130,88 @@ body {
 @keyframes fadeIn { 
   0% { opacity: 0; transform: translateY(15px); } 
   100% { opacity: 1; transform: translateY(0px); } 
+}
+
+/* =======================================================
+   UI MODE SPECIFIC OVERRIDES
+   4 combinations: Classic Light, Classic Dark,
+                   Architect Light, Architect Dark
+   ======================================================= */
+
+/* ---- CLASSIC MODE (applies to both light + dark) ---- */
+/*
+ * Classic mode design intent:
+ *   - System sans-serif font (NOT Inter)
+ *   - Solid, opaque cards (NO glassmorphism/backdrop blur)
+ *   - Light: white surface, gray-200 borders
+ *   - Dark: gray-900 surface, green-600 borders
+ *   - All 4 combinations (uiMode × theme) must look DISTINCTLY different
+ */
+.ui-classic body {
+  @apply font-architect not-italic; /* Original Inter font, no italics */
+}
+
+.ui-classic h1, 
+.ui-classic h2, 
+.ui-classic h3 {
+  @apply font-architect uppercase tracking-[0.1em] not-italic; /* Clean tech headers, NOT italic */
+}
+
+.ui-classic h1 {
+  @apply font-bold text-emerald-600 dark:text-emerald-400; /* Color only, size managed by components */
+}
+
+.ui-classic h4, 
+.ui-classic h5, 
+.ui-classic h6,
+.ui-classic span,
+.ui-classic p,
+.ui-classic div,
+.ui-classic .font-header {
+  @apply font-architect not-italic normal-case; /* Force normal case and no italics for body/secondary text */
+}
+
+/* Classic Light body: pale gray background */
+.ui-classic:not(.dark) body {
+  background-color: var(--classic-bg); /* gray-50 */
+  color: var(--classic-text);
+}
+
+/* Classic Dark body: deep solid black—NOT the Architect's cosmic dark */
+.ui-classic.dark body {
+  background-color: var(--classic-bg); /* gray-950 */
+  color: var(--classic-text);
+}
+
+/* Classic: disable ALL glassmorphism effects regardless of light/dark */
+.ui-classic .glass-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0.75rem;
+}
+
+/* Classic Light — solid white cards with thinner gray border */
+.ui-classic:not(.dark) .glass-card {
+  background: var(--classic-surface) !important; /* white */
+  border: 2px solid #e5e7eb !important;          /* gray-200 */
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+}
+
+/* Classic Dark — solid gray-900 cards with thinner green-600 border */
+.ui-classic.dark .glass-card {
+  background: var(--classic-surface) !important; /* gray-900 */
+  border: 2px solid var(--classic-border) !important; /* green-600 */
+  box-shadow: 0 4px 20px rgba(22, 163, 74, 0.05); /* subtle green glow reduced */
+}
+
+/* ---- ARCHITECT MODE (applies to both light + dark) ---- */
+.ui-architect body {
+  @apply font-architect;
+}
+
+/* Disable animated pulse in Classic mode */
+.ui-classic .animate-pulse {
+  animation: none;
 }
 
 /* Confetti System */

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import 'chartjs-adapter-date-fns';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -170,8 +170,8 @@ const tools: Tool[] = [
   { id: 'sunoMusicPlayer', name: 'Music Shuffler', component: SunoMusicPlayerTool, icon: <PlatformsIcon />, category: "AI Music Platforms" },
   { id: 'sunoUserStats', name: 'Suno User Stats', component: SunoUserStatsTool, icon: <UserStatsIcon />, category: "AI Music Platforms" },
   { id: 'sunoSongCompliance', name: 'Compliance Check', component: SunoSongComplianceTool, icon: <ComplianceCheckIcon />, category: "AI Music Platforms" },
-  { id: 'songStructureBuilder', name: 'Structure Builder', component: SongStructureBuilderTool, icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
-  { id: 'songCoverArt', name: 'Visual Synth', component: SongCoverArtTool, icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
+  { id: 'songStructureBuilder', name: 'Song Structure Builder', component: SongStructureBuilderTool, icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
+  { id: 'songCoverArt', name: 'Cover Art Lab', component: SongCoverArtTool, icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
   { id: 'mp3Cutter', name: 'MP3 Cutter', component: MP3CutterTool, icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
   { id: 'lyricProcessor', name: 'Lyric Lab', component: LyricProcessorTool, icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
   { id: 'lyricsSynchronizer', name: 'Lyrics Sync', component: LyricsSynchronizerTool, icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
@@ -181,12 +181,12 @@ const tools: Tool[] = [
   { id: 'musicTheoryWiki', name: 'Music Theory Wiki', component: MusicTheoryWikiTool, icon: <BookOpenIcon />, category: "Creator Resources & Learning" },
   { id: 'sunoCommunitySpinner', name: 'Magic Spin', component: SunoCommunitySpinnerTool, icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
   { id: 'chordProgressionGenerator', name: 'Chord Progressions', component: ChordProgressionTool, icon: <TuneIcon />, category: "Music Theory & Composition" }, 
-  { id: 'scaleChordViewer', name: 'Scale & Chords', component: ScaleChordViewerTool, icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
+  { id: 'scaleChordViewer', name: 'Scale & Chord Viewer', component: ScaleChordViewerTool, icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
   { id: 'songDeckPicker', name: 'Song Deck', component: SongDeckPickerTool, icon: <CardsIcon />, category: "Community & Fun Tools" },
   { id: 'bpmTapper', name: 'Tempo & Key', component: BPMTapperTool, icon: <TapIcon />, category: "Music Theory & Composition" }, 
   { id: 'metronome', name: 'Metronome', component: MetronomeTool, icon: <MetronomeIcon />, category: "Music Theory & Composition" },
   { id: 'promptSpark', name: 'SparkTune', component: PromptSparkTool, icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
-  { id: 'releaseNotes', name: 'Release Notes', component: ReleaseNotesPage as React.FC<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
+  { id: 'releaseNotes', name: 'Updates', component: ReleaseNotesPage as React.FC<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
   { id: 'specialMentions', name: 'Special Mentions', component: SpecialMentionsPage as React.FC<ToolProps>, icon: <HeartIcon />, category: "App & Info"},
   { id: 'stats', name: 'Analytics', component: StatsPage as React.FC<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
 ];
@@ -202,7 +202,7 @@ const Layout: React.FC = () => {
   const [activeToolId, setActiveToolId] = useState<ToolId>('about'); 
   const [showCookieConsent, setShowCookieConsent] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
-  const { theme } = useTheme();
+  const { theme, uiMode, toggleUiMode } = useTheme();
 
   useEffect(() => {
     const handleResize = () => {
@@ -321,14 +321,18 @@ const Layout: React.FC = () => {
     setShowCookieConsent(false);
   }, []);
 
-  const foundTool = tools.find(tool => tool.id === activeToolId);
+  const translatedTools = useMemo(() => {
+    return tools;
+  }, []);
+
+  const foundTool = translatedTools.find(tool => tool.id === activeToolId);
   const ActiveToolComponent = foundTool ? foundTool.component : null;
   const ToolNotFoundComponent = () => <div className="text-center py-10"><h2 className="text-2xl text-red-400">Tool Not Found</h2><p className="text-gray-400">The requested tool could not be loaded.</p></div>;
 
   const activeToolSpecificProps: Partial<ToolProps> = {};
   if ((activeToolId === 'about' || activeToolId === 'releaseNotes' || activeToolId === 'specialMentions') && foundTool) {
     activeToolSpecificProps.onNavigate = handleNavigate;
-    activeToolSpecificProps.toolsList = tools; 
+    activeToolSpecificProps.toolsList = translatedTools; 
   }
   
   const combinedToolProps: ToolProps = {
@@ -343,36 +347,38 @@ const Layout: React.FC = () => {
       <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} appName="Music AI Multi-Tool Hub" />
       <div className="flex flex-1 pt-16 relative overflow-hidden">
         {/* Animated Background Orbs */}
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-green-500/10 blur-[120px] animate-pulse"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
+        {uiMode !== 'classic' && (
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/10 blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
+        )}
 
         <Sidebar 
           isOpen={isSidebarOpen} 
           onClose={toggleSidebar} 
-          tools={tools.map(t => ({ id: t.id, name: t.name, icon: t.icon, category: t.category }))}
+          tools={translatedTools.map(t => ({ id: t.id, name: t.name, icon: t.icon, category: t.category }))}
           activeToolId={activeToolId}
           onNavigate={handleNavigate} 
           trackLocalEvent={trackLocalEvent}
         />
         <main className={`flex-1 w-full max-w-full overflow-x-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'md:ml-80 ml-0' : 'ml-0'}`}>
-          <div className="px-0 sm:px-6 lg:px-12 pt-2 pb-12 max-w-[1600px] mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col items-center"> 
+          <div className={`${uiMode === 'classic' ? 'px-1 sm:px-4 lg:px-8 max-w-full items-start' : 'px-0 sm:px-6 lg:px-12 max-w-[1600px] items-center'} pt-2 pb-12 mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col`}> 
             <div className="w-full max-w-full">
               {ActiveToolComponent ? <ActiveToolComponent {...combinedToolProps} /> : <ToolNotFoundComponent />}
             </div>
           </div>
         </main>
       </div>
-      <footer className="relative z-20 py-8 px-6 glass-nav text-center text-xs text-gray-500">
+      <footer className={`relative z-20 py-8 px-6 text-center text-xs ${uiMode === 'classic' ? 'bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-gray-600' : 'glass-nav text-gray-500'}`}>
         <div className="max-w-4xl mx-auto space-y-4">
-          <p className="font-black uppercase tracking-widest text-[10px] opacity-60">&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
+          <p className={`${uiMode === 'classic' ? 'font-medium opacity-80' : 'font-black uppercase tracking-widest text-[10px] opacity-60'}`}>&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
           <p className="leading-relaxed">
             Developed by <span className="font-bold text-gray-700 dark:text-gray-300">@spupuz</span> with support from <span className="font-bold text-gray-700 dark:text-gray-300">@flickerlog</span>. 
             <br className="sm:hidden" /> For creative purposes. 
-            Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-green-600 dark:text-green-400 font-bold hover:underline transition-all underline-offset-4">Privacy Policy</a> before use.
+            Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-all underline-offset-4">Privacy Policy</a> before use.
           </p>
-          <div className="pt-2 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] opacity-40 hover:opacity-80 transition-opacity">
+          <div className={`pt-2 flex items-center justify-center gap-2 opacity-40 hover:opacity-80 transition-opacity ${uiMode === 'classic' ? 'text-xs font-bold' : 'text-[10px] font-black uppercase tracking-[0.2em]'}`}>
             i <HeartIcon className="w-3.5 h-3.5 text-red-500 animate-pulse" /> Vibe Coding
           </div>
         </div>

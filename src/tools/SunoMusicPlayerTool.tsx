@@ -12,12 +12,14 @@ import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 
 import { LOGO_SVG_STRING, FALLBACK_IMAGE_DATA_URI, TOOL_CATEGORY_UI, LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, DEFAULT_PLAYLIST_HEIGHT_PX, MIN_PLAYLIST_HEIGHT_PX, MAX_PLAYLIST_HEIGHT_PX, MIN_SNIPPET_DURATION_SECONDS, MAX_SNIPPET_DURATION_SECONDS, LOCAL_CLICK_CONFIRM_NEEDED, LOCAL_CLICK_TIMEOUT_MS, EQ_PRESETS_FOR_UI } from '@/components/SunoMusicPlayer/constants';
+import { useTheme } from '@/context/ThemeContext';
 import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon, ChevronDownIcon, PlayIcon, PauseIcon, SkipBackIcon, SkipForwardIcon, ShuffleIcon } from '@/components/Icons';
 import KeyboardShortcutsModal from '@/components/SunoMusicPlayer/KeyboardShortcutsModal';
 import { ProfileInfoBox, PlaylistInfoBox } from '@/components/SunoMusicPlayer/InfoBoxes';
 
 
 const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const {
     identifierInput, setIdentifierInput,
     currentIdentifier, currentIdentifierType,
@@ -307,21 +309,35 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const onDropHandler = (e: React.DragEvent<HTMLLIElement>, dropTargetSongId: string) => { if (playerState.isShuffle || !draggedItemId || !dropIndicator) return; e.preventDefault(); const draggedIdFromData = e.dataTransfer.getData('text/plain'); if (draggedIdFromData === draggedItemId && draggedItemId !== dropTargetSongId) handleReorderQueue(draggedItemId, dropIndicator.targetId, dropIndicator.position === 'before'); setDraggedItemId(null); setDropIndicator(null); e.currentTarget.style.opacity = '1'; };
   const onDragEndHandler = (e: React.DragEvent<HTMLLIElement>) => { setDraggedItemId(null); setDropIndicator(null); e.currentTarget.style.opacity = '1'; };
 
+
   return (
-    <div className="w-full max-w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
-      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-1 md:mb-4">Music Shuffler</h1>
-        <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4' : 'max-w-full'} pb-20`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Music Player
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
             Neural Audio Streamer • AI-generated musical landscapes
-        </p>
-      </header>
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+          <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-1 md:mb-4">Music Shuffler</h1>
+          <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+              Neural Audio Streamer • AI-generated musical landscapes
+          </p>
+        </header>
+      )}
+
+      <div className="w-full max-w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
       <div className="mb-8 flex flex-col items-stretch gap-4">
         <textarea
           value={identifierInput}
           onChange={handleIdentifierInputChange}
           onKeyDown={handleIdentifierInputKeyDown}
           placeholder="Enter @username, playlist URL, or song URLs (one per line)..."
-          className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 text-sm sm:text-base font-bold resize-y min-h-[60px] transition-all h-20 md:h-auto"
+          className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm sm:text-base font-bold resize-y min-h-[60px] transition-all h-20 md:h-auto"
           rows={3}
           aria-label="Suno Username, Playlist URL, or list of Song URLs"
         />
@@ -352,7 +368,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </div>
       </div>
 
-      {isFetchingOrLoading && fetchProgress && <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-green-600 dark:text-green-300 text-center animate-pulse" role="status">{fetchProgress}</div>}
+      {isFetchingOrLoading && fetchProgress && <div className="mt-8 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-300 text-center animate-pulse" role="status">{fetchProgress}</div>}
       {!isFetchingOrLoading && dataManagementStatus && <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-yellow-700 dark:text-yellow-200 text-center" role="status">{dataManagementStatus}</div>}
       {(uiError || playerError) && <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-md text-sm text-center" role="alert">{uiError || playerError}</div>}
 
@@ -391,34 +407,34 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
               <div className="space-y-4">
-                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Top Tags</h4>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">Top Tags</h4>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
                   {playlistAnalysis.mostCommonTags.length > 0 ? playlistAnalysis.mostCommonTags.map(tag => (
-                    <div key={tag.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                    <div key={tag.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-emerald-500/30 transition-all">
                       <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{tag.name}</span>
-                      <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{tag.count}</span>
+                      <span className="font-black text-[10px] text-emerald-600 dark:text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg">{tag.count}</span>
                     </div>
                   )) : <p className="text-gray-500 italic text-xs">No tags found</p>}
                 </div>
               </div>
               <div className="space-y-4">
-                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Genres</h4>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">Genres</h4>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
                   {playlistAnalysis.mostCommonGenres.length > 0 ? playlistAnalysis.mostCommonGenres.map(genre => (
-                    <div key={genre.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                    <div key={genre.name} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-emerald-500/30 transition-all">
                       <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{genre.name}</span>
-                      <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{genre.count}</span>
+                      <span className="font-black text-[10px] text-emerald-600 dark:text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg">{genre.count}</span>
                     </div>
                   )) : <p className="text-gray-500 italic text-xs">No genres found</p>}
                 </div>
               </div>
               <div className="space-y-4">
-                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-700 dark:text-green-400">Artists</h4>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">Artists</h4>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
                   {playlistAnalysis.mostFeaturedArtists.length > 0 ? playlistAnalysis.mostFeaturedArtists.map(artist => (
-                    <div key={artist.handle} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-green-500/30 transition-all">
+                    <div key={artist.handle} className="flex justify-between items-center bg-slate-50/50 dark:bg-black/10 p-2.5 rounded-xl border border-gray-100 dark:border-white/5 group hover:border-emerald-500/30 transition-all">
                       <span className="font-bold text-gray-700 dark:text-gray-300 truncate">{artist.name}</span>
-                       <span className="font-black text-[10px] text-green-600 dark:text-green-500 bg-green-500/10 px-2 py-0.5 rounded-lg">{artist.count}</span>
+                       <span className="font-black text-[10px] text-emerald-600 dark:text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-lg">{artist.count}</span>
                     </div>
                   )) : <p className="text-gray-500 italic text-xs">No artists featured</p>}
                 </div>
@@ -516,7 +532,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   value={newPlaylistName} 
                   onChange={(e) => setNewPlaylistName(e.target.value)} 
                   placeholder="New Playlist Name..." 
-                  className="flex-grow px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" 
+                  className="w-full px-12 py-3 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:opacity-20" 
                 />
                 <Button 
                   onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} 
@@ -534,7 +550,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               {savedCustomPlaylists.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 scrollbar-thin">
                   {savedCustomPlaylists.map(p => (
-                    <div key={p.id} className="flex flex-col p-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-3xl hover:border-green-500/30 transition-all group">
+                    <div key={p.id} className="flex flex-col p-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-3xl hover:border-emerald-500/30 transition-all group">
                       <div className="mb-4">
                         <span className="text-sm font-black text-gray-900 dark:text-white truncate block" title={p.name}>{p.name}</span>
                         <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 mt-1">
@@ -627,7 +643,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
       <AudioVisualizer analyserNodes={analyserNodes} isPlaying={playerState.status === PlaybackStatus.Playing} />
 
-      <div className="flex items-center justify-between mb-4"> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.currentTime)}</div> <input type="range" min="0" max={playerState.duration || 0} value={playerState.currentTime} onChange={handleSeekSlider} className="flex-grow mx-3 h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500 focus:outline-none focus:ring-1 focus:ring-green-400" aria-label="Seek slider" /> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.duration)}</div> </div>
+      <div className="flex items-center justify-between mb-4"> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.currentTime)}</div> <input type="range" min="0" max={playerState.duration || 0} value={playerState.currentTime} onChange={handleSeekSlider} className="flex-grow mx-3 h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-400" aria-label="Seek slider" /> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.duration)}</div> </div>
 
       <div className="flex items-center justify-center gap-8 mb-8 mt-4">
         <Button onClick={previousTrack} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Previous Track"> <SkipBackIcon className="w-6 h-6" /> </Button>
@@ -639,11 +655,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       </div>
 
       <div className="flex items-center justify-between text-xs mb-4">
-        <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500" aria-label="Volume control" /> </div>
+        <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-emerald-500" aria-label="Volume control" /> </div>
         <div className="flex gap-2 items-center">
-          <label htmlFor="snippetModeCheckbox" className="text-gray-600 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover:text-green-300">Snippet Mode ({playerState.snippetDurationConfig}s):</label>
-          <input type="checkbox" id="snippetModeCheckbox" checked={playerState.isSnippetMode} onChange={toggleSnippetMode} className="form-checkbox h-3.5 w-3.5 text-green-500 bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 rounded focus:ring-green-400 focus:ring-offset-0" />
-          <input type="number" value={playerState.snippetDurationConfig} onChange={(e) => setSnippetDurationConfig(parseInt(e.target.value, 10))} min={MIN_SNIPPET_DURATION_SECONDS} max={MAX_SNIPPET_DURATION_SECONDS} className="w-12 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white focus:ring-green-400 focus:border-green-400" aria-label="Snippet duration in seconds" />
+          <label htmlFor="snippetModeCheckbox" className="text-gray-600 dark:text-gray-400 cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-300">Snippet Mode ({playerState.snippetDurationConfig}s):</label>
+          <input type="checkbox" id="snippetModeCheckbox" checked={playerState.isSnippetMode} onChange={toggleSnippetMode} className="form-checkbox h-3.5 w-3.5 text-emerald-500 bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 rounded focus:ring-emerald-400 focus:ring-offset-0" />
+          <input type="number" value={playerState.snippetDurationConfig} onChange={(e) => setSnippetDurationConfig(parseInt(e.target.value, 10))} min={MIN_SNIPPET_DURATION_SECONDS} max={MAX_SNIPPET_DURATION_SECONDS} className="w-12 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white focus:ring-emerald-400 focus:border-emerald-400" aria-label="Snippet duration in seconds" />
 
           <Button onClick={() => setShowEq(!showEq)} variant="ghost" size="xs" className={`p-2 rounded-xl transition-all shadow-none ${showEq ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-white/5 border-white/10 text-gray-400'} hover:opacity-80`} aria-label="Toggle equalizer" aria-expanded={showEq} startIcon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>} />
           <Button onClick={() => setShowShortcutsModal(true)} variant="ghost" size="xs" className="p-2 rounded-xl bg-white/5 border-white/10 text-gray-400 hover:opacity-80 shadow-none" aria-label="Show Keyboard Shortcuts" startIcon={<KeyboardIcon className="w-4 h-4" />} />
@@ -665,7 +681,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               </Button>
             ))} 
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-2 text-xs"> {playerState.eqBands.map(band => (<div key={band.id}> <label htmlFor={band.id} className="block text-gray-600 dark:text-gray-400 text-center mb-0.5">{band.frequency < 1000 ? `${band.frequency}Hz` : `${band.frequency / 1000}kHz`}</label> <input type="range" id={band.id} min="-12" max="12" step="0.1" value={band.gain} onChange={e => setEqGain(band.id, parseFloat(e.target.value))} className="w-full h-1.5 bg-gray-400 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500" /> <p className="text-center text-gray-700 dark:text-gray-300 mt-0.5">{band.gain.toFixed(1)} dB</p> </div>))} </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-2 text-xs"> {playerState.eqBands.map(band => (<div key={band.id}> <label htmlFor={band.id} className="block text-gray-600 dark:text-gray-400 text-center mb-0.5">{band.frequency < 1000 ? `${band.frequency}Hz` : `${band.frequency / 1000}kHz`}</label> <input type="range" id={band.id} min="-12" max="12" step="0.1" value={band.gain} onChange={e => setEqGain(band.id, parseFloat(e.target.value))} className="w-full h-1.5 bg-gray-400 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-emerald-500" /> <p className="text-center text-gray-700 dark:text-gray-300 mt-0.5">{band.gain.toFixed(1)} dB</p> </div>))} </div>
         </div>
       )}
 
@@ -690,7 +706,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             value={filterQuery} 
             onChange={(e) => setFilterQuery(e.target.value)} 
             placeholder="Filter list..." 
-            className="px-4 py-2.5 bg-white/10 dark:bg-black/20 border border-white/20 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 text-gray-900 dark:text-white sm:text-sm font-bold flex-grow transition-all" 
+            className="px-4 py-2.5 bg-white/10 dark:bg-black/20 border border-white/20 rounded-xl placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-sm font-bold flex-grow transition-all" 
             aria-label="Filter playlist" 
           />
           <Button 
@@ -720,8 +736,8 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                     ${playerState.isShuffle
                     ? 'cursor-not-allowed opacity-80'
                     : 'hover:bg-white/10 cursor-grab active:cursor-grabbing'}
-                                    ${playerState.currentSong?.id === song.id ? 'bg-green-500/10 dark:bg-green-500/5' : ''} 
-                                    ${dropIndicator?.targetId === song.id ? (dropIndicator.position === 'before' ? 'border-t-4 border-green-500/50' : 'border-b-4 border-green-500/50') : ''} 
+                                    ${playerState.currentSong?.id === song.id ? 'bg-emerald-500/10 dark:bg-emerald-500/5' : ''} 
+                                    ${dropIndicator?.targetId === song.id ? (dropIndicator.position === 'before' ? 'border-t-4 border-emerald-500/50' : 'border-b-4 border-emerald-500/50') : ''} 
                                     ${draggedItemId === song.id ? 'opacity-30' : ''}`
                 }
               >
@@ -729,11 +745,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <img
                     src={song.image_url || FALLBACK_IMAGE_DATA_URI}
                     alt={song.title}
-                    className={`w-12 h-12 rounded-xl object-cover border border-white/10 transition-all duration-500 ${playerState.currentSong?.id === song.id ? 'border-green-500/50 scale-110 shadow-lg' : ''}`}
+                    className={`w-12 h-12 rounded-xl object-cover border border-white/10 transition-all duration-500 ${playerState.currentSong?.id === song.id ? 'border-emerald-500/50 scale-110 shadow-lg' : ''}`}
                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
                   />
                   {playerState.currentSong?.id === song.id && playerState.status === PlaybackStatus.Playing && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0 cursor-pointer" onClick={() => playSong(song)}> 
@@ -749,7 +765,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             ))}
             {playerState.queue.length === 0 && (<li className="p-12 text-center text-gray-500 dark:text-gray-600 text-xs font-black uppercase tracking-[0.2em] italic">Queue is empty</li>)}
           </ul>
-          {playlistContainerRef.current && <div onMouseDown={handleMouseDownResize} className="absolute bottom-0 left-0 w-full h-3 bg-white/5 dark:bg-black/20 hover:bg-green-500/20 cursor-ns-resize flex items-center justify-center transition-colors"><div className="w-12 h-1 bg-white/20 rounded-full"></div></div>}
+          {playlistContainerRef.current && <div onMouseDown={handleMouseDownResize} className="absolute bottom-0 left-0 w-full h-3 bg-white/5 dark:bg-black/20 hover:bg-emerald-500/20 cursor-ns-resize flex items-center justify-center transition-colors"><div className="w-12 h-1 bg-white/20 rounded-full"></div></div>}
         </div>
       )}
 
@@ -764,7 +780,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
             <div className="mb-8">
               <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Lyrics Breakdown</h3>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 mt-1">{playerState.currentSong?.title}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-500 mt-1">{playerState.currentSong?.title}</p>
             </div>
             
             <div className="flex-grow overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 mb-8">
@@ -772,7 +788,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
 
             <div className="flex items-center justify-between pt-6 border-t border-white/10">
-               {lyricsSourceField && <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">Source: <span className="text-green-600/50">{lyricsSourceField}</span></p>}
+               {lyricsSourceField && <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">Source: <span className="text-emerald-600/50">{lyricsSourceField}</span></p>}
                <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
                  {copyLyricsStatus || "Copy Lyrics"}
                </Button>
@@ -792,7 +808,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
             <div className="mb-8">
               <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Track Intel</h3>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 mt-1">{playerState.currentSong.title}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-500 mt-1">{playerState.currentSong.title}</p>
             </div>
             
             <div className="overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-white/10 space-y-6">
@@ -837,6 +853,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             If audio issues occur, ensure your browser has permission to play audio. Interact with the page before playing. If persistent, try refreshing or clearing data via System Management.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -9,6 +9,19 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.3.0] - 2026-03-31
+
+### Changed
+- **Mobile UI & Accessibility Refinement**: Performed a high-precision overhaul for 375px+ viewports. Standardized responsive paddings and eliminated horizontal overflow across all tools.
+- **Light Mode Visual Polish**: Extensive theme-aware refactoring for `Suno Music Player`, `Visual Synth`, and `Creative Concept Blender`. Replaced hardcoded charcoal regions with dynamic, translucent slate surfaces.
+- **Audio Visualizer Redesign**: Upgraded the visualizer with a premium glassmorphic background (`backdrop-blur`), `rounded-3xl` corners, and theme-sensitive border contrast.
+- **Suno Music Player Refinement**: Control buttons (Previous, Next, Shuffle) and volume sliders now feature improved visibility and interaction states in Light Mode.
+- **Sidebar UX Optimization**: Removed redundant application titles from the sidebar drawer to maximize vertical space and decrease visual clutter on mobile devices.
+
+### Fixed
+- **Community Spinner Polish**: Resolved the "flashing blue square" glitch by implementing custom focus rings and a more elegant `pulse-gentle` animation for the Spin button.
+- **Text Contrast**: Audited and corrected low-contrast technical status labels (e.g., "System Idle", "Waiting for Signal") across the Hub.
+
 ## [2.2.0] - 2026-03-11
 
 ### Added

@@ -3,8 +3,8 @@ import type { SongStructureBlock, LyricLineData } from '@/types';
 import { TrashIcon, DuplicateIcon, UpArrowIcon, DownArrowIcon, HistoryIcon, PlusIcon } from './Icons';
 import Button from '@/components/common/Button';
 
-export const DropIndicator: React.FC = () => (
-    <div className="h-1 bg-green-500 rounded-full my-3 opacity-100 shadow-[0_0_10px_rgba(34,197,94,0.8)] animate-pulse" />
+export const DropIndicator: React.FC<{ uiMode?: 'classic' | 'architect' }> = ({ uiMode = 'architect' }) => (
+    <div className={`h-1 ${uiMode === 'classic' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]'} rounded-full my-3 opacity-100 animate-pulse`} />
 );
 
 export interface TimelineBlockItemProps {
@@ -30,6 +30,7 @@ export interface TimelineBlockItemProps {
     onShowHistory: (blockId: string, lyric: LyricLineData) => void;
     onDeleteLyricLine: (blockId: string, lyricId: string) => void;
     onAddLyricLine: (blockId: string) => void;
+    uiMode?: 'classic' | 'architect';
 }
 
 const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
@@ -54,11 +55,12 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
     onInsertLyricLineAfter,
     onShowHistory,
     onDeleteLyricLine,
-    onAddLyricLine
+    onAddLyricLine,
+    uiMode = 'architect'
 }) => {
     return (
         <div onDragOver={(e) => onDragOver(e, index)} className="group/block relative">
-            <div className="p-6 bg-white/5 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10 border-l-[6px] shadow-xl transition-all hover:border-white/20 active:scale-[0.99]" style={{ borderLeftColor: blockColor }}>
+            <div className={`p-6 ${uiMode === 'classic' ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700' : 'bg-white/5 dark:bg-black/20 backdrop-blur-xl border-white/10 shadow-xl transition-all hover:border-white/20'} rounded-2xl border border-l-[6px] active:scale-[0.99]`} style={{ borderLeftColor: blockColor }}>
                 <div className="flex justify-between items-center mb-4" draggable onDragStart={(e) => onDragStart(e, 'timeline', { id: block.id, fromIndex: index })} onDragEnd={onDragEnd}>
                     <div className="flex items-center flex-grow mr-4 cursor-grab active:cursor-grabbing">
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mr-2 opacity-50">#{(index + 1).toString().padStart(2, '0')}</span>
@@ -76,7 +78,7 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
                                 value={block.barCount || ''}
                                 onChange={(e) => onBarCountChange(block.id, e.target.value)}
                                 onMouseDown={(e) => e.stopPropagation()}
-                                className="w-10 p-0 text-xs font-black text-center bg-transparent border-none text-green-600 dark:text-green-500 focus:ring-0"
+                                className={`w-10 p-0 text-xs font-black text-center bg-transparent border-none ${uiMode === 'classic' ? 'text-green-600 dark:text-green-400' : 'text-emerald-600 dark:text-emerald-500'} focus:ring-0`}
                                 placeholder="00"
                             />
                             <span className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1 opacity-60">Bars</span>
@@ -95,7 +97,7 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
                       onMouseDown={(e) => e.stopPropagation()}
                       placeholder={`Project notes for ${block.type}...`} 
                       rows={1} 
-                      className="w-full px-4 py-3 bg-white/5 dark:bg-black/20 border border-white/5 rounded-xl text-xs font-medium text-gray-700 dark:text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white/10 outline-none transition-all resize-none overflow-hidden" 
+                      className={`w-full px-4 py-3 ${uiMode === 'classic' ? 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600' : 'bg-white/5 dark:bg-black/20 border-white/5 focus:bg-white/10'} border rounded-xl text-xs font-medium text-gray-700 dark:text-gray-300 placeholder-gray-500 focus:ring-2 ${uiMode === 'classic' ? 'focus:ring-green-500/20 focus:border-green-500' : 'focus:ring-emerald-500/20 focus:border-emerald-500'} outline-none transition-all resize-none overflow-hidden`} 
                       style={{ minHeight: '42px' }}
                       onInput={(e) => {
                         const target = e.target as HTMLTextAreaElement;
@@ -145,7 +147,7 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
                     )}
                 </div>
             </div>
-            {dropTargetIndex === index + 1 && <DropIndicator />}
+            {dropTargetIndex === index + 1 && <DropIndicator uiMode={uiMode} />}
             {isLast && dropTargetIndex === index + 1 && <div className="h-6"></div>}
         </div>
     );

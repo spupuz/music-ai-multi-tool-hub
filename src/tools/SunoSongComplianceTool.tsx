@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { ToolProps, ToolId } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
 import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from '@/services/aiAnalysisService';
 import { getCountryDetails, getFlagEmoji } from '@/utils/countryData';
@@ -29,7 +30,7 @@ const ratingOptions: { value: RatingLevel; label: string }[] = [
 
 const InfoIcon: React.FC<{ tooltip: string, className?: string }> = ({ tooltip, className = "" }) => (
   <div className={`inline-block relative group ${className} align-middle`}>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-400 hover:text-green-500 cursor-help">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-400 hover:text-emerald-500 cursor-help">
       <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
     </svg>
     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 text-xs text-white bg-gray-800 border border-gray-600 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 pointer-events-none text-left">
@@ -49,6 +50,7 @@ interface BatchSummary {
 
 
 const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNavigate }) => {
+  const { uiMode } = useTheme();
   const [sunoUrlsInput, setSunoUrlsInput] = useState<string>('');
   const [titleFormatPattern, setTitleFormatPattern] = useState<string>('[SSC<number>, <country/code>]');
   const [durationLimitSeconds, setDurationLimitSeconds] = useState<number>(300); // Default 5 minutes
@@ -373,9 +375,9 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
 
   const ResultDisplay: React.FC<{ status?: boolean; title: string; message: string; details?: string | string[] | Record<string, any> | LyricsLanguageCheckResult | TitleCheckResult | DurationCheckResult }> = ({ status, title, message, details }) => {
     const icon = status ? '✅' : status === false ? '❌' : 'ℹ️';
-    const bgColor = status === undefined ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600' : status ? 'bg-green-100 dark:bg-green-800 border-green-300 dark:border-green-600' : 'bg-red-100 dark:bg-red-800 border-red-300 dark:border-red-600';
-    const textColor = status === undefined ? 'text-gray-800 dark:text-gray-100' : status ? 'text-green-800 dark:text-green-100' : 'text-red-800 dark:text-red-100';
-    const detailTextColor = status === undefined ? 'text-gray-700 dark:text-gray-200' : status ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200';
+    const bgColor = status === undefined ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600' : status ? 'bg-emerald-100 dark:bg-emerald-800 border-emerald-300 dark:border-emerald-600' : 'bg-red-100 dark:bg-red-800 border-red-300 dark:border-red-600';
+    const textColor = status === undefined ? 'text-gray-800 dark:text-gray-100' : status ? 'text-emerald-800 dark:text-emerald-100' : 'text-red-800 dark:text-red-100';
+    const detailTextColor = status === undefined ? 'text-gray-700 dark:text-gray-200' : status ? 'text-emerald-700 dark:text-emerald-200' : 'text-red-700 dark:text-red-200';
 
     let detailContent;
     if (typeof details === 'string') {
@@ -409,14 +411,26 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
     )
   };
 
+
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Compliance Check</h1>
-        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4' : 'max-w-5xl mx-auto'} pb-20`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Song Compliance
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
             Heuristic Enforcement Hub • Validate metadata and content against contest protocols
-        </p>
-      </header>
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Compliance Check</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+              Heuristic Enforcement Hub • Validate metadata and content against contest protocols
+          </p>
+        </header>
+      )}
 
       <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn">
         <div className="space-y-4 md:space-y-8">
@@ -426,7 +440,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
               <input type="password" id="committeePassword" value={enteredPassword} onChange={handlePasswordChange}
                 onKeyDown={(e) => e.key === 'Enter' && handleVerifyPassword()}
                 placeholder="TOKEN REQUIRED"
-                className="flex-grow px-3 py-2 md:px-4 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-yellow-500/20 focus:border-yellow-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold transition-all h-10 md:h-auto" />
+                className="flex-grow px-12 py-3 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:opacity-20" />
               <Button 
                 onClick={handleVerifyPassword} 
                 disabled={isVerifying || !enteredPassword.trim()}
@@ -480,16 +494,16 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
           </Button>
         </div>
 
-        {isLoading && progressMessage && (<div className="mt-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-green-600 dark:text-green-300 text-center animate-pulse" role="status">{progressMessage}</div>)}
+        {isLoading && progressMessage && (<div className="mt-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-emerald-600 dark:text-emerald-300 text-center animate-pulse" role="status">{progressMessage}</div>)}
         {error && (<div className="mt-6 p-4 bg-red-100 dark:bg-red-900/50 bg-opacity-75 rounded-md text-center border border-red-300 dark:border-red-700" role="alert"><p className="text-sm font-medium text-red-700 dark:text-red-300">ERROR</p><p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p></div>)}
-        {exportStatusMessage && <p className={`mt-2 text-sm text-center ${exportStatusMessage.includes('Error') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-300'}`}>{exportStatusMessage}</p>}
+        {exportStatusMessage && <p className={`mt-2 text-sm text-center ${exportStatusMessage.includes('Error') ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-300'}`}>{exportStatusMessage}</p>}
 
         {batchSummary && !isLoading && (
           <div className="mt-8 p-6 glass-card border-white/10 animate-fadeIn">
             <h3 className="text-sm font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-6 text-center">Batch Intelligence Summary</h3>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
               <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Processed</p><p className="font-black text-gray-900 dark:text-white text-lg">{batchSummary.totalProcessed}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-green-500 mb-1">Passed</p><p className="font-black text-green-600 dark:text-green-200 text-lg">{batchSummary.passedAllChecks}</p></div>
+              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">Passed</p><p className="font-black text-emerald-600 dark:text-emerald-200 text-lg">{batchSummary.passedAllChecks}</p></div>
               <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Titles</p><p className="font-black text-yellow-600 dark:text-yellow-200 text-lg">{batchSummary.titleIssues}</p></div>
               <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-cyan-500 mb-1">Time</p><p className="font-black text-cyan-600 dark:text-cyan-300 text-lg">{batchSummary.durationIssues}</p></div>
               <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-orange-500 mb-1">Rating</p><p className="font-black text-orange-600 dark:text-orange-300 text-lg">{batchSummary.contentRatingIssues}</p></div>
@@ -501,13 +515,19 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
         {batchRunResults.length > 0 && (
           <div className="mt-12 space-y-8">
             <div className="flex justify-between items-center border-b border-white/10 pb-4">
-              <h2 className="text-xl font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Analysis Logs</h2>
+              <div className="flex animate-pulse items-center justify-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                Analysis Logs
+              </div>
                <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-white/10">Export Summary</Button>
             </div>
             {batchRunResults.map((result, index) => (
               <div key={result.inputUrl + index} className="p-6 glass-card border-white/10 shadow-xl transition-all duration-300 animate-fadeIn">
-                <div className="flex justify-between items-start mb-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow" title={result.inputUrl}>Signal: {result.inputUrl}</p>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Analysis In Progress</span>
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow ml-4" title={result.inputUrl}>Signal: {result.inputUrl}</p>
                   {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Signal</Button>}
                 </div>
                 {result.processingError && !result.clipData && (<ResultDisplay title="Processing Error" status={false} message={result.processingError} />)}
@@ -532,7 +552,9 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                     )}
                     {result.songLyrics && (
                       <div className="space-y-3">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 ml-1">Lyrical Content</h4>
+                        <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-center">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Lyrical Content</p>
+                        </div>
                         <div className="p-4 bg-white/5 dark:bg-black/20 border border-white/5 rounded-2xl max-h-40 overflow-y-auto text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed scrollbar-thin">
                           {result.songLyrics}
                         </div>

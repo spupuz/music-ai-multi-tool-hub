@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import { resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
 import { fetchSunoClipById } from '@/services/sunoService';
@@ -16,7 +17,7 @@ const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRIN
 
 const InfoIcon: React.FC<{ tooltip: string, className?: string }> = ({ tooltip, className = "" }) => (
   <div className={`inline-block relative group ${className}`}>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-400 hover:text-green-600 dark:hover:text-green-300 cursor-help">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-300 cursor-help">
       <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
     </svg>
     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs text-gray-800 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
@@ -52,6 +53,7 @@ const toTitleCase = (str: string): string => {
 
 
 const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [songTitle, setSongTitle] = useState<string>('');
   const [creatorName, setCreatorName] = useState<string>('');
   const [creatorHandle, setCreatorHandle] = useState<string>(''); // New state
@@ -366,16 +368,30 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     trackLocalEvent(TOOL_CATEGORY, 'caseConverted', 'title');
   };
 
+
   return (
-    <div className="w-full">
-      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-        <h1 className="text-xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyric Lab</h1>
-        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">High-fidelity lyric engine • Intelligent restructuring</p>
-      </header>
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Lyric Lab
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+            Semantic Signal Refinement • Advanced Linguistic Extraction
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyric Lab</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+            Advanced Lyric Decomposition • Neural Verse Synthesizer
+          </p>
+        </header>
+      )}
 
       <main className="w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
 
         {/* URL Load Section */}
@@ -397,7 +413,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             variant="primary" 
             size="md" 
             className="w-full sm:w-auto h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
-            backgroundColor="#22c55e"
+            backgroundColor="#10b981"
             startIcon={isUrlLoading ? null : <ImportIcon className="w-4 h-4" />}
           >
             {isUrlLoading ? <Spinner size="w-3 h-3" color="text-white" /> : "Load Data"}
@@ -418,7 +434,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <div className="mb-10 relative z-10">
           <div className="flex justify-between items-end mb-4 px-1">
             <div>
-              <label htmlFor="lyricsInput" className="block text-[10px] font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 opacity-80 mb-1">Lyrics Workspace</label>
+              <label htmlFor="lyricsInput" className="block text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-500 opacity-80 mb-1">Lyrics Workspace</label>
               <div className="flex gap-4 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-600">
                 <span>Words: {wordCount}</span>
                 <span>Chars: {charCount}</span>
@@ -429,9 +445,9 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 type="checkbox" 
                 checked={showLineNumbers} 
                 onChange={(e) => setShowLineNumbers(e.target.checked)} 
-                className="w-4 h-4 rounded-md border-white/20 bg-white/5 text-green-500 focus:ring-green-500/20 transition-all"
+                className="w-4 h-4 rounded-md border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/20 transition-all"
               />
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-green-500 transition-colors">Line Numbers</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-emerald-500 transition-colors">Line Numbers</span>
             </label>
           </div>
           
@@ -444,7 +460,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               onChange={handleLyricsInputChange}
               placeholder="Paste your lyrics here..."
               rows={14}
-              className="mb-0 focus-within:ring-4 focus-within:ring-green-500/10 transition-all"
+              className="mb-0 focus-within:ring-4 focus-within:ring-emerald-500/10 transition-all"
             />
             
             {/* Formatting Toolbar */}
@@ -460,7 +476,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 relative z-10">
           {/* Format & Analyze */}
           <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 opacity-70 mb-2">Refinery & Analysis</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 opacity-70 mb-2">Refinery & Analysis</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <CheckboxField id="removeSquare" label="Strip [ ]" checked={removeSquareBrackets} onChange={setRemoveSquareBrackets} />
               <CheckboxField id="removeRound" label="Strip ( )" checked={removeRoundBrackets} onChange={setRemoveRoundBrackets} />
@@ -475,7 +491,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           {/* Find & Replace */}
           <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-4">
             <div className="flex justify-between items-center mb-2">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 opacity-70">Find & Replace</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 opacity-70">Find & Replace</h3>
               <Button onClick={() => setShowAdvancedOptions(!showAdvancedOptions)} variant="ghost" size="xs" className="text-[8px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors underline underline-offset-4 border-none shadow-none">{showAdvancedOptions ? 'Simple mode' : 'Advanced regex'}</Button>
             </div>
             
@@ -492,14 +508,14 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             )}
 
             <Button onClick={handleReplaceAll} disabled={isLoading || !findText} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
-            {replaceMessage && <p className="text-[10px] font-black uppercase tracking-widest text-center mt-2 text-green-500 animate-fadeIn">{replaceMessage}</p>}
+            {replaceMessage && <p className="text-[10px] font-black uppercase tracking-widest text-center mt-2 text-emerald-500 animate-fadeIn">{replaceMessage}</p>}
           </div>
         </div>
 
         {/* Output */}
         {processedOutput && (
           <div className="mt-12 pt-10 border-t border-white/10 animate-fadeIn relative z-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 text-center opacity-70">Processed Output</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6 text-center opacity-70">Processed Output</h3>
             <TextAreaField
               id="outputArea"
               label=""

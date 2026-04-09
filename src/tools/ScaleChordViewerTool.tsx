@@ -8,6 +8,7 @@ import {
   DiatonicChordInfo
 } from '@/utils/musicTheoryUtils';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { MusicNoteIcon, SparklesIcon, SparkTuneIcon as SpeakerIcon } from '@/components/Icons';
@@ -42,6 +43,7 @@ const calculateFrequencyForNote = (noteName: string, octave: number = 4): number
 
 
 const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [rootNote, setRootNote] = useState<string>('C');
   const [scaleType, setScaleType] = useState<string>('Major');
   
@@ -167,17 +169,29 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     </Button>
   );
 
+
   return (
-    <div className="w-full">
-      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Scale & Chord Viewer</h1>
-        <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-6 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Scale & Chord Viewer
+          </h1>
+          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
             Musical Theory Matrix • Interactive Harmonic Map
-        </p>
-      </header>
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Scale & Chord Viewer</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+              Musical Theory Matrix • Interactive Harmonic Map
+          </p>
+        </header>
+      )}
 
       <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-10 relative z-10">
@@ -189,7 +203,7 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {scaleNotesDisplay.length > 0 && (
           <div className="mb-10 p-8 bg-slate-50/50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-white/5 animate-fadeIn relative z-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-6 text-center opacity-70 flex items-center justify-center gap-3">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6 text-center opacity-70 flex items-center justify-center gap-3">
               <SparklesIcon className="w-4 h-4" />
               Scale Profile: {rootNote} {scaleType.replace(/([A-Z])/g, ' $1').trim()}
             </h3>
@@ -201,7 +215,7 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {diatonicTriads.length > 0 && (
           <div className="mb-10 p-8 bg-slate-50/50 dark:bg-black/10 rounded-3xl border border-gray-100 dark:border-white/5 shadow-inner relative z-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">Diatonic Triads</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-8 text-center opacity-70">Diatonic Triads</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {diatonicTriads.map(chord => <ChordDisplayCard key={`triad-${chord.name}`} chord={chord} />)}
             </div>
@@ -210,7 +224,7 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {diatonicSeventhChords.length > 0 && (
           <div className="p-8 bg-slate-50/50 dark:bg-black/10 rounded-3xl border border-gray-100 dark:border-white/5 shadow-inner relative z-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center opacity-70">Diatonic Seventh Chords</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-8 text-center opacity-70">Diatonic Seventh Chords</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {diatonicSeventhChords.map(chord => <ChordDisplayCard key={`seventh-${chord.name}`} chord={chord} />)}
             </div>

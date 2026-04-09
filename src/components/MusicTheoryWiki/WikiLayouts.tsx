@@ -17,14 +17,14 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
     searchTerm, setSearchTerm, visibleCategories, filteredWikiTopics,
     expandedCategories, toggleCategoryExpansion, selectedTopicId, handleSelectTopic
 }) => (
-    <aside className="md:w-1/3 lg:w-1/4 p-4 rounded-3xl border border-white/20 glass-nav self-start md:sticky md:top-24 max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 shadow-2xl transition-all duration-300">
+    <aside className="w-full md:w-80 md:min-w-[320px] md:shrink-0 p-4 rounded-3xl border border-white/20 glass-nav self-start md:sticky md:top-24 max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 shadow-2xl transition-all duration-300">
         <div className="relative mb-6">
             <input
                 type="search"
                 placeholder="Search topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-4 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all duration-300 font-bold text-sm"
+                className="w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all duration-300 font-bold text-sm"
                 aria-label="Search wiki topics"
             />
         </div>
@@ -42,7 +42,7 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
                     <Button
                         onClick={() => toggleCategoryExpansion(category)}
                         variant="ghost"
-                        className="w-full flex justify-between items-center text-left text-[11px] font-black uppercase tracking-[0.15em] text-green-700 dark:text-green-400 mb-2 p-3 hover:bg-white/10 dark:hover:bg-white/5 rounded-2xl border-none shadow-none transition-all duration-300"
+                        className="w-full flex justify-between items-center text-left text-[11px] font-black uppercase tracking-[0.15em] text-emerald-700 dark:text-emerald-400 mb-2 p-3 hover:bg-white/10 dark:hover:bg-white/5 rounded-2xl border-none shadow-none transition-all duration-300"
                         aria-expanded={!!expandedCategories[category]}
                         endIcon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-3.5 h-3.5 transform transition-transform duration-300 ${expandedCategories[category] ? 'rotate-0' : '-rotate-90'}`}>
@@ -61,7 +61,7 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
                                         variant="ghost"
                                         className={`w-full text-left text-sm px-3 py-2.5 rounded-xl transition-all duration-200 font-bold border-none shadow-none justify-start
                                             ${selectedTopicId === topic.id 
-                                                ? 'bg-white/30 dark:bg-white/20 text-green-600 dark:text-green-400 shadow-md border border-white/20' 
+                                                ? 'bg-white/30 dark:bg-white/20 text-emerald-600 dark:text-emerald-400 shadow-md border border-white/20' 
                                                 : 'text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'}`}
                                         aria-current={selectedTopicId === topic.id ? 'page' : undefined}
                                     >
@@ -87,15 +87,15 @@ interface WikiArticleProps {
 export const WikiArticle: React.FC<WikiArticleProps> = ({
     selectedTopic, filteredWikiTopics, relatedTopics, handleSelectTopic
 }) => (
-    <article id="wiki-article-content" className="flex-1 p-6 md:p-10 rounded-3xl border border-white/10 min-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 animate-fadeIn">
+    <article id="wiki-article-content" className="flex-1 p-6 md:p-10 rounded-3xl border border-white/10 min-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white/10 animate-fadeIn">
         {selectedTopic ? (
             <div className="space-y-8">
                 <div>
-                    <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-2 leading-tight">{selectedTopic.title}</h2>
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-green-600 dark:text-green-500 opacity-80">{selectedTopic.category}</p>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-2 leading-tight break-words">{selectedTopic.title}</h2>
+                    <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-500 opacity-80">{selectedTopic.category}</p>
                 </div>
                 
-                <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-green-600 dark:prose-a:text-green-400">
+                <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-a:text-emerald-600 dark:prose-a:text-emerald-400">
                     {selectedTopic.content}
                 </div>
 
@@ -108,9 +108,9 @@ export const WikiArticle: React.FC<WikiArticleProps> = ({
                                     key={`related-${topic.id}`}
                                     onClick={() => handleSelectTopic(topic.id)}
                                     variant="ghost"
-                                    className="p-5 h-auto rounded-2xl border border-white/10 hover:border-green-500/50 hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300 text-left group flex flex-col items-start gap-1 shadow-none"
+                                    className="p-5 h-auto rounded-2xl border border-white/10 hover:border-emerald-500/20 hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300 text-left group flex flex-col items-start gap-1 shadow-none"
                                 >
-                                    <div className="text-sm font-black text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors uppercase tracking-tight">{topic.title}</div>
+                                    <div className="text-sm font-black text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors uppercase tracking-tight">{topic.title}</div>
                                     <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 dark:text-gray-600 mt-1">{topic.category}</div>
                                 </Button>
                             ))}

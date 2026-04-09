@@ -2,10 +2,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light';
+export type UiMode = 'architect' | 'classic';
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  uiMode: UiMode;
+  toggleUiMode: () => void;
+  setUiMode: (mode: UiMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -18,31 +22,50 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (storedTheme === 'light' || storedTheme === 'dark') {
         return storedTheme;
       }
-      // Default to dark as per original design
-      return 'dark'; 
+      return 'dark';
     }
     return 'dark';
   });
 
+  const [uiMode, setUiModeState] = useState<UiMode>(() => {
+    if (typeof window !== 'undefined') {
+      const storedUiMode = localStorage.getItem('aiMultiToolHub_uiMode');
+      if (storedUiMode === 'architect' || storedUiMode === 'classic') {
+        return storedUiMode;
+      }
+      return 'architect'; // Default to new UI
+    }
+    return 'architect';
+  });
+
   useEffect(() => {
     const root = window.document.documentElement;
-    
-    // Remove both to ensure a clean switch
     root.classList.remove('light', 'dark');
-    
-    // Add current theme
     root.classList.add(theme);
-    
-    // Save to local storage
     localStorage.setItem('aiMultiToolHub_theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('ui-architect', 'ui-classic');
+    root.classList.add(`ui-${uiMode}`);
+    localStorage.setItem('aiMultiToolHub_uiMode', uiMode);
+  }, [uiMode]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  const toggleUiMode = () => {
+    setUiModeState((prev) => (prev === 'architect' ? 'classic' : 'architect'));
+  };
+
+  const setUiMode = (mode: UiMode) => {
+    setUiModeState(mode);
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, uiMode, toggleUiMode, setUiMode }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -46,7 +46,7 @@ const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPa
     return sortDirection === 'asc' ? <span aria-label="sorted ascending">🔼</span> : <span aria-label="sorted descending">🔽</span>;
   };
   
-  const thClasses = "px-0.5 sm:px-3 py-1 sm:py-2 text-left text-[9px] sm:text-xs font-medium text-green-300 uppercase tracking-tighter sm:tracking-wider cursor-pointer select-none hover:bg-gray-700 transition-colors";
+  const thClasses = "px-0.5 sm:px-3 py-1 sm:py-2 text-left text-[9px] sm:text-xs font-medium text-emerald-300 uppercase tracking-tighter sm:tracking-wider cursor-pointer select-none hover:bg-gray-700 transition-colors";
 
   if (!tagPairData || tagPairData.length === 0) {
     return <p className="text-gray-400 text-center py-4">No tag pair performance data available (min. 3 songs per pair required).</p>;

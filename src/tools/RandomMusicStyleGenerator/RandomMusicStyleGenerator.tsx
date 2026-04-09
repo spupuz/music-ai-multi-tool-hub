@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import { useRandomMusicStyle } from '@/hooks/useRandomMusicStyle';
 import { AddCustomItemModal, ManageCustomItemsModal, ImportConfirmationModal, CategoryItemDisplay, ToggleSwitch } from './RandomMusicStyleGenerator.uiComponents';
 import Spinner from '@/components/Spinner';
@@ -11,6 +12,7 @@ import type { SavedStyleEntry } from '@/types';
 
 
 const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const {
     currentStyle,
     currentLockedCategories,
@@ -103,14 +105,26 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
   };
 
 
+
   return (
-    <div className="w-full max-w-5xl mx-auto glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn overflow-hidden">
-      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-        <h1 className="text-lg sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Style Architect</h1>
-        <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+    <div className={`w-full max-w-5xl mx-auto ${uiMode === 'classic' ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-gray-200'} flex flex-col transition-all duration-500 animate-fadeIn overflow-hidden px-4 pb-20`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Style Architect
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
             Aesthetic Fusion Core • Generate high-variance musical prompts
-        </p>
-      </header>
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Style Architect</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+              Aesthetic Fusion Core • Generate high-variance musical prompts
+          </p>
+        </header>
+      )}
       <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[100px] pointer-events-none"></div>
         <div className="flex flex-col items-center">
@@ -119,7 +133,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
             disabled={isGenerating} 
             variant="primary"
             size="lg"
-            className="w-full md:w-auto h-16 px-12 font-black uppercase tracking-[0.3em] text-sm shadow-[0_0_50px_rgba(34,197,94,0.3)] active:scale-95 transition-all"
+            className="w-full md:w-auto h-16 px-12 font-black uppercase tracking-[0.3em] text-sm shadow-[0_0_50px_rgba(16,185,129,0.3)] active:scale-95 transition-all"
           >
             {isGenerating && !currentStyle ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />SYNCHRONIZING...</> : isGenerating ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />RE-SYNCHING...</> : 'INITIATE SYNTHESIS'}
           </Button>

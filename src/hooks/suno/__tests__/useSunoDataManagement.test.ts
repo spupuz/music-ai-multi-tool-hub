@@ -62,24 +62,24 @@ describe('useSunoDataManagement', () => {
     
     // First click
     await act(async () => {
-      result.current.handleClearPlayerCache();
+      result.current.handleClearSongInfoCache();
     });
     expect(result.current.clearPlayerCacheClickCount).toBe(1);
     expect(localStorageMock.removeItem).not.toHaveBeenCalled();
 
     // Second click
     await act(async () => {
-      result.current.handleClearPlayerCache();
+      result.current.handleClearSongInfoCache();
     });
     expect(result.current.clearPlayerCacheClickCount).toBe(2);
     expect(localStorageMock.removeItem).not.toHaveBeenCalled();
 
     // Third click (success)
     await act(async () => {
-      result.current.handleClearPlayerCache();
+      result.current.handleClearSongInfoCache();
     });
     expect(localStorageMock.removeItem).toHaveBeenCalledWith(LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY);
-    expect(result.current.dataManagementStatus).toBe("Player cache cleared successfully.");
+    expect(result.current.dataManagementStatus).toBe("Song info cache (individual clips) cleared.");
     
     vi.useRealTimers();
   });

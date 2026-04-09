@@ -29,16 +29,16 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
     const [customLogo, setCustomLogo] = useState<string | null>(null);
     const [selectedLogoSize, setSelectedLogoSize] = useState<string>('96px');
     
-    const [toolBackgroundColor, setToolBackgroundColor] = useState<string>(DEFAULT_TOOL_BG_COLOR_DARK);
+    const [toolBackgroundColor, setToolBackgroundColor] = useState<string>(theme === 'light' ? DEFAULT_TOOL_BG_COLOR_LIGHT : DEFAULT_TOOL_BG_COLOR_DARK);
     const [toolAccentColor, setToolAccentColor] = useState<string>(DEFAULT_TOOL_ACCENT_COLOR);
-    const [toolTextColor, setToolTextColor] = useState<string>(DEFAULT_TOOL_TEXT_COLOR_DARK);
-    const [wheelSegmentBorderColor, setWheelSegmentBorderColor] = useState<string>(DEFAULT_WHEEL_BORDER_COLOR_DARK);
+    const [toolTextColor, setToolTextColor] = useState<string>(theme === 'light' ? DEFAULT_TOOL_TEXT_COLOR_LIGHT : DEFAULT_TOOL_TEXT_COLOR_DARK);
+    const [wheelSegmentBorderColor, setWheelSegmentBorderColor] = useState<string>(theme === 'light' ? DEFAULT_WHEEL_BORDER_COLOR_LIGHT : DEFAULT_WHEEL_BORDER_COLOR_DARK);
     const [wheelTextFont, setWheelTextFont] = useState<string>(DEFAULT_WHEEL_TEXT_FONT);
     
-    const [toolBackgroundColorHexInput, setToolBackgroundColorHexInput] = useState<string>(DEFAULT_TOOL_BG_COLOR_DARK);
+    const [toolBackgroundColorHexInput, setToolBackgroundColorHexInput] = useState<string>(theme === 'light' ? DEFAULT_TOOL_BG_COLOR_LIGHT : DEFAULT_TOOL_BG_COLOR_DARK);
     const [toolAccentColorHexInput, setToolAccentColorHexInput] = useState<string>(DEFAULT_TOOL_ACCENT_COLOR);
-    const [toolTextColorHexInput, setToolTextColorHexInput] = useState<string>(DEFAULT_TOOL_TEXT_COLOR_DARK);
-    const [wheelSegmentBorderColorHexInput, setWheelSegmentBorderColorHexInput] = useState<string>(DEFAULT_WHEEL_BORDER_COLOR_DARK);
+    const [toolTextColorHexInput, setToolTextColorHexInput] = useState<string>(theme === 'light' ? DEFAULT_TOOL_TEXT_COLOR_LIGHT : DEFAULT_TOOL_TEXT_COLOR_DARK);
+    const [wheelSegmentBorderColorHexInput, setWheelSegmentBorderColorHexInput] = useState<string>(theme === 'light' ? DEFAULT_WHEEL_BORDER_COLOR_LIGHT : DEFAULT_WHEEL_BORDER_COLOR_DARK);
 
     const [selectedSpinSound, setSelectedSpinSound] = useState<string>(DEFAULT_SPIN_SOUND);
 
@@ -103,10 +103,10 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
         if (isImporting || data.customTitle !== undefined) setCustomTitle(data.customTitle || 'Magic Spin');
         if (isImporting || data.customLogo !== undefined) setCustomLogo(data.customLogo === undefined ? null : data.customLogo);
         if (isImporting || data.selectedLogoSize !== undefined) setSelectedLogoSize(data.selectedLogoSize || '96px');
-        if (isImporting || data.toolBackgroundColor !== undefined) setToolBackgroundColor(data.toolBackgroundColor || DEFAULT_TOOL_BG_COLOR_DARK);
+        if (isImporting || data.toolBackgroundColor !== undefined) setToolBackgroundColor(data.toolBackgroundColor || (theme === 'light' ? DEFAULT_TOOL_BG_COLOR_LIGHT : DEFAULT_TOOL_BG_COLOR_DARK));
         if (isImporting || data.toolAccentColor !== undefined) setToolAccentColor(data.toolAccentColor || DEFAULT_TOOL_ACCENT_COLOR);
-        if (isImporting || data.toolTextColor !== undefined) setToolTextColor(data.toolTextColor || DEFAULT_TOOL_TEXT_COLOR_DARK);
-        if (isImporting || data.wheelSegmentBorderColor !== undefined) setWheelSegmentBorderColor(data.wheelSegmentBorderColor || DEFAULT_WHEEL_BORDER_COLOR_DARK);
+        if (isImporting || data.toolTextColor !== undefined) setToolTextColor(data.toolTextColor || (theme === 'light' ? DEFAULT_TOOL_TEXT_COLOR_LIGHT : DEFAULT_TOOL_TEXT_COLOR_DARK));
+        if (isImporting || data.wheelSegmentBorderColor !== undefined) setWheelSegmentBorderColor(data.wheelSegmentBorderColor || (theme === 'light' ? DEFAULT_WHEEL_BORDER_COLOR_LIGHT : DEFAULT_WHEEL_BORDER_COLOR_DARK));
         if (isImporting || data.wheelTextFont !== undefined) setWheelTextFont(data.wheelTextFont || DEFAULT_WHEEL_TEXT_FONT);
         if (isImporting || data.selectedSpinSound !== undefined) setSelectedSpinSound(data.selectedSpinSound || DEFAULT_SPIN_SOUND);
 

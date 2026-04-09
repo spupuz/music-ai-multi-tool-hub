@@ -25,10 +25,10 @@ const CohortPerformanceTable: React.FC<CohortPerformanceTableProps> = ({ cohortD
 
   return (
     <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-3xl pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl pointer-events-none"></div>
       
       <div className="mb-6 flex items-center gap-3">
-        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
         <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">Temporal Cohort Analysis</h3>
       </div>
 
@@ -41,8 +41,8 @@ const CohortPerformanceTable: React.FC<CohortPerformanceTableProps> = ({ cohortD
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Flux</th>
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Affinity</th>
               <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Echoes</th>
-              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Affinity%</th>
-              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-green-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Echo%</th>
+              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-emerald-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Affinity%</th>
+              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-emerald-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in cohort">Echo%</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -53,8 +53,8 @@ const CohortPerformanceTable: React.FC<CohortPerformanceTableProps> = ({ cohortD
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgPlays)}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgUpvotes)}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(cohort.avgComments)}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/80 tracking-widest">{formatPercentageDisplay(cohort.avgUpvoteRate)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-green-500/60 tracking-widest">{formatPercentageDisplay(cohort.avgCommentRate)}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/80 tracking-widest">{formatPercentageDisplay(cohort.avgUpvoteRate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/60 tracking-widest">{formatPercentageDisplay(cohort.avgCommentRate)}</td>
               </tr>
             ))}
           </tbody>

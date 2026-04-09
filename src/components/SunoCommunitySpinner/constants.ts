@@ -32,7 +32,7 @@ export const DEFAULT_TOOL_BG_COLOR_LIGHT = '#ffffff';
 export const DEFAULT_TOOL_TEXT_COLOR_LIGHT = '#111827'; 
 export const DEFAULT_WHEEL_BORDER_COLOR_LIGHT = '#e5e7eb'; 
 
-export const DEFAULT_TOOL_ACCENT_COLOR = '#059669'; 
+export const DEFAULT_TOOL_ACCENT_COLOR = '#16a34a'; 
 export const DEFAULT_WHEEL_TEXT_FONT = "'Inter', sans-serif";
 export const DEFAULT_SPIN_SOUND = 'mechanicalClick';
 

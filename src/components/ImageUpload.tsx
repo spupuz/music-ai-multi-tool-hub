@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import ReactCrop, { type Crop } from 'react-image-crop';
 import Button from '@/components/common/Button';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ImageUploadProps {
   onImageUpload: (base64Image: string) => void;
@@ -49,6 +50,7 @@ function getCroppedImg(image: HTMLImageElement, crop: Crop): Promise<string> {
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Upload Inspiration Image" }) => {
+  const { uiMode } = useTheme();
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -143,9 +145,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
 
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-green-400 mb-1">{label}</label>
+      <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${uiMode === 'architect' ? 'text-gray-500' : 'text-green-400'}`}>{label}</label>
       <div
-        className="group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-green-500 border-dashed rounded-xl cursor-pointer hover:border-green-400 transition-all bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 shadow-inner"
+        className={`group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl cursor-pointer transition-all shadow-inner
+          ${uiMode === 'architect' 
+            ? 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-emerald-500/20' 
+            : 'border-green-500 bg-slate-100 dark:bg-gray-800 hover:border-green-400 hover:bg-slate-200 dark:hover:bg-gray-700'}`}
         onClick={handleUploadClick}
         onDrop={(e) => {
           e.preventDefault();
@@ -171,13 +176,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
           aria-label="Upload inspiration image"
         />
         {preview ? (
-          <img src={preview} alt="Preview" className="max-h-40 rounded-lg object-contain shadow-2xl" />
+          <img src={preview} alt="Preview" className={`max-h-40 rounded-lg object-contain ${uiMode === 'architect' ? 'shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all' : 'shadow-2xl'}`} />
         ) : (
           <div className="flex flex-row items-center gap-6 py-6 px-4">
-            <UploadIcon className="w-12 h-12 text-green-600 dark:text-green-500 group-hover:text-green-500 dark:group-hover:text-green-400 flex-shrink-0" />
+            <UploadIcon className={`w-12 h-12 flex-shrink-0 transition-colors ${uiMode === 'architect' ? 'text-emerald-500 group-hover:text-emerald-400' : 'text-green-600 dark:text-green-500 group-hover:text-green-500 dark:group-hover:text-green-400'}`} />
             <div className="flex flex-col items-start text-left">
-              <p className="text-sm font-black uppercase tracking-widest text-gray-800 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">Drag & drop or click</p>
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300">PNG, JPG, GIF up to 5MB</p>
+              <p className={`text-sm font-black uppercase tracking-widest transition-colors ${uiMode === 'architect' ? 'text-gray-400 group-hover:text-white' : 'text-gray-800 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white'}`}>Drag & drop or click</p>
+              <p className={`text-[10px] font-black uppercase tracking-widest transition-colors ${uiMode === 'architect' ? 'text-gray-600 group-hover:text-gray-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`}>PNG, JPG, GIF up to 5MB</p>
             </div>
           </div>
         )}
@@ -185,9 +190,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
       
       {isCropping && uncroppedImageSrc && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" aria-modal="true" role="dialog">
-          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl h-[90vh] flex flex-col p-6 border-2 border-green-500">
-            <h2 className="text-xl font-bold text-green-300 mb-4">Crop Your Image</h2>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4" aria-modal="true" role="dialog">
+          <div className={`${uiMode === 'architect' ? 'glass-card border-white/10 p-8 max-w-4xl h-[90vh]' : 'bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-4xl h-[90vh] border-2 border-green-500'} flex flex-col`}>
+            <h2 className={`text-xl font-black uppercase tracking-tight mb-4 ${uiMode === 'architect' ? 'text-white' : 'text-green-300'}`}>Crop Your Image</h2>
             <div className="flex-grow min-h-0 flex justify-center items-center">
                 <ReactCrop
                     crop={crop}

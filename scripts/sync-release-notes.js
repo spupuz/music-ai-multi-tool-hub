@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const CHANGELOG_PATH = path.resolve('CHANGELOG.md');
-const DATA_PATH = path.resolve('data/releaseNotesData.tsx');
+const DATA_PATH = path.resolve('src/data/releaseNotesData.tsx');
 
 function parseChangelog() {
     const content = fs.readFileSync(CHANGELOG_PATH, 'utf8');
@@ -90,7 +90,7 @@ function parseChangelog() {
 
 const notes = parseChangelog();
 const template = `import React from 'react';
-import { P, UL, LI, CODE, STRONG, SectionTitle, SubSectionTitle } from '../components/ReleaseNoteElements';
+import { P, UL, LI, CODE, STRONG, SectionTitle, SubSectionTitle } from '@/components/ReleaseNoteElements';
 
 export interface ReleaseNoteItem {
   version: string;
@@ -102,4 +102,4 @@ export const releaseNotes: ReleaseNoteItem[] = [${notes.map(n => n.jsx).join(','
 `;
 
 fs.writeFileSync(DATA_PATH, template);
-console.log('✅ Synchronized data/releaseNotesData.tsx with CHANGELOG.md');
+console.log('✅ Synchronized src/data/releaseNotesData.tsx with CHANGELOG.md');

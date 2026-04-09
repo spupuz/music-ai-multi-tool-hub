@@ -19,7 +19,7 @@ const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://ww
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
 
 const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-    const { theme } = useTheme();
+    const { theme, uiMode } = useTheme();
     const logic = useSongDeckPickerLogic({ trackLocalEvent });
     
     const [isSnippetPlaying, setIsSnippetPlaying] = useState(false);
@@ -115,7 +115,26 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     ];
 
     return (
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white pb-20 px-4' : 'text-gray-900 dark:text-white'} animate-fadeIn`}>
+          {uiMode === 'classic' ? (
+            <header className="mb-10 text-center pt-8">
+              <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+                Song Deck Picker
+              </h1>
+              <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+                Curated song libraries • Advanced filtering • Interactive Decks
+              </p>
+            </header>
+          ) : (
+            <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Song Deck Picker</h1>
+              <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
+                Curated song libraries • Advanced filtering • Interactive Decks
+              </p>
+            </header>
+          )}
+
+          <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         <div className="max-w-6xl mx-auto space-y-12">
         
         <nav 
@@ -164,10 +183,8 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     style={{ maxHeight: logic.selectedLogoSize, maxWidth: '80%' }} 
                 /> 
              )}
-            <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Song Deck Picker</h1>
-        <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Curated song libraries • Advanced filtering • Interactive Decks</p>
-      </header>
+
+
         
         <DeckControls {...logic} theme={theme} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
 
@@ -207,6 +224,7 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         .card-back { transform: rotateY(180deg); }
       `}</style>
       </main>
+    </div>
     );
 };
 export default SongDeckPickerTool;

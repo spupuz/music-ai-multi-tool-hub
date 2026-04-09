@@ -19,7 +19,7 @@ const InfoIconWithTooltip: React.FC<InfoIconWithTooltipProps> = ({
         viewBox="0 0 24 24"
         strokeWidth={2}
         stroke="currentColor"
-        className="w-4 h-4 text-gray-400 group-hover:text-green-300 cursor-help flex-shrink-0"
+        className="w-4 h-4 text-gray-400 group-hover:text-emerald-300 cursor-help flex-shrink-0"
         aria-hidden="true" 
         focusable="false" 
       >
@@ -36,7 +36,7 @@ const InfoIconWithTooltip: React.FC<InfoIconWithTooltipProps> = ({
                     opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 
                     invisible group-hover:visible group-focus-within:visible
                     transition-opacity duration-300 z-50 pointer-events-none
-                    border border-green-500 whitespace-normal
+                    border border-emerald-500 whitespace-normal
                     ${position === 'bottom' ? 'top-full' : ''}
                     ${position === 'top' ? 'bottom-full mb-2' : ''}
                   `}

@@ -1,12 +1,15 @@
 import React from 'react';
 import Button from '@/components/common/Button';
+import { useTheme } from '@/context/ThemeContext';
 
 export const InputField: React.FC<{
   id: string; label: string; value: string | number; onChange: (val: string) => void; placeholder?: string;
   type?: string; labelTextColor?: string; className?: string; min?: number; max?: number; step?: number;
-}> = ({ id, label, value, onChange, placeholder, type = "text", labelTextColor, className = "mb-6", min, max, step }) => (
+}> = ({ id, label, value, onChange, placeholder, type = "text", labelTextColor, className = "mb-6", min, max, step }) => {
+    const { uiMode } = useTheme();
+    return (
     <div className={className}>
-        <label htmlFor={id} className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 px-1" style={{color: labelTextColor}}>{label}</label>
+        <label htmlFor={id} className={`block ${uiMode === 'architect' ? 'text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2' : 'text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1'} px-1`} style={{color: labelTextColor}}>{label}</label>
         <input 
             type={type} 
             id={id} 
@@ -16,15 +19,18 @@ export const InputField: React.FC<{
             min={min} 
             max={max} 
             step={step}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white placeholder-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner" 
+            className={`w-full px-4 py-3 ${uiMode === 'architect' ? 'bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white placeholder-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 transition-colors'}`} 
         />
     </div>
-);
+    );
+};
 
 export const TextAreaField: React.FC<{ id: string; label: string; value: string; onChange: (val: string) => void; placeholder?: string; rows?: number; labelTextColor?: string; readOnly?: boolean; className?: string; }> =
-    ({ id, label, value, onChange, placeholder, rows = 6, labelTextColor, readOnly = false, className = "mb-6" }) => (
+    ({ id, label, value, onChange, placeholder, rows = 6, labelTextColor, readOnly = false, className = "mb-6" }) => {
+    const { uiMode } = useTheme();
+    return (
     <div className={className}>
-        <label htmlFor={id} className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 px-1" style={{color: labelTextColor}}>{label}</label>
+        <label htmlFor={id} className={`block ${uiMode === 'architect' ? 'text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2' : 'text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1'} px-1`} style={{color: labelTextColor}}>{label}</label>
         <textarea 
             id={id} 
             value={value} 
@@ -32,18 +38,21 @@ export const TextAreaField: React.FC<{ id: string; label: string; value: string;
             placeholder={placeholder} 
             rows={rows} 
             readOnly={readOnly}
-            className={`w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white placeholder-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner resize-none scrollbar-thin ${readOnly ? 'opacity-50 cursor-not-allowed' : ''}`} 
+            className={`w-full px-4 py-3 ${uiMode === 'architect' ? 'bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white placeholder-white/20 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 transition-colors'} resize-none scrollbar-thin ${readOnly ? 'opacity-50 cursor-not-allowed' : ''}`} 
         />
     </div>
-);
+    );
+};
 
 export const CheckboxField: React.FC<{ id: string; label: string; checked: boolean; onChange: (checked: boolean) => void; description?: string; labelTextColor?: string; className?: string; title?: string; }> = 
-  ({ id, label, checked, onChange, description, labelTextColor, className = "mb-4", title }) => (
+  ({ id, label, checked, onChange, description, labelTextColor, className = "mb-4", title }) => {
+  const { uiMode } = useTheme();
+  return (
     <div className={`flex items-start group cursor-pointer ${className}`} onClick={() => onChange(!checked)}>
         <div className="flex items-center h-6">
-            <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${checked ? 'bg-emerald-500 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-white/20 group-hover:border-white/40'}`}>
+            <div className={`w-5 h-5 ${uiMode === 'architect' ? 'rounded-lg border-2' : 'rounded-sm border'} flex items-center justify-center transition-all ${checked ? (uiMode === 'architect' ? 'bg-emerald-500 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-green-600 border-green-600') : (uiMode === 'architect' ? 'bg-white/5 border-white/20 group-hover:border-white/40' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600')}`}>
                 {checked && (
-                    <svg className="w-3.5 h-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                    <svg className={`w-3.5 h-3.5 ${uiMode === 'architect' ? 'text-black' : 'text-white'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                 )}
@@ -58,34 +67,40 @@ export const CheckboxField: React.FC<{ id: string; label: string; checked: boole
             />
         </div>
         <div className="ml-4 text-sm mt-0.5">
-            <label htmlFor={id} className="text-[11px] font-black uppercase tracking-widest text-white/80 transition-colors pointer-events-none" style={{color: labelTextColor}} title={title}>{label}</label>
-            {description && <p id={`${id}-description`} className="text-white/40 text-[10px] mt-1 font-medium">{description}</p>}
+            <label htmlFor={id} className={`${uiMode === 'architect' ? 'text-[11px] font-black uppercase tracking-widest text-white/80' : 'text-sm font-semibold text-gray-800 dark:text-gray-200'} transition-colors pointer-events-none`} style={{color: labelTextColor}} title={title}>{label}</label>
+            {description && <p id={`${id}-description`} className={`${uiMode === 'architect' ? 'text-white/40 text-[10px]' : 'text-gray-500 dark:text-gray-400 text-xs'} mt-1 font-medium`}>{description}</p>}
         </div>
     </div>
-);
+  );
+};
 
 export const SelectField: React.FC<{ id: string; label: string; value: string; onChange: (value: string) => void; options: Array<{ value: string; label: string }>; labelTextColor?: string; className?: string; }> = 
-  ({ id, label, value, onChange, options, labelTextColor, className = "mb-6" }) => (
+  ({ id, label, value, onChange, options, labelTextColor, className = "mb-6" }) => {
+  const { uiMode } = useTheme();
+  return (
     <div className={className}>
-        <label htmlFor={id} className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 px-1" style={{color: labelTextColor}}>{label}</label>
+        <label htmlFor={id} className={`block ${uiMode === 'architect' ? 'text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2' : 'text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1'} px-1`} style={{color: labelTextColor}}>{label}</label>
         <div className="relative group">
             <select 
                 id={id} 
                 value={value} 
                 onChange={e => onChange(e.target.value)} 
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white appearance-none focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner"
+                className={`w-full px-4 py-3 ${uiMode === 'architect' ? 'bg-white/5 border border-white/10 rounded-2xl text-[13px] font-bold text-white appearance-none focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors'}`}
             >
-                <option disabled value="" className="bg-gray-900">Select Parameter...</option>
-                {options.map(opt => (<option key={opt.value} value={opt.value} className="bg-gray-900">{opt.label}</option>))}
+                <option disabled value="" className={uiMode === 'architect' ? "bg-gray-900" : "bg-white dark:bg-gray-800"}>Select Parameter...</option>
+                {options.map(opt => (<option key={opt.value} value={opt.value} className={uiMode === 'architect' ? "bg-gray-900" : "bg-white dark:bg-gray-800"}>{opt.label}</option>))}
             </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </div>
+            {uiMode === 'architect' && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            )}
         </div>
     </div>
-);
+  );
+};
 
 export const ConfirmationButton: React.FC<{
   onConfirm: () => void;

@@ -9,8 +9,8 @@ interface HeaderProps {
   appName: string;
 }
 
-const AppLogo: React.FC = () => (
-  <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2 text-green-600 dark:text-green-500">
+const AppLogo: React.FC<{ uiMode: 'classic' | 'architect' }> = ({ uiMode }) => (
+  <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={`mr-2 ${uiMode === 'architect' ? 'text-emerald-500' : 'text-emerald-600 dark:text-emerald-500'}`}>
     {/* Open Hexagon for Hub - primary green */}
     <path d="M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z" stroke="currentColor" strokeWidth="8" fill="transparent"/>
     {/* 'A' like structure inside with nodes - accent */}
@@ -35,8 +35,20 @@ const MoonIcon = () => (
   </svg>
 );
 
+const ArchitectIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+  </svg>
+);
+
+const ClassicIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25a2.25 2.25 0 01-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" />
+  </svg>
+);
+
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName }) => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, uiMode, toggleUiMode } = useTheme();
 
   // Split the appName for styling
   const nameParts = appName.split(' '); // ["Music", "AI", "Multi-Tool", "Hub"]
@@ -45,12 +57,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
   if (nameParts.length >= 4 && nameParts[0] === "Music" && nameParts[1] === "AI") {
     styledName = (
       <>
-        <span className="text-green-600 dark:text-green-400">{nameParts[0]}</span>{' '}
-        <span className="text-green-500 dark:text-green-300">{nameParts[1]}</span>{' '}
+        <span className={uiMode === 'architect' ? 'text-emerald-500' : 'text-emerald-600 dark:text-emerald-400'}>{nameParts[0]}</span>{' '}
+        <span className={uiMode === 'architect' ? 'text-emerald-400/80' : 'text-emerald-500 dark:text-emerald-300'}>{nameParts[1]}</span>{' '}
         <span className="hidden min-[380px]:inline text-gray-700 dark:text-gray-200">
           {nameParts.slice(2, -1).join(' ')}{' '}
         </span>
-        <span className="text-green-700 dark:text-green-500 font-bold">{nameParts.slice(-1)}</span>
+        <span className={`${uiMode === 'architect' ? 'text-emerald-600' : 'text-emerald-700 dark:text-emerald-500'} font-bold`}>{nameParts.slice(-1)}</span>
       </>
     );
   } else { // Fallback if the name doesn't match expected structure
@@ -59,13 +71,13 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
 
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-2 sm:px-4 glass-nav transition-all duration-300"
+      className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-2 sm:px-4 transition-all duration-300 ${uiMode === 'classic' ? 'bg-white dark:bg-gray-900 border-b-2 border-emerald-600 dark:border-emerald-500 shadow-md' : 'glass-nav'}`}
     >
       <div className="flex items-center px-2 flex-grow overflow-hidden">
         <Button
           onClick={onToggleSidebar}
           variant="ghost"
-          className="p-2 rounded-xl text-gray-600 hover:bg-slate-200/50 dark:text-green-400 dark:hover:bg-white/5 transition-all duration-200 active:scale-95 border-0 ring-0 outline-none shadow-none mr-2 focus:ring-0 focus:outline-none"
+          className="p-2 rounded-xl text-gray-600 hover:bg-slate-200/50 dark:text-emerald-400 dark:hover:bg-white/5 transition-all duration-200 active:scale-95 border-0 ring-0 outline-none shadow-none mr-2 focus:ring-0 focus:outline-none"
           aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
           {isSidebarOpen ? (
@@ -81,15 +93,25 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
 
         <div className="flex items-center flex-grow overflow-hidden">
           <div className="hidden min-[400px]:block transition-transform hover:scale-110 duration-300">
-            <AppLogo />
+            <AppLogo uiMode={uiMode} />
           </div>
-          <h1 className="text-[8px] min-[320px]:text-[10px] min-[360px]:text-xs min-[420px]:text-sm sm:text-lg md:text-xl font-bold sm:font-black uppercase tracking-tight sm:tracking-tighter whitespace-normal sm:whitespace-nowrap overflow-hidden text-ellipsis ml-1 min-[400px]:ml-2 max-w-[140px] min-[360px]:max-w-none">
+          <h1 className="text-[10px] min-[320px]:text-xs sm:text-sm font-bold sm:font-black uppercase tracking-tight sm:tracking-tighter whitespace-normal sm:whitespace-nowrap overflow-hidden text-ellipsis ml-1 min-[400px]:ml-2 max-w-[140px] min-[360px]:max-w-none">
             {styledName}
           </h1>
         </div>
       </div>
       
-      <div className="px-2">
+      <div className="px-1 flex items-center gap-1 sm:gap-2">
+        <Button
+          onClick={toggleUiMode}
+          variant="ghost"
+          className="p-2.5 rounded-xl text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-emerald-400 hover:bg-slate-200/50 dark:hover:bg-white/10 transition-all duration-300 border-none shadow-none"
+          aria-label="Toggle UI mode"
+          title={uiMode === 'architect' ? "Switch to Classic UI" : "Switch to Architect UI"}
+        >
+          {uiMode === 'architect' ? <ArchitectIcon /> : <ClassicIcon />}
+        </Button>
+
         <Button
           onClick={toggleTheme}
           variant="ghost"

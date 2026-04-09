@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
+import { useTheme } from '@/context/ThemeContext';
 import type { BlendedConceptParts, CreativeLockableCategoryKey, CreativeLockedCategoriesState, CreativeSavedConceptEntry, CreativeCustomItemCategoryKey, CreativeCustomItemsState, OptionalCreativeCategoryToggleState } from '@/types';
 import Button from '@/components/common/Button';
 import { 
@@ -37,7 +38,7 @@ const ItemPalettes: React.FC<{
   optionalToggles: OptionalCreativeCategoryToggleState;
 }> = ({ onItemSelect, customItems, optionalToggles }) => (
     <div className="mt-8 w-full p-6 glass-card border-white/10">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-700 dark:text-green-500 mb-6 text-center">Blueprint Repository</h3>
+        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-500 mb-6 text-center">Blueprint Repository</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {(Object.keys(categoryDataSources) as CreativeCustomItemCategoryKey[]).filter(k => k !== 'twist' && (['theme','style','texture'].includes(k) || optionalToggles[`include${k.charAt(0).toUpperCase() + k.slice(1)}` as keyof OptionalCreativeCategoryToggleState])).map(catKey => (
                 <div key={catKey}>
@@ -63,6 +64,7 @@ const ItemPalettes: React.FC<{
 );
 
 export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent }) => {
+  const { uiMode } = useTheme();
   const [currentConcept, setCurrentConcept] = useState<BlendedConceptParts | null>(null);
   const [currentLockedCategories, setCurrentLockedCategories] = useState<CreativeLockedCategoriesState>(initialLockedCategories);
   const [optionalCategoryToggles, setOptionalCategoryToggles] = useState<OptionalCreativeCategoryToggleState>(initialOptionalCategoryToggles);
@@ -285,7 +287,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     if (isOptional && !value && activeMode === 'generate') return null;
     
     return (
-        <div className={`group flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 ${isLocked ? 'border-green-500/50 shadow-inner bg-green-500/5' : 'hover:border-green-500/20'}`}>
+        <div className={`group flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 ${isLocked ? 'border-emerald-500/50 shadow-inner bg-emerald-500/5' : 'hover:border-emerald-500/20'}`}>
             <div className="flex-grow min-w-0 mr-4">
                 <span className="text-[11px] uppercase text-emerald-600 dark:text-emerald-400 font-bold tracking-wider block mb-1.5 opacity-90">
                     {label}
@@ -321,15 +323,27 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
     );
   };
   
+
   return (
-    <div className="w-full text-gray-900 dark:text-white animate-fadeIn">
-      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-        <h1 className="text-xl sm:text-4xl md:text-6xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Concept Blender</h1>
-        <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Architectural Prompt Fusion • Neural Concept Mapping</p>
-      </header>
+    <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white pb-20 px-4' : 'text-gray-900 dark:text-white'} animate-fadeIn`}>
+      {uiMode === 'classic' ? (
+        <header className="mb-10 text-center pt-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
+            Concept Blender
+          </h1>
+          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+            Architectural Prompt Fusion • Neural Concept Mapping
+          </p>
+        </header>
+      ) : (
+        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Concept Blender</h1>
+          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">Architectural Prompt Fusion • Neural Concept Mapping</p>
+        </header>
+      )}
 
       <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] pointer-events-none rounded-full"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[100px] pointer-events-none rounded-full"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none rounded-full"></div>
         
         {/* Mode Switcher */}
@@ -407,7 +421,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
 
         {currentConcept && (
             <div className="relative p-4 sm:p-8 glass-card border-white/10 shadow-inner group/concept overflow-hidden">
-                 <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-500 via-blue-500 to-purple-600 opacity-50"></div>
+                 <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-emerald-500 via-blue-500 to-purple-600 opacity-50"></div>
                  
                  <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-10 pl-4">
                     <div>
@@ -511,7 +525,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
                         </div>
                         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                             {history.length === 0 ? <p className="text-gray-500 dark:text-gray-600 italic text-[10px] font-black uppercase tracking-widest text-center py-10 opacity-50">Empty static</p> : history.map((entry, idx) => (
-                                <div key={entry.concept.id + idx} className="glass-card bg-slate-50 dark:bg-white/5 p-4 border-slate-200 dark:border-white/10 space-y-4 hover:border-green-500/20 transition-all">
+                                <div key={entry.concept.id + idx} className="glass-card bg-slate-50 dark:bg-white/5 p-4 border-slate-200 dark:border-white/10 space-y-4 hover:border-emerald-500/20 transition-all">
                                     <p className="text-xs font-bold text-gray-700 dark:text-gray-300 leading-relaxed uppercase tracking-tight line-clamp-3">{formatConceptForClipboard(entry.concept)}</p>
                                     <div className="flex gap-2">
                                         <Button onClick={() => handleLoadSavedConcept(entry)} size="xs" variant="ghost" className="bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white px-4 border-none" startIcon={<LoadIcon className="w-3 h-3" />}>Load</Button>
@@ -545,7 +559,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
                                                   onChange={(e) => handleNoteChange(entry.concept.id, e.target.value)} 
                                                   onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(entry.concept.id)} 
                                                   onBlur={() => setTimeout(() => { if (document.activeElement !== noteInputRef.current) handleSaveNote(entry.concept.id); }, 100)} 
-                                                  className="flex-grow px-3 py-1.5 text-xs bg-white/10 border border-white/5 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-green-500 font-bold" 
+                                                  className="flex-grow px-3 py-1.5 text-xs bg-white/10 border border-white/5 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-bold" 
                                                   placeholder="Add track note..."
                                                 />
                                                 <Button onClick={() => handleSaveNote(entry.concept.id)} size="xs" variant="success" className="px-3">Save</Button>
@@ -588,13 +602,13 @@ export const AddCustomItemModal: React.FC<{
     return (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn">
             <div className="glass-card p-8 border-white/20 shadow-2xl w-full max-w-md relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-[50px] pointer-events-none rounded-full"></div>
-                <h3 className="text-xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-6">Forge Item into <span className="text-green-600 dark:text-green-500">{category}</span></h3>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[50px] pointer-events-none rounded-full"></div>
+                <h3 className="text-xl font-black uppercase tracking-tighter text-gray-900 dark:text-white mb-6">Forge Item into <span className="text-emerald-600 dark:text-emerald-500">{category}</span></h3>
                 <input 
                   type="text" 
                   value={value} 
                   onChange={(e) => setValue(e.target.value)} 
-                  className="w-full px-4 py-3 bg-white/5 dark:bg-black/40 border border-white/10 rounded-2xl text-gray-900 dark:text-white mb-6 focus:ring-2 focus:ring-green-500/50 outline-none font-bold" 
+                  className="w-full px-4 py-3 bg-white/5 dark:bg-black/40 border border-white/10 rounded-2xl text-gray-900 dark:text-white mb-6 focus:ring-2 focus:ring-emerald-500/50 outline-none font-bold" 
                   placeholder="Blueprint input..." 
                   aria-label="Custom item value"
                 />
@@ -631,7 +645,7 @@ export const ManageCustomItemsModal: React.FC<{
                     ) : (
                         customItemEntries.map(([catKey, items]) => items.length > 0 && (
                             <div key={catKey} className="space-y-4">
-                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-700 dark:text-green-500 border-b border-white/5 pb-2">{catKey}</h4>
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-500 border-b border-white/5 pb-2">{catKey}</h4>
                                 <ul className="space-y-2"> 
                                   {items.map(item => ( 
                                     <li key={item} className="text-xs font-bold text-gray-800 dark:text-gray-300 flex justify-between items-center group/item hover:bg-white/5 p-2 rounded-xl transition-all"> 
@@ -651,7 +665,7 @@ export const ManageCustomItemsModal: React.FC<{
                         ))
                     )}
                 </div>
-                {importStatusMessage && <p className={`text-[10px] font-black uppercase tracking-widest mt-4 text-center ${importStatusMessage.includes("Error") ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>{importStatusMessage}</p>}
+                {importStatusMessage && <p className={`text-[10px] font-black uppercase tracking-widest mt-4 text-center ${importStatusMessage.includes("Error") ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}`}>{importStatusMessage}</p>}
                 <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
                     <div className="flex gap-3">
                         <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file"/>

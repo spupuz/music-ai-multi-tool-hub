@@ -77,8 +77,11 @@ export default {
                 countries[cc] = parseInt(await env.STATS_KV.get(key.name) || '0');
             }
             
+            const liveCount = (await env.STATS_KV.list({ prefix: 'live:' })).keys.length;
+            
             return new Response(JSON.stringify({
                 total: { pageviews: parseInt(totalPV), uniques: parseInt(totalUV) },
+                liveCount,
                 timeline,
                 countries
             }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
@@ -109,6 +112,7 @@ export default {
             await incrementKV(env.STATS_KV, 'total:pageviews');
             await incrementKV(env.STATS_KV, `daily:pageviews:${date}`);
             await incrementKV(env.STATS_KV, `country:${country}`);
+            await env.STATS_KV.put(`live:${ipHash}`, '1', { expirationTtl: 300 }); // 5 minutes
             
             const totalSeenKey = `seen:total:${ipHash}`;
             const dailySeenKey = `seen:daily:${date}:${ipHash}`;
