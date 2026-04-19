@@ -28,6 +28,8 @@ dist-ssr
 RIFFUSION_MIGRATION.md
 .agents/
 .local_agents/
+.roo/commands
+scripts/sync-commands.sh
 
 # OmniState Tracking
 antigravity.config.json

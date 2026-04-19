@@ -113,7 +113,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const handleLoadFromUrl = useCallback(async () => {
     let urlToProcess = sunoUrlInput.trim();
     if (!urlToProcess) {
-      setError("Please enter a Suno, Riffusion, or Producer.AI Song URL.");
+      setError("Please enter a Suno, Riffusion, or Flow Music Song URL.");
       return;
     }
     setIsUrlLoading(true);
@@ -121,23 +121,23 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     setUrlLoadingProgress('Validating URL...');
     if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlLoadAttempt', urlToProcess);
 
-    if (urlToProcess.includes('producer.ai')) {
-      setUrlLoadingProgress('Producer.AI URL detected, transforming to Riffusion...');
+    if (urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
+      setUrlLoadingProgress('Flow Music URL detected, transforming...');
       const songId = extractRiffusionSongId(urlToProcess);
       if (songId) {
-        urlToProcess = `https://www.producer.ai/song/${songId}`;
-        setUrlLoadingProgress('URL transformed. Fetching from Riffusion...');
-        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'producer.ai_to_riffusion');
+        urlToProcess = `https://www.flowmusic.app/song/${songId}`;
+        setUrlLoadingProgress('URL transformed. Fetching data...');
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'flowmusic_rebranding');
       } else {
-        setError('Could not extract a valid song ID from the Producer.AI URL.');
+        setError('Could not extract a valid song ID from the Flow Music / Producer.AI URL.');
         setIsUrlLoading(false);
         setUrlLoadingProgress('');
-        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformError', 'producer.ai_no_id');
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformError', 'flowmusic_no_id');
         return;
       }
     }
 
-    if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('producer.ai')) {
+    if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
       try {
         const songId = extractRiffusionSongId(urlToProcess);
         if (!songId) {
@@ -297,9 +297,9 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       if (creatorName) header += `By: ${creatorName}\n`;
       if (creatorHandle) {
         const cleanHandle = creatorHandle.replace(/^@/, '');
-        header += `Profile: https://suno.com/@${cleanHandle}\n`;
+        header += `Profile: https://www.flowmusic.app/${cleanHandle}\n`;
       }
-      header += `Processed via: https://tools.checktrend.info/\n`;
+      header += `Processed via: https://music-ai-multi-tool-hub.pages.dev/\n`;
 
       const copyrightNotice = `\n\nIMPORTANT COPYRIGHT NOTICE:\nThese lyrics are the intellectual property of their respective owners.\nReproduction, distribution, or public performance of these lyrics may require\npermission from the copyright holders. Please respect artist rights.\nAll rights to the original song and lyrics are retained by their respective creators and publishers.`;
 
@@ -402,7 +402,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               label="Import from Source URL" 
               value={sunoUrlInput} 
               onChange={setSunoUrlInput} 
-              placeholder="Suno, Riffusion, or Producer.ai song link" 
+              placeholder="Suno, Riffusion, or Flow Music song link" 
               className="mb-0" 
               disabled={isUrlLoading}
             />

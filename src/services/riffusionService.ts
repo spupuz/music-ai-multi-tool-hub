@@ -44,7 +44,7 @@ const RIFFUSION_PROMPT_PATTERNS = [
 ];
 
 /**
- * Extracts the Riffusion/Producer.ai Song ID from a given URL.
+ * Extracts the Riffusion/Flow Music Song ID from a given URL.
  */
 export function extractRiffusionSongId(url: string): string | null {
     if (!url) return null;
@@ -82,10 +82,10 @@ async function fetchWithProxies(url: string, options: RequestInit = {}): Promise
 
             const isLocalProxy = proxy === '/proxy/';
 
-            // Skip local proxy for Producer.ai/riffusion.com domains — these block server-side requests with 403.
+            // Skip local proxy for Flow Music/Riffusion domains — these block server-side requests with 403.
             // We rely on client-side public proxies (corsproxy.io, etc.) for these domains.
-            if (isLocalProxy && (url.includes('producer.ai') || url.includes('riffusion.com'))) {
-                console.log('[riffusionService] Skipping local proxy for producer.ai/riffusion.com to avoid 403 blocking.');
+            if (isLocalProxy && (url.includes('flowmusic.app') || url.includes('producer.ai') || url.includes('riffusion.com'))) {
+                console.log('[riffusionService] Skipping local proxy for flowmusic.app/riffusion.com to avoid 403 blocking.');
                 continue;
             }
 
@@ -131,7 +131,7 @@ function safeString(value: any): string | undefined {
     }
     if (Array.isArray(value)) return value.map(safeString).filter(Boolean).join(', ') || undefined;
     if (typeof value === 'object') {
-        // Producer.ai lyrics format: { status: "completed", value: { text: "...", id: "..." } }
+        // Flow Music / Producer.ai lyrics format: { status: "completed", value: { text: "...", id: "..." } }
         if (value.value?.text) return safeString(value.value.text);
         if (value.text) return safeString(value.text);
         // Other common string fields inside prompt/lyrics objects
@@ -236,7 +236,7 @@ export async function fetchRiffusionSongData(url: string): Promise<RiffusionSong
 
     // STRATEGY 1: HTML Scraping (Fastest and most compatible now)
     const scrapeUrls = [
-        `https://www.producer.ai/song/${songId}`,
+        `https://www.flowmusic.app/song/${songId}`,
         `https://classic.riffusion.com/song/${songId}`
     ];
 

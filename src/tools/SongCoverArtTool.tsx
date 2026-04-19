@@ -176,17 +176,17 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   const handleLoadFromUrl = useCallback(async () => {
     let urlToProcess = songUrlInput.trim();
-    if (!urlToProcess) { setError('Please enter a Suno, Riffusion, or Producer.AI Song URL.'); return; }
+    if (!urlToProcess) { setError('Please enter a Suno, Riffusion, or Flow Music Song URL.'); return; }
     setError(null); setAppState(AppState.Processing); setProgressMessage('Validating URL...');
     trackLocalEvent(TOOL_CATEGORY, 'urlLoadAttempt', songUrlInput);
 
-    if (urlToProcess.includes('producer.ai')) {
+    if (urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
       const songId = extractRiffusionSongId(urlToProcess);
-      if (songId) { urlToProcess = `https://www.producer.ai/song/${songId}`; }
+      if (songId) { urlToProcess = `https://www.flowmusic.app/song/${songId}`; }
     }
 
     try {
-      if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('producer.ai')) {
+      if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
         const songId = extractRiffusionSongId(urlToProcess);
         if (!songId) throw new Error("Could not extract Riffusion song ID.");
         const riffusionData = await fetchRiffusionSongData(songId);
@@ -393,7 +393,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <div className="space-y-2">
                 <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500">Remote Stream</label>
                 <div className="flex gap-2">
-                  <input type="text" value={songUrlInput} onChange={(e) => setSongUrlInput(e.target.value)} placeholder="Suno / Riffusion URL" className="flex-grow px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold" />
+                  <input type="text" value={songUrlInput} onChange={(e) => setSongUrlInput(e.target.value)} placeholder="Suno / Riffusion / Flow Music URL" className="flex-grow px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold" />
                   <Button onClick={handleLoadFromUrl} variant="primary" size="xs" className="px-4" startIcon={<RefreshIcon className="w-3 h-3" />}>Sync</Button>
                 </div>
               </div>

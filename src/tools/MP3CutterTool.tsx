@@ -100,7 +100,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 value={sunoUrlInput}
                 onChange={(e) => setSunoUrlInput(e.target.value)}
                 className="block w-full flex-1 rounded-2xl sm:rounded-none sm:rounded-l-2xl border-white/10 bg-white/10 dark:bg-black/20 px-4 py-3.5 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-                placeholder="suno.com/..., riffusion.com/..., producer.ai/..."
+                placeholder="suno.com/..., riffusion.com/..., flowmusic.app/..."
                 disabled={isLoading}
               />
               <Button

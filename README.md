@@ -15,7 +15,7 @@ A premium suite of **20+ specialized tools** for AI music creators, producers, a
 | Feature | Description |
 |---------|-------------|
 | 🎵 **20+ Music Tools** | From shufflers and cutters to theory generators |
-| 🤖 **AI Integration** | Suno, Riffusion/Producer.AI, and Google Gemini |
+| 🤖 **AI Integration** | Suno, Flow Music/Riffusion, and Google Gemini |
 | 🎨 **Creative Studio** | Cover art, lyric processing, karaoke sync |
 | ☁️ **Cloudflare Powered** | Zero-server static deployment with Worker-side AI proxy |
 | 🔒 **Secrets in Worker** | Gemini API key never touches the frontend bundle |
@@ -28,7 +28,7 @@ A premium suite of **20+ specialized tools** for AI music creators, producers, a
 ## 🛠 Tools
 
 ### 🤖 AI Music Platforms
-- **Music Shuffler** — Play Suno/Riffusion/Producer.AI libraries with 10-band EQ
+- **Music Shuffler** — Play Suno/Riffusion/Flow Music libraries with 10-band EQ
 - **Suno User Stats** — Creator metrics and activity trends
 - **Hub Stats** — Interactive global activity dashboard and site telemetry
 - **Song Compliance Checker** — AI-powered title, duration, and lyrics verification via Gemini

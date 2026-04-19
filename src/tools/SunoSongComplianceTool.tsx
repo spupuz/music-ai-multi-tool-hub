@@ -99,20 +99,20 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
 
     try {
       let urlToProcess = url;
-      if (urlToProcess.includes('producer.ai')) {
-        setProgressMessage(`${batchProgressPrefix}: Producer.AI URL detected, transforming...`);
+      if (urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
+        setProgressMessage(`${batchProgressPrefix}: Flow Music / Producer.AI URL detected, transforming...`);
         const songId = extractRiffusionSongId(urlToProcess);
         if (songId) {
-          urlToProcess = `https://www.producer.ai/song/${songId}`;
-          trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'producer.ai_to_riffusion');
+          urlToProcess = `https://www.flowmusic.app/song/${songId}`;
+          trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'flowmusic_rebranding');
         } else {
-          throw new Error('Could not extract a valid song ID from the Producer.AI URL.');
+          throw new Error('Could not extract a valid song ID from the Flow Music / Producer.AI URL.');
         }
       }
 
       let clipData: SunoClip | null = null;
 
-      if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('producer.ai')) {
+      if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
         const songId = extractRiffusionSongId(urlToProcess);
         if (!songId) throw new Error("Could not extract Riffusion song ID from URL.");
         setProgressMessage(`${batchProgressPrefix}: Fetching Riffusion song ${songId.substring(0, 8)}...`);
@@ -150,9 +150,9 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
           upvote_count: 0,
           comment_count: 0,
           is_public: true,
-          suno_song_url: `https://www.producer.ai/song/${riffusionData.id}`,
+          suno_song_url: `https://www.flowmusic.app/song/${riffusionData.id}`,
           suno_creator_url: (riffusionData.artist && !riffusionData.artist.startsWith('user_') && riffusionData.artist !== 'Unknown Artist' && riffusionData.artist !== 'Riffusion Artist')
-            ? `https://www.producer.ai/${encodeURIComponent(riffusionData.artist)}`
+            ? `https://www.flowmusic.app/${encodeURIComponent(riffusionData.artist)}`
             : '',
           source: 'riffusion',
           image_urls: {}
@@ -462,7 +462,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
           </div>
           <div>
             <label htmlFor="sunoUrlsInput" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-1 ml-1 leading-none">Song Signal Vectors (One per line)</label>
-            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or Producer.AI song URLs here..." rows={3} className="block w-full px-4 py-2.5 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold resize-y transition-all min-h-[60px] md:min-h-auto" disabled={isLoading} />
+            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or FlowMusic.app song URLs here..." rows={3} className="block w-full px-4 py-2.5 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold resize-y transition-all min-h-[60px] md:min-h-auto" disabled={isLoading} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

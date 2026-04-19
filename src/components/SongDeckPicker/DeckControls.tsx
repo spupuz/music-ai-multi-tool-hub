@@ -74,7 +74,7 @@ export const DeckControls: React.FC<DeckControlsProps> = ({
                     label="Song Entries (1 per line)" 
                     value={rawSongInput} 
                     onChange={setRawSongInput} 
-                    placeholder="Suno/Riffusion/Producer.AI URL, Suno Playlist URL, or ArtistName: Artist | Title: Title | ..." 
+                    placeholder="Suno/Riffusion/Flow Music URL, Suno Playlist URL, or ArtistName: Artist | Title: Title | ..." 
                     labelTextColor={toolTextColor} 
                 />
                 <TextAreaField 

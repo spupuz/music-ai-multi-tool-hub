@@ -84,23 +84,23 @@ export const useMP3CutterLogic = ({ trackLocalEvent }: Pick<ToolProps, 'trackLoc
 
     let urlToProcess = sunoUrlInput.trim();
 
-    if (urlToProcess.includes('producer.ai')) {
-      setUrlLoadingProgress('Producer.AI URL detected, transforming to Riffusion...');
+    if (urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
+      setUrlLoadingProgress('Flow Music URL detected, transforming...');
       const songId = extractRiffusionSongId(urlToProcess);
       if (songId) {
-        urlToProcess = `https://www.producer.ai/song/${songId}`;
-        setUrlLoadingProgress('URL transformed. Fetching from Riffusion...');
-        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'urlTransformed', 'producer.ai_to_riffusion');
+        urlToProcess = `https://www.flowmusic.app/song/${songId}`;
+        setUrlLoadingProgress('URL transformed. Fetching data...');
+        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'urlTransformed', 'flowmusic_rebranding');
       } else {
-        setError('Could not extract a valid song ID from the Producer.AI URL.');
+        setError('Could not extract a valid song ID from the Flow Music / Producer.AI URL.');
         setIsLoading(false);
         setUrlLoadingProgress('');
-        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'urlTransformError', 'producer.ai_no_id');
+        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'urlTransformError', 'flowmusic_no_id');
         return;
       }
     }
 
-    const isRiffusionUrl = urlToProcess.includes('riffusion.com') || urlToProcess.includes('producer.ai');
+    const isRiffusionUrl = urlToProcess.includes('riffusion.com') || urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai');
 
     if (isRiffusionUrl) {
       try {

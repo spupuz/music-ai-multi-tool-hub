@@ -194,7 +194,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       let fetchedArtist = 'Unknown Artist';
       let fetchedCoverArt: string | null = null;
 
-      if (finderUrlInput.includes('riffusion.com') || finderUrlInput.includes('producer.ai')) {
+      if (finderUrlInput.includes('riffusion.com') || finderUrlInput.includes('flowmusic.app') || finderUrlInput.includes('producer.ai')) {
         const songId = extractRiffusionSongId(finderUrlInput);
         if (!songId) throw new Error("Could not extract Riffusion ID.");
         setFinderProgress(`Fetching Riffusion song...`);

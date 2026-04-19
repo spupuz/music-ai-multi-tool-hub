@@ -109,7 +109,8 @@ export const inferSourceTypeFromInput = (line: string): SongCardInterface['sourc
                 return 'riffusion_url';
             }
         }
-        if (url.hostname === 'www.producer.ai' || url.hostname === 'producer.ai') {
+        if (url.hostname === 'www.flowmusic.app' || url.hostname === 'flowmusic.app' || 
+            url.hostname === 'www.producer.ai' || url.hostname === 'producer.ai') {
             if (url.pathname.includes('/song/')) {
                 return 'riffusion_url';
             }

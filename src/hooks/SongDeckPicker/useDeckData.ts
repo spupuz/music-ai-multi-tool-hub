@@ -114,7 +114,7 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
                         if (riffusionData) {
                             const newCard: SongCardInterface = {
                                 id: riffusionData.id, artistName: riffusionData.artist, title: riffusionData.title, imageUrl: riffusionData.image_url,
-                                webLink: `https://www.producer.ai/song/${riffusionData.id}`, audioUrl: riffusionData.audio_url, color: generateRandomColor(), originalInputLine: line,
+                                webLink: `https://www.flowmusic.app/song/${riffusionData.id}`, audioUrl: riffusionData.audio_url, color: generateRandomColor(), originalInputLine: line,
                                 sourceType: 'riffusion_url', isBonusApplied: false
                             };
                             newDeckBaseAccumulator.push(newCard);

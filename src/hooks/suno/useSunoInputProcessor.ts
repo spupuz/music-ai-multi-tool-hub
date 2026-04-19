@@ -76,10 +76,10 @@ export const useSunoInputProcessor = ({
     if (!trimmedInput) return { type: null, id: null };
     if (trimmedInput.includes('\n')) return { type: 'custom_list', id: 'custom_list_urls', nameHint: 'Custom Song List', rawInput: trimmedInput };
 
-    if (trimmedInput.includes('producer.ai')) {
+    if (trimmedInput.includes('flowmusic.app') || trimmedInput.includes('producer.ai')) {
       const songId = extractRiffusionSongId(trimmedInput);
       if (songId) {
-        return { type: 'riffusion', id: songId, nameHint: 'Riffusion Song', rawInput: `https://www.producer.ai/song/${songId}` };
+        return { type: 'riffusion', id: songId, nameHint: 'Flow Music Song', rawInput: `https://www.flowmusic.app/song/${songId}` };
       }
     }
 
@@ -388,7 +388,7 @@ export const useSunoInputProcessor = ({
     } else if ((type === 'custom_list' || type === 'riffusion') && rawInput) {
       processMultiSourceInput(rawInput, false);
     } else {
-      setUiError("Please enter a valid Suno/Riffusion/Producer.AI URL, Suno Username, Suno Playlist, or a list of items.");
+      setUiError("Please enter a valid Suno/Riffusion/FlowMusic.app URL, Suno Username, Suno Playlist, or a list of items.");
     }
   }, [identifierInput, currentIdentifier, currentIdentifierType, fetchAndStoreUserData, fetchAndStorePlaylistData, processMultiSourceInput, parseInput, setUiError]);
 
@@ -417,7 +417,7 @@ export const useSunoInputProcessor = ({
       const lines = trimmedInput.split('\n').filter(l => l.trim()).length;
       setMainButtonText(`Load ${lines} Song${lines !== 1 ? 's' : ''} from Input`);
     } else if (inputType.type === 'riffusion') {
-      setMainButtonText(`Load Riffusion Song`);
+      setMainButtonText(`Load Flow Music Song`);
     }
   }, [identifierInput, parseInput]);
 

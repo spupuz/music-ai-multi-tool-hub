@@ -182,29 +182,29 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   const handleLoadFromUrl = async () => {
     let urlInput = sunoUrlInput.trim();
-    if (!urlInput) { setError("Please enter a Suno, Riffusion, or Producer.AI Song URL."); return; }
+    if (!urlInput) { setError("Please enter a Suno, Riffusion, or Flow Music Song URL."); return; }
     setIsUrlLoading(true); setError(null); setUrlLoadingProgress('Validating URL...');
     if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlLoadAttempted', urlInput);
     if (audioFileInputRef.current) audioFileInputRef.current.value = ""; setAudioSrc(null); setAudioFileName(null);
     setSongTitle(''); setArtistName(''); setSunoCoverArtUrl(null); setRawLyrics(''); setParsedLines([]);
 
-    if (urlInput.includes('producer.ai')) {
-      setUrlLoadingProgress('Producer.AI URL detected, transforming to Riffusion...');
+    if (urlInput.includes('flowmusic.app') || urlInput.includes('producer.ai')) {
+      setUrlLoadingProgress('Flow Music URL detected, transforming...');
       const songId = extractRiffusionSongId(urlInput);
       if (songId) {
-        urlInput = `https://www.producer.ai/song/${songId}`;
-        setUrlLoadingProgress('URL transformed. Fetching from Riffusion...');
-        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'producer.ai_to_riffusion');
+        urlInput = `https://www.flowmusic.app/song/${songId}`;
+        setUrlLoadingProgress('URL transformed. Fetching data...');
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformed', 'flowmusic_rebranding');
       } else {
-        setError('Could not extract a valid song ID from the Producer.AI URL.');
+        setError('Could not extract a valid song ID from the Flow Music / Producer.AI URL.');
         setIsUrlLoading(false);
         setUrlLoadingProgress('');
-        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformError', 'producer.ai_no_id');
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlTransformError', 'flowmusic_no_id');
         return;
       }
     }
 
-    if (urlInput.includes('riffusion.com') || urlInput.includes('producer.ai')) {
+    if (urlInput.includes('riffusion.com') || urlInput.includes('flowmusic.app') || urlInput.includes('producer.ai')) {
       try {
         const songId = extractRiffusionSongId(urlInput);
         if (!songId) throw new Error("Could not extract Riffusion song ID from URL.");
@@ -339,7 +339,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                       type="text"
                       value={sunoUrlInput}
                       onChange={(e) => setSunoUrlInput(e.target.value)}
-                      placeholder="Suno / Riffusion / Producer.AI URL"
+                      placeholder="Suno / Riffusion / Flow Music URL"
                       className="flex-grow px-4 py-2 bg-white/5 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all placeholder:opacity-30 disabled:opacity-50"
                       disabled={isUrlLoading}
                     />
