@@ -86,6 +86,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const [isUrlLoading, setIsUrlLoading] = useState<boolean>(false);
   const [urlLoadingProgress, setUrlLoadingProgress] = useState<string>('');
   const [sunoCoverArtUrl, setSunoCoverArtUrl] = useState<string | null>(null);
+  const [sourcePlatform, setSourcePlatform] = useState<'suno' | 'flowmusic' | 'riffusion' | null>(null);
 
 
   useEffect(() => {
@@ -139,6 +140,11 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
     if (urlToProcess.includes('riffusion.com') || urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
       try {
+        if (urlToProcess.includes('flowmusic.app') || urlToProcess.includes('producer.ai')) {
+          setSourcePlatform('flowmusic');
+        } else {
+          setSourcePlatform('riffusion');
+        }
         const songId = extractRiffusionSongId(urlToProcess);
         if (!songId) {
           throw new Error("Could not extract Riffusion song ID from URL.");
@@ -172,6 +178,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
     // Existing Suno logic
     try {
+      setSourcePlatform('suno');
       const songId = await resolveSunoUrlToPotentialSongId(urlToProcess, setUrlLoadingProgress);
       if (!songId) {
         throw new Error("Could not resolve Suno URL to a song ID.");
@@ -297,7 +304,13 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       if (creatorName) header += `By: ${creatorName}\n`;
       if (creatorHandle) {
         const cleanHandle = creatorHandle.replace(/^@/, '');
-        header += `Profile: https://www.flowmusic.app/${cleanHandle}\n`;
+        if (sourcePlatform === 'suno') {
+          header += `Profile: https://suno.com/@${cleanHandle}\n`;
+        } else if (sourcePlatform === 'riffusion') {
+          header += `Profile: https://www.riffusion.com/${cleanHandle}\n`;
+        } else {
+          header += `Profile: https://www.flowmusic.app/${cleanHandle}\n`;
+        }
       }
       header += `Processed via: https://music-ai-multi-tool-hub.pages.dev/\n`;
 
@@ -307,7 +320,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       setIsLoading(false);
       trackLocalEvent(TOOL_CATEGORY, 'lyricsCleaned');
     }, 100);
-  }, [lyricsInput, removeSquareBrackets, removeRoundBrackets, removeCurlyBrackets, songTitle, creatorName, creatorHandle, trackLocalEvent]);
+  }, [lyricsInput, removeSquareBrackets, removeRoundBrackets, removeCurlyBrackets, songTitle, creatorName, creatorHandle, sourcePlatform, trackLocalEvent]);
 
   const handleCopyToClipboard = useCallback(() => {
     if (!processedOutput) return;
