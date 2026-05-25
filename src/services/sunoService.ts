@@ -13,6 +13,21 @@ export interface FetchSunoPlaylistResult {
   clips: SunoClip[];
 }
 
+const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  try {
+    const response = await fetch(url, options);
+    // If CORS is blocked, fetch typically throws a TypeError (NetworkError).
+    // So we only reach here if the request was actually made.
+    return response;
+  } catch (error) {
+    console.warn(`[sunoService] Direct fetch failed (likely CORS), falling back to proxy for: ${url}`);
+  }
+
+  // Fallback to corsproxy.io
+  const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+  return fetch(proxyUrl, options);
+};
+
 
 const mapRawResponseToProfileDetail = (raw: SunoRawProfileResponse): SunoProfileDetail | null => {
   if (!raw.user_id) return null; 
@@ -71,7 +86,7 @@ export const fetchSunoSongsByUsername = async (
         attemptDelayMs = 0; 
 
         try {
-            const response = await fetch(url, {
+            const response = await fetchWithProxy(url, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
             });
@@ -205,7 +220,7 @@ export const fetchSunoSongsByUsername = async (
 export const fetchSunoClipById = async (clipId: string): Promise<SunoClip | null> => {
   const url = `${API_BASE_URL}/clip/${clipId}`;
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithProxy(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -274,7 +289,7 @@ export const fetchSunoPlaylistById = async (
         attemptDelayMs = 0;
 
         try {
-            const response = await fetch(url, {
+            const response = await fetchWithProxy(url, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
             });
