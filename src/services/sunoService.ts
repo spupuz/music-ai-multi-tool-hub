@@ -13,6 +13,18 @@ export interface FetchSunoPlaylistResult {
   clips: SunoClip[];
 }
 
+const publicProxies = [
+    { name: "local", constructUrl: (targetUrl: string) => `/proxy/${targetUrl}` },
+    { name: "corsproxy.io", constructUrl: (targetUrl: string) => `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}` },
+    { name: "allorigins.win", constructUrl: (targetUrl: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}` },
+    { name: "thingproxy", constructUrl: (targetUrl: string) => `https://thingproxy.freeboard.io/fetch/${targetUrl}` },
+    { name: "cors-anywhere", constructUrl: (targetUrl: string) => `https://cors-anywhere.herokuapp.com/${targetUrl}` },
+    { name: "codetabs", constructUrl: (targetUrl: string) => `https://api.codetabs.com/v1/proxy/?quest=${targetUrl}` },
+    { name: "corsproxy.org", constructUrl: (targetUrl: string) => `https://corsproxy.org/?${encodeURIComponent(targetUrl)}` },
+    { name: "cors.sh", constructUrl: (targetUrl: string) => `https://proxy.cors.sh/${targetUrl}` },
+    { name: "yacdn", constructUrl: (targetUrl: string) => `https://yacdn.org/proxy/${targetUrl}` }
+];
+
 const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<Response> => {
   try {
     const response = await fetch(url, options);
@@ -23,9 +35,47 @@ const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<R
     console.warn(`[sunoService] Direct fetch failed (likely CORS), falling back to proxy for: ${url}`);
   }
 
-  // Fallback to corsproxy.io
-  const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
-  return fetch(proxyUrl, options);
+  let lastError: any = null;
+
+  for (const proxy of publicProxies) {
+    if (proxy.name === 'local' && typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+        continue;
+    }
+
+    const proxyUrl = proxy.constructUrl(url);
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const fetchOptions = { ...options, signal: controller.signal };
+      
+      const response = await fetch(proxyUrl, fetchOptions);
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        lastError = new Error(`Proxy ${proxy.name} responded with status: ${response.status}`);
+        continue;
+      }
+
+      if (proxy.name === 'allorigins.win') {
+        const json = await response.json();
+        if (json && json.contents !== undefined) {
+           return new Response(json.contents, {
+             status: json.status?.http_code || 200,
+             headers: new Headers({ 'Content-Type': json.status?.content_type || 'application/json' })
+           });
+        } else {
+           throw new Error("Invalid allorigins response format");
+        }
+      }
+
+      return response;
+    } catch (error) {
+      console.warn(`[sunoService] Proxy ${proxy.name} failed:`, error);
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error(`Failed to fetch ${url} via all available proxies.`);
 };
 
 
@@ -407,12 +457,16 @@ export const fetchSunoPlaylistById = async (
 
 // --- URL Utilities (Moved from songDeckPicker.utils.ts) ---
 
-const publicProxies = [
+const publicProxiesList = [
     { name: "local", constructUrl: (targetUrl: string) => `/proxy/${targetUrl}` },
     { name: "corsproxy.io", constructUrl: (targetUrl: string) => `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}` },
     { name: "allorigins.win", constructUrl: (targetUrl: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}` },
     { name: "thingproxy", constructUrl: (targetUrl: string) => `https://thingproxy.freeboard.io/fetch/${targetUrl}` },
     { name: "cors-anywhere", constructUrl: (targetUrl: string) => `https://cors-anywhere.herokuapp.com/${targetUrl}` },
+    { name: "codetabs", constructUrl: (targetUrl: string) => `https://api.codetabs.com/v1/proxy/?quest=${targetUrl}` },
+    { name: "corsproxy.org", constructUrl: (targetUrl: string) => `https://corsproxy.org/?${encodeURIComponent(targetUrl)}` },
+    { name: "cors.sh", constructUrl: (targetUrl: string) => `https://proxy.cors.sh/${targetUrl}` },
+    { name: "yacdn", constructUrl: (targetUrl: string) => `https://yacdn.org/proxy/${targetUrl}` }
 ];
 
 export const extractSunoSongIdFromPath = (urlPath: string): string | null => {
@@ -447,10 +501,10 @@ export const resolveSunoUrlToPotentialSongId = async (
         setProgressMessageForResolution("This looks like a short URL. Trying to resolve it...");
         await new Promise(resolve => setTimeout(resolve, 250)); 
         
-        for (let i = 0; i < publicProxies.length; i++) {
-            const proxy = publicProxies[i];
+        for (let i = 0; i < publicProxiesList.length; i++) {
+            const proxy = publicProxiesList[i];
             const proxiedUrl = proxy.constructUrl(originalUrl);
-            setProgressMessageForResolution(`Attempting to resolve via public proxy (${i + 1}/${publicProxies.length})...`);
+            setProgressMessageForResolution(`Attempting to resolve via public proxy (${i + 1}/${publicProxiesList.length})...`);
             
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -519,13 +573,13 @@ export const resolveSunoUrlToPotentialSongId = async (
                     }
                 }
                  
-                if (i < publicProxies.length - 1) {
+                if (i < publicProxiesList.length - 1) {
                     setProgressMessageForResolution(`Proxy connected, but no song ID found. Trying next...`);
                 }
                 await new Promise(resolve => setTimeout(resolve, 200));
             } catch (error) {
                 clearTimeout(timeoutId);
-                 if (i < publicProxies.length - 1) {
+                 if (i < publicProxiesList.length - 1) {
                     setProgressMessageForResolution(`Proxy attempt failed. Trying next...`);
                  }
                  await new Promise(resolve => setTimeout(resolve, 200));
