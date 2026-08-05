@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
-import { LATEST_VERSION, LATEST_RELEASE_DATE } from '@/data/version';
+import { useAppVersion } from '@/hooks/useAppVersion';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -50,6 +50,7 @@ const ClassicIcon = () => (
 
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName }) => {
   const { theme, toggleTheme, uiMode, toggleUiMode } = useTheme();
+  const { version: latestVersion } = useAppVersion();
 
   // Split the appName for styling
   const nameParts = appName.split(' '); // ["Music", "AI", "Multi-Tool", "Hub"]
@@ -100,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
             {styledName}
           </h1>
           <span className="hidden min-[500px]:inline ml-2 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex-shrink-0">
-            v{LATEST_VERSION}
+            v{latestVersion}
           </span>
         </div>
       </div>

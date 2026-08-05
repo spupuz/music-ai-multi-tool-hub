@@ -28,6 +28,7 @@ dist-ssr
 RIFFUSION_MIGRATION.md
 .agents/
 .local_agents/
+.opencode/
 .roo/commands
 scripts/sync-commands.sh
 
