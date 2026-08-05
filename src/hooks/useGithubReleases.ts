@@ -133,10 +133,17 @@ export function useGithubReleases(): UseGithubReleasesResult {
 
         const parsed: ReleaseNoteItem[] = releases
           .filter(r => r.tag_name && !r.draft && r.body)
-          .map(r => ({
-            version: r.tag_name.replace(/^v/i, ''),
-            content: h(React.Fragment, {}, ...parseMarkdownToJsx(r.body)),
-          }));
+          .map(r => {
+            const version = r.tag_name.replace(/^v/i, '');
+            const date = r.published_at ? r.published_at.split('T')[0] : '';
+            const title = `Version ${version}${date ? ` - ${date}` : ''}`;
+            const parsed = parseMarkdownToJsx(r.body);
+            const header = h(SectionTitle, { key: 'title' }, title);
+            return {
+              version,
+              content: h(React.Fragment, {}, header, ...parsed),
+            };
+          });
 
         if (parsed.length > 0) {
           setState({ notes: parsed, loading: false, error: null });
