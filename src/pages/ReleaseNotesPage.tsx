@@ -35,8 +35,11 @@ function parseBody(body: string): { title: string; items: string[] }[] {
     if (!t) continue;
     const h3 = t.match(/^###\s+(.+)/);
     if (h3) { current = { title: h3[1], items: [] }; sections.push(current); continue; }
+    if (!current) continue;
+    if (/^##/.test(t) || /^---/.test(t)) continue;
     const li = t.match(/^-\s+(.+)/);
-    if (li && current) { current.items.push(li[1]); }
+    if (li) { current.items.push(li[1]); continue; }
+    current.items.push(t);
   }
   return sections;
 }
