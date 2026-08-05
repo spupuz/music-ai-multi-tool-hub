@@ -1,11 +1,13 @@
 
 import React, { useEffect } from 'react';
 import type { ToolProps } from '@/Layout';
-import { releaseNotes } from '@/data/releaseNotesData';
 import { useTheme } from '@/context/ThemeContext';
+import { useGithubReleases } from '@/hooks/useGithubReleases';
+import Spinner from '@/components/Spinner';
 
 const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const { uiMode } = useTheme();
+  const { notes: releaseNotes, loading } = useGithubReleases();
 
   useEffect(() => {
     if (trackLocalEvent) {
@@ -26,11 +28,15 @@ const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </header>
 
         <main className="space-y-8">
-          {releaseNotes.map((note) => (
-            <div key={note.version} className="glass-card p-6 md:p-10 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-50/50 dark:bg-gray-800/20 shadow-sm">
-              {note.content}
-            </div>
-          ))}
+          {loading ? (
+            <div className="flex justify-center py-12"><Spinner size="w-10 h-10" /></div>
+          ) : (
+            releaseNotes.map((note) => (
+              <div key={note.version} className="glass-card p-6 md:p-10 border border-gray-100 dark:border-gray-800 rounded-md bg-gray-50/50 dark:bg-gray-800/20 shadow-sm">
+                {note.content}
+              </div>
+            ))
+          )}
         </main>
 
         <footer className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
@@ -55,11 +61,15 @@ const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       </header>
 
       <main className="text-gray-700 dark:text-gray-300 leading-relaxed relative z-10">
-        {releaseNotes.map((note) => (
-            <div key={note.version} className="mb-12 last:mb-0 bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
-                {note.content}
-            </div>
-        ))}
+        {loading ? (
+          <div className="flex justify-center py-12"><Spinner size="w-10 h-10" /></div>
+        ) : (
+          releaseNotes.map((note) => (
+              <div key={note.version} className="mb-12 last:mb-0 bg-white/5 dark:bg-black/20 rounded-3xl p-8 border border-white/5 hover:border-emerald-500/20 transition-all duration-300">
+                  {note.content}
+              </div>
+          ))
+        )}
       </main>
 
       <footer className="mt-16 pt-8 border-t border-white/10 text-center relative z-10">
