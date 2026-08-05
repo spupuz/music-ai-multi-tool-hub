@@ -1,6 +1,7 @@
 import React from 'react';
 import InputField from '@/components/forms/InputField';
 import Button from '@/components/common/Button';
+import ScrollReveal from '@/components/ScrollReveal';
 import { 
     FolderPlusIcon, ArrowUturnLeftIcon, TrashIcon 
 } from '@/components/Icons';
@@ -83,17 +84,17 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                 </Button>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-3">
+                            <ScrollReveal className="grid grid-cols-1 gap-3 stagger-fade">
                                 {props.loggedCards.map((log, index) => (
                                     <div 
                                         key={log.timestamp + index} 
-                                        className="p-4 rounded-xl text-xs flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                                        className="p-4 rounded-xl text-xs flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow cv-auto"
                                         style={{ 
                                             backgroundColor: log.color || props.cardBackgroundColor, 
                                             border: `1px solid ${String(props.cardBorderColor)}44` 
                                         }}
                                     >
-                                        <img src={log.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt={`${log.title} cover`} className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg shadow-sm flex-shrink-0" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}/>
+                                        <img src={log.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt={`${log.title} cover`} loading="lazy" decoding="async" className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg shadow-sm flex-shrink-0" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}/>
                                         <div className="flex-grow min-w-0">
                                             <p className="font-bold text-base break-words leading-tight" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.title}</p>
                                             <p className="text-sm opacity-80" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.artistName}</p>
@@ -103,7 +104,7 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                            </ScrollReveal>
                         </div>
                     )}
                 </details>
@@ -140,10 +141,10 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                         {props.getRemoveGroupButtonText(group.id)}
                                     </Button>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-black/20">
+                                <ScrollReveal className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-black/20 stagger-fade">
                                     {group.songs.map((log, index) => (
-                                        <div key={log.timestamp + index + group.id} className="p-2.5 rounded-xl text-xs flex items-center gap-3 border border-black/5 dark:border-white/5 shadow-sm" style={{ backgroundColor: log.color || props.cardBackgroundColor }}>
-                                            <img src={log.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt={`${log.title} cover`} className="w-12 h-12 object-cover rounded border border-black/10 flex-shrink-0 shadow-sm" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}/>
+                                        <div key={log.timestamp + index + group.id} className="p-2.5 rounded-xl text-xs flex items-center gap-3 border border-black/5 dark:border-white/5 shadow-sm cv-auto" style={{ backgroundColor: log.color || props.cardBackgroundColor }}>
+                                            <img src={log.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt={`${log.title} cover`} loading="lazy" decoding="async" className="w-12 h-12 object-cover rounded border border-black/10 flex-shrink-0 shadow-sm" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}/>
                                             <div className="flex-grow min-w-0">
                                                 <p className="font-bold text-xs truncate" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.title}</p>
                                                 <p className="opacity-70 truncate text-[10px]" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.artistName}</p>
@@ -151,7 +152,7 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                             </div>
                                         </div>
                                     ))}
-                                </div>
+                                </ScrollReveal>
                             </div>
                         ))}
                     </div>

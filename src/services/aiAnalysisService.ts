@@ -7,23 +7,54 @@ import type { ContentRatingCheckResult, LyricsLanguageCheckResult, RatingLevel, 
 
 const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
 const MODEL = 'gemini-2.5-flash';
+const REQUEST_TIMEOUT_MS = 30000;
 
-/** Call the Gemini proxy Worker */
-async function callProxy(contents: string, config?: object): Promise<{ text: string }> {
+/** Strip a Markdown code fence (e.g. ```json ... ```) if present, returning the inner content. */
+function stripCodeFence(raw: string): string {
+  const trimmed = raw.trim();
+  const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
+  const match = trimmed.match(fenceRegex);
+  return match && match[2] ? match[2].trim() : trimmed;
+}
+
+/** Call the Gemini proxy Worker with a timeout, optionally honoring an external abort signal. */
+async function callProxy(contents: string, config?: object, signal?: AbortSignal): Promise<{ text: string }> {
   if (!WORKER_URL) throw new Error('Gemini proxy not configured. Set VITE_GEMINI_WORKER_URL in your environment variables.');
 
-  const res = await fetch(WORKER_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: MODEL, contents, config }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Gemini proxy error ${res.status}: ${err}`);
+  const controller = new AbortController();
+  let didTimeout = false;
+  const timeoutId = setTimeout(() => {
+    didTimeout = true;
+    controller.abort();
+  }, REQUEST_TIMEOUT_MS);
+  const onExternalAbort = () => controller.abort();
+  if (signal) {
+    if (signal.aborted) controller.abort();
+    else signal.addEventListener('abort', onExternalAbort, { once: true });
   }
 
-  return res.json();
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: MODEL, contents, config }),
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Gemini proxy error ${res.status}: ${err}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    if (didTimeout) throw new Error('Gemini proxy request timed out. Please try again.');
+    if (error instanceof DOMException && error.name === 'AbortError') throw new Error('Gemini proxy request was cancelled.');
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+    if (signal) signal.removeEventListener('abort', onExternalAbort);
+  }
 }
 
 export async function analyzeLyricsLanguageDetailsGemini(text: string): Promise<LyricsLanguageCheckResult> {
@@ -31,10 +62,7 @@ export async function analyzeLyricsLanguageDetailsGemini(text: string): Promise<
 
   try {
     const response = await callProxy(prompt, { responseMimeType: 'application/json' });
-    let jsonStr = response.text.trim();
-    const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-    const match = jsonStr.match(fenceRegex);
-    if (match && match[2]) jsonStr = match[2].trim();
+    const jsonStr = stripCodeFence(response.text);
 
     const parsedResult = JSON.parse(jsonStr);
     if (typeof parsedResult.primaryLanguageCode === 'string' &&
@@ -64,10 +92,7 @@ export async function checkContentRatingGemini(text: string, ratingLevel: Rating
 
   try {
     const response = await callProxy(prompt, { responseMimeType: 'application/json' });
-    let jsonStr = response.text.trim();
-    const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-    const match = jsonStr.match(fenceRegex);
-    if (match && match[2]) jsonStr = match[2].trim();
+    const jsonStr = stripCodeFence(response.text);
     return JSON.parse(jsonStr) as ContentRatingCheckResult;
   } catch (error) {
     console.error(`Error in checkContentRatingGemini (Rating: ${ratingLevel}):`, error);
@@ -116,10 +141,7 @@ Return ONLY the JSON array.
 
   try {
     const response = await callProxy(prompt, { responseMimeType: 'application/json' });
-    let jsonStr = response.text.trim();
-    const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-    const match = jsonStr.match(fenceRegex);
-    if (match && match[2]) jsonStr = match[2].trim();
+    const jsonStr = stripCodeFence(response.text);
 
     const parsedResult = JSON.parse(jsonStr);
     if (Array.isArray(parsedResult) && parsedResult.every(item =>

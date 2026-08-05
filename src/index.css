@@ -70,6 +70,10 @@ body {
   border: 1px solid var(--premium-border);
   box-shadow: var(--premium-shadow);
   border-radius: 1.5rem; /* rounded-3xl */
+  transition: box-shadow 0.3s ease;
+}
+.glass-card:hover {
+  box-shadow: var(--premium-shadow), 0 0 30px -8px var(--premium-accent);
 }
 
 .glass-nav {
@@ -249,4 +253,169 @@ body {
 
 .animate-flash {
   animation: flash 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Architect background orbs — pre-blurred radial gradients (no expensive blur() filter).
+   Drift uses transform only, so it stays on the GPU compositor thread. */
+@keyframes orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -2rem, 0) scale(1.06); }
+}
+
+.animate-orb-drift {
+  animation: orb-drift 16s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Subtle animated aurora gradient behind the orbs */
+.bg-aurora {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(59, 130, 246, 0.06), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 40%, rgba(139, 92, 246, 0.05), transparent 60%);
+  animation: aurora-shift 12s ease-in-out infinite alternate;
+  will-change: background-position;
+}
+
+@keyframes aurora-shift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 20%; }
+}
+
+/* Skip rendering off-screen list items (large queues/logs/directories).
+   contain-intrinsic-size reserves space so the scrollbar doesn't jump. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
+}
+
+/* For taller blocks in a normal flow page (e.g. directory sections) */
+.cv-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+
+/* Staggered entrance — children fade in with a per-index delay.
+   Hidden until the container gets `.in-view` (set by ScrollReveal on first scroll-into-view).
+   Add `animation-fill-mode: backwards` so elements stay at opacity:0 before their delay. */
+.stagger-fade > * {
+  opacity: 0;
+  transform: translateY(15px);
+}
+.stagger-fade.in-view > * {
+  animation: fadeIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+  will-change: transform, opacity;
+}
+.stagger-fade.in-view > *:nth-child(1)  { animation-delay: 0.00s; }
+.stagger-fade.in-view > *:nth-child(2)  { animation-delay: 0.06s; }
+.stagger-fade.in-view > *:nth-child(3)  { animation-delay: 0.12s; }
+.stagger-fade.in-view > *:nth-child(4)  { animation-delay: 0.18s; }
+.stagger-fade.in-view > *:nth-child(5)  { animation-delay: 0.24s; }
+.stagger-fade.in-view > *:nth-child(6)  { animation-delay: 0.30s; }
+.stagger-fade.in-view > *:nth-child(7)  { animation-delay: 0.36s; }
+.stagger-fade.in-view > *:nth-child(8)  { animation-delay: 0.42s; }
+.stagger-fade.in-view > *:nth-child(9)  { animation-delay: 0.48s; }
+.stagger-fade.in-view > *:nth-child(10) { animation-delay: 0.54s; }
+.stagger-fade.in-view > *:nth-child(n+11) { animation-delay: 0.60s; }
+
+/* Subtle grid background pattern for architect mode hero areas */
+.bg-grid-subtle {
+  background-image:
+    linear-gradient(var(--premium-accent) 1px, transparent 1px),
+    linear-gradient(90deg, var(--premium-accent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.04;
+}
+
+/* Glass card glow — animated border on hover */
+.glass-card-hover {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.glass-card-hover::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--premium-accent), #60a5fa, #a78bfa, var(--premium-accent));
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+.glass-card-hover:hover::before {
+  opacity: 0.6;
+}
+.glass-card-hover:hover {
+  box-shadow: 0 0 30px -5px var(--premium-accent);
+}
+
+/* Animated gradient text for headers */
+.text-gradient-animated {
+  background: linear-gradient(135deg,
+    var(--premium-accent),
+    #60a5fa 25%,
+    #a78bfa 50%,
+    var(--premium-accent) 75%,
+    var(--premium-accent)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Loading skeleton shimmer — animates background-position only (GPU/compositor cheap) */
+.skeleton-bar {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.14) 25%, rgba(148, 163, 184, 0.3) 37%, rgba(148, 163, 184, 0.14) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* Sidebar icon hover — subtle spin */
+.sidebar-icon-hover {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+.group:hover .sidebar-icon-hover {
+  transform: scale(1.15) rotate(-8deg);
+}
+
+/* Slim progress bar at the top of the page */
+@keyframes progress-bar-scan {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(200%); }
+}
+.animate-progress-bar {
+  animation: progress-bar-scan 3s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion (also trims animation cost on low-end devices) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep the loading spinner spinning so it still reads as "in progress" */
+  .animate-spin {
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

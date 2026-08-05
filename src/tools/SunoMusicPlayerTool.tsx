@@ -8,6 +8,7 @@ import type { ToolProps } from '@/Layout';
 import { useSunoAudioPlayer } from '@/hooks/useSunoAudioPlayer';
 import { SortCriteriaHook } from '@/hooks/suno/useSunoQueue';
 import PlaylistCreationDateChart from '@/components/sunoUserStats/charts/PlaylistCreationDateChart';
+import '@/components/sunoUserStats/charts/chartSetup';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 
@@ -598,7 +599,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       </div>
 
       {playerState.currentSong && (
-        <div className="mb-8 p-4 sm:p-8 glass-card border-white/10 shadow-2xl animate-fadeIn relative overflow-hidden group">
+        <div className="mb-8 p-4 sm:p-8 glass-card border-white/10 shadow-2xl animate-fadeIn relative overflow-hidden group transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.3)]">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
             <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 group/img">
@@ -606,6 +607,8 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <img
                   src={playerState.currentSong.image_url || FALLBACK_IMAGE_DATA_URI}
                   alt={playerState.currentSong.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-36 h-36 rounded-3xl object-cover border-2 border-white/10 shadow-2xl transition-all duration-500 group-hover/img:scale-105 group-hover/img:border-emerald-500/50"
                   onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
                 />
@@ -732,7 +735,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 onDragLeave={onDragLeaveHandler}
                 onDrop={e => onDropHandler(e, song.id)}
                 onDragEnd={onDragEndHandler}
-                className={`p-4 flex items-center gap-4 transition-all duration-300 relative group
+                className={`p-4 flex items-center gap-4 transition-[background-color,opacity] duration-300 relative group cv-auto
                                     ${playerState.isShuffle
                     ? 'cursor-not-allowed opacity-80'
                     : 'hover:bg-white/10 cursor-grab active:cursor-grabbing'}
@@ -745,6 +748,8 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <img
                     src={song.image_url || FALLBACK_IMAGE_DATA_URI}
                     alt={song.title}
+                    loading="lazy"
+                    decoding="async"
                     className={`w-12 h-12 rounded-xl object-cover border border-white/10 transition-all duration-500 ${playerState.currentSong?.id === song.id ? 'border-emerald-500/50 scale-110 shadow-lg' : ''}`}
                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
                   />

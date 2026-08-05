@@ -54,8 +54,8 @@ export const useDeckPersistence = ({
     }, []);
 
     // Sync to LocalStorage
-    useEffect(() => { localStorage.setItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY, JSON.stringify(loggedCards)); }, [loggedCards]);
-    useEffect(() => { localStorage.setItem(LOCAL_STORAGE_SAVED_THEMES_KEY, JSON.stringify(savedDeckThemes)); }, [savedDeckThemes]);
+    useEffect(() => { try { localStorage.setItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY, JSON.stringify(loggedCards)); } catch (e) { console.warn("Failed to persist deck log to localStorage:", e); } }, [loggedCards]);
+    useEffect(() => { try { localStorage.setItem(LOCAL_STORAGE_SAVED_THEMES_KEY, JSON.stringify(savedDeckThemes)); } catch (e) { console.warn("Failed to persist deck themes to localStorage:", e); } }, [savedDeckThemes]);
 
     const handleSaveTheme = useCallback(() => {
         setErrorSaveTheme(null);

@@ -8,6 +8,7 @@ import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from '@/
 import { getCountryDetails, getFlagEmoji } from '@/utils/countryData';
 import type { SunoClip, SingleSongComplianceResult, TitleCheckResult, LyricsLanguageCheckResult, ContentRatingCheckResult, RatingLevel, DurationCheckResult } from '@/types';
 import Spinner from '@/components/Spinner';
+import ScrollReveal from '@/components/ScrollReveal';
 import Button from '@/components/common/Button';
 import { ComplianceCheckIcon, SaveIcon, LoadIcon, DownloadIcon, RefreshIcon, LyricsIcon } from '@/components/Icons';
 import { downloadSunoComplianceResultsAsCsv } from '@/services/csvExportService';
@@ -520,8 +521,9 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
               </div>
                <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-white/10">Export Summary</Button>
             </div>
+            <ScrollReveal className="stagger-fade">
             {batchRunResults.map((result, index) => (
-              <div key={result.inputUrl + index} className="p-6 glass-card border-white/10 shadow-xl transition-all duration-300 animate-fadeIn">
+              <div key={result.inputUrl + index} className="p-6 glass-card border-white/10 shadow-xl transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-2xl animate-fadeIn">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
@@ -536,7 +538,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                     <div className="p-4 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5">
                       <div className="flex flex-col sm:flex-row gap-6 items-center">
                         {result.clipData.image_url && (
-                          <img src={result.clipData.image_url} alt="Cover Art" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                          <img src={result.clipData.image_url} alt="Cover Art" loading="lazy" decoding="async" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
                         )} 
                         <div className="flex-1 text-center sm:text-left min-w-0">
                           <h3 className="text-xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-400 truncate" title={result.clipData.title}>{result.clipData.title || "UNTITLED_SIGNAL"}</h3>
@@ -572,6 +574,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                 )}
               </div>
             ))}
+          </ScrollReveal>
           </div>
         )}
       </main>

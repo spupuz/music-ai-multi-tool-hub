@@ -1,6 +1,6 @@
 // components/sunoUserStats/charts/PlaylistCreationDateChart.tsx
 import React, { useEffect, useRef } from 'react';
-import { Chart } from 'chart.js/auto';
+import { Chart } from 'chart.js';
 import { getBaseChartOptions } from '@/utils/chartUtils';
 
 interface PlaylistCreationDateChartProps {

@@ -10,6 +10,7 @@ import {
   fetchSunoPlaylistById, 
   fetchSunoClipById, 
   extractSunoSongIdFromPath as extractSunoSongIdFromPathFromService, 
+  resolveSunoUrlToPotentialSongId,
 } from '@/services/sunoService';
 import { 
   fetchRiffusionSongData, 
@@ -156,7 +157,11 @@ export const useSunoInputProcessor = ({
       setLastFetchedTimestamp(currentTimestamp);
       if (result.profileDetail || result.clips.length > 0) {
         const cachedData = { identifier: usernameToFetch, type: 'user', profileDetail: result.profileDetail, playlistDetail: null, clips: result.clips, lastFetched: currentTimestamp };
-        localStorage.setItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData));
+        try {
+          localStorage.setItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData));
+        } catch (e) {
+          console.warn('Failed to persist user cache:', e);
+        }
       }
       if (result.clips.length === 0 && result.profileDetail) {
         setUiError(`No songs found for @${result.profileDetail.handle}. Profile might be private or have no public songs.`);
@@ -228,7 +233,11 @@ export const useSunoInputProcessor = ({
       setLastFetchedTimestamp(currentTimestamp);
       if (result.playlistDetail || result.clips.length > 0) {
         const cachedData = { identifier: playlistIdToFetch, type: 'playlist', playlistDetail: result.playlistDetail, profileDetail: null, clips: result.clips, lastFetched: currentTimestamp };
-        localStorage.setItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData));
+        try {
+          localStorage.setItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData));
+        } catch (e) {
+          console.warn('Failed to persist playlist cache:', e);
+        }
       }
       if (result.clips.length === 0 && result.playlistDetail) {
         setUiError(`No songs found in playlist "${result.playlistDetail.name || playlistIdToFetch}". It might be empty or private.`);
@@ -308,46 +317,77 @@ export const useSunoInputProcessor = ({
       return;
     }
 
-    const allFetchedClips: SunoClip[] = [];
+    const results: (SunoClip | null)[] = new Array(lines.length).fill(null);
     let fetchErrors = 0;
     const errorMessagesAccumulator: string[] = [];
     const updatedSongInfoCache = new Map(songInfoCache);
 
-    for (const line of lines) {
+    const processLine = async (line: string, index: number) => {
       try {
         const riffId = extractRiffusionSongId(line);
         if (riffId) {
           if (updatedSongInfoCache.has(riffId)) {
-            allFetchedClips.push(updatedSongInfoCache.get(riffId)!);
+            results[index] = updatedSongInfoCache.get(riffId)!;
           } else {
             const clipData = await fetchRiffusionSongData(riffId);
             if (clipData) {
               const clip = mapRiffusionToSuno(clipData);
-              allFetchedClips.push(clip);
+              results[index] = clip;
               updatedSongInfoCache.set(clip.id, clip);
             }
           }
-          continue;
+          return;
         }
 
         const sunoSongId = extractSunoSongIdFromPathFromService(line);
         if (sunoSongId) {
           if (updatedSongInfoCache.has(sunoSongId)) {
-            allFetchedClips.push(updatedSongInfoCache.get(sunoSongId)!);
+            results[index] = updatedSongInfoCache.get(sunoSongId)!;
           } else {
             const clip = await fetchSunoClipById(sunoSongId);
             if (clip) {
-              allFetchedClips.push(clip);
+              results[index] = clip;
               updatedSongInfoCache.set(clip.id, clip);
             }
           }
-          continue;
+          return;
+        }
+
+        // Fallback for suno.com short URLs (e.g. https://suno.com/s/abc123) that can't be parsed directly.
+        // Resolution is cached in localStorage (hubCache_shorturl_*), so repeat loads are instant.
+        if (/^(?:https?:\/\/)?(?:www\.)?(?:suno\.com|app\.suno\.ai)\//i.test(line)) {
+          const resolvedId = await resolveSunoUrlToPotentialSongId(line, setFetchProgress);
+          if (resolvedId) {
+            if (updatedSongInfoCache.has(resolvedId)) {
+              results[index] = updatedSongInfoCache.get(resolvedId)!;
+            } else {
+              const clip = await fetchSunoClipById(resolvedId);
+              if (clip) {
+                results[index] = clip;
+                updatedSongInfoCache.set(clip.id, clip);
+              }
+            }
+          }
+          return;
         }
       } catch (err) {
         fetchErrors++;
         errorMessagesAccumulator.push(`Error at "${line.substring(0, 20)}...": ${err instanceof Error ? err.message : String(err)}`);
       }
-    }
+    };
+
+    const CONCURRENCY = 4;
+    const workerCount = Math.min(CONCURRENCY, lines.length);
+    const workers = Array.from({ length: workerCount }, (_, workerIndex) =>
+      (async () => {
+        for (let i = workerIndex; i < lines.length; i += CONCURRENCY) {
+          await processLine(lines[i], i);
+        }
+      })()
+    );
+    await Promise.all(workers);
+
+    const allFetchedClips: SunoClip[] = results.filter((clip): clip is SunoClip => clip !== null);
 
     setSongInfoCache(updatedSongInfoCache);
 
@@ -422,11 +462,15 @@ export const useSunoInputProcessor = ({
   }, [identifierInput, parseInput]);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
-      type: currentIdentifierType,
-      id: currentIdentifier,
-      input: identifierInput,
-    }));
+    try {
+      localStorage.setItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
+        type: currentIdentifierType,
+        id: currentIdentifier,
+        input: identifierInput,
+      }));
+    } catch (e) {
+      console.warn('Failed to persist last session:', e);
+    }
   }, [currentIdentifier, currentIdentifierType, identifierInput]);
 
   return {

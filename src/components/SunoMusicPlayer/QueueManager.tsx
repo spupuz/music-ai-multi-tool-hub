@@ -99,7 +99,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                   onDragLeave={onDragLeave}
                   onDrop={e => onDrop(e, song.id)}
                   onDragEnd={onDragEnd}
-                  className={`p-3 flex items-center gap-4 transition-all relative 
+                  className={`p-3 flex items-center gap-4 cv-auto transition-[background-color,border-color,opacity,box-shadow] relative 
                                       ${isShuffle ? 'cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-gray-700 cursor-grab active:cursor-grabbing border-l-4 border-transparent hover:border-green-600'}
                                       ${currentSong?.id === song.id ? 'bg-green-100 dark:bg-green-700 bg-opacity-40 border-l-4 border-green-600' : ''} 
                                       ${dropIndicator?.targetId === song.id ? (dropIndicator.position === 'before' ? 'border-t-4 border-indigo-500' : 'border-b-4 border-indigo-500') : ''} 
@@ -110,6 +110,8 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                   <img
                     src={song.image_url || FALLBACK_IMAGE_DATA_URI}
                     alt={song.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-10 h-10 rounded object-cover flex-shrink-0 border-2 border-gray-300 dark:border-gray-600"
                     onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }}
                   />

@@ -2,6 +2,7 @@
 import React from 'react';
 import InfoIconWithTooltip from './InfoIconWithTooltip';
 import { useTheme } from '@/context/ThemeContext';
+import { useCountUp } from '@/hooks/useCountUp';
 
 interface StatDisplayCardProps {
   title: string;
@@ -14,6 +15,9 @@ interface StatDisplayCardProps {
 
 const StatDisplayCard: React.FC<StatDisplayCardProps> = ({ title, value, description, icon, children, tooltipText }) => {
   const { uiMode } = useTheme();
+  const numericValue = typeof value === 'number' ? value : 0;
+  const isNumeric = typeof value === 'number';
+  const animatedValue = useCountUp(numericValue, 700, isNumeric);
 
   if (uiMode === 'classic') {
     return (
@@ -24,7 +28,7 @@ const StatDisplayCard: React.FC<StatDisplayCardProps> = ({ title, value, descrip
           {tooltipText && <InfoIconWithTooltip text={tooltipText} className="ml-1 flex-shrink-0" />}
         </div>
         {value !== undefined && value !== null && (
-          <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1 truncate" title={String(value)}>{String(value)}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1 truncate tabular-nums" title={String(value)}>{isNumeric ? animatedValue.toLocaleString() : String(value)}</p>
         )}
         {description && <p className="text-xs text-gray-500 dark:text-gray-400 mt-auto">{description}</p>}
         {children && <div className="mt-1 text-sm text-gray-600 dark:text-gray-300 flex-grow">{children}</div>}
@@ -53,8 +57,8 @@ const StatDisplayCard: React.FC<StatDisplayCardProps> = ({ title, value, descrip
       </div>
       <div className="flex flex-col gap-1 z-10">
         {value !== undefined && value !== null && (
-          <div className="text-xl font-black text-white tracking-widest truncate group-hover:scale-[1.02] origin-left transition-transform duration-300" title={String(value)}>
-            {String(value)}
+          <div className="text-xl font-black text-white tracking-widest truncate group-hover:scale-[1.02] origin-left transition-transform duration-300 tabular-nums" title={String(value)}>
+            {isNumeric ? animatedValue.toLocaleString() : String(value)}
           </div>
         )}
         {description && (

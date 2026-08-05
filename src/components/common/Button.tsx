@@ -44,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
         inline-flex items-center justify-center 
         ${isArchitect ? 'font-black uppercase tracking-widest' : 'font-bold'} 
         ${isArchitect ? 'rounded-2xl' : 'rounded-md'} 
-        transition-all duration-300 
+        transition-[transform,box-shadow,background-color,border-color,color,filter] duration-300 
         transform active:scale-95 disabled:opacity-50 
         disabled:cursor-not-allowed disabled:active:scale-100 
         shadow-sm active:shadow-inner border

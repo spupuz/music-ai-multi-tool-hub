@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 
 export function useSpinAudio() {
     const [soundError, setSoundError] = useState<string | null>(null);
@@ -89,6 +89,16 @@ export function useSpinAudio() {
         } else if (osc || noiseNode) {
             activeSpinSoundSourceRef.current = { stop: () => { if (osc) osc.stop(); if (noiseNode) noiseNode.stop(); if (lfo) lfo.stop(); if (gainNode) gainNode.disconnect(); if (filterNode) filterNode.disconnect(); if (lfoGain) lfoGain.disconnect(); } };
         }
+    }, [stopSelectedSpinSound]);
+
+    useEffect(() => {
+        return () => {
+            stopSelectedSpinSound();
+            if (audioContextRef.current) {
+                audioContextRef.current.close().catch(() => {});
+                audioContextRef.current = null;
+            }
+        };
     }, [stopSelectedSpinSound]);
 
     return {

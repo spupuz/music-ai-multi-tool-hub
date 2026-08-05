@@ -3,6 +3,11 @@ import type { SunoProfileDetail, SunoPlaylistDetail } from '@/types';
 import { TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, FollowersIcon, ClipsIcon, PlaylistIcon } from './Icons';
 import { useTheme } from '@/context/ThemeContext';
 
+const AVATAR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="#1f2937" rx="64"/><circle cx="64" cy="64" r="32" fill="#374151"/><path d="M58 48v28c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V48l20-4v18c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V44l-16 4z" fill="#10b981"/></svg>';
+const ARTWORK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="#1f2937" rx="12"/><path d="M44 52v28c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V44l24-4v26c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V48l-20 4zm36 0v28c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V44l24-4v26c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V48l-20 4z" fill="#10b981" opacity=".6"/></svg>';
+const PLACEHOLDER_AVATAR = `data:image/svg+xml;base64,${btoa(AVATAR_SVG)}`;
+const PLACEHOLDER_ARTWORK = `data:image/svg+xml;base64,${btoa(ARTWORK_SVG)}`;
+
 export const ProfileInfoBox: React.FC<{ detail: SunoProfileDetail }> = ({ detail }) => {
   const { uiMode } = useTheme();
   
@@ -10,7 +15,7 @@ export const ProfileInfoBox: React.FC<{ detail: SunoProfileDetail }> = ({ detail
     return (
       <div className="mb-6 bg-white dark:bg-gray-800 p-6 rounded-lg border-2 border-gray-200 dark:border-green-600/30 flex flex-col md:flex-row items-center md:items-center gap-8 shadow-md"> 
         {detail.user_id !== "custom_list_synthetic_id" && detail.image_url && (
-          <img src={detail.image_url || 'https://via.placeholder.com/128?text=No+Avatar'} alt={`${detail.display_name}'s avatar`} className="w-32 h-32 rounded-full object-cover border-4 border-green-600 shadow-lg flex-shrink-0" />
+          <img src={detail.image_url || PLACEHOLDER_AVATAR} alt={`${detail.display_name}'s avatar`} loading="lazy" decoding="async" className="w-32 h-32 rounded-full object-cover border-4 border-green-600 shadow-lg flex-shrink-0" />
         )} 
         <div className="flex-1 text-center md:text-left min-w-0"> 
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white truncate mb-1" title={detail.display_name}>{detail.display_name}</h2> 
@@ -60,8 +65,10 @@ export const ProfileInfoBox: React.FC<{ detail: SunoProfileDetail }> = ({ detail
         <div className="relative flex-shrink-0 group/avatar">
           <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-md opacity-0 group-hover/avatar:opacity-100 transition-opacity"></div>
           <img 
-            src={detail.image_url || 'https://via.placeholder.com/128?text=No+Avatar'} 
+            src={detail.image_url || PLACEHOLDER_AVATAR} 
             alt={`${detail.display_name}'s avatar`} 
+            loading="lazy"
+            decoding="async"
             className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10 grayscale-[0.2] group-hover/avatar:grayscale-0 transition-all duration-500" 
           />
         </div>
@@ -121,7 +128,7 @@ export const PlaylistInfoBox: React.FC<{ detail: SunoPlaylistDetail }> = ({ deta
   if (uiMode === 'classic') {
     return (
       <div className="mb-6 bg-white dark:bg-gray-800 p-6 rounded-lg border-2 border-gray-200 dark:border-green-600/30 flex flex-col md:flex-row items-center md:items-center gap-8 shadow-md"> 
-        <img src={detail.image_url || detail.creator_avatar_image_url || 'https://via.placeholder.com/128?text=No+Artwork'} alt={`${detail.name || 'Playlist'}'s artwork`} className="w-32 h-32 rounded-xl object-cover border-4 border-green-600 shadow-lg flex-shrink-0" /> 
+        <img src={detail.image_url || detail.creator_avatar_image_url || PLACEHOLDER_ARTWORK} alt={`${detail.name || 'Playlist'}'s artwork`} loading="lazy" decoding="async" className="w-32 h-32 rounded-xl object-cover border-4 border-green-600 shadow-lg flex-shrink-0" /> 
         <div className="flex-1 text-center md:text-left min-w-0"> 
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white truncate mb-1" title={detail.name || 'Untitled Playlist'}> 
             <a href={detail.suno_playlist_url} target="_blank" rel="noopener noreferrer" className="hover:underline"> {detail.name || 'Untitled Playlist'} </a> 
@@ -160,8 +167,10 @@ export const PlaylistInfoBox: React.FC<{ detail: SunoPlaylistDetail }> = ({ deta
       <div className="relative flex-shrink-0 group/cover">
         <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-md opacity-0 group-hover/cover:opacity-100 transition-opacity"></div>
         <img 
-          src={detail.image_url || detail.creator_avatar_image_url || 'https://via.placeholder.com/128?text=No+Artwork'} 
+          src={detail.image_url || detail.creator_avatar_image_url || PLACEHOLDER_ARTWORK} 
           alt={`${detail.name || 'Playlist'}'s artwork`} 
+          loading="lazy"
+          decoding="async"
           className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl object-cover border-4 border-white/10 shadow-2xl relative z-10 grayscale-[0.2] group-hover/cover:grayscale-0 transition-all duration-500" 
         />
       </div> 

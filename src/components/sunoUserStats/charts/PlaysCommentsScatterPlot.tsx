@@ -1,10 +1,8 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Chart, ScatterController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js/auto';
+import { Chart } from 'chart.js';
 import type { SunoClip } from '@/types';
 import { getBaseChartOptions } from '@/utils/chartUtils';
-
-Chart.register(ScatterController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface PlaysCommentsScatterPlotProps {
   songs: SunoClip[];

@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
 import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
+import ScrollReveal from '@/components/ScrollReveal';
 import { 
   SearchIcon, 
   GlobeAltIcon, 
@@ -256,14 +257,14 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
 
         <div className="space-y-12 relative z-10">
           {filteredCategories.map(category => (
-            <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn">
+            <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn cv-section">
               <div className="flex items-center gap-4 mb-8">
                 <h2 id={`category-title-${category.id}`} className="text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-emerald-600 dark:text-emerald-500">
                   {category.name}
                 </h2>
                 <div className="h-px w-full bg-white/5"></div>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <ScrollReveal className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-fade">
                 {category.items.map(item => (
                   <a
                     key={item.id}
@@ -284,7 +285,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                     </div>
                   </a>
                 ))}
-              </div>
+              </ScrollReveal>
             </section>
           ))}
         </div>

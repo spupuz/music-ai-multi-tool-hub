@@ -242,7 +242,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                   <tr key={song.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <td className="px-3 py-2 whitespace-nowrap">
                       <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" title={`View ${song.title} on Suno`}>
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={song.image_url || FALLBACK_IMAGE_DATA_URI} 
                           alt={song.title} 
                           className="w-10 h-10 object-cover rounded border border-gray-300 dark:border-gray-500" 
@@ -376,7 +376,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                   <td className="sticky left-0 z-20 bg-[#0a0a0a] group-hover:bg-gray-900/40 px-4 sm:px-6 py-4 whitespace-nowrap border-r border-white/5">
                     <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="block relative h-10 w-10 sm:h-12 sm:w-12 group/thumb">
                       <div className="absolute inset-0 bg-emerald-500/10 rounded-xl blur-sm opacity-0 group-hover/thumb:opacity-100 transition-opacity"></div>
-                      <img 
+                      <img loading="lazy" decoding="async" 
                         src={song.image_url || FALLBACK_IMAGE_DATA_URI} 
                         alt={song.title} 
                         className="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-xl border border-white/10 shadow-lg relative z-10 grayscale-[0.3] group-hover:grayscale-0 transition-all" 

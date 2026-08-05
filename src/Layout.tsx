@@ -1,34 +1,22 @@
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import 'chartjs-adapter-date-fns';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import SongCoverArtTool from '@/tools/SongCoverArtTool';
-import LyricProcessorTool from '@/tools/LyricProcessorTool';
-import SunoMusicPlayerTool from '@/tools/SunoMusicPlayerTool';
-import AboutPage from '@/pages/AboutPage'; 
-import RandomMusicStyleGenerator from '@/tools/RandomMusicStyleGenerator/RandomMusicStyleGenerator';
-import { CreativeConceptBlender } from '@/tools/CreativeConceptBlender/CreativeConceptBlender';
-import ChordProgressionTool from '@/tools/ChordProgressionTool'; 
-import ScaleChordViewerTool from '@/tools/ScaleChordViewerTool';
-import LyricsSynchronizerTool from '@/tools/LyricsSynchronizerTool';
-import SongStructureBuilderTool from '@/tools/SongStructureBuilderTool';
-import SongDeckPickerTool from '@/tools/SongDeckPicker/SongDeckPickerTool';
-import MusicTheoryWikiTool from '@/tools/MusicTheoryWikiTool';
-import BPMTapperTool from '@/tools/BPMTapperTool';
-import MetronomeTool from '@/tools/MetronomeTool';
-import MP3CutterTool from '@/tools/MP3CutterTool';
-import SunoUserStatsTool from '@/tools/SunoUserStatsTool'; 
-import SunoSongComplianceTool from '@/tools/SunoSongComplianceTool';
-import ReleaseNotesPage from '@/pages/ReleaseNotesPage'; 
-import SpecialMentionsPage from '@/pages/SpecialMentionsPage';
 import CookieConsentPopup from '@/components/CookieConsentPopup';
-import PromptSparkTool from '@/tools/SparkTuneTool'; 
-import SunoCommunitySpinnerTool from '@/tools/SunoCommunitySpinnerTool';
-import LocalMusicResourceDirectoryTool from '@/tools/LocalMusicResourceDirectoryTool'; 
+import ToolErrorBoundary from '@/components/ToolErrorBoundary';
+import { ToastProvider } from '@/components/ToastProvider';
 import { useTheme } from '@/context/ThemeContext';
 import { useTelemetry } from '@/hooks/useTelemetry';
-import StatsPage from '@/pages/StatsPage';
+
+// Wraps React.lazy with an optional hover/focus preload so tool chunks
+// are fetched before the user actually clicks, without breaking on failure.
+function lazyWithPreload<T extends React.ComponentType<ToolProps>>(factory: () => Promise<{ default: T }>) {
+  const Component = React.lazy(factory);
+  (Component as React.LazyExoticComponent<T> & { preload?: () => void }).preload = () => {
+    factory().catch(() => {});
+  };
+  return Component;
+}
 
 // --- Tool Icons (SVGs) ---
 const AboutIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>);
@@ -159,37 +147,63 @@ export interface ToolProps {
 export interface Tool {
   id: ToolId;
   name: string;
-  component: React.FC<ToolProps>;
+  component: React.ComponentType<ToolProps>;
   icon?: React.ReactElement; 
   category: string;
+  preload?: () => void;
 }
 
 
 const tools: Tool[] = [
-  { id: 'about', name: 'About This Hub', component: AboutPage as React.FC<ToolProps>, icon: <AboutIcon />, category: "App & Info" },
-  { id: 'sunoMusicPlayer', name: 'Music Shuffler', component: SunoMusicPlayerTool, icon: <PlatformsIcon />, category: "AI Music Platforms" },
-  { id: 'sunoUserStats', name: 'Suno User Stats', component: SunoUserStatsTool, icon: <UserStatsIcon />, category: "AI Music Platforms" },
-  { id: 'sunoSongCompliance', name: 'Compliance Check', component: SunoSongComplianceTool, icon: <ComplianceCheckIcon />, category: "AI Music Platforms" },
-  { id: 'songStructureBuilder', name: 'Song Structure Builder', component: SongStructureBuilderTool, icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
-  { id: 'songCoverArt', name: 'Cover Art Lab', component: SongCoverArtTool, icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
-  { id: 'mp3Cutter', name: 'MP3 Cutter', component: MP3CutterTool, icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
-  { id: 'lyricProcessor', name: 'Lyric Lab', component: LyricProcessorTool, icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
-  { id: 'lyricsSynchronizer', name: 'Lyrics Sync', component: LyricsSynchronizerTool, icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
-  { id: 'randomMusicStyle', name: 'Style Architect', component: RandomMusicStyleGenerator, icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
-  { id: 'creativeConceptBlender', name: 'Concept Blender', component: CreativeConceptBlender, icon: <LightbulbIcon className="w-5 h-5 transform scale-x-[-1]" />, category: "Creative AI & Content Tools" },
-  { id: 'localMusicResourceDirectory', name: 'Resource Nexus', component: LocalMusicResourceDirectoryTool, icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
-  { id: 'musicTheoryWiki', name: 'Music Theory Wiki', component: MusicTheoryWikiTool, icon: <BookOpenIcon />, category: "Creator Resources & Learning" },
-  { id: 'sunoCommunitySpinner', name: 'Magic Spin', component: SunoCommunitySpinnerTool, icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
-  { id: 'chordProgressionGenerator', name: 'Chord Progressions', component: ChordProgressionTool, icon: <TuneIcon />, category: "Music Theory & Composition" }, 
-  { id: 'scaleChordViewer', name: 'Scale & Chord Viewer', component: ScaleChordViewerTool, icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
-  { id: 'songDeckPicker', name: 'Song Deck', component: SongDeckPickerTool, icon: <CardsIcon />, category: "Community & Fun Tools" },
-  { id: 'bpmTapper', name: 'Tempo & Key', component: BPMTapperTool, icon: <TapIcon />, category: "Music Theory & Composition" }, 
-  { id: 'metronome', name: 'Metronome', component: MetronomeTool, icon: <MetronomeIcon />, category: "Music Theory & Composition" },
-  { id: 'promptSpark', name: 'SparkTune', component: PromptSparkTool, icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
-  { id: 'releaseNotes', name: 'Updates', component: ReleaseNotesPage as React.FC<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
-  { id: 'specialMentions', name: 'Special Mentions', component: SpecialMentionsPage as React.FC<ToolProps>, icon: <HeartIcon />, category: "App & Info"},
-  { id: 'stats', name: 'Analytics', component: StatsPage as React.FC<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
+  { id: 'about', name: 'About This Hub', component: lazyWithPreload(() => import('@/pages/AboutPage')) as unknown as React.ComponentType<ToolProps>, icon: <AboutIcon />, category: "App & Info" },
+  { id: 'sunoMusicPlayer', name: 'Music Shuffler', component: lazyWithPreload(() => import('@/tools/SunoMusicPlayerTool')), icon: <PlatformsIcon />, category: "AI Music Platforms" },
+  { id: 'sunoUserStats', name: 'Suno User Stats', component: lazyWithPreload(() => import('@/tools/SunoUserStatsTool')), icon: <UserStatsIcon />, category: "AI Music Platforms" },
+  { id: 'sunoSongCompliance', name: 'Compliance Check', component: lazyWithPreload(() => import('@/tools/SunoSongComplianceTool')), icon: <ComplianceCheckIcon />, category: "AI Music Platforms" },
+  { id: 'songStructureBuilder', name: 'Song Structure Builder', component: lazyWithPreload(() => import('@/tools/SongStructureBuilderTool')), icon: <SongStructureIcon />, category: "Creative AI & Content Tools" },
+  { id: 'songCoverArt', name: 'Cover Art Lab', component: lazyWithPreload(() => import('@/tools/SongCoverArtTool')), icon: <CoverArtIcon />, category: "Creative AI & Content Tools" },
+  { id: 'mp3Cutter', name: 'MP3 Cutter', component: lazyWithPreload(() => import('@/tools/MP3CutterTool')), icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
+  { id: 'lyricProcessor', name: 'Lyric Lab', component: lazyWithPreload(() => import('@/tools/LyricProcessorTool')), icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
+  { id: 'lyricsSynchronizer', name: 'Lyrics Sync', component: lazyWithPreload(() => import('@/tools/LyricsSynchronizerTool')), icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
+  { id: 'randomMusicStyle', name: 'Style Architect', component: lazyWithPreload(() => import('@/tools/RandomMusicStyleGenerator/RandomMusicStyleGenerator')), icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
+  { id: 'creativeConceptBlender', name: 'Concept Blender', component: lazyWithPreload(() => import('@/tools/CreativeConceptBlender/CreativeConceptBlender').then(m => ({ default: m.CreativeConceptBlender }))), icon: <LightbulbIcon className="w-5 h-5 transform scale-x-[-1]" />, category: "Creative AI & Content Tools" },
+  { id: 'localMusicResourceDirectory', name: 'Resource Nexus', component: lazyWithPreload(() => import('@/tools/LocalMusicResourceDirectoryTool')), icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
+  { id: 'musicTheoryWiki', name: 'Music Theory Wiki', component: lazyWithPreload(() => import('@/tools/MusicTheoryWikiTool')), icon: <BookOpenIcon />, category: "Creator Resources & Learning" },
+  { id: 'sunoCommunitySpinner', name: 'Magic Spin', component: lazyWithPreload(() => import('@/tools/SunoCommunitySpinnerTool')), icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
+  { id: 'chordProgressionGenerator', name: 'Chord Progressions', component: lazyWithPreload(() => import('@/tools/ChordProgressionTool')), icon: <TuneIcon />, category: "Music Theory & Composition" }, 
+  { id: 'scaleChordViewer', name: 'Scale & Chord Viewer', component: lazyWithPreload(() => import('@/tools/ScaleChordViewerTool')), icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
+  { id: 'songDeckPicker', name: 'Song Deck', component: lazyWithPreload(() => import('@/tools/SongDeckPicker/SongDeckPickerTool')), icon: <CardsIcon />, category: "Community & Fun Tools" },
+  { id: 'bpmTapper', name: 'Tempo & Key', component: lazyWithPreload(() => import('@/tools/BPMTapperTool')), icon: <TapIcon />, category: "Music Theory & Composition" }, 
+  { id: 'metronome', name: 'Metronome', component: lazyWithPreload(() => import('@/tools/MetronomeTool')), icon: <MetronomeIcon />, category: "Music Theory & Composition" },
+  { id: 'promptSpark', name: 'SparkTune', component: lazyWithPreload(() => import('@/tools/SparkTuneTool')), icon: <SparkTuneIcon />, category: "Community & Fun Tools"},
+  { id: 'releaseNotes', name: 'Updates', component: lazyWithPreload(() => import('@/pages/ReleaseNotesPage')) as unknown as React.ComponentType<ToolProps>, icon: <ReleaseNotesIcon />, category: "App & Info"},
+  { id: 'specialMentions', name: 'Special Mentions', component: lazyWithPreload(() => import('@/pages/SpecialMentionsPage')) as unknown as React.ComponentType<ToolProps>, icon: <HeartIcon />, category: "App & Info"},
+  { id: 'stats', name: 'Analytics', component: lazyWithPreload(() => import('@/pages/StatsPage')) as unknown as React.ComponentType<ToolProps>, icon: <StatsIcon />, category: "App & Info"},
 ];
+
+const ToolNotFoundComponent: React.FC = () => (
+  <div className="text-center py-10">
+    <h2 className="text-2xl text-red-400">Tool Not Found</h2>
+    <p className="text-gray-400">The requested tool could not be loaded.</p>
+  </div>
+);
+
+const ToolLoadingFallback: React.FC = () => (
+  <div className="w-full max-w-5xl mx-auto animate-fadeIn">
+    <div className="glass-card p-2 sm:p-6 md:p-10 border-white/10 relative overflow-hidden">
+      <div className="mb-8 md:mb-12 text-center pt-0 md:pt-4">
+        <div className="skeleton-bar h-8 w-2/3 mx-auto rounded-xl" />
+        <div className="skeleton-bar h-4 w-1/3 mx-auto mt-3 rounded-md" />
+      </div>
+      <div className="space-y-3">
+        <div className="skeleton-bar h-16 rounded-2xl" />
+        <div className="skeleton-bar h-16 rounded-2xl" />
+        <div className="skeleton-bar h-16 rounded-2xl" />
+        <div className="skeleton-bar h-16 rounded-2xl" />
+        <div className="skeleton-bar h-16 rounded-2xl" />
+      </div>
+    </div>
+  </div>
+);
 
 const COOKIE_CONSENT_KEY = 'aiMultiToolHub_cookieConsent';
 const CONSENT_GIVEN_VALUE = 'true';
@@ -200,16 +214,36 @@ const Layout: React.FC = () => {
   useTelemetry();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeToolId, setActiveToolId] = useState<ToolId>('about'); 
+  const activeToolRef = useRef(activeToolId);
+  activeToolRef.current = activeToolId;
   const [showCookieConsent, setShowCookieConsent] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
   const { theme, uiMode, toggleUiMode } = useTheme();
 
   useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        translatedTools.find(t => t.id === 'about')?.preload?.();
+      }, { timeout: 2000 });
+      requestIdleCallback(() => {
+        translatedTools.find(t => t.id === 'sunoMusicPlayer')?.preload?.();
+      }, { timeout: 4000 });
+    }
+  }, []);
+
+  useEffect(() => {
+    let timer: number | undefined;
     const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 768);
+      if (timer) cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(() => {
+        setIsDesktop(window.innerWidth >= 768);
+      });
     };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (timer) cancelAnimationFrame(timer);
+    };
   }, []);
 
 
@@ -298,9 +332,16 @@ const Layout: React.FC = () => {
     const mainContentTransitionDuration = 300; 
 
     const performNavigation = () => {
-      setActiveToolId(toolId);
-      if (toolId !== 'about' && toolId !== 'releaseNotes' && toolId !== 'specialMentions') {
-        trackLocalEvent('Navigation', 'toolVisits', toolId);
+      const doSet = () => {
+        setActiveToolId(toolId);
+        if (toolId !== 'about' && toolId !== 'releaseNotes' && toolId !== 'specialMentions') {
+          trackLocalEvent('Navigation', 'toolVisits', toolId);
+        }
+      };
+      if (document.startViewTransition) {
+        document.startViewTransition(doSet);
+      } else {
+        doSet();
       }
     };
 
@@ -325,47 +366,65 @@ const Layout: React.FC = () => {
     return tools;
   }, []);
 
+  const sidebarTools = useMemo(() => {
+    return translatedTools.map(t => ({ id: t.id, name: t.name, icon: t.icon, category: t.category }));
+  }, [translatedTools]);
+
+  const preloadTool = useCallback((toolId: ToolId) => {
+    const tool = translatedTools.find(t => t.id === toolId);
+    tool?.preload?.();
+  }, [translatedTools]);
+
   const foundTool = translatedTools.find(tool => tool.id === activeToolId);
   const ActiveToolComponent = foundTool ? foundTool.component : null;
-  const ToolNotFoundComponent = () => <div className="text-center py-10"><h2 className="text-2xl text-red-400">Tool Not Found</h2><p className="text-gray-400">The requested tool could not be loaded.</p></div>;
 
-  const activeToolSpecificProps: Partial<ToolProps> = {};
-  if ((activeToolId === 'about' || activeToolId === 'releaseNotes' || activeToolId === 'specialMentions') && foundTool) {
-    activeToolSpecificProps.onNavigate = handleNavigate;
-    activeToolSpecificProps.toolsList = translatedTools; 
-  }
-  
-  const combinedToolProps: ToolProps = {
-    trackLocalEvent,
-    ...activeToolSpecificProps,
-    onNavigate: (activeToolId === 'about' || activeToolId === 'releaseNotes' || activeToolId === 'specialMentions' || activeToolId === 'sunoSongCompliance') ? handleNavigate : undefined,
-  };
+  const combinedToolProps: ToolProps = useMemo(() => {
+    const isInfoPage = activeToolId === 'about' || activeToolId === 'releaseNotes' || activeToolId === 'specialMentions';
+    const shouldPassNavigation = isInfoPage || activeToolId === 'sunoSongCompliance';
+    return {
+      trackLocalEvent,
+      onNavigate: shouldPassNavigation ? handleNavigate : undefined,
+      toolsList: isInfoPage ? translatedTools : undefined,
+    };
+  }, [activeToolId, handleNavigate, trackLocalEvent, translatedTools]);
 
 
   return (
+    <ToastProvider>
     <div className="flex flex-col min-h-screen transition-colors duration-500 ease-in-out overflow-x-hidden">
+      <div className="fixed top-0 left-0 right-0 z-[60] h-0.5 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent animate-progress-bar pointer-events-none" aria-hidden="true" />
       <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} appName="Music AI Multi-Tool Hub" />
       <div className="flex flex-1 pt-16 relative overflow-hidden">
-        {/* Animated Background Orbs */}
+        {/* Animated Background Orbs + aurora — pre-blurred radial gradients (no blur() filter, GPU-friendly drift) */}
         {uiMode !== 'classic' && (
-          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/10 blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+            <div className="absolute inset-0 bg-aurora" />
+            <div className="absolute -top-40 -left-40 w-[36rem] h-[36rem] rounded-full [background:radial-gradient(circle,rgba(16,185,129,0.16),transparent_62%)] animate-orb-drift"></div>
+            <div className="absolute -bottom-40 -right-40 w-[36rem] h-[36rem] rounded-full [background:radial-gradient(circle,rgba(59,130,246,0.13),transparent_62%)] animate-orb-drift" style={{ animationDelay: '-8s' }}></div>
           </div>
         )}
 
         <Sidebar 
           isOpen={isSidebarOpen} 
           onClose={toggleSidebar} 
-          tools={translatedTools.map(t => ({ id: t.id, name: t.name, icon: t.icon, category: t.category }))}
+          tools={sidebarTools}
           activeToolId={activeToolId}
           onNavigate={handleNavigate} 
           trackLocalEvent={trackLocalEvent}
+          onPreloadTool={preloadTool}
         />
-        <main className={`flex-1 w-full max-w-full overflow-x-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'md:ml-80 ml-0' : 'ml-0'}`}>
+        <main className={`flex-1 w-full max-w-full overflow-x-hidden transition-[margin-left] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'md:ml-80 ml-0' : 'ml-0'}`}>
           <div className={`${uiMode === 'classic' ? 'px-1 sm:px-4 lg:px-8 max-w-full items-start' : 'px-0 sm:px-6 lg:px-12 max-w-[1600px] items-center'} pt-2 pb-12 mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col`}> 
             <div className="w-full max-w-full">
-              {ActiveToolComponent ? <ActiveToolComponent {...combinedToolProps} /> : <ToolNotFoundComponent />}
+              {ActiveToolComponent ? (
+                <React.Suspense fallback={<ToolLoadingFallback />}>
+                  <ToolErrorBoundary key={activeToolId}>
+                    <ActiveToolComponent {...combinedToolProps} />
+                  </ToolErrorBoundary>
+                </React.Suspense>
+              ) : (
+                <ToolNotFoundComponent />
+              )}
             </div>
           </div>
         </main>
@@ -385,6 +444,7 @@ const Layout: React.FC = () => {
       </footer>
       {showCookieConsent && <CookieConsentPopup onAccept={handleAcceptCookieConsent} onLearnMore={() => { if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }), 50); setShowCookieConsent(false);}, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({ behavior: 'smooth' }), 50); setShowCookieConsent(false); }}} />}
     </div>
+    </ToastProvider>
   );
 };
 

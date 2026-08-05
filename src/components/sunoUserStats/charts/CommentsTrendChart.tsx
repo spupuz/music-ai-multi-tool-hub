@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Chart } from 'chart.js/auto';
+import { Chart } from 'chart.js';
 import type { HistoricalDataPoint } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';
 

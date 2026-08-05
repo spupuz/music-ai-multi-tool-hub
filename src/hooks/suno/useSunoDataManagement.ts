@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { SunoClip, SavedCustomPlaylist, SunoMusicPlayerStoredData, SunoProfileDetail, SunoPlaylistDetail } from '@/types';
 import { downloadSunoPlaylistAsCsv } from '@/services/csvExportService';
+import { cacheGetAll, cacheSet, cacheRemove, cacheRemoveNamespace } from '@/services/cacheUtils';
 import {
-  LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY,
   LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY,
   LOCAL_STORAGE_PREFIX_USER,
   LOCAL_STORAGE_PREFIX_PLAYLIST,
@@ -13,6 +13,8 @@ import {
   knownAppLocalStoragePrefixes
 } from './constants';
 
+const CACHE_NAMESPACE_SONG = 'song';
+
 export interface UseSunoDataManagementProps {
   trackLocalEvent: (category: string, action: string, label?: string, value?: string | number) => void;
   setErrorPlayer: (error: string | null) => void;
@@ -22,6 +24,9 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   const [savedCustomPlaylists, setSavedCustomPlaylists] = useState<SavedCustomPlaylist[]>([]);
   const [songInfoCache, setSongInfoCache] = useState<Map<string, SunoClip>>(new Map());
   const [dataManagementStatus, setDataManagementStatus] = useState<string>('');
+  const hasHydratedStorage = useRef(false);
+  const prevSongInfoCacheRef = useRef<Map<string, SunoClip>>(new Map());
+  const SONG_CACHE_MAX_ENTRIES = 500;
 
   const getCacheKey = useCallback((type: 'user' | 'playlist', id: string): string => 
     type === 'user' ? `${LOCAL_STORAGE_PREFIX_USER}${id}` : `${LOCAL_STORAGE_PREFIX_PLAYLIST}${id}`, []);
@@ -55,8 +60,9 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     }
 
     try {
-      const storedClipCache = localStorage.getItem(LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY);
-      if (storedClipCache) setSongInfoCache(new Map(JSON.parse(storedClipCache)));
+      const hydrated = cacheGetAll<SunoClip>(CACHE_NAMESPACE_SONG, SONG_CACHE_MAX_ENTRIES);
+      prevSongInfoCacheRef.current = hydrated;
+      setSongInfoCache(hydrated);
     } catch (e) {
       console.error("Error loading song detail cache:", e);
       setSongInfoCache(new Map());
@@ -65,6 +71,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
 
   // Sync with localStorage on changes
   useEffect(() => {
+    if (!hasHydratedStorage.current) return;
     try {
       localStorage.setItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY, JSON.stringify(savedCustomPlaylists));
     } catch (e) {
@@ -73,12 +80,24 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   }, [savedCustomPlaylists]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY, JSON.stringify(Array.from(songInfoCache.entries())));
-    } catch (e) {
-      console.error("Error saving song detail cache:", e);
-    }
+    if (!hasHydratedStorage.current) return;
+    const prev = prevSongInfoCacheRef.current;
+    prev.forEach((_, id) => {
+      if (!songInfoCache.has(id)) {
+        cacheRemove(CACHE_NAMESPACE_SONG, id);
+      }
+    });
+    songInfoCache.forEach((clip, id) => {
+      if (prev.get(id) !== clip) {
+        cacheSet(CACHE_NAMESPACE_SONG, id, clip, SONG_CACHE_MAX_ENTRIES);
+      }
+    });
+    prevSongInfoCacheRef.current = songInfoCache;
   }, [songInfoCache]);
+
+  useEffect(() => {
+    hasHydratedStorage.current = true;
+  }, []);
 
   const handleClearSongInfoCache = useCallback(() => {
     if (clearPlayerCacheClickCount < CLEAR_CLICKS_NEEDED - 1) {
@@ -92,7 +111,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       return;
     }
     try {
-      localStorage.removeItem(LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY);
+      cacheRemoveNamespace(CACHE_NAMESPACE_SONG);
       setSongInfoCache(new Map());
       setDataManagementStatus("Song info cache (individual clips) cleared.");
       trackLocalEvent(TOOL_CATEGORY_PLAYER, 'cacheCleared', 'songInfoCache');

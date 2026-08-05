@@ -8,6 +8,40 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.4.0",
+    content: (
+      <section id="version-2.4.0">
+        <SectionTitle>Version 2.4.0 - 2025-08-05</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Service Layer Caching</STRONG>: Added persistent caching layer for Suno clip data, Riffusion song data, and short URL resolutions to reduce redundant network requests.</LI>
+          <LI><STRONG>Parallel Proxy Racing</STRONG>: Both <CODE>sunoService</CODE> and <CODE>riffusionService</CODE> now race all CORS proxies in parallel — the first successful response wins, dramatically improving fetch reliability.</LI>
+          <LI><STRONG>Animated Stat Counters</STRONG>: Added <CODE>useCountUp</CODE> hook with animated number transitions on the Analytics dashboard.</LI>
+          <LI><STRONG>ScrollReveal Component</STRONG>: New stagger-fade scroll animation wrapper for resource directory and compliance tool.</LI>
+          <LI><STRONG>Toast & Error Boundary</STRONG>: Added <CODE>ToastProvider</CODE> for transient notifications and <CODE>ToolErrorBoundary</CODE> for graceful tool-level crash recovery.</LI>
+          <LI><STRONG>Chart.js Centralized Setup</STRONG>: Moved all Chart.js registration to <CODE>chartSetup.ts</CODE> to eliminate redundant imports.</LI>
+          <LI><STRONG>Manual Vite Chunking</STRONG>: Configured <CODE>rollupOptions.manualChunks</CODE> to split vendor dependencies, reducing main bundle size.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>AI Analysis Service</STRONG>: Added 30s request timeout and external abort signal support; refactored code-fence stripping into reusable <CODE>stripCodeFence</CODE> utility.</LI>
+          <LI><STRONG>Gemini Proxy Calls</STRONG>: Enhanced error handling with distinct timeout vs. cancellation error messages.</LI>
+          <LI><STRONG>CSS Transition Optimization</STRONG>: Replaced generic <CODE>transition-all</CODE> with specific property transitions (<CODE>transition-[transform,box-shadow,...]</CODE>) for better rendering performance.</LI>
+          <LI><STRONG>Image Loading</STRONG>: Added <CODE>loading="lazy"</CODE> and <CODE>decoding="async"</CODE> to all image elements for deferred loading and non-blocking decode.</LI>
+          <LI><STRONG>Sidebar Migration</STRONG>: Moved sidebar component from <CODE>src/Sidebar.tsx</CODE> to <CODE>src/components/Sidebar.tsx</CODE>.</LI>
+          <LI><STRONG>Title Styling</STRONG>: Applied gradient animated text to About, Release Notes, and Analytics page headers.</LI>
+          <LI><STRONG>Tailwind Config</STRONG>: Removed unused <CODE>classic-header</CODE> and <CODE>classic-body</CODE> font families.</LI>
+        </UL>
+        <SubSectionTitle>Removed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Dead Code</STRONG>: Deleted empty placeholder services (<CODE>geminiService.ts</CODE>, <CODE>huggingfaceService.ts</CODE>) and old <CODE>src/Sidebar.tsx</CODE>.</LI>
+          <LI><STRONG>StatChartsPlaceholder</STRONG>: Removed empty placeholder component.</LI>
+          <LI><STRONG>Console Log Cleanup</STRONG>: Stripped noisy debug <CODE>console.log</CODE> statements from <CODE>sunoService.ts</CODE> and <CODE>riffusionService.ts</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.3.0",
     content: (
       <section id="version-2.3.0">

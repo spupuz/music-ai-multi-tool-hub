@@ -1,7 +1,15 @@
-import React from 'react';
+import type React from 'react';
 import type { SunoClip, SunoRawProfileResponse, SunoProfileDetail, SunoRawPlaylistResponse, SunoPlaylistDetail } from '@/types';
+import { cacheGet, cacheSet } from './cacheUtils';
+import { raceFetch, raceForValue, type ProxyAttempt } from './proxyUtils';
 
 const API_BASE_URL = 'https://studio-api.prod.suno.com/api';
+
+// Cache TTLs
+const SONG_DETAIL_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+const SHORT_URL_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const CACHE_NAMESPACE_SONG = 'song';
+const CACHE_NAMESPACE_SHORT_URL = 'shorturl';
 
 export interface FetchSunoSongsResult {
   clips: SunoClip[];
@@ -32,50 +40,36 @@ const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<R
     // So we only reach here if the request was actually made.
     return response;
   } catch (error) {
-    console.warn(`[sunoService] Direct fetch failed (likely CORS), falling back to proxy for: ${url}`);
+    console.warn(`[sunoService] Direct fetch failed (likely CORS), racing proxies for: ${url}`);
   }
 
-  let lastError: any = null;
-
-  for (const proxy of publicProxies) {
-    if (proxy.name === 'local' && typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-        continue;
-    }
-
-    const proxyUrl = proxy.constructUrl(url);
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      const fetchOptions = { ...options, signal: controller.signal };
-      
-      const response = await fetch(proxyUrl, fetchOptions);
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        lastError = new Error(`Proxy ${proxy.name} responded with status: ${response.status}`);
-        continue;
+  const attempts: ProxyAttempt[] = publicProxies
+    .filter(p => p.name !== 'local' || (typeof window !== 'undefined' && window.location.hostname === 'localhost'))
+    .map(p => {
+      const proxyUrl = p.constructUrl(url);
+      if (p.name === 'allorigins.win') {
+        return {
+          url: proxyUrl,
+          parse: async (response: Response) => {
+            const json = await response.json();
+            if (json && json.contents !== undefined) {
+              return new Response(json.contents, {
+                status: json.status?.http_code || 200,
+                headers: new Headers({ 'Content-Type': json.status?.content_type || 'application/json' })
+              });
+            }
+            throw new Error('Invalid allorigins response format');
+          },
+        };
       }
+      return { url: proxyUrl };
+    });
 
-      if (proxy.name === 'allorigins.win') {
-        const json = await response.json();
-        if (json && json.contents !== undefined) {
-           return new Response(json.contents, {
-             status: json.status?.http_code || 200,
-             headers: new Headers({ 'Content-Type': json.status?.content_type || 'application/json' })
-           });
-        } else {
-           throw new Error("Invalid allorigins response format");
-        }
-      }
-
-      return response;
-    } catch (error) {
-      console.warn(`[sunoService] Proxy ${proxy.name} failed:`, error);
-      lastError = error;
-    }
+  try {
+    return await raceFetch(attempts, options);
+  } catch (error) {
+    throw new Error(`Failed to fetch ${url} via all available proxies: ${error instanceof Error ? error.message : String(error)}`);
   }
-
-  throw lastError || new Error(`Failed to fetch ${url} via all available proxies.`);
 };
 
 
@@ -111,18 +105,15 @@ export const fetchSunoSongsByUsername = async (
   const clipsPerPageDefault = 10; 
   let isFirstPageEverFetched = true;
 
-  console.log(`[sunoService] Starting fetch for user: ${username} from ${API_BASE_URL}`);
   if (onProgress) onProgress(`Starting fetch for ${username}...`, 0, totalPagesEstimate);
 
   while (hasMorePages) {
     if (!isFirstPageEverFetched) {
         await new Promise(resolve => setTimeout(resolve, 2000)); 
-        console.log(`[sunoService] Waited 2000ms before attempting to fetch new page ${currentPage}`);
     }
     isFirstPageEverFetched = false;
 
     const url = `${API_BASE_URL}/profiles/${encodeURIComponent(username)}/?page=${currentPage}&playlists_sort_by=upvote_count&clips_sort_by=created_at`;
-    console.log(`[sunoService] Attempting to fetch URL: ${url}`);
     
     let retries = 0;
     const maxRetries = 3; 
@@ -146,7 +137,6 @@ export const fetchSunoSongsByUsername = async (
                     if (retries < maxRetries) {
                         attemptDelayMs = Math.pow(2, retries) * 3000; 
                         if (onProgress) onProgress(`Rate limit hit for page ${currentPage}. Retrying in ${attemptDelayMs / 1000}s... (Retry ${retries + 1} of ${maxRetries})`, currentPage, totalPagesEstimate);
-                        console.log(`[sunoService] Rate limit hit for page ${currentPage}. Retrying in ${attemptDelayMs / 1000}s (Retry ${retries + 1})`);
                     } else {
                         const errorMsg = `Rate limit exceeded for page ${currentPage} after ${maxRetries + 1} attempts.`;
                         console.error(`[sunoService] ${errorMsg}`);
@@ -267,7 +257,12 @@ export const fetchSunoSongsByUsername = async (
 };
 
 
-export const fetchSunoClipById = async (clipId: string): Promise<SunoClip | null> => {
+export const fetchSunoClipById = async (clipId: string, forceRefresh = false): Promise<SunoClip | null> => {
+  if (!forceRefresh) {
+    const cached = cacheGet<SunoClip>(CACHE_NAMESPACE_SONG, clipId, SONG_DETAIL_CACHE_TTL_MS);
+    if (cached) return cached;
+  }
+
   const url = `${API_BASE_URL}/clip/${clipId}`;
   try {
     const response = await fetchWithProxy(url, {
@@ -297,6 +292,7 @@ export const fetchSunoClipById = async (clipId: string): Promise<SunoClip | null
         suno_creator_url: `https://suno.com/@${clipData.handle}`,
         image_url: clipData.image_large_url || clipData.image_url || (clipData.image_urls ? clipData.image_urls.image_url : null),
     };
+    cacheSet(CACHE_NAMESPACE_SONG, clipId, enrichedClip);
     return enrichedClip;
 
   } catch (error) {
@@ -316,7 +312,6 @@ export const fetchSunoPlaylistById = async (
   let totalPagesEstimate: number | undefined = undefined;
   let isFirstPageEverFetched = true;
 
-  console.log(`[sunoService] Starting fetch for playlist ID: ${playlistId}`);
   if (onProgress) onProgress(`Fetching playlist ${playlistId}...`, 0, totalPagesEstimate);
 
   while (currentPageNum !== null) {
@@ -326,7 +321,6 @@ export const fetchSunoPlaylistById = async (
     isFirstPageEverFetched = false;
 
     const url = `${API_BASE_URL}/playlist/${playlistId}/?page=${currentPageNum}`;
-    console.log(`[sunoService] Fetching playlist page: ${url}`);
     
     let retries = 0;
     let pageData: SunoRawPlaylistResponse | null = null;
@@ -457,18 +451,6 @@ export const fetchSunoPlaylistById = async (
 
 // --- URL Utilities (Moved from songDeckPicker.utils.ts) ---
 
-const publicProxiesList = [
-    { name: "local", constructUrl: (targetUrl: string) => `/proxy/${targetUrl}` },
-    { name: "corsproxy.io", constructUrl: (targetUrl: string) => `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}` },
-    { name: "allorigins.win", constructUrl: (targetUrl: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}` },
-    { name: "thingproxy", constructUrl: (targetUrl: string) => `https://thingproxy.freeboard.io/fetch/${targetUrl}` },
-    { name: "cors-anywhere", constructUrl: (targetUrl: string) => `https://cors-anywhere.herokuapp.com/${targetUrl}` },
-    { name: "codetabs", constructUrl: (targetUrl: string) => `https://api.codetabs.com/v1/proxy/?quest=${targetUrl}` },
-    { name: "corsproxy.org", constructUrl: (targetUrl: string) => `https://corsproxy.org/?${encodeURIComponent(targetUrl)}` },
-    { name: "cors.sh", constructUrl: (targetUrl: string) => `https://proxy.cors.sh/${targetUrl}` },
-    { name: "yacdn", constructUrl: (targetUrl: string) => `https://yacdn.org/proxy/${targetUrl}` }
-];
-
 export const extractSunoSongIdFromPath = (urlPath: string): string | null => {
     try {
         const pathOnly = urlPath.startsWith('http') ? new URL(urlPath).pathname : urlPath;
@@ -498,93 +480,86 @@ export const resolveSunoUrlToPotentialSongId = async (
 
     const shortUrlPattern = /^\/s\/[A-Za-z0-9]+(?:\?.*)?$/;
     if (shortUrlPattern.test(parsedUrlObject.pathname + parsedUrlObject.search)) {
-        setProgressMessageForResolution("This looks like a short URL. Trying to resolve it...");
-        await new Promise(resolve => setTimeout(resolve, 250)); 
-        
-        for (let i = 0; i < publicProxiesList.length; i++) {
-            const proxy = publicProxiesList[i];
-            const proxiedUrl = proxy.constructUrl(originalUrl);
-            setProgressMessageForResolution(`Attempting to resolve via public proxy (${i + 1}/${publicProxiesList.length})...`);
-            
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-            try {
-                const response = await fetch(proxiedUrl, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
-                // Strategy 1: Check for HTTP redirect followed by the proxy.
-                let resolvedSongId: string | null = null;
-                if (response.url && response.url !== proxiedUrl && response.url !== originalUrl) {
-                    resolvedSongId = extractSunoSongIdFromPath(response.url);
-                    if (resolvedSongId) {
-                        setProgressMessageForResolution(`Success! Resolved via redirect with ${proxy.name}.`);
-                        return resolvedSongId;
-                    }
-                }
-
-                if (!response.ok) { 
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    continue; 
-                }
-                
-                let htmlContent = await response.text();
-                // Handle JSON-wrapping proxies like allorigins
-                if (proxy.name === 'allorigins.win') {
-                    try {
-                        const jsonResponse = JSON.parse(htmlContent);
-                        if (jsonResponse && jsonResponse.contents) {
-                            htmlContent = jsonResponse.contents;
-                        } else {
-                            throw new Error("Invalid allorigins.win response structure");
-                        }
-                    } catch (e) {
-                        console.warn(`Failed to parse allorigins.win JSON for ${originalUrl}`, e);
-                        continue; // Try next proxy
-                    }
-                }
-
-                // Strategy 2: Parse HTML for various client-side redirect methods.
-                const patternsToTry: RegExp[] = [
-                    /NEXT_REDIRECT;replace;([^;]+);/, // Old pattern
-                    /<meta\s+http-equiv="refresh"\s+content="[^;]+;\s*url=([^"]+)"/i, // Meta refresh
-                    /window\.location\.(?:href|replace)\s*=\s*['"]([^'"]+)['"]/i, // JS redirect
-                ];
-
-                for (const pattern of patternsToTry) {
-                    const match = htmlContent.match(pattern);
-                    if (match && match[1]) {
-                        resolvedSongId = extractSunoSongIdFromPath(match[1]);
-                        if (resolvedSongId) {
-                            setProgressMessageForResolution(`Success! Resolved via content pattern with ${proxy.name}.`);
-                            return resolvedSongId;
-                        }
-                    }
-                }
-
-                // Strategy 3: Fallback to finding any song UUID in the content that is part of a /song/ path.
-                const uuidPattern = /["'\/]([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/g;
-                let uuidMatch;
-                while ((uuidMatch = uuidPattern.exec(htmlContent)) !== null) {
-                    const potentialId = uuidMatch[1];
-                    if (htmlContent.includes(`/song/${potentialId}`)) {
-                        setProgressMessageForResolution(`Success! Found song ID directly in content with ${proxy.name}.`);
-                        return potentialId;
-                    }
-                }
-                 
-                if (i < publicProxiesList.length - 1) {
-                    setProgressMessageForResolution(`Proxy connected, but no song ID found. Trying next...`);
-                }
-                await new Promise(resolve => setTimeout(resolve, 200));
-            } catch (error) {
-                clearTimeout(timeoutId);
-                 if (i < publicProxiesList.length - 1) {
-                    setProgressMessageForResolution(`Proxy attempt failed. Trying next...`);
-                 }
-                 await new Promise(resolve => setTimeout(resolve, 200));
-            }
+        const cachedSongId = cacheGet<string>(CACHE_NAMESPACE_SHORT_URL, originalUrl, SHORT_URL_CACHE_TTL_MS);
+        if (cachedSongId) {
+            setProgressMessageForResolution(`Resolved from cached short URL.`);
+            return cachedSongId;
         }
+
+        setProgressMessageForResolution("This looks like a short URL. Trying to resolve it...");
+
+        const activeProxies = publicProxies.filter(
+            p => p.name !== 'local' || (typeof window !== 'undefined' && window.location.hostname === 'localhost')
+        );
+
+        const resolvedSongId = await raceForValue<string>(
+            activeProxies.map(proxy => async (signal) => {
+                try {
+                    const proxiedUrl = proxy.constructUrl(originalUrl);
+                    const response = await fetch(proxiedUrl, { signal });
+
+                    // Strategy 1: Check for HTTP redirect followed by the proxy.
+                    if (response.url && response.url !== proxiedUrl && response.url !== originalUrl) {
+                        const redirectId = extractSunoSongIdFromPath(response.url);
+                        if (redirectId) return redirectId;
+                    }
+
+                    if (!response.ok) return null;
+
+                    let htmlContent = await response.text();
+                    // Handle JSON-wrapping proxies like allorigins
+                    if (proxy.name === 'allorigins.win') {
+                        try {
+                            const jsonResponse = JSON.parse(htmlContent);
+                            if (jsonResponse && jsonResponse.contents) {
+                                htmlContent = jsonResponse.contents;
+                            } else {
+                                return null;
+                            }
+                        } catch (e) {
+                            return null;
+                        }
+                    }
+
+                    // Strategy 2: Parse HTML for various client-side redirect methods.
+                    const patternsToTry: RegExp[] = [
+                        /NEXT_REDIRECT;replace;([^;]+);/, // Old pattern
+                        /<meta\s+http-equiv="refresh"\s+content="[^;]+;\s*url=([^"]+)"/i, // Meta refresh
+                        /window\.location\.(?:href|replace)\s*=\s*['"]([^'"]+)['"]/i, // JS redirect
+                    ];
+
+                    for (const pattern of patternsToTry) {
+                        const match = htmlContent.match(pattern);
+                        if (match && match[1]) {
+                            const id = extractSunoSongIdFromPath(match[1]);
+                            if (id) return id;
+                        }
+                    }
+
+                    // Strategy 3: Fallback to finding any song UUID in the content that is part of a /song/ path.
+                    const uuidPattern = /["'\/]([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/g;
+                    let uuidMatch;
+                    while ((uuidMatch = uuidPattern.exec(htmlContent)) !== null) {
+                        const potentialId = uuidMatch[1];
+                        if (htmlContent.includes(`/song/${potentialId}`)) {
+                            return potentialId;
+                        }
+                    }
+
+                    return null;
+                } catch (error) {
+                    return null;
+                }
+            }),
+            10000
+        );
+
+        if (resolvedSongId) {
+            setProgressMessageForResolution(`Success! Resolved short URL to song ID.`);
+            cacheSet(CACHE_NAMESPACE_SHORT_URL, originalUrl, resolvedSongId);
+            return resolvedSongId;
+        }
+
         throw new Error(`Could not resolve the short URL after multiple attempts. It might be invalid or the public proxy services may be down. Please try using a full /song/... URL if available.`);
     }
     

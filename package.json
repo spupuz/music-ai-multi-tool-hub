@@ -14,11 +14,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@google/genai": "1.5.1",
     "chart.js": "4.5.0",
     "chartjs-adapter-date-fns": "3.0.0",
-    "chartjs-chart-matrix": "2.0.1",
-    "d3-scale": "^4.0.2",
+        "d3-scale": "^4.0.2",
     "date-fns": "2.30.0",
     "howler": "2.2.4",
     "lamejs": "1.2.1",

@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 import type { RiffusionSongData } from '@/types';
+import { cacheGet, cacheSet } from './cacheUtils';
+import { raceFetch, type ProxyAttempt } from './proxyUtils';
 
 // Extended list of CORS proxies to try
 const CORS_PROXIES = [
@@ -15,6 +17,9 @@ const CORS_PROXIES = [
 
 // In production, this might be injected by the build process or a global config
 const PROXY_AUTH_TOKEN = import.meta.env.VITE_PROXY_AUTH_TOKEN;
+
+const RIFFUSION_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_NAMESPACE_RIFFUSION = 'riffusion';
 
 // Regex patterns for metadata scraping
 const RIFFUSION_TITLE_PATTERNS = [
@@ -67,48 +72,33 @@ export function extractRiffusionSongId(url: string): string | null {
 
 /**
  * Helper to fetch content through a rotating list of CORS proxies.
+ * All proxies are raced in parallel; the first OK response wins.
  */
 async function fetchWithProxies(url: string, options: RequestInit = {}): Promise<Response | null> {
-    console.log(`[riffusionService] Fetching: ${url}`);
+    // Skip local proxy for Flow Music/Riffusion domains — these block server-side requests with 403.
+    // We rely on client-side public proxies (corsproxy.io, etc.) for these domains.
+    const isFlowLike = url.includes('flowmusic.app') || url.includes('producer.ai') || url.includes('riffusion.com');
 
-    for (const proxy of CORS_PROXIES) {
-        const isAllOrigins = proxy.includes('allorigins.win');
-        const targetUrl = isAllOrigins ? encodeURIComponent(url) : url;
-        const proxiedUrl = `${proxy}${targetUrl}`;
-
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-            const isLocalProxy = proxy === '/proxy/';
-
-            // Skip local proxy for Flow Music/Riffusion domains — these block server-side requests with 403.
-            // We rely on client-side public proxies (corsproxy.io, etc.) for these domains.
-            if (isLocalProxy && (url.includes('flowmusic.app') || url.includes('producer.ai') || url.includes('riffusion.com'))) {
-                console.log('[riffusionService] Skipping local proxy for flowmusic.app/riffusion.com to avoid 403 blocking.');
-                continue;
-            }
-
-            const headers = { ...((options.headers as any) || {}) };
-            if (isLocalProxy && PROXY_AUTH_TOKEN) {
+    const attempts: ProxyAttempt[] = CORS_PROXIES
+        .filter(proxy => !(proxy === '/proxy/' && isFlowLike))
+        .map(proxy => {
+            const isAllOrigins = proxy.includes('allorigins.win');
+            const targetUrl = isAllOrigins ? encodeURIComponent(url) : url;
+            const headers: Record<string, string> = {};
+            if (proxy === '/proxy/' && PROXY_AUTH_TOKEN) {
                 headers['X-Proxy-Auth'] = PROXY_AUTH_TOKEN;
             }
+            return {
+                url: `${proxy}${targetUrl}`,
+                headers: Object.keys(headers).length > 0 ? headers : undefined,
+            };
+        });
 
-            const response = await fetch(proxiedUrl, {
-                ...options,
-                headers,
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (response.ok) return response;
-
-            console.warn(`[riffusionService] Proxy ${proxy} failed: ${response.status}`);
-        } catch (error) {
-            console.warn(`[riffusionService] Proxy ${proxy} error:`, error);
-        }
+    try {
+        return await raceFetch(attempts, options, 10000);
+    } catch (e) {
+        return null;
     }
-    return null;
 }
 
 function extractWithPatterns(content: string, patterns: readonly RegExp[]): string | null {
@@ -230,9 +220,14 @@ async function scrapeDataFromHtml(htmlContent: string, songId: string): Promise<
     };
 }
 
-export async function fetchRiffusionSongData(url: string): Promise<RiffusionSongData | null> {
+export async function fetchRiffusionSongData(url: string, forceRefresh = false): Promise<RiffusionSongData | null> {
     const songId = extractRiffusionSongId(url);
     if (!songId) return null;
+
+    if (!forceRefresh) {
+        const cached = cacheGet<RiffusionSongData>(CACHE_NAMESPACE_RIFFUSION, songId, RIFFUSION_CACHE_TTL_MS);
+        if (cached) return cached;
+    }
 
     // STRATEGY 1: HTML Scraping (Fastest and most compatible now)
     const scrapeUrls = [
@@ -245,13 +240,16 @@ export async function fetchRiffusionSongData(url: string): Promise<RiffusionSong
         if (response) {
             const html = await response.text();
             const scrapedData = await scrapeDataFromHtml(html, songId);
-            if (scrapedData) return scrapedData;
+            if (scrapedData) {
+                cacheSet(CACHE_NAMESPACE_RIFFUSION, songId, scrapedData);
+                return scrapedData;
+            }
         }
     }
 
     // STRATEGY 2: Fallback construction
     console.warn('[riffusionService] Scrapers failed. Using fallback construction.');
-    return {
+    const fallback: RiffusionSongData = {
         id: songId,
         title: 'Riffusion Song (Fallback)',
         artist: 'Unknown Artist',
@@ -260,4 +258,6 @@ export async function fetchRiffusionSongData(url: string): Promise<RiffusionSong
         source: 'mock',
         lyrics: 'Could not fetch metadata.'
     };
+    cacheSet(CACHE_NAMESPACE_RIFFUSION, songId, fallback);
+    return fallback;
 }

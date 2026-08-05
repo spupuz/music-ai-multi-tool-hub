@@ -90,7 +90,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                                         style={props.getCardStyleForAnimation(card, index)}
                                     >
                                         <div className="relative overflow-hidden rounded-xl border border-black/10 aspect-[4/3] mb-2 shadow-inner">
-                                            <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }} />
+                                            <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }} />
                                             {!card.imageUrl && <div className="absolute inset-0 flex items-center justify-center opacity-20"><HandRaisedIcon className="w-12 h-12"/></div>}
                                         </div>
                                         <div className="flex-grow flex flex-col justify-end">
@@ -156,7 +156,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                             <div key={`reveal-${card.id}-${index}`} className="card-container w-44 h-72 shadow-xl hover:shadow-2xl transition-all duration-300">
                                 <div className="card-inner" style={card.isRevealed ? {} : {transform: 'rotateY(180deg)'}}>
                                     <div className="card-face card-front p-2 rounded-2xl text-xs flex flex-col justify-between shadow-lg border" style={{backgroundColor: card.color || props.cardBackgroundColor, borderColor: String(props.cardBorderColor)}}>
-                                        <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" className="w-full h-44 object-cover rounded-xl mb-2 border-black/10" />
+                                        <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" loading="lazy" decoding="async" className="w-full h-44 object-cover rounded-xl mb-2 border-black/10" />
                                         <div className="p-2.5 rounded-xl bg-black/40 backdrop-blur-sm border border-white/10 text-center">
                                             <p className="font-black text-[11px] leading-tight uppercase tracking-tight" style={{ color: '#FFFFFF', fontFamily: props.cardTextFont }}>{card.title}</p>
                                             <p className="font-bold text-[9px] opacity-70 uppercase tracking-widest truncate" style={{ color: '#FFFFFF', fontFamily: props.cardTextFont }}>{card.artistName}</p>
@@ -208,7 +208,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                             >
                                 <div className="card-inner" style={card.isRevealed ? {} : { transform: 'rotateY(180deg)' }}>
                                     <div className="card-face card-front p-2 rounded-2xl text-xs flex flex-col justify-between shadow-lg border" style={{ backgroundColor: card.color || props.cardBackgroundColor, borderColor: String(props.cardBorderColor) }}>
-                                        <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" className="w-full h-44 object-cover rounded-xl mb-2 border-black/10" />
+                                        <img src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} alt="" loading="lazy" decoding="async" className="w-full h-44 object-cover rounded-xl mb-2 border-black/10" />
                                         <div className="p-2.5 rounded-xl bg-black/40 backdrop-blur-sm border border-white/10 text-center">
                                             <p className="font-black text-[11px] leading-tight uppercase tracking-tight" style={{ color: '#FFFFFF', fontFamily: props.cardTextFont }}>{card.title}</p>
                                             <p className="font-bold text-[9px] opacity-70 uppercase tracking-widest truncate" style={{ color: '#FFFFFF', fontFamily: props.cardTextFont }}>{card.artistName}</p>

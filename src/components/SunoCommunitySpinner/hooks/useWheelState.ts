@@ -143,29 +143,33 @@ export function useWheelState(theme: string, trackLocalEvent: (category: string,
 
     // Sync to localStorage
     useEffect(() => { 
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activityWheelTitle`, activityWheelTitle);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}userName`, userName);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activitiesString`, activitiesString);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activityDetails`, JSON.stringify(activityDetails));
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}showAddEditDetails`, String(showAddEditDetails));
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}numberOfSegmentsOnWheel`, String(numberOfSegmentsOnWheel));
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}selectedActivitiesForWheel`, JSON.stringify(selectedActivitiesForWheel));
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelActivityWeights`, JSON.stringify(wheelActivityWeights));
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customTitle`, customTitle);
-        if (customLogo) localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customLogo`, customLogo); else localStorage.removeItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customLogo`);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}selectedLogoSize`, selectedLogoSize);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolBackgroundColor`, toolBackgroundColor);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolAccentColor`, toolAccentColor);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolTextColor`, toolTextColor);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelSegmentBorderColor`, wheelSegmentBorderColor);
-        localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelTextFont`, wheelTextFont);
-        localStorage.setItem(LOCAL_STORAGE_SPIN_SOUND_KEY, selectedSpinSound);
+        try {
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activityWheelTitle`, activityWheelTitle);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}userName`, userName);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activitiesString`, activitiesString);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}activityDetails`, JSON.stringify(activityDetails));
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}showAddEditDetails`, String(showAddEditDetails));
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}numberOfSegmentsOnWheel`, String(numberOfSegmentsOnWheel));
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}selectedActivitiesForWheel`, JSON.stringify(selectedActivitiesForWheel));
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelActivityWeights`, JSON.stringify(wheelActivityWeights));
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customTitle`, customTitle);
+            if (customLogo) localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customLogo`, customLogo); else localStorage.removeItem(`${LOCAL_STORAGE_CURRENT_PREFIX}customLogo`);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}selectedLogoSize`, selectedLogoSize);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolBackgroundColor`, toolBackgroundColor);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolAccentColor`, toolAccentColor);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}toolTextColor`, toolTextColor);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelSegmentBorderColor`, wheelSegmentBorderColor);
+            localStorage.setItem(`${LOCAL_STORAGE_CURRENT_PREFIX}wheelTextFont`, wheelTextFont);
+            localStorage.setItem(LOCAL_STORAGE_SPIN_SOUND_KEY, selectedSpinSound);
+        } catch (e) {
+            console.warn('Failed to persist wheel settings to localStorage:', e);
+        }
     }, [activityWheelTitle, userName, activitiesString, activityDetails, showAddEditDetails, 
         numberOfSegmentsOnWheel, selectedActivitiesForWheel, wheelActivityWeights,
         customTitle, customLogo, selectedLogoSize, toolBackgroundColor, toolAccentColor, toolTextColor, wheelSegmentBorderColor, wheelTextFont,
         selectedSpinSound]);
     
-    useEffect(() => { localStorage.setItem(LOCAL_STORAGE_SAVED_WHEELS_KEY, JSON.stringify(savedWheels)); }, [savedWheels]);
+    useEffect(() => { try { localStorage.setItem(LOCAL_STORAGE_SAVED_WHEELS_KEY, JSON.stringify(savedWheels)); } catch (e) { console.warn('Failed to persist saved wheels to localStorage:', e); } }, [savedWheels]);
     
     // Sync activities to weights and details
     useEffect(() => {

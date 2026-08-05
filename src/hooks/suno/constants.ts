@@ -61,6 +61,7 @@ export const knownAppLocalStoragePrefixes = [
   LOCAL_STORAGE_PREFIX_USER,
   LOCAL_STORAGE_PREFIX_PLAYLIST,
   'SCS_current_MagicSpinWheel_v3_',
+  'hubCache_',
 ];
 
 export const sunoPlaylistUrlPattern = /^(?:https?:\/\/)?(?:www\.)?(?:suno\.com|app\.suno\.ai)\/playlist\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;

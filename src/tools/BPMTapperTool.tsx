@@ -404,7 +404,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     {coverArtUrl && (
                       <div className="relative shrink-0">
                         <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full scale-125"></div>
-                        <img 
+                        <img loading="lazy" decoding="async" 
                           src={coverArtUrl} 
                           alt={songTitle || 'Song Cover'} 
                           className="w-24 h-24 object-cover rounded-xl border border-white/20 relative z-10 shadow-2xl" 

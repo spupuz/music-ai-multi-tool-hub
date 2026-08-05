@@ -46,7 +46,7 @@ const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
 
       <header className="mb-14 text-center pt-8 px-4 relative z-10">
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic mb-4 text-gradient-animated">
           Updates
         </h1>
         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">

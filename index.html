@@ -4,239 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Music AI Multi-Tool Hub — a suite of free tools for AI music creators: music shuffler, user stats, lyric lab, cover art, chord progressions, metronome and more.">
+  <meta name="theme-color" content="#059669" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#030712" media="(prefers-color-scheme: dark)">
   <title>Music AI Multi-Tool Hub</title>
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' fill='%23059669'/%3E%3Ccircle cx='50' cy='50' r='12' fill='%23FFFFFF'/%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://gemini-proxy.spupuz.workers.dev">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://esm.sh/react-image-crop@11.0.6/dist/ReactCrop.css" />
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.1.0",
-    "react/jsx-runtime": "https://esm.sh/react@19.1.0/jsx-runtime",
-    "react/jsx-dev-runtime": "https://esm.sh/react@19.1.0/jsx-dev-runtime",
-    "react-dom": "https://esm.sh/react-dom@19.1.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.1.0/client",
-    "react-dom/server": "https://esm.sh/react-dom@19.1.0/server",
-    "react/": "https://esm.sh/react@19.1.0/",
-    "react-dom/": "https://esm.sh/react-dom@19.1.0/",
-    "midi-writer-js": "https://esm.sh/midi-writer-js@3.1.1",
-    "howler": "https://esm.sh/howler@2.2.4",
-    "chart.js": "https://esm.sh/chart.js@4.5.0",
-    "chart.js/auto": "https://esm.sh/chart.js@4.5.0/auto",
-    "chart.js/": "https://esm.sh/chart.js@4.5.0/",
-    "react-chartjs-2": "https://esm.sh/react-chartjs-2@5.2.0?external=react,react-dom,chart.js",
-    "chartjs-chart-matrix": "https://esm.sh/chartjs-chart-matrix@2.0.1?external=chart.js",
-    "chartjs-adapter-date-fns": "https://esm.sh/chartjs-adapter-date-fns@3.0.0?external=chart.js,date-fns",
-    "date-fns": "https://esm.sh/date-fns@2.30.0",
-    "@google/genai": "https://esm.sh/@google/genai@1.5.1",
-    "wavesurfer.js": "https://esm.sh/wavesurfer.js@7.8.0",
-    "wavesurfer.js/dist/plugins/regions.js": "https://esm.sh/wavesurfer.js@7.8.0/dist/plugins/regions.js",
-    "lamejs": "https://esm.sh/lamejs@1.2.1",
-    "react-image-crop": "https://esm.sh/react-image-crop@11.0.6",
-    "./utils/imageUtils": "./src/utils/imageUtils.js",
-    "./utils/musicTheoryUtils": "./src/utils/musicTheoryUtils.js",
-    "./utils/chartUtils": "./src/utils/chartUtils.js",
-    "./utils/countryData": "./src/utils/countryData.js",
-    "./utils/mathUtils": "./src/utils/mathUtils.js",
-    "./utils/lyricUtils": "./src/utils/lyricUtils.js",
-    "./Layout": "./src/Layout.js",
-    "./SongCoverArtTool": "./src/SongCoverArtTool.js",
-    "./LyricProcessorTool": "./src/LyricProcessorTool.js",
-    "./LyricsSynchronizerTool": "./src/LyricsSynchronizerTool.js",
-    "./SunoMusicPlayerTool": "./src/SunoMusicPlayerTool.js",
-    "./SunoSongComplianceTool": "./src/SunoSongComplianceTool.js",
-    "./SparkTuneTool": "./src/SparkTuneTool.js",
-    "./SunoCommunitySpinnerTool": "./src/SunoCommunitySpinnerTool.js",
-    "./AboutPage": "./src/AboutPage.js",
-    "./RandomMusicStyleGenerator": "./src/RandomMusicStyleGenerator.js",
-    "./useRandomMusicStyle": "./src/hooks/useRandomMusicStyle.js",
-    "./RandomMusicStyleGenerator.constants": "./src/RandomMusicStyleGenerator.constants.js",
-    "./RandomMusicStyleGenerator.uiComponents": "./src/RandomMusicStyleGenerator.uiComponents.js",
-    "./RandomMusicStyleGenerator.icons": "./src/RandomMusicStyleGenerator.icons.js",
-    "./CreativeConceptBlender": "./src/CreativeConceptBlender.js",
-    "./ChordProgressionTool": "./src/ChordProgressionTool.js",
-    "./ScaleChordViewerTool": "./src/ScaleChordViewerTool.js",
-    "./SongDeckPickerTool": "./src/SongDeckPickerTool.js",
-    "./songDeckPicker.constants": "./src/songDeckPicker.constants.js",
-    "./songDeckPicker.utils": "./src/songDeckPicker.utils.js",
-    "./songDeckPicker.icons": "./src/songDeckPicker.icons.js",
-    "./hooks/useSongDeckPickerLogic": "./src/hooks/useSongDeckPickerLogic.js",
-    "./MusicTheoryWikiTool": "./src/MusicTheoryWikiTool.js",
-    "./BPMTapperTool": "./src/BPMTapperTool.js",
-    "./MetronomeTool": "./src/MetronomeTool.js",
-    "./MP3CutterTool": "./src/MP3CutterTool.js",
-    "./hooks/useMP3CutterLogic": "./src/hooks/useMP3CutterLogic.js",
-    "./SunoUserStatsTool": "./src/SunoUserStatsTool.js",
-    "./LocalMusicResourceDirectoryTool": "./src/LocalMusicResourceDirectoryTool.js",
-    "./ReleaseNotesPage": "./src/ReleaseNotesPage.js",
-    "./SpecialMentionsPage": "./src/SpecialMentionsPage.js",
-    "./SongStructureBuilderTool": "./src/SongStructureBuilderTool.js",
-    "./components/Header": "./src/components/Header.js",
-    "./components/Sidebar": "./src/components/Sidebar.js",
-    "./components/ImageUpload": "./src/components/ImageUpload.js",
-    "./components/Spinner": "./src/components/Spinner.js",
-    "./components/AudioVisualizer/AudioVisualizer": "./src/components/AudioVisualizer/AudioVisualizer.js",
-    "./components/CookieConsentPopup": "./src/components/CookieConsentPopup.js",
-    "./components/forms/InputField": "./src/components/forms/InputField.js",
-    "./components/forms/TextAreaField": "./src/components/forms/TextAreaField.js",
-    "./components/forms/SelectField": "./src/components/forms/SelectField.js",
-    "./components/forms/CheckboxField": "./src/components/forms/CheckboxField.js",
-    "./components/forms/SliderField": "./src/components/forms/SliderField.js",
-    "./components/sunoUserStats/UserProfileCard": "./src/components/sunoUserStats/UserProfileCard.js",
-    "./components/sunoUserStats/StatDisplayCard": "./src/components/sunoUserStats/StatDisplayCard.js",
-    "./components/sunoUserStats/DataManagementControls": "./src/components/sunoUserStats/DataManagementControls.js",
-    "./components/sunoUserStats/StatChartsArea": "./src/components/sunoUserStats/StatChartsArea.js",
-    "./components/sunoUserStats/DetailedSongPerformanceTable": "./src/components/sunoUserStats/DetailedSongPerformanceTable.js",
-    "./components/sunoUserStats/InfoIconWithTooltip": "./src/components/sunoUserStats/InfoIconWithTooltip.js",
-    "./components/sunoUserStats/charts/DailySongCreationChart": "./src/components/sunoUserStats/charts/DailySongCreationChart.js",
-    "./components/sunoUserStats/charts/UpvotesTrendChart": "./src/components/sunoUserStats/charts/UpvotesTrendChart.js",
-    "./components/sunoUserStats/charts/PlaysTrendChart": "./src/components/sunoUserStats/charts/PlaysTrendChart.js",
-    "./components/sunoUserStats/charts/FollowersTrendChart": "./src/components/sunoUserStats/charts/FollowersTrendChart.js",
-    "./components/sunoUserStats/charts/TagUsageChart": "./src/components/sunoUserStats/charts/TagUsageChart.js",
-    "./components/sunoUserStats/charts/TagVotesChart": "./src/components/sunoUserStats/charts/TagVotesChart.js",
-    "./components/sunoUserStats/charts/GenreUsageChart": "./src/components/sunoUserStats/charts/GenreUsageChart.js",
-    "./components/sunoUserStats/charts/GenreVotesChart": "./src/components/sunoUserStats/charts/GenreVotesChart.js",
-    "./components/sunoUserStats/charts/ChartContainer": "./src/components/sunoUserStats/charts/ChartContainer.js",
-    "./components/sunoUserStats/charts/SongTrendChart": "./src/components/sunoUserStats/charts/SongTrendChart.js",
-    "./components/sunoUserStats/charts/SongsByDayOfWeekChart": "./src/components/sunoUserStats/charts/SongsByDayOfWeekChart.js",
-    "./components/sunoUserStats/charts/SongsByHourOfDayChart": "./src/components/sunoUserStats/charts/SongsByHourOfDayChart.js",
-    "./components/sunoUserStats/charts/TopSongsChart": "./src/components/sunoUserStats/charts/TopSongsChart.js",
-    "./components/sunoUserStats/charts/PlayCountDistributionChart": "./src/components/sunoUserStats/charts/PlayCountDistributionChart.js",
-    "./components/sunoUserStats/charts/UpvoteCountDistributionChart": "./src/components/sunoUserStats/charts/UpvoteCountDistributionChart.js",
-    "./components/sunoUserStats/charts/TopEngagingSongsChart": "./src/components/sunoUserStats/charts/TopEngagingSongsChart.js",
-    "./components/sunoUserStats/charts/CommentsTrendChart": "./src/components/sunoUserStats/charts/CommentsTrendChart.js",
-    "./components/sunoUserStats/charts/TopCommentedSongsChart": "./src/components/sunoUserStats/charts/TopCommentedSongsChart.js",
-    "./components/sunoUserStats/charts/CommentCountDistributionChart": "./src/components/sunoUserStats/charts/CommentCountDistributionChart.js",
-    "./components/sunoUserStats/charts/TopSongsByCommentRateChart": "./src/components/sunoUserStats/charts/TopSongsByCommentRateChart.js",
-    "./components/sunoUserStats/charts/TagGenrePerformanceTables": "./src/components/sunoUserStats/charts/TagGenrePerformanceTables.js",
-    "./components/sunoUserStats/charts/PlaysUpvotesScatterPlot": "./src/components/sunoUserStats/charts/PlaysUpvotesScatterPlot.js",
-    "./components/sunoUserStats/charts/CohortPerformanceTable": "./src/components/sunoUserStats/charts/CohortPerformanceTable.js",
-    "./components/sunoUserStats/charts/TagPairPerformanceTable": "./src/components/sunoUserStats/charts/TagPairPerformanceTable.js",
-    "./components/sunoUserStats/charts/SongLifecycleChartModal": "./src/components/sunoUserStats/charts/SongLifecycleChartModal.js",
-    "./components/sunoUserStats/charts/PlaysCommentsScatterPlot": "./src/components/sunoUserStats/charts/PlaysCommentsScatterPlot.js",
-    "./components/sunoUserStats/charts/SongDurationPerformanceTable": "./src/components/sunoUserStats/charts/SongDurationPerformanceTable.js",
-    "./components/sunoUserStats/charts/PlaylistCreationDateChart": "./src/components/sunoUserStats/charts/PlaylistCreationDateChart.js",
-    "./services/sunoService": "./src/services/sunoService.js",
-    "./services/riffusionService": "./src/services/riffusionService.js",
-    "./services/aiAnalysisService": "./src/services/aiAnalysisService.js",
-    "./services/csvExportService": "./src/services/csvExportService.js",
-    "./hooks/useSunoAudioPlayer": "./src/hooks/useSunoAudioPlayer.js",
-    "./hooks/useSunoUserStatsData": "./src/hooks/useSunoUserStatsData.js",
-    "./types": "./src/types.js",
-    "./types/sunoUserStatsTypes": "./src/types/sunoUserStatsTypes.js",
-    "./release-notes/v1_9_4": "./src/release-notes/v1_9_4.js",
-    "wavesurfer.js/": "https://esm.sh/wavesurfer.js@7.9.5/"
-  }
-}
-</script>
-  <style>
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #1f2937;
-    }
-
-    html.light ::-webkit-scrollbar-track {
-      background: #e5e7eb;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #059669;
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #047857;
-    }
-
-    ::selection {
-      background-color: #059669;
-      color: #000000;
-    }
-
-    ::-moz-selection {
-      background-color: #059669;
-      color: #000000;
-    }
-
-    .animate-fadeIn {
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0px);
-      }
-    }
-
-    .confetti-piece {
-      position: absolute;
-      width: 8px;
-      height: 16px;
-      background-color: #facc15;
-      /* yellow-400 */
-      opacity: 0;
-      animation: fall 3s ease-out forwards;
-    }
-
-    .confetti-piece:nth-child(2n) {
-      background-color: #4ade80;
-      /* green-400 */
-    }
-
-    .confetti-piece:nth-child(3n) {
-      background-color: #60a5fa;
-      /* blue-400 */
-    }
-
-    .confetti-piece:nth-child(4n) {
-      background-color: #f472b6;
-      /* pink-400 */
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-10vh) rotateZ(0deg);
-        opacity: 1;
-      }
-
-      100% {
-        transform: translateY(100vh) rotateZ(720deg);
-        opacity: 0;
-      }
-    }
-
-    @keyframes flash {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.4;
-      }
-    }
-
-    .animate-flash {
-      animation: flash 1.5s infinite ease-in-out;
-    }
-  </style>
-  <script type="module" src="./src/index.js"></script>
   <link rel="stylesheet" href="/src/index.css">
 </head>
 
@@ -244,6 +23,13 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <script type="module" src="/src/index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 
 </html>

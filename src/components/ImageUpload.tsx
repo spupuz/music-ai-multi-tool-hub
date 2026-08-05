@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import ReactCrop, { type Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import Button from '@/components/common/Button';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -176,7 +177,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
           aria-label="Upload inspiration image"
         />
         {preview ? (
-          <img src={preview} alt="Preview" className={`max-h-40 rounded-lg object-contain ${uiMode === 'architect' ? 'shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all' : 'shadow-2xl'}`} />
+          <img loading="lazy" decoding="async" src={preview} alt="Preview" className={`max-h-40 rounded-lg object-contain ${uiMode === 'architect' ? 'shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all' : 'shadow-2xl'}`} />
         ) : (
           <div className="flex flex-row items-center gap-6 py-6 px-4">
             <UploadIcon className={`w-12 h-12 flex-shrink-0 transition-colors ${uiMode === 'architect' ? 'text-emerald-500 group-hover:text-emerald-400' : 'text-green-600 dark:text-green-500 group-hover:text-green-500 dark:group-hover:text-green-400'}`} />

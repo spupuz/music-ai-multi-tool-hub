@@ -12,6 +12,17 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [react()],
     define: {},
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') && !id.includes('react-simple-maps') && !id.includes('react-chartjs-2') && !id.includes('react-image-crop')) return 'vendor';
+            }
+          },
+        },
+      },
+    },
     test: {
       globals: true,
       environment: 'jsdom',

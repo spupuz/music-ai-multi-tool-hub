@@ -9,6 +9,31 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.4.0] - 2025-08-05
+
+### Added
+- **Service Layer Caching**: Added persistent caching layer for Suno clip data, Riffusion song data, and short URL resolutions to reduce redundant network requests.
+- **Parallel Proxy Racing**: Both `sunoService` and `riffusionService` now race all CORS proxies in parallel — the first successful response wins, dramatically improving fetch reliability.
+- **Animated Stat Counters**: Added `useCountUp` hook with animated number transitions on the Analytics dashboard.
+- **ScrollReveal Component**: New stagger-fade scroll animation wrapper for resource directory and compliance tool.
+- **Toast & Error Boundary**: Added `ToastProvider` for transient notifications and `ToolErrorBoundary` for graceful tool-level crash recovery.
+- **Chart.js Centralized Setup**: Moved all Chart.js registration to `chartSetup.ts` to eliminate redundant imports.
+- **Manual Vite Chunking**: Configured `rollupOptions.manualChunks` to split vendor dependencies, reducing main bundle size.
+
+### Changed
+- **AI Analysis Service**: Added 30s request timeout and external abort signal support; refactored code-fence stripping into reusable `stripCodeFence` utility.
+- **Gemini Proxy Calls**: Enhanced error handling with distinct timeout vs. cancellation error messages.
+- **CSS Transition Optimization**: Replaced generic `transition-all` with specific property transitions (`transition-[transform,box-shadow,...]`) for better rendering performance.
+- **Image Loading**: Added `loading="lazy"` and `decoding="async"` to all image elements for deferred loading and non-blocking decode.
+- **Sidebar Migration**: Moved sidebar component from `src/Sidebar.tsx` to `src/components/Sidebar.tsx`.
+- **Title Styling**: Applied gradient animated text to About, Release Notes, and Analytics page headers.
+- **Tailwind Config**: Removed unused `classic-header` and `classic-body` font families.
+
+### Removed
+- **Dead Code**: Deleted empty placeholder services (`geminiService.ts`, `huggingfaceService.ts`) and old `src/Sidebar.tsx`.
+- **StatChartsPlaceholder**: Removed empty placeholder component.
+- **Console Log Cleanup**: Stripped noisy debug `console.log` statements from `sunoService.ts` and `riffusionService.ts`.
+
 ## [2.3.0] - 2026-03-31
 
 ### Changed

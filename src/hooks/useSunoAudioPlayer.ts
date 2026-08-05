@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Howl, Howler } from 'howler';
 import type { SunoClip, RiffusionSongData, EqualizerBand, PlayerState, SunoProfileDetail, SunoPlaylistDetail, SunoMusicPlayerStoredData, SavedCustomPlaylist, PlaylistAnalysis } from '@/types';
 import { PlaybackStatus } from '@/types';
@@ -15,7 +15,6 @@ import {
   EQ_PRESETS,
   LOCAL_STORAGE_PREFIX_USER,
   LOCAL_STORAGE_PREFIX_PLAYLIST,
-  LOCAL_STORAGE_CLIP_DETAIL_CACHE_KEY,
   LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY,
   LOCAL_STORAGE_SNIPPET_DURATION_KEY,
   CLEAR_CLICKS_NEEDED,
@@ -498,9 +497,6 @@ export const useSunoAudioPlayer = ({
     return () => { if (animationFrameId) cancelAnimationFrame(animationFrameId); }; 
   }, [playerState.status, playerState.duration, setPlayerState]);
 
-  useEffect(() => {      // Audio context management is now handled by the useSunoAudioSystem hook.
-      // If we need to trigger a specific cleanup here, we can do it via the hook's interface.
-}, [playerState.volume, isAudioSystemReady]);
   const setEqGain = useCallback((bandId: string, gain: number) => { setPlayerState(prevState => ({ ...prevState, eqBands: prevState.eqBands.map(b => b.id === bandId ? { ...b, gain } : b) })); if (isAudioSystemReady) { const bandConfig = playerStateRef.current.eqBands.find(b => b.id === bandId); if (bandConfig && ((bandConfig.gain !== 0 && gain === 0) || (bandConfig.gain === 0 && gain !== 0) || (Math.abs(bandConfig.gain - gain) > 0.5))) trackLocalEvent(TOOL_CATEGORY_PLAYER, 'eqAdjusted', bandId, 1); } }, [trackLocalEvent, isAudioSystemReady, setPlayerState]);
   const applyEqPreset = useCallback((presetKey: string) => { const preset = EQ_PRESETS[presetKey]; if (preset) { setPlayerState(prev => ({ ...prev, eqBands: prev.eqBands.map((band, index) => ({ ...band, gain: preset.gains[index] ?? 0 })) })); if (isAudioSystemReady) trackLocalEvent(TOOL_CATEGORY_PLAYER, 'eqPresetApplied', preset.label, 1); } }, [trackLocalEvent, isAudioSystemReady, setPlayerState]);
 
@@ -545,7 +541,6 @@ export const useSunoAudioPlayer = ({
     }
   }, [trackLocalEvent, nextTrackRef, setPlayerState]);
 
-  const formatTime = (secs: number): string => { if (isNaN(secs) || !isFinite(secs) || secs < 0) return '0:00'; const minutes = Math.floor(secs / 60); const seconds = Math.floor(secs % 60); return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; };
   useEffect(() => { return () => { if (currentSoundRef.current) { currentSoundRef.current.unload(); currentSoundRef.current = null; } if (snippetTimeoutRef.current) { clearTimeout(snippetTimeoutRef.current); snippetTimeoutRef.current = null; } }; }, []);
 
   // Handlers for main control button actions are now derived directly from the useSunoInputProcessor hook above.
@@ -739,6 +734,7 @@ export const useSunoAudioPlayer = ({
     toggleSnippetMode,
     setSnippetDurationConfig,
     formatTime: (secs: number) => {
+      if (isNaN(secs) || !isFinite(secs) || secs < 0) return '0:00';
       const mins = Math.floor(secs / 60);
       const s = Math.floor(secs % 60);
       return `${mins}:${s.toString().padStart(2, '0')}`;

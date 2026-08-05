@@ -24,8 +24,6 @@ export default {
       },
       fontFamily: {
         architect: ['Inter', 'sans-serif'],
-        'classic-header': ['Orbitron', 'sans-serif'],
-        'classic-body': ['Rajdhani', 'sans-serif'],
       }
     },
   },

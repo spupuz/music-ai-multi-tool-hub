@@ -50,6 +50,7 @@ export const DeckFocusView: React.FC<DeckFocusViewProps> = (props) => {
                         <img 
                             src={props.card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
                             alt={`${props.card.title} cover`} 
+                            loading="lazy" decoding="async"
                             className="w-56 h-56 md:w-64 md:h-64 object-cover rounded-2xl mx-auto shadow-2xl border-4 transition-transform duration-500 group-hover:scale-105" 
                             style={{borderColor: `${props.effectiveCardTextColor}44`}} 
                             onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}
@@ -139,6 +140,7 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
                         <img 
                             src={props.revealedRankingCard.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
                             alt={`${props.revealedRankingCard.title} cover`} 
+                            loading="lazy" decoding="async"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                             onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}
                         />

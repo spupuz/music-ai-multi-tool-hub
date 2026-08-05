@@ -1,7 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Chart } from 'chart.js/auto';
-import 'chartjs-adapter-date-fns';
+import { Chart } from 'chart.js';
 import type { SunoClip } from '@/types';
 import type { SongInteractionPoint } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';

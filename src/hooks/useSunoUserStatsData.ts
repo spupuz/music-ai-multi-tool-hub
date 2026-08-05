@@ -19,6 +19,16 @@ const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
 const MIN_PLAYS_FOR_RATE_CALCS = 20; 
 const MIN_SONGS_FOR_TAG_PAIR = 3;
 
+const persistUserData = (key: string, data: SunoUserStoredData): boolean => {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (e) {
+        console.warn(`Failed to persist user data to localStorage for key "${key}". Data is kept in memory for this session.`);
+        return false;
+    }
+};
+
 
 const calculateAggregatedStats = (
     profile: SunoProfileDetail, 
@@ -324,7 +334,7 @@ export const useSunoUserStatsData = (passedTrackLocalEvent: ToolProps['trackLoca
         username: normalizedUser, profile: profileDetail, songs: clips, 
         aggregatedStats, lastFetched: currentFetchTime,
       };
-      localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${normalizedUser}`, JSON.stringify(newData));
+      persistUserData(`${LOCAL_STORAGE_PREFIX}${normalizedUser}`, newData);
       setStoredData(newData); lastSubmittedUsernameRef.current = normalizedUser; 
       setProgressMessage(isUpdate ? `Updated @${normalizedUser}!` : `Fetched @${normalizedUser}!`);
       if (typeof localTracker === 'function') {
@@ -435,14 +445,14 @@ export const useSunoUserStatsData = (passedTrackLocalEvent: ToolProps['trackLoca
             // No existing data, just save the imported data
             setStoredData(importedData);
             setUsername(importedData.username);
-            localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`, JSON.stringify(importedData));
+            persistUserData(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`, importedData);
             lastSubmittedUsernameRef.current = usernameToImport;
             setExportImportStatusMessage(`Data for @${usernameToImport} imported successfully!`);
         } else {
             // Data exists, overwrite for simplicity
             setStoredData(importedData);
             setUsername(importedData.username);
-            localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`, JSON.stringify(importedData));
+            persistUserData(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`, importedData);
             lastSubmittedUsernameRef.current = usernameToImport;
             setExportImportStatusMessage(`Data for @${usernameToImport} imported (overwrote existing)!`);
         }

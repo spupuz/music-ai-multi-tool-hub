@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ToolProps } from '@/Layout';
 import { useTheme } from '@/context/ThemeContext';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-  ArcElement,
-} from 'chart.js';
+import { useCountUp } from '@/hooks/useCountUp';
+import '@/components/sunoUserStats/charts/chartSetup';
+
+const AnimatedStat: React.FC<{ value: number }> = ({ value }) => {
+  const count = useCountUp(value, 700, true);
+  return <>{count.toLocaleString()}</>;
+};
 import { 
   ComposableMap, 
   Geographies, 
@@ -31,18 +26,6 @@ import {
   StatsIcon,
   GlobeAltIcon
 } from '@/components/Icons';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  ChartTooltip,
-  Legend
-);
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
@@ -89,17 +72,20 @@ const resolveMapCountryName = (alpha2: string) => {
   return mapCountryNameAliases[country.name] || country.name;
 };
 
-const StatCard = ({ title, value, sub, icon }: { title: string, value: any, sub: string, icon: React.ReactNode }) => (
+const StatCard = ({ title, value, sub, icon }: { title: string, value: any, sub: string, icon: React.ReactNode }) => {
+  const count = useCountUp(typeof value === 'number' ? value : 0, 800, typeof value === 'number');
+  return (
   <div className="glass-card p-6 border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
     <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-3xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors"></div>
     <div className="flex justify-between items-start mb-4 relative z-10">
       <div className="text-emerald-500">{icon}</div>
       <div className="text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full tracking-widest leading-none">{sub}</div>
     </div>
-    <div className="text-3xl font-black text-gray-900 dark:text-white leading-none mb-1 tabular-nums relative z-10">{value.toLocaleString()}</div>
+    <div className="text-3xl font-black text-gray-900 dark:text-white leading-none mb-1 tabular-nums relative z-10">{count.toLocaleString()}</div>
     <div className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest relative z-10">{title}</div>
   </div>
-);
+  );
+};
 
 const StatsPage: React.FC<ToolProps> = () => {
   const { uiMode } = useTheme();
@@ -197,7 +183,7 @@ const StatsPage: React.FC<ToolProps> = () => {
             ].map((stat, idx) => (
               <div key={idx} className="glass-card p-6 border-2 border-emerald-600/50 dark:border-emerald-500/30 flex flex-col items-center shadow-sm">
                 <div className="mb-3">{stat.icon}</div>
-                <div className="text-2xl font-bold text-gray-900 dark:text-white tabular-nums">{stat.value.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white tabular-nums"><AnimatedStat value={stat.value} /></div>
                 <div className="text-xs text-gray-500 font-bold uppercase tracking-widest">{stat.title}</div>
               </div>
             ))}
@@ -331,7 +317,7 @@ const StatsPage: React.FC<ToolProps> = () => {
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 animate-fadeIn pb-12">
       <header className="mb-14 text-center pt-8 px-4 animate-fadeIn">
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">Analytics</h1>
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic mb-4 text-gradient-animated">Analytics</h1>
         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
             Neural Infrastructure Monitoring • Global Deployment Reach
         </p>

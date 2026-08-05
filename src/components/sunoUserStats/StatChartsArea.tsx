@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import './charts/chartSetup';
 import type { AggregatedStats, SongTrendData, SongEngagementData } from '@/types/sunoUserStatsTypes';
 import type { SunoClip } from '@/types';
 import ChartContainer from './charts/ChartContainer';
@@ -52,7 +53,27 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
   const { theme, uiMode } = useTheme();
 
   if (!stats) {
-    return <p className="text-gray-400 text-center py-4">No aggregated statistics available for @{username} to display charts.</p>;
+    return (
+      <div className="space-y-6 mt-6 animate-fadeIn">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-8">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="p-6 rounded-2xl border border-white/5 space-y-4">
+              <div className="skeleton-bar h-4 w-2/3 rounded-md" />
+              <div className="skeleton-bar h-8 w-full rounded-xl" />
+              <div className="skeleton-bar h-4 w-1/2 rounded-md" />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="p-6 rounded-2xl border border-white/5 space-y-4">
+              <div className="skeleton-bar h-4 w-2/3 rounded-md" />
+              <div className="skeleton-bar h-6 w-full rounded-xl" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   // Dynamic colors based on theme
@@ -117,14 +138,14 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
 
   return (
      <div className="space-y-8 mt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-8">
-         <ChartContainer title={uiMode === 'architect' ? "Upvotes Trend (Per Update)" : "Likes Trend"} tooltipText="Trend of the user's total likes over time, based on data snapshots collected by this tool at each update run."><UpvotesTrendChart data={stats.historicalUpvotes} lineColor="#ff4444" {...commonChartProps} /></ChartContainer>
+         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-8  ">
+          <ChartContainer title={uiMode === 'architect' ? "Upvotes Trend (Per Update)" : "Likes Trend"} tooltipText="Trend of the user's total likes over time, based on data snapshots collected by this tool at each update run."><UpvotesTrendChart data={stats.historicalUpvotes} lineColor="#ff4444" {...commonChartProps} /></ChartContainer>
         <ChartContainer title="Plays Trend (Per Update)" tooltipText="Trend of the user's total plays over time, based on data snapshots collected by this tool at each update run."><PlaysTrendChart data={stats.historicalPlays} lineColor="#44ff44" {...commonChartProps} /></ChartContainer>
         <ChartContainer title="Followers Trend (Per Update)" tooltipText="Trend of the user's total followers over time, based on data snapshots collected by this tool at each update run."><FollowersTrendChart data={stats.historicalFollowers} lineColor="#4444ff" {...commonChartProps} /></ChartContainer>
         <ChartContainer title="Comments Trend (Per Update)" tooltipText="Trend of the user's total comments on their songs over time, based on data snapshots collected by this tool at each update run."><CommentsTrendChart data={stats.historicalComments} lineColor="#FFCA28" {...commonChartProps} /></ChartContainer>
       </div>
       <p className="text-xs text-gray-500 mt-1 italic text-center"> Profile trends (Upvotes, Plays, Followers, Comments) show data collected by this tool at each update run. </p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8  ">
         <ChartContainer title="Songs Created Per Day (Last 30 Days)" tooltipText="Number of songs created each day over the last 30 days, based on song `created_at` timestamps."><DailySongCreationChart data={stats.dailySongCreationCounts} lineColor="#FACC15" {...commonChartProps} /></ChartContainer>
         <ChartContainer title="Creations by Day of Week" tooltipText="Distribution of song creations across different days of the week. Click a bar to filter the song table."> <SongsByDayOfWeekChart data={stats.productivity.songsByDayOfWeek} barColor="#8B5CF6" {...commonChartProps} onSetFilter={(dayIndex) => onSetFilter('dayOfWeek', String(dayIndex))} /> </ChartContainer>
         <ChartContainer title="Creations by Hour of Day" tooltipText="Distribution of song creations across different hours of the day (user's local time). Click a bar to filter the song table."> <SongsByHourOfDayChart data={stats.productivity.songsByHourOfDay} barColor="#EC4899" {...commonChartProps} onSetFilter={(hour) => onSetFilter('hourOfDay', String(hour))} /> </ChartContainer>
@@ -155,7 +176,7 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
           </div>
         </div>
       </section>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8  ">
         <ChartContainer title={topUpvotesChartTitle} heightClassName={chartWithCoverArtMinHeight} tooltipText="Shows songs with the largest increase in upvotes during the selected period. 'Overall' shows top songs by total upvotes."> {selectedPeriod !== "overall" ? ( <SongTrendChart data={topUpvotesChartData as SongTrendData[]} valueLabel={topUpvotesValueLabel} barColor={topUpvotesBarColor} topNValue={topNValue} {...commonChartProps} /> ) : ( <TopSongsChart songs={topUpvotesChartData as SunoClip[]} metric="upvote_count" valueLabel={topUpvotesValueLabel} barColor={topUpvotesBarColor} topN={topNValue} {...commonChartProps} /> )} </ChartContainer>
         <ChartContainer title={topPlaysChartTitle} heightClassName={chartWithCoverArtMinHeight} tooltipText="Shows songs with the largest increase in plays during the selected period. 'Overall' shows top songs by total plays."> {selectedPeriod !== "overall" ? ( <SongTrendChart data={topPlaysChartData as SongTrendData[]} valueLabel={topPlaysValueLabel} barColor={topPlaysBarColor} topNValue={topNValue} {...commonChartProps} /> ) : ( <TopSongsChart songs={topPlaysChartData as SunoClip[]} metric="play_count" valueLabel={topPlaysValueLabel} barColor={topPlaysBarColor} topN={topNValue} {...commonChartProps} /> )} </ChartContainer>
       </div>
@@ -168,7 +189,7 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
         <ChartContainer title={`Top ${topNValue} Songs by Comment Rate (Comments/Plays)`} heightClassName={chartWithCoverArtMinHeight} tooltipText={`Songs ranked by Comment Rate (Comments per 100 Plays), for songs with at least ${MIN_PLAYS_FOR_ENGAGEMENT_RATIO} plays. Highlights songs that generate a lot of discussion.`}> <TopSongsByCommentRateChart data={stats.topSongsByCommentRate} barColor="#FACC15" topNValue={topNValue} {...commonChartProps} /> </ChartContainer>
       </div>
        <p className="text-xs text-gray-500 mt-1 italic text-center"> "Top Songs by Comment Rate" are ranked by Comment Rate (Comments per 100 Plays), for songs with at least {MIN_PLAYS_FOR_ENGAGEMENT_RATIO} plays. </p>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 mt-8  ">
         <ChartContainer title="Play Count Distribution" tooltipText="Shows how many songs fall into different play count brackets."><PlayCountDistributionChart data={stats.playCountDistribution} barColor="#22D3EE" {...commonChartProps} /></ChartContainer>
         <ChartContainer title={uiMode === 'architect' ? "Upvote Count Distribution" : "Like Count Distribution"} tooltipText="Shows how many songs fall into different like count brackets."><UpvoteCountDistributionChart data={stats.upvoteCountDistribution} barColor="#A78BFA" {...commonChartProps} /></ChartContainer>
         <ChartContainer title="Comment Count Distribution" tooltipText="Shows how many songs fall into different comment count brackets."><CommentCountDistributionChart data={stats.commentCountDistribution} barColor="#FFECB3" {...commonChartProps} /></ChartContainer>
@@ -181,22 +202,22 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
       <div className="mt-8"> <TagPairPerformanceTable tagPairData={stats.tagPairPerformance} topN={topNValue} /> </div>
       <p className="text-xs text-gray-500 mt-1 italic text-center"> Tag Pair Performance shows average metrics for songs containing specific pairs of tags (min. 3 songs per pair). </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-8"> {/* Changed to 2 columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-8  "> {/* Changed to 2 columns */}
         <ChartContainer title={uiMode === 'architect' ? "Song Performance: Plays vs. Upvotes" : "Performance: Plays vs. Likes"} heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total likes (Y-axis). The line indicates the user's overall average like rate. Helps identify high/low engagement songs."> <PlaysUpvotesScatterPlot songs={stats.topPlayedSongs.concat(stats.topUpvotedSongs).filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)} averageUpvoteRateOverall={stats.overallUpvoteRate} {...commonChartProps} /> </ChartContainer>
-        <ChartContainer title="Song Performance: Plays vs. Comments" heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total comments (Y-axis). The line indicates the user's overall average comment rate (for songs >20 plays). Helps identify 'talkable' songs."> <PlaysCommentsScatterPlotChart songs={stats.topPlayedSongs.concat(stats.topUpvotedSongs).filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)} averageCommentRateOverall={stats.overallCommentRate} {...commonChartProps} /> </ChartContainer>
+        <ChartContainer title="Song Performance: Plays vs. Comments" heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total comments (Y-axis). The line indicates the user's overall average like rate (for songs >20 plays). Helps identify 'talkable' songs."> <PlaysCommentsScatterPlotChart songs={stats.topPlayedSongs.concat(stats.topUpvotedSongs).filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)} averageCommentRateOverall={stats.overallCommentRate} {...commonChartProps} /> </ChartContainer>
       </div>
        <p className="text-xs text-gray-500 mt-1 italic text-center"> Scatter Plots show songs based on their total plays and upvotes/comments. Line indicates overall average rate for the respective metric. </p>
       
       <div className="mt-8"> <SongDurationPerformanceTable durationPerformanceData={stats.songDurationPerformance} /> </div>
       <p className="text-xs text-gray-500 mt-1 italic text-center"> Song Duration Performance shows average metrics for songs categorized by their length. Rate calculations include songs with &gt;20 plays in that bucket. </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8 mt-8  ">
         <ChartContainer title={`Top ${topNValue} Most Used Tags`} tooltipText="Ranks tags by frequency of appearance across all fetched songs. Click a bar to filter the song table."><TagUsageChart data={stats.tagStats} barColorStart="#E8F5E9" barColorEnd="#2E7D32" topN={topNValue} {...commonChartProps} onSetFilter={(tagName) => onSetFilter('tag', tagName)} /></ChartContainer>
         <ChartContainer title={uiMode === 'architect' ? `Top ${topNValue} Most Voted Tags` : `Top ${topNValue} Most Liked Tags`} tooltipText="Ranks tags by the total likes received by songs associated with them. Click a bar to filter the song table."><TagVotesChart data={stats.tagStats} barColorStart="#F3E5F5" barColorEnd="#7B1FA2" topN={topNValue} {...commonChartProps} onSetFilter={(tagName) => onSetFilter('tag', tagName)}/></ChartContainer>
         <ChartContainer title={`Top ${topNValue} Most Commented Songs`} heightClassName={chartWithCoverArtMinHeight} tooltipText="Shows songs with the highest total number of comments."><TopCommentedSongsChart songs={stats.topCommentedSongs} valueLabel="Total Comments" barColor="#FFD54F" topN={topNValue} {...commonChartProps} /></ChartContainer>
       </div>
       <p className="text-xs text-gray-500 mt-1 italic text-center"> "Most Used Tags" shows tags by frequency of appearance. "Most Voted Tags" ranks tags by the total upvotes on songs associated with them. "Most Commented Songs" shows overall top commented songs. </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-8  ">
         <ChartContainer title={`Top ${topNValue} Most Used Genres (Derived)`} tooltipText="'Genres (Derived)' are inferred from common genre keywords found within tags. This chart shows their usage frequency. Click a bar to filter the song table."><GenreUsageChart data={stats.genreStats} barColorStart="#E3F2FD" barColorEnd="#1565C0" topN={topNValue} {...commonChartProps} onSetFilter={(genreName) => onSetFilter('genre', genreName)}/></ChartContainer>
         <ChartContainer title={uiMode === 'architect' ? `Top ${topNValue} Most Voted Genres (Derived)` : `Top ${topNValue} Most Liked Genres`} tooltipText="'Genres (Derived)' are inferred from common genre keywords in tags. This chart ranks them by total likes on associated songs. Click a bar to filter the song table."><GenreVotesChart data={stats.genreStats} barColorStart="#FFF3E0" barColorEnd="#E65100" topN={topNValue} {...commonChartProps} onSetFilter={(genreName) => onSetFilter('genre', genreName)}/></ChartContainer>
       </div>
@@ -210,4 +231,4 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
     </div>
   );
 };
-export default StatChartsArea;
+export default React.memo(StatChartsArea);

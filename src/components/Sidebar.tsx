@@ -20,6 +20,7 @@ interface SidebarProps {
   activeToolId: ToolId;
   onNavigate: (toolId: ToolId) => void;
   trackLocalEvent: (category: string, action: string, label?: string, value?: string | number) => void;
+  onPreloadTool?: (toolId: ToolId) => void;
 }
 
 const EmailIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
@@ -53,7 +54,7 @@ const categoryOrder = [
 ];
 
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, tools, activeToolId, onNavigate, trackLocalEvent }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, tools, activeToolId, onNavigate, trackLocalEvent, onPreloadTool }) => {
   const { uiMode } = useTheme();
   const emailAddress = "qwqwojij0@mozmail.com";
   const emailSubject = "Music AI Multi-Tool Hub Feedback/Suggestion";
@@ -110,7 +111,9 @@ Thanks,
         ></div>
       )}
 
-      <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-900 shadow-2xl z-40 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] border-r border-gray-200 dark:border-gray-800 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full invisible pointer-events-none'}`} aria-label="Main navigation">
+      <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-white dark:bg-gray-900 shadow-2xl z-40 border-r border-gray-200 dark:border-gray-800 flex flex-col ${isOpen
+        ? 'translate-x-0 visible pointer-events-auto [transition:transform_500ms_cubic-bezier(0.23,1,0.32,1)]'
+        : '-translate-x-full pointer-events-none [visibility:hidden] [transition:transform_500ms_cubic-bezier(0.23,1,0.32,1),visibility_0s_linear_500ms]'}`} aria-label="Main navigation">
         <header className={`p-4 border-b flex items-center justify-between gap-4 z-20 ${
           uiMode === 'architect' 
             ? 'border-gray-200/50 dark:border-white/5 bg-slate-50/90 dark:bg-gray-950/80 backdrop-blur-xl' 
@@ -140,9 +143,11 @@ Thanks,
                     <Button
                       key={tool.id}
                       onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, tool.id)}
+                      onMouseEnter={() => onPreloadTool && onPreloadTool(tool.id)}
+                      onFocus={() => onPreloadTool && onPreloadTool(tool.id)}
                       variant="ghost"
                       startIcon={tool.icon ? (
-                        <span className={`transition-transform duration-300 group-hover:scale-110 ${activeToolId === tool.id ? 'opacity-100' : 'opacity-60'}`}>
+                        <span className={`sidebar-icon-hover ${activeToolId === tool.id ? 'opacity-100' : 'opacity-60'}`}>
                           {tool.icon}
                         </span>
                       ) : null}
@@ -219,12 +224,16 @@ Thanks,
               <img
                 src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
                 alt="Buy Me A Coffee"
+                loading="lazy"
+                decoding="async"
                 style={{ height: '40px', width: '145px', display: 'block', margin: '0 auto' }}
               />
             </a>
             <div className="grid grid-cols-2 gap-2">
               <Button
                 onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, 'releaseNotes')}
+                onMouseEnter={() => onPreloadTool && onPreloadTool('releaseNotes')}
+                onFocus={() => onPreloadTool && onPreloadTool('releaseNotes')}
                 variant="ghost"
                 size="sm"
                 className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none
@@ -240,6 +249,8 @@ Thanks,
               </Button>
               <Button
                 onClick={(e) => handleToolButtonClick(e as unknown as React.MouseEvent<HTMLButtonElement>, 'specialMentions')}
+                onMouseEnter={() => onPreloadTool && onPreloadTool('specialMentions')}
+                onFocus={() => onPreloadTool && onPreloadTool('specialMentions')}
                 variant="ghost"
                 size="sm"
                 className={`flex items-center justify-start p-3 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all shadow-none whitespace-nowrap border-none

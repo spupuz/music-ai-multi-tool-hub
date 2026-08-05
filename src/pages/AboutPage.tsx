@@ -114,7 +114,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, icon, onClick }
 
   return (
     <div
-      className={`p-6 rounded-xl shadow-lg border transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-xl flex flex-col 
+      className={`p-6 rounded-xl shadow-lg border transition-[transform,box-shadow,border-color,background-color] duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-xl flex flex-col 
         ${uiMode === 'architect' 
           ? 'glass-card border-white/10 hover:border-emerald-500/20' 
           : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-500'} 
@@ -238,7 +238,7 @@ Thanks,
               <p className="text-center mb-6">If you find the Hub valuable, consider supporting its continued development!</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a href="https://www.buymeacoffee.com/spupuz" target="_blank" rel="noopener noreferrer">
-                  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style={{ height: '45px', width: '160px' }} />
+                  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" loading="lazy" decoding="async" style={{ height: '45px', width: '160px' }} />
                 </a>
                 <a 
                   href="https://floot.com/r/Y4O5V8" 
@@ -268,7 +268,7 @@ Thanks,
                          <div 
                           key={tool.id} 
                           onClick={() => onNavigate && onNavigate(tool.id)}
-                          className="p-5 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-500/30 transition-all flex items-center gap-4 group"
+                          className="p-5 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-500/30 transition-[background-color,border-color] flex items-center gap-4 group"
                         >
                           <div className="text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
                             {tool.icon && React.cloneElement(tool.icon as React.ReactElement, { className: "w-6 h-6" })}
@@ -329,12 +329,12 @@ Thanks,
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto glass-card p-4 sm:p-8 md:p-12 border-white/10 shadow-2xl transition-all duration-500 animate-fadeIn relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
+    <div className="w-full max-w-5xl mx-auto glass-card p-4 sm:p-8 md:p-12 border-white/10 shadow-2xl transition-[box-shadow,border-color] duration-500 animate-fadeIn relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 [background:radial-gradient(circle,rgba(16,185,129,0.08),transparent_65%)] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 [background:radial-gradient(circle,rgba(59,130,246,0.08),transparent_65%)] pointer-events-none"></div>
       
       <header className="mb-8 md:mb-14 text-center pt-4 md:pt-8 px-4 relative z-10">
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic mb-4">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic mb-4 text-gradient-animated">
           About This Hub
         </h1>
         <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">

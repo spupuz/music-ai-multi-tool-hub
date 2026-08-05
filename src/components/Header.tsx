@@ -2,6 +2,7 @@
 import React from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
+import { LATEST_VERSION, LATEST_RELEASE_DATE } from '@/data/version';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -71,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-2 sm:px-4 transition-all duration-300 ${uiMode === 'classic' ? 'bg-white dark:bg-gray-900 border-b-2 border-emerald-600 dark:border-emerald-500 shadow-md' : 'glass-nav'}`}
+      className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-2 sm:px-4 transition-[background-color,border-color,box-shadow] duration-300 ${uiMode === 'classic' ? 'bg-white dark:bg-gray-900 border-b-2 border-emerald-600 dark:border-emerald-500 shadow-md' : 'glass-nav'}`}
     >
       <div className="flex items-center px-2 flex-grow overflow-hidden">
         <Button
@@ -98,6 +99,9 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
           <h1 className="text-[10px] min-[320px]:text-xs sm:text-sm font-bold sm:font-black uppercase tracking-tight sm:tracking-tighter whitespace-normal sm:whitespace-nowrap overflow-hidden text-ellipsis ml-1 min-[400px]:ml-2 max-w-[140px] min-[360px]:max-w-none">
             {styledName}
           </h1>
+          <span className="hidden min-[500px]:inline ml-2 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-widest rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+            v{LATEST_VERSION}
+          </span>
         </div>
       </div>
       

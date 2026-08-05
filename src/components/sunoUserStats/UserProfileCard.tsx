@@ -56,7 +56,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
       
       <div className="relative shrink-0">
         <div className="absolute -inset-1 bg-gradient-to-tr from-emerald-500/20 to-emerald-500/20 rounded-full blur-sm group-hover:blur-md transition-all duration-500"></div>
-        <img 
+        <img loading="lazy" decoding="async" 
           src={profile.image_url || FALLBACK_IMAGE_DATA_URI} 
           alt={`${profile.display_name}'s avatar`} 
           className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white/10 shadow-2xl relative z-10 brightness-90 group-hover:brightness-100 transition-all duration-500"
