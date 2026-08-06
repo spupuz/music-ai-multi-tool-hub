@@ -6,6 +6,19 @@ import { raceFetch, raceForValue, type ProxyAttempt } from './proxyUtils';
 
 const API_BASE_URL = 'https://studio-api.prod.suno.com/api';
 
+// Hosts that never send CORS headers — direct browser fetches to them are
+// guaranteed to fail, so skip the doomed attempt and go straight to the proxy.
+const SUNO_CROSS_ORIGIN_HOSTS = ['studio-api.prod.suno.com', 'suno.com', 'app.suno.ai'];
+
+const isSunoCrossOriginHost = (url: string): boolean => {
+  try {
+    const host = new URL(url).hostname;
+    return SUNO_CROSS_ORIGIN_HOSTS.some(h => host === h || host.endsWith(`.${h}`));
+  } catch {
+    return false;
+  }
+};
+
 // Our own Cloudflare Worker proxies Suno server-side, bypassing browser CORS.
 // These are the same fixed endpoints used for Gemini/telemetry — see gemini-worker/index.js.
 // For local testing, set VITE_SUNO_WORKER_URL=http://localhost:8787 (wrangler dev).
@@ -42,13 +55,18 @@ const publicProxies = [
 ];
 
 const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  try {
-    const response = await fetch(url, options);
-    // If CORS is blocked, fetch typically throws a TypeError (NetworkError).
-    // So we only reach here if the request was actually made.
-    return response;
-  } catch (error) {
-    console.warn(`[sunoService] Direct fetch failed (likely CORS), using worker proxy for: ${url}`);
+  // For Suno hosts, direct reads are always blocked by CORS, so the fetch below
+  // would fail and only spam the console. Go straight to the worker proxy.
+  // Non-Suno URLs keep the direct attempt first.
+  if (!isSunoCrossOriginHost(url)) {
+    try {
+      const response = await fetch(url, options);
+      // If CORS is blocked, fetch typically throws a TypeError (NetworkError).
+      // So we only reach here if the request was actually made.
+      return response;
+    } catch (error) {
+      console.warn(`[sunoService] Direct fetch failed (likely CORS), using worker proxy for: ${url}`);
+    }
   }
 
   // Primary: our own Cloudflare Worker proxy (server-side fetch, no CORS).

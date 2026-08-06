@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.1",
+    content: (
+      <section id="version-2.6.1">
+        <SectionTitle>Version 2.6.1 - 2026-08-06</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Clean console</STRONG>: <CODE>sunoService</CODE> no longer attempts the guaranteed-to-fail direct browser fetch to Suno hosts (always blocked by CORS) — it goes straight to the Cloudflare Worker proxy, eliminating CORS error spam in the browser console.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.0",
     content: (
       <section id="version-2.6.0">

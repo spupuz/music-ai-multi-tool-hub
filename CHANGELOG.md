@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.1] - 2026-08-06
+
+### Fixed
+- **Clean console**: `sunoService` no longer attempts the guaranteed-to-fail direct browser fetch to Suno hosts (always blocked by CORS) — it goes straight to the Cloudflare Worker proxy, eliminating CORS error spam in the browser console.
+
 ## [2.6.0] - 2026-08-06
 
 ### Added
