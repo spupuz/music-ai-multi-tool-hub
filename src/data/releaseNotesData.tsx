@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.3",
+    content: (
+      <section id="version-2.6.3">
+        <SectionTitle>Version 2.6.3 - 2026-08-06</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>No sensitive data in the repo</STRONG>: <CODE>.env</CODE> is no longer tracked (untracked via <CODE>git rm --cached</CODE>), and docs/AGENTS now enforce that <CODE>.env</CODE>, <CODE>.dev.vars</CODE>, and <CODE>.wrangler/</CODE> stay out of git.</LI>
+          <LI><STRONG><CODE>wrangler.toml</CODE> policy</STRONG>: documented that it holds only non-secret bindings (names, KV namespace IDs) — API keys and passwords are set exclusively via <CODE>wrangler secret put</CODE> / the dashboard, never committed.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.2",
     content: (
       <section id="version-2.6.2">

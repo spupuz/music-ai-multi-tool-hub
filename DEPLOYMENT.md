@@ -8,11 +8,14 @@ This project is deployed as a **static SPA on Cloudflare Pages**, with a **Cloud
 
 ```
 Browser → Cloudflare Pages (static build)
-              ↓ AI/password requests
+              ↓ AI/password requests + Suno API calls
          Cloudflare Worker (gemini-proxy.spupuz.workers.dev)
               ↓
-         Google Gemini API  (key stored as Worker secret)
+         Google Gemini API   (key stored as Worker secret)
+         Suno /studio-api    (proxied with per-endpoint cache)
 ```
+
+The Worker proxies Gemini requests, verifies the committee password server-side, and serves `/suno/*` / `/suno-web/*` (cached) so the browser never calls Suno directly and never hits CORS errors.
 
 ---
 
@@ -24,9 +27,11 @@ Browser → Cloudflare Pages (static build)
 
 ---
 
-## 1. Deploy the Gemini Worker
+## 1. Deploy the Worker
 
-The Worker proxies Gemini API requests and verifies the committee password server-side.
+The Worker proxies Gemini API requests, verifies the committee password server-side, and proxies Suno API calls.
+
+> **`wrangler.toml` contains no secrets** — only bindings (worker name, KV namespace ID). Secrets are set below via `wrangler secret put` or the dashboard, never committed.
 
 ### Via Cloudflare Dashboard
 
@@ -77,13 +82,22 @@ Worker URL: `https://gemini-proxy.spupuz.workers.dev`
 ```bash
 npm install
 cp .env.example .env
-# Add GEMINI_API_KEY to .env (only for local runs — not committed)
+# Add GEMINI_API_KEY to .env (only for local runs — NOT committed: .env is untracked)
 npm run dev
 ```
 
 The app runs at `http://localhost:3000`.
 
 For AI features locally, the Worker URL is hardcoded in `services/aiAnalysisService.ts` and `SunoSongComplianceTool.tsx`.
+
+To test the Suno proxy against a local Worker:
+
+```bash
+cd gemini-worker
+npx wrangler@3 dev --port 8787   # Node 20 → use wrangler v3 (v4 needs Node 22)
+```
+
+Then create a local `.env` with `VITE_SUNO_WORKER_URL=http://localhost:8787` so `sunoService.ts` targets the local Worker instead of production.
 
 ---
 
@@ -102,6 +116,7 @@ git push origin main
 ## Security Notes
 
 - `GEMINI_API_KEY` and `COMMITTEE_PASSWORD` are **Worker secrets** — never in the git repo or JS bundle
+- `.env`, `.env.*`, `.dev.vars`, and `.wrangler/` are **gitignored and must stay untracked** (`.env` is not committed — verify with `git ls-files | grep -E "\.env|dev\.vars|\.wrangler"`)
+- `wrangler.toml` only holds **non-secret bindings** (names, KV namespace IDs) — no API keys, tokens, or passwords ever
 - The Worker URL (`gemini-proxy.spupuz.workers.dev`) is not secret — it's a public endpoint
-- Keep `.env` in `.gitignore` (already configured)
 - CORS in the Worker only allows requests from `music-ai-multi-tool-hub.pages.dev`

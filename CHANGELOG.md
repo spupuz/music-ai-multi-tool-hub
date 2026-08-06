@@ -9,6 +9,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.3] - 2026-08-06
+
+### Security
+- **No sensitive data in the repo**: `.env` is no longer tracked (untracked via `git rm --cached`), and docs/AGENTS now enforce that `.env`, `.dev.vars`, and `.wrangler/` stay out of git.
+- **`wrangler.toml` policy**: documented that it holds only non-secret bindings (names, KV namespace IDs) — API keys and passwords are set exclusively via `wrangler secret put` / the dashboard, never committed.
+
 ## [2.6.2] - 2026-08-06
 
 ### Changed

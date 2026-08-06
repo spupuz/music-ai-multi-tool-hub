@@ -134,7 +134,9 @@ useEffect(() => {
 
 ## Security & Data Privacy
 
-- **Cloudflare Worker**: All Gemini API calls and password verification are proxied via `gemini-proxy.spupuz.workers.dev`. Secrets live exclusively in the Worker — never in source code or the JS bundle.
+- **Cloudflare Worker**: All Gemini API calls, password verification, and Suno API proxying go through `gemini-proxy.spupuz.workers.dev`. Secrets live exclusively in the Worker — never in source code or the JS bundle.
+- **Never commit secrets**: `.env`, `.env.*`, `.dev.vars`, and `.wrangler/` must stay untracked (already in `.gitignore`). Verify with `git ls-files | grep -E "\.env|dev\.vars|\.wrangler"` (must be empty). If `.env` ever becomes tracked, `git rm --cached .env` immediately.
+- **`wrangler.toml`**: must never contain secrets — only non-secret bindings (names, KV namespace IDs). `GEMINI_API_KEY` / `COMMITTEE_PASSWORD` are set via `wrangler secret put` or the Cloudflare dashboard, never committed.
 - **Local Privacy**: Sensitive user data should be kept in local state/storage and never leaked to external logs.
 
 ## AI-Assisted Contributions

@@ -70,15 +70,15 @@ npm run dev            # http://localhost:3000
 
 ```
 Browser → Cloudflare Pages (static SPA)
-              ↓ (AI requests)
+              ↓ (AI requests + Suno API calls)
          Cloudflare Worker (gemini-proxy)
               ↓ (API key as Worker secret)
-         Google Gemini API
+         Google Gemini API / Suno API (cached)
 ```
 
-- **All secrets** (`GEMINI_API_KEY`, `COMMITTEE_PASSWORD`) live as **Worker secrets** — never in the JS bundle
+- **All secrets** (`GEMINI_API_KEY`, `COMMITTEE_PASSWORD`) live as **Worker secrets** — never in the JS bundle, never in `wrangler.toml`, never in a committed `.env`
 - **SPA routing** handled via `public/_redirects`
-- **Gemini proxy** at `gemini-proxy.spupuz.workers.dev`
+- **Gemini + Suno proxy** at `gemini-proxy.spupuz.workers.dev` (Suno endpoints are cached per-endpoint)
 
 ---
 

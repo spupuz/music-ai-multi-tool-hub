@@ -1,3 +1,5 @@
+# No secrets in this file. GEMINI_API_KEY and COMMITTEE_PASSWORD are set via
+# `wrangler secret put` (or the Cloudflare dashboard) — never committed.
 name = "gemini-proxy"
 main = "index.js"
 compatibility_date = "2024-09-23"

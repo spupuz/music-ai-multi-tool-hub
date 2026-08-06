@@ -11,7 +11,7 @@
 - **Service Layer**: Pure TypeScript abstractions in `services/` (Suno, Riffusion, Gemini, HuggingFace).
 - **Communication**: Local event tracking via `localStorage` in `Layout.tsx`.
 - **Orchestration**: Deployed as a static SPA on **Cloudflare Pages**.
-- **API Proxy**: Cloudflare Worker (`gemini-proxy`) handles Gemini calls, telemetry, and visitor statistics. Secrets never reach the frontend bundle.
+- **API Proxy**: Cloudflare Worker (`gemini-proxy`) handles Gemini calls, telemetry, visitor statistics, and Suno API proxying (with per-endpoint cache TTLs). Secrets never reach the frontend bundle.
 - **Iconography**: Centralized SVG icons in `components/Icons.tsx` for consistent premium branding.
 
 ## 📐 Architecture Overview
@@ -26,6 +26,7 @@
 3. **Architecture**: Always follow the Tool-Component pattern. Use existing hooks and utility functions for music theory or image processing.
 4. **Security**: **CRITICAL**. API keys (`GEMINI_API_KEY`) and secrets live exclusively in the **Cloudflare Worker** — never hardcoded in source files or env vars that get compiled into the bundle.
 5. **Data Masking & Privacy**: Mask all tokens in logs and UI displays (e.g., `key.slice(0, 4) + '...'`).
+6. **Never commit secrets**: `.env`, `.env.*`, `.dev.vars`, and `.wrangler/` must stay untracked (`.gitignore` is configured). `wrangler.toml` must never contain secrets — only non-secret bindings (names, KV namespace IDs). Worker secrets are set via `wrangler secret put` or the dashboard.
 
 ## 🏷️ Versioning Strategy
 
