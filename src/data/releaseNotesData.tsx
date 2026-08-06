@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.2",
+    content: (
+      <section id="version-2.6.2">
+        <SectionTitle>Version 2.6.2 - 2026-08-06</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno proxy cache optimization</STRONG>: the Worker now caches per-endpoint — clips for 24h (immutable data), profiles for 10 min, playlists for 5 min, short links for 1h. Faster repeat loads and less load on Suno.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.1",
     content: (
       <section id="version-2.6.1">

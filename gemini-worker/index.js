@@ -11,7 +11,25 @@
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 const SUNO_API_BASE = 'https://studio-api.prod.suno.com';
 const SUNO_WEB_BASE = 'https://suno.com';
-const SUNO_PROXY_CACHE_TTL_SECONDS = 600; // 10 minutes
+
+// Per-endpoint cache TTLs (seconds). Longer TTLs reduce load on Suno and speed
+// up repeat visits. Clip data is immutable after creation, so it caches longest.
+const SUNO_CACHE_TTL = {
+    clip: 24 * 60 * 60,    // /api/clip/… – never changes once created
+    profile: 10 * 60,      // /api/profiles/… – updates as artists publish
+    playlist: 5 * 60,      // /api/playlist/… – updates as tracks are added/removed
+    shortLink: 60 * 60,    // suno.com/s/… – redirects are effectively permanent
+    default: 10 * 60,
+};
+
+function cacheTtlForPath(path) {
+    if (path.includes('/clip/')) return SUNO_CACHE_TTL.clip;
+    if (path.includes('/profiles/')) return SUNO_CACHE_TTL.profile;
+    if (path.includes('/playlist/')) return SUNO_CACHE_TTL.playlist;
+    if (path.includes('/s/')) return SUNO_CACHE_TTL.shortLink;
+    return SUNO_CACHE_TTL.default;
+}
+
 const ALLOWED_ORIGINS = [
     'https://music-ai-multi-tool-hub.pages.dev',
     'http://localhost:3000',
@@ -32,27 +50,26 @@ function corsHeaders(origin) {
 /**
  * Proxies a Suno request server-side so the browser never hits Suno's CORS
  * restrictions. Only fixed base hosts are allowed (no open/SSRF proxy).
- * Responses are cached at the edge for SUNO_PROXY_CACHE_TTL_SECONDS.
+ * Responses are cached at the edge with a per-endpoint TTL.
  */
-async function proxySunoRequest(request, url, baseUrl, cacheable) {
+async function proxySunoRequest(request, url, baseUrl) {
     const origin = request.headers.get('Origin') || '';
     const cors = corsHeaders(origin);
     const path = url.pathname.replace(/^\/suno(-web)?/, '') || '/';
     const targetUrl = `${baseUrl}${path}${url.search}`;
+    const ttlSeconds = cacheTtlForPath(path);
 
-    if (cacheable) {
-        try {
-            const cached = await caches.default.match(targetUrl);
-            if (cached) {
-                const body = await cached.text();
-                return new Response(body, {
-                    status: 200,
-                    headers: { ...cors, 'Content-Type': 'application/json', 'X-Suno-Proxy': 'cache' },
-                });
-            }
-        } catch (e) {
-            // Cache lookup failure is non-fatal; continue to origin.
+    try {
+        const cached = await caches.default.match(targetUrl);
+        if (cached) {
+            const body = await cached.text();
+            return new Response(body, {
+                status: 200,
+                headers: { ...cors, 'Content-Type': 'application/json', 'X-Suno-Proxy': 'cache' },
+            });
         }
+    } catch (e) {
+        // Cache lookup failure is non-fatal; continue to origin.
     }
 
     try {
@@ -72,11 +89,11 @@ async function proxySunoRequest(request, url, baseUrl, cacheable) {
             'X-Suno-Proxy': 'origin',
         };
 
-        if (cacheable && sunoRes.ok) {
+        if (sunoRes.ok && ttlSeconds > 0) {
             try {
                 await caches.default.put(targetUrl, new Response(body, {
                     status: 200,
-                    headers: { 'Cache-Control': `public, max-age=${SUNO_PROXY_CACHE_TTL_SECONDS}` },
+                    headers: { 'Cache-Control': `public, max-age=${ttlSeconds}` },
                 }));
             } catch (e) {
                 // Cache write failure is non-fatal.
@@ -121,10 +138,10 @@ export default {
             const isWeb = url.pathname.startsWith('/suno-web');
             const isApi = url.pathname.startsWith('/suno/');
             if (isWeb) {
-                return proxySunoRequest(request, url, SUNO_WEB_BASE, false);
+                return proxySunoRequest(request, url, SUNO_WEB_BASE);
             }
             if (isApi) {
-                return proxySunoRequest(request, url, SUNO_API_BASE, true);
+                return proxySunoRequest(request, url, SUNO_API_BASE);
             }
             return new Response('Not Found', { status: 404, headers: cors });
         }

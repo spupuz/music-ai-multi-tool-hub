@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.2] - 2026-08-06
+
+### Changed
+- **Suno proxy cache optimization**: the Worker now caches per-endpoint — clips for 24h (immutable data), profiles for 10 min, playlists for 5 min, short links for 1h. Faster repeat loads and less load on Suno.
+
 ## [2.6.1] - 2026-08-06
 
 ### Fixed
