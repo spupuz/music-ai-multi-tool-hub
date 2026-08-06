@@ -49,14 +49,16 @@ function ReleaseFromGithub({ release }: { release: RawRelease }) {
   return (
     <>
       <SectionTitle>Version {release.version}{release.date ? ` - ${release.date}` : ''}</SectionTitle>
-      {sections.map(sec => (
+      {sections.length > 0 ? sections.map(sec => (
         <React.Fragment key={sec.title}>
           <SubSectionTitle>{sec.title}</SubSectionTitle>
           {sec.items.length > 0 && (
             <UL>{sec.items.map((item, i) => <LI key={i}>{inlineMd(item)}</LI>)}</UL>
           )}
         </React.Fragment>
-      ))}
+      )) : (
+        <UL>{release.body.split('\n').filter(l => { const t = l.trim(); return t && !/^#/.test(t) && !/^---/.test(t); }).map((line, i) => <LI key={i}>{inlineMd(line.replace(/^-\s*/, ''))}</LI>)}</UL>
+      )}
     </>
   );
 }

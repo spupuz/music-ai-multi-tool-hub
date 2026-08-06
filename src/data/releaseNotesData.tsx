@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.5.5",
+    content: (
+      <section id="version-2.5.5">
+        <SectionTitle>Version 2.5.5 - 2026-08-06</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Release Notes Fallback</STRONG>: GitHub releases whose bodies lack <CODE>###</CODE> section headers (older releases published as plain commit-subject lists) now render their content as a fallback bullet list instead of showing only the version title.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.4.0",
     content: (
       <section id="version-2.4.0">

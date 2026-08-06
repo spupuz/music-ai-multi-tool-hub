@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.5.5] - 2026-08-06
+
+### Fixed
+- **Release Notes Fallback**: GitHub releases whose bodies lack `###` section headers (older releases published as plain commit-subject lists) now render their content as a fallback bullet list instead of showing only the version title.
+
 ## [2.4.0] - 2025-08-05
 
 ### Added
