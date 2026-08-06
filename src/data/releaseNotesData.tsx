@@ -8,6 +8,27 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.0",
+    content: (
+      <section id="version-2.6.0">
+        <SectionTitle>Version 2.6.0 - 2026-08-06</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Definitive Suno Proxy</STRONG>: Suno API calls now route through the app's own Cloudflare Worker (<CODE>GET /suno/*</CODE>) instead of unreliable public CORS proxies. The Worker fetches Suno server-side (no browser CORS), caches responses at the edge for 10 minutes, and returns proper CORS headers. Public proxies remain only as a last-resort fallback.</LI>
+          <LI><STRONG>Short URL Resolution via Worker</STRONG>: <CODE>suno.com/s/...</CODE> links are resolved through the Worker (<CODE>GET /suno-web/*</CODE>) first, falling back to public proxies.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>sunoService</STRONG>: Worker proxy URL is configurable via <CODE>VITE_SUNO_WORKER_URL</CODE> for local testing (pointing at a local <CODE>wrangler dev</CODE> instance).</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno CORS errors</STRONG>: Profile, playlist and clip fetches no longer fail when free CORS proxies are down (thingproxy, corsproxy.org, yacdn, codetabs, etc.).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.5.5",
     content: (
       <section id="version-2.5.5">

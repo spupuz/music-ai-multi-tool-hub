@@ -9,6 +9,18 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.0] - 2026-08-06
+
+### Added
+- **Definitive Suno Proxy**: Suno API calls now route through the app's own Cloudflare Worker (`GET /suno/*`) instead of unreliable public CORS proxies. The Worker fetches Suno server-side (no browser CORS), caches responses at the edge for 10 minutes, and returns proper CORS headers. Public proxies remain only as a last-resort fallback.
+- **Short URL Resolution via Worker**: `suno.com/s/...` links are resolved through the Worker (`GET /suno-web/*`) first, falling back to public proxies.
+
+### Changed
+- **sunoService**: Worker proxy URL is configurable via `VITE_SUNO_WORKER_URL` for local testing (pointing at a local `wrangler dev` instance).
+
+### Fixed
+- **Suno CORS errors**: Profile, playlist and clip fetches no longer fail when free CORS proxies are down (thingproxy, corsproxy.org, yacdn, codetabs, etc.).
+
 ## [2.5.5] - 2026-08-06
 
 ### Fixed

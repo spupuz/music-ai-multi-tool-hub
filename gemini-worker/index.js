@@ -4,9 +4,14 @@
  * - POST /verify-password → Verify committee password (COMMITTEE_PASSWORD secret)
  * - POST /telemetry       → Register a visit (uses STATS_KV)
  * - GET /stats            → Get statistics (uses STATS_KV)
+ * - GET /suno/*           → Server-side proxy for Suno Studio API (no browser CORS)
+ * - GET /suno-web/*       → Server-side proxy for suno.com pages (short-URL resolution)
  */
 
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+const SUNO_API_BASE = 'https://studio-api.prod.suno.com';
+const SUNO_WEB_BASE = 'https://suno.com';
+const SUNO_PROXY_CACHE_TTL_SECONDS = 600; // 10 minutes
 const ALLOWED_ORIGINS = [
     'https://music-ai-multi-tool-hub.pages.dev',
     'http://localhost:3000',
@@ -22,6 +27,69 @@ function corsHeaders(origin) {
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
     };
+}
+
+/**
+ * Proxies a Suno request server-side so the browser never hits Suno's CORS
+ * restrictions. Only fixed base hosts are allowed (no open/SSRF proxy).
+ * Responses are cached at the edge for SUNO_PROXY_CACHE_TTL_SECONDS.
+ */
+async function proxySunoRequest(request, url, baseUrl, cacheable) {
+    const origin = request.headers.get('Origin') || '';
+    const cors = corsHeaders(origin);
+    const path = url.pathname.replace(/^\/suno(-web)?/, '') || '/';
+    const targetUrl = `${baseUrl}${path}${url.search}`;
+
+    if (cacheable) {
+        try {
+            const cached = await caches.default.match(targetUrl);
+            if (cached) {
+                const body = await cached.text();
+                return new Response(body, {
+                    status: 200,
+                    headers: { ...cors, 'Content-Type': 'application/json', 'X-Suno-Proxy': 'cache' },
+                });
+            }
+        } catch (e) {
+            // Cache lookup failure is non-fatal; continue to origin.
+        }
+    }
+
+    try {
+        const sunoRes = await fetch(targetUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (compatible; MusicAIToolHub/1.0)',
+                'Referer': 'https://suno.com/',
+            },
+        });
+
+        const body = await sunoRes.text();
+        const headers = {
+            ...cors,
+            'Content-Type': 'application/json',
+            'X-Suno-Proxy': 'origin',
+        };
+
+        if (cacheable && sunoRes.ok) {
+            try {
+                await caches.default.put(targetUrl, new Response(body, {
+                    status: 200,
+                    headers: { 'Cache-Control': `public, max-age=${SUNO_PROXY_CACHE_TTL_SECONDS}` },
+                }));
+            } catch (e) {
+                // Cache write failure is non-fatal.
+            }
+        }
+
+        return new Response(body, { status: sunoRes.status, headers });
+    } catch (err) {
+        return new Response(
+            JSON.stringify({ error: `Suno proxy error: ${err.message}` }),
+            { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } }
+        );
+    }
 }
 
 async function hash(text) {
@@ -46,6 +114,19 @@ export default {
         // Handle CORS preflight
         if (request.method === 'OPTIONS') {
             return new Response(null, { status: 204, headers: cors });
+        }
+
+        // ── GET /suno/* (Suno Studio API proxy) ──────────────────────────────────
+        if (request.method === 'GET' && url.pathname.startsWith('/suno')) {
+            const isWeb = url.pathname.startsWith('/suno-web');
+            const isApi = url.pathname.startsWith('/suno/');
+            if (isWeb) {
+                return proxySunoRequest(request, url, SUNO_WEB_BASE, false);
+            }
+            if (isApi) {
+                return proxySunoRequest(request, url, SUNO_API_BASE, true);
+            }
+            return new Response('Not Found', { status: 404, headers: cors });
         }
 
         // ── GET /stats ─────────────────────────────────────────────────────────────

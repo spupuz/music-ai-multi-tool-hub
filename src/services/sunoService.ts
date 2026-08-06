@@ -1,9 +1,17 @@
+/// <reference types="vite/client" />
 import type React from 'react';
 import type { SunoClip, SunoRawProfileResponse, SunoProfileDetail, SunoRawPlaylistResponse, SunoPlaylistDetail } from '@/types';
 import { cacheGet, cacheSet } from './cacheUtils';
 import { raceFetch, raceForValue, type ProxyAttempt } from './proxyUtils';
 
 const API_BASE_URL = 'https://studio-api.prod.suno.com/api';
+
+// Our own Cloudflare Worker proxies Suno server-side, bypassing browser CORS.
+// These are the same fixed endpoints used for Gemini/telemetry — see gemini-worker/index.js.
+// For local testing, set VITE_SUNO_WORKER_URL=http://localhost:8787 (wrangler dev).
+const WORKER_URL = import.meta.env.VITE_SUNO_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
+const WORKER_PROXY_BASE = `${WORKER_URL}/suno`;
+const WORKER_PROXY_WEB_BASE = `${WORKER_URL}/suno-web`;
 
 // Cache TTLs
 const SONG_DETAIL_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
@@ -40,7 +48,26 @@ const fetchWithProxy = async (url: string, options: RequestInit = {}): Promise<R
     // So we only reach here if the request was actually made.
     return response;
   } catch (error) {
-    console.warn(`[sunoService] Direct fetch failed (likely CORS), racing proxies for: ${url}`);
+    console.warn(`[sunoService] Direct fetch failed (likely CORS), using worker proxy for: ${url}`);
+  }
+
+  // Primary: our own Cloudflare Worker proxy (server-side fetch, no CORS).
+  try {
+    const parsedUrl = new URL(url);
+    const workerUrl = `${WORKER_PROXY_BASE}${parsedUrl.pathname}${parsedUrl.search}`;
+    const response = await fetch(workerUrl, {
+      ...options,
+      headers: { ...(options.headers as Record<string, string> | undefined), 'Accept': 'application/json' },
+    });
+    // Pass through meaningful statuses so callers can apply their own 404/429
+    // handling. Only fall back to public proxies on network errors or
+    // unexpected server errors.
+    if (response.ok || response.status === 404 || response.status === 429) {
+      return response;
+    }
+    console.warn(`[sunoService] Worker proxy returned ${response.status} for ${url}; falling back to public proxies.`);
+  } catch (error) {
+    console.warn(`[sunoService] Worker proxy failed for ${url}:`, error);
   }
 
   const attempts: ProxyAttempt[] = publicProxies
@@ -492,8 +519,32 @@ export const resolveSunoUrlToPotentialSongId = async (
             p => p.name !== 'local' || (typeof window !== 'undefined' && window.location.hostname === 'localhost')
         );
 
-        const resolvedSongId = await raceForValue<string>(
-            activeProxies.map(proxy => async (signal) => {
+        const resolutionAttempts: Array<(signal: AbortSignal) => Promise<string | null>> = [];
+
+        // Primary: our own Worker proxy follows the redirect server-side and
+        // returns the final song page HTML, which always references /song/<uuid>.
+        resolutionAttempts.push(async (signal) => {
+            try {
+                const workerUrl = `${WORKER_PROXY_WEB_BASE}${parsedUrlObject.pathname}${parsedUrlObject.search}`;
+                const response = await fetch(workerUrl, { signal });
+                if (!response.ok) return null;
+
+                const htmlContent = await response.text();
+                const uuidPattern = /["'\/]([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/g;
+                let uuidMatch;
+                while ((uuidMatch = uuidPattern.exec(htmlContent)) !== null) {
+                    const potentialId = uuidMatch[1];
+                    if (htmlContent.includes(`/song/${potentialId}`)) {
+                        return potentialId;
+                    }
+                }
+                return null;
+            } catch (error) {
+                return null;
+            }
+        });
+
+        resolutionAttempts.push(...activeProxies.map(proxy => async (signal) => {
                 try {
                     const proxiedUrl = proxy.constructUrl(originalUrl);
                     const response = await fetch(proxiedUrl, { signal });
@@ -550,9 +601,9 @@ export const resolveSunoUrlToPotentialSongId = async (
                 } catch (error) {
                     return null;
                 }
-            }),
-            10000
-        );
+            }));
+
+        const resolvedSongId = await raceForValue<string>(resolutionAttempts, 10000);
 
         if (resolvedSongId) {
             setProgressMessageForResolution(`Success! Resolved short URL to song ID.`);
