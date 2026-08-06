@@ -61,15 +61,43 @@ function ReleaseFromGithub({ release }: { release: RawRelease }) {
   );
 }
 
+function hasProperSections(body: string): boolean {
+  return /^###\s/m.test(body);
+}
+
 const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const { uiMode } = useTheme();
   const { raw, loading } = useGithubReleases();
   const notes = useMemo<ReleaseNoteItem[]>(() => {
     if (raw.length > 0) {
-      return raw.map(r => ({
-        version: r.version,
-        content: <ReleaseFromGithub release={r} />,
-      }));
+      const staticMap = new Map(staticNotes.map(n => [n.version, n]));
+      const merged: ReleaseNoteItem[] = [];
+      const seen = new Set<string>();
+
+      for (const r of raw) {
+        seen.add(r.version);
+        if (hasProperSections(r.body)) {
+          merged.push({ version: r.version, content: <ReleaseFromGithub release={r} /> });
+        } else if (staticMap.has(r.version)) {
+          merged.push(staticMap.get(r.version)!);
+        } else {
+          merged.push({ version: r.version, content: <ReleaseFromGithub release={r} /> });
+        }
+      }
+
+      for (const s of staticNotes) {
+        if (!seen.has(s.version)) {
+          merged.push(s);
+        }
+      }
+
+      merged.sort((a, b) => {
+        const [am, an, ap] = a.version.split('.').map(Number);
+        const [bm, bn, bp] = b.version.split('.').map(Number);
+        return bm - am || bn - an || bp - ap;
+      });
+
+      return merged;
     }
     return staticNotes;
   }, [raw]);
