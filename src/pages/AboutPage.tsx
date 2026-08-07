@@ -236,19 +236,16 @@ Thanks,
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-l-4 border-emerald-600 pl-3 uppercase">Support</h2>
             <div className="bg-emerald-50 dark:bg-emerald-900/10 p-8 rounded-lg border border-emerald-200 dark:border-emerald-800/50 flex flex-col items-center shadow-inner">
               <p className="text-center mb-6">If you find the Hub valuable, consider supporting its continued development!</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="https://www.buymeacoffee.com/spupuz" target="_blank" rel="noopener noreferrer">
-                  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" loading="lazy" decoding="async" style={{ height: '45px', width: '160px' }} />
-                </a>
-                <a 
-                  href="https://floot.com/r/Y4O5V8" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-purple-600 text-white font-bold py-2.5 px-6 rounded-md hover:bg-purple-500 transition-colors shadow-sm"
-                >
-                  Join on Floot
-                </a>
-              </div>
+              <a
+                href="https://www.buymeacoffee.com/spupuz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:scale-105 transition-transform shadow-lg rounded-lg"
+                aria-label="Buy Me A Coffee to support the Music AI Multi-Tool Hub"
+                onClick={() => trackLocalEvent && trackLocalEvent('Support', 'ClickedBMACButton', 'AboutPage')}
+              >
+                <img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" loading="lazy" decoding="async" style={{ height: '60px', width: '215px' }} />
+              </a>
             </div>
           </section>
 
@@ -411,8 +408,8 @@ Thanks,
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl"></div>
             <h3 className="text-2xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-6 text-center">Support the Hub's Journey!</h3>
             <div className="flex flex-col items-center">
-              <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 mb-8 w-full max-w-4xl relative z-10">
-                <div className="flex-1 bg-white/5 p-8 rounded-2xl text-center flex flex-col items-center justify-between border border-white/10 hover:border-emerald-500/30 transition-all shadow-xl hover:-translate-y-1 duration-300">
+              <div className="flex flex-col items-center gap-6 mb-8 w-full max-w-xl relative z-10">
+                <div className="w-full bg-white/5 p-8 rounded-2xl text-center flex flex-col items-center justify-between border-2 border-emerald-500/50 hover:border-emerald-500/80 transition-all shadow-xl hover:-translate-y-1 duration-300">
                   <div>
                     <h4 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-3 leading-tight">Direct Contribution</h4>
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-6 max-w-xs mx-auto">
@@ -430,26 +427,8 @@ Thanks,
                     <img
                       src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
                       alt="Buy Me A Coffee"
-                      style={{ height: '50px', width: '180px', filter: 'hue-rotate(15deg) brightness(1.1)' }}
+                      style={{ height: '60px', width: '215px', filter: 'hue-rotate(15deg) brightness(1.1)' }}
                     />
-                  </a>
-                </div>
-
-                <div className="flex-1 bg-white/5 p-8 rounded-2xl text-center flex flex-col items-center justify-between border border-white/10 hover:border-emerald-500/30 transition-all shadow-xl hover:-translate-y-1 duration-300">
-                  <div>
-                    <h4 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-3 leading-tight">Support via Floot</h4>
-                    <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-6 max-w-xs mx-auto">
-                      Join <a href="https://floot.com/r/Y4O5V8" target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-500 hover:underline">Floot</a> - signing up through my referral link is another great way to support the Hub!
-                    </p>
-                  </div>
-                  <a
-                    href="https://floot.com/r/Y4O5V8"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block bg-white text-black font-black uppercase tracking-[0.2em] py-4 px-8 rounded-xl hover:bg-emerald-500 hover:text-white transition-all shadow-md text-xs mt-auto"
-                    onClick={() => trackLocalEvent && trackLocalEvent('Support', 'ClickedFlootReferral', 'AboutPage')}
-                  >
-                    Join on Floot
                   </a>
                 </div>
               </div>

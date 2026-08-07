@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.5] - 2026-08-07
+
+### Changed
+- **Support section revamp**: removed the Floot referral link from the About page and made the Buy Me a Coffee button more prominent (larger, emerald-highlighted card) in both support sections.
+
 ## [2.6.4] - 2026-08-07
 
 ### Fixed

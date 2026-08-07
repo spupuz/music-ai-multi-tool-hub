@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.5",
+    content: (
+      <section id="version-2.6.5">
+        <SectionTitle>Version 2.6.5 - 2026-08-07</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Support section revamp</STRONG>: removed the Floot referral link from the About page and made the Buy Me a Coffee button more prominent (larger, emerald-highlighted card) in both support sections.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.4",
     content: (
       <section id="version-2.6.4">
