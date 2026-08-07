@@ -16,7 +16,7 @@ const SectionTitle: React.FC<{ children: React.ReactNode; id?: string }> = ({ ch
 const SubSectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { uiMode } = useTheme();
   return (
-    <h3 className={`text-xl font-black uppercase tracking-tight mt-4 mb-2 ${uiMode === 'architect' ? 'text-white' : 'text-emerald-700 dark:text-emerald-300'}`}>
+    <h3 className={`text-xl font-black uppercase tracking-tight mt-4 mb-2 ${uiMode === 'architect' ? 'text-gray-900 dark:text-white' : 'text-emerald-700 dark:text-emerald-300'}`}>
       {children}
     </h3>
   );

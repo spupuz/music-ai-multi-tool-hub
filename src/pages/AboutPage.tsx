@@ -124,7 +124,7 @@ const ToolCard: React.FC<ToolCardProps> = ({ title, description, icon, onClick }
     >
       <div className="flex items-center mb-4">
         {icon && <span className={`mr-4 flex-shrink-0 ${uiMode === 'architect' ? 'text-emerald-500' : 'text-emerald-600 dark:text-emerald-400'}`}>{React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: "w-8 h-8" })}</span>}
-        <h3 className={`text-xl font-semibold ${uiMode === 'architect' ? 'text-white font-black uppercase tracking-tight' : 'text-emerald-800 dark:text-emerald-300'}`}>{title}</h3>
+        <h3 className={`text-xl font-semibold ${uiMode === 'architect' ? 'text-gray-900 dark:text-white font-black uppercase tracking-tight' : 'text-emerald-800 dark:text-emerald-300'}`}>{title}</h3>
       </div>
       <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed flex-grow">{description}</p>
     </div>
@@ -386,7 +386,7 @@ Thanks,
                         {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: "w-7 h-7" })}
                       </span>
                     }
-                    <h4 className="text-xl font-black uppercase tracking-tight text-white">{workflow.title}</h4>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white">{workflow.title}</h4>
                   </div>
                   <p className="mb-3 leading-relaxed text-sm text-gray-600 dark:text-gray-400 font-bold flex-grow">{workflow.description}</p>
                   <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-2">
@@ -409,12 +409,12 @@ Thanks,
         <section id="support-the-hub" className="mt-12">
           <div className="bg-emerald-500/5 p-8 rounded-2xl border border-white/10 group relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl"></div>
-            <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-6 text-center">Support the Hub's Journey!</h3>
+            <h3 className="text-2xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-6 text-center">Support the Hub's Journey!</h3>
             <div className="flex flex-col items-center">
               <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 mb-8 w-full max-w-4xl relative z-10">
                 <div className="flex-1 bg-white/5 p-8 rounded-2xl text-center flex flex-col items-center justify-between border border-white/10 hover:border-emerald-500/30 transition-all shadow-xl hover:-translate-y-1 duration-300">
                   <div>
-                    <h4 className="text-xl font-black uppercase tracking-tight text-white mb-3 leading-tight">Direct Contribution</h4>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-3 leading-tight">Direct Contribution</h4>
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-6 max-w-xs mx-auto">
                       If you find the Hub valuable, a small tip helps cover costs and is greatly appreciated!
                     </p>
@@ -437,7 +437,7 @@ Thanks,
 
                 <div className="flex-1 bg-white/5 p-8 rounded-2xl text-center flex flex-col items-center justify-between border border-white/10 hover:border-emerald-500/30 transition-all shadow-xl hover:-translate-y-1 duration-300">
                   <div>
-                    <h4 className="text-xl font-black uppercase tracking-tight text-white mb-3 leading-tight">Support via Floot</h4>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white mb-3 leading-tight">Support via Floot</h4>
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-6 max-w-xs mx-auto">
                       Join <a href="https://floot.com/r/Y4O5V8" target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-500 hover:underline">Floot</a> - signing up through my referral link is another great way to support the Hub!
                     </p>
@@ -575,17 +575,17 @@ Thanks,
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6 italic">Last Updated: {privacyPolicyLastUpdated}</p>
 
-            <p className="mb-4 text-xl font-black uppercase tracking-tight text-white">Your Data Stays Yours.</p>
+            <p className="mb-4 text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white">Your Data Stays Yours.</p>
             <p className="mb-8 leading-relaxed font-bold opacity-80">The Hub is designed with a "privacy-first" architecture. We do not store your songs, lyrics, or generated content on our servers. All creative processing occurs locally in your browser.</p>
 
             <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 mb-4 italic">Infrastructure Details</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                <div className="bg-white/5 p-6 rounded-xl border border-white/5">
-                  <p className="text-xs font-black uppercase tracking-widest text-white mb-2 italic">Local Storage</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-2 italic">Local Storage</p>
                   <p className="text-xs font-bold text-gray-500 leading-relaxed">Solely used for preferences, favorites, and settings. You have full control to clear this at any time.</p>
                </div>
                <div className="bg-white/5 p-6 rounded-xl border border-white/5">
-                  <p className="text-xs font-black uppercase tracking-widest text-white mb-2 italic">Relays</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-2 italic">Relays</p>
                   <p className="text-xs font-bold text-gray-500 leading-relaxed">Data sent to external APIs (Suno/Gemini) is transmitted via secure relays. We do not log or retain any info.</p>
                </div>
             </div>

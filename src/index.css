@@ -297,13 +297,14 @@ body {
 
 /* Staggered entrance — children fade in with a per-index delay.
    Hidden until the container gets `.in-view` (set by ScrollReveal on first scroll-into-view).
-   Add `animation-fill-mode: backwards` so elements stay at opacity:0 before their delay. */
+   `animation-fill-mode: both` keeps children at opacity:0 before their delay AND retains the
+   visible end state after the animation completes (backwards-only would revert to opacity:0). */
 .stagger-fade > * {
   opacity: 0;
   transform: translateY(15px);
 }
 .stagger-fade.in-view > * {
-  animation: fadeIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+  animation: fadeIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) both;
   will-change: transform, opacity;
 }
 .stagger-fade.in-view > *:nth-child(1)  { animation-delay: 0.00s; }

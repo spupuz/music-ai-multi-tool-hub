@@ -9,6 +9,13 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.4] - 2026-08-07
+
+### Fixed
+- **Resource Nexus cards not visible**: the `stagger-fade` entrance animation used `animation-fill-mode: backwards`, which reverted cards to `opacity: 0` once the fade-in completed (now `both`, retaining the visible end state). Also removed `content-visibility: auto` (`cv-section`) from directory sections, which could prevent the `ScrollReveal` observer from firing for off-screen sections.
+- **ScrollReveal reliability**: `useScrollReveal` now reveals elements already in/near the viewport on mount and falls back to a scroll listener, so content is never left permanently hidden if `IntersectionObserver` never fires.
+- **White-on-white titles in light mode**: About and Special Mentions pages used hardcoded `text-white` for headings in Architect mode, making titles invisible on the light background. Now `text-gray-900 dark:text-white`.
+
 ## [2.6.3] - 2026-08-06
 
 ### Security

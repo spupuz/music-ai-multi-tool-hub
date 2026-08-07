@@ -257,7 +257,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
 
         <div className="space-y-12 relative z-10">
           {filteredCategories.map(category => (
-            <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn cv-section">
+            <section key={category.id} aria-labelledby={`category-title-${category.id}`} className="animate-fadeIn">
               <div className="flex items-center gap-4 mb-8">
                 <h2 id={`category-title-${category.id}`} className="text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-emerald-600 dark:text-emerald-500">
                   {category.name}

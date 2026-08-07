@@ -8,6 +8,20 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.4",
+    content: (
+      <section id="version-2.6.4">
+        <SectionTitle>Version 2.6.4 - 2026-08-07</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Resource Nexus cards not visible</STRONG>: the <CODE>stagger-fade</CODE> entrance animation used <CODE>animation-fill-mode: backwards</CODE>, which reverted cards to <CODE>opacity: 0</CODE> once the fade-in completed (now <CODE>both</CODE>, retaining the visible end state). Also removed <CODE>content-visibility: auto</CODE> (<CODE>cv-section</CODE>) from directory sections, which could prevent the <CODE>ScrollReveal</CODE> observer from firing for off-screen sections.</LI>
+          <LI><STRONG>ScrollReveal reliability</STRONG>: <CODE>useScrollReveal</CODE> now reveals elements already in/near the viewport on mount and falls back to a scroll listener, so content is never left permanently hidden if <CODE>IntersectionObserver</CODE> never fires.</LI>
+          <LI><STRONG>White-on-white titles in light mode</STRONG>: About and Special Mentions pages used hardcoded <CODE>text-white</CODE> for headings in Architect mode, making titles invisible on the light background. Now <CODE>text-gray-900 dark:text-white</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.3",
     content: (
       <section id="version-2.6.3">
