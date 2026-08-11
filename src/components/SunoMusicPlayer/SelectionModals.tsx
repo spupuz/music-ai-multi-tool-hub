@@ -25,7 +25,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
         <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col border-2 border-green-600" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-4 border-b-2 border-gray-100 dark:border-green-600/30 pb-2">
             <h3 className="text-xl font-bold text-green-600 dark:text-green-600 uppercase tracking-widest">Lyrics: {songTitle}</h3>
-            <button onClick={onClose} className="p-2 -mr-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl">&times;</button>
+            <button onClick={onClose} className="p-2 -mr-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl" aria-label="Close lyrics modal">&times;</button>
           </div>
           {lyricsSourceField && <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-widest">Metadata Source: <code className="bg-gray-100 dark:bg-gray-700 font-mono px-1 rounded">{lyricsSourceField}</code></p>}
           <pre className="text-sm font-bold text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-y-auto flex-grow p-4 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-green-600/20 rounded-lg scrollbar-thin leading-relaxed shadow-inner">{lyricsToDisplay}</pre>
@@ -40,7 +40,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
       <div className="glass-card p-8 border-white/20 shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Lyrics</h2>
-          <Button onClick={onClose} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl">
+          <Button onClick={onClose} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl" aria-label="Close lyrics modal">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </Button>
         </div>
@@ -82,7 +82,7 @@ export const MetadataModal: React.FC<MetadataModalProps> = ({
         <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col border-2 border-green-600" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-4 border-b-2 border-gray-100 dark:border-green-600/30 pb-2"> 
             <h3 className="text-xl font-bold text-green-600 dark:text-green-600 uppercase tracking-widest">Track Intel: {song.title}</h3> 
-            <button onClick={onClose} className="p-2 -mr-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl">&times;</button> 
+            <button onClick={onClose} className="p-2 -mr-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl" aria-label="Close metadata modal">&times;</button>
           </div>
           <div className="overflow-y-auto text-sm text-gray-700 dark:text-gray-300 space-y-4 pr-3 scrollbar-thin">
             <div className="space-y-1">
@@ -117,7 +117,7 @@ export const MetadataModal: React.FC<MetadataModalProps> = ({
       <div className="glass-card p-4 sm:p-8 border-white/20 shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col relative" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Metadata</h2>
-          <Button onClick={onClose} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl">
+          <Button onClick={onClose} variant="ghost" size="sm" className="p-2 hover:bg-white/10 text-gray-500 hover:text-white transition-all rounded-xl" aria-label="Close metadata modal">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </Button>
         </div>
