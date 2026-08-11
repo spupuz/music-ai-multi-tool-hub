@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.6] - 2026-08-11
+
+### Changed
+- **Faster stats charts**: sunoUserStats charts now memoize their sorting/aggregation with `useMemo` and copy arrays before sorting (`[...data].sort()`), eliminating prop mutation side effects and redundant re-sorts on every render.
+
+### Fixed
+- **Modal accessibility**: close buttons in the SunoMusicPlayer lyrics and metadata modals now carry `aria-label`s, so screen readers announce their purpose.
+
 ## [2.6.5] - 2026-08-07
 
 ### Changed

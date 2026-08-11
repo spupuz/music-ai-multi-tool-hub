@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.6",
+    content: (
+      <section id="version-2.6.6">
+        <SectionTitle>Version 2.6.6 - 2026-08-11</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Faster stats charts</STRONG>: sunoUserStats charts now memoize their sorting/aggregation with <CODE>useMemo</CODE> and copy arrays before sorting (<CODE>[...data].sort()</CODE>), eliminating prop mutation side effects and redundant re-sorts on every render.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Modal accessibility</STRONG>: close buttons in the SunoMusicPlayer lyrics and metadata modals now carry <CODE>aria-label</CODE>s, so screen readers announce their purpose.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.5",
     content: (
       <section id="version-2.6.5">
