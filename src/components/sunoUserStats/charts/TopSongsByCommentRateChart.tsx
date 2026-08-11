@@ -32,8 +32,10 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const validData = data.filter(item => item && item.song && typeof item.commentRate === 'number' && item.commentRate > 0);
-  const processedData = validData.sort((a, b) => (b.commentRate || 0) - (a.commentRate || 0)).slice(0, topNValue);
+  const processedData = React.useMemo(() => {
+    const validData = data.filter(item => item && item.song && typeof item.commentRate === 'number' && item.commentRate > 0);
+    return validData.sort((a, b) => (b.commentRate || 0) - (a.commentRate || 0)).slice(0, topNValue);
+  }, [data, topNValue]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {

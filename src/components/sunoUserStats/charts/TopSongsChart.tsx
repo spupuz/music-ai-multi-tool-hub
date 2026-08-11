@@ -37,8 +37,10 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
   }, []);
 
   // Filter for valid song objects before processing
-  const validSongs = songs.filter(song => song && typeof song === 'object');
-  const processedSongs = validSongs.sort((a,b) => (b[metric] || 0) - (a[metric] || 0)).slice(0, topN);
+  const processedSongs = React.useMemo(() => {
+    const validSongs = songs.filter(song => song && typeof song === 'object');
+    return validSongs.sort((a,b) => (b[metric] || 0) - (a[metric] || 0)).slice(0, topN);
+  }, [songs, metric, topN]);
 
 
   useEffect(() => {

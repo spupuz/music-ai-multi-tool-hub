@@ -33,8 +33,10 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
   }, []);
 
   // Filter for valid items and sort, then slice
-  const validData = data.filter(item => item && item.song && typeof item.upvoteRate === 'number');
-  const processedData = validData.sort((a, b) => (b.upvoteRate || 0) - (a.upvoteRate || 0)).slice(0, topNValue);
+  const processedData = React.useMemo(() => {
+    const validData = data.filter(item => item && item.song && typeof item.upvoteRate === 'number');
+    return validData.sort((a, b) => (b.upvoteRate || 0) - (a.upvoteRate || 0)).slice(0, topNValue);
+  }, [data, topNValue]);
 
 
   useEffect(() => {

@@ -28,8 +28,10 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
   const chartInstanceRef = useRef<Chart | null>(null);
 
   // Filter for valid song objects before processing
-  const validSongs = songs.filter(s => s && typeof s === 'object');
-  const processedSongs = validSongs.filter(s => (s.comment_count || 0) > 0).sort((a,b) => (b.comment_count || 0) - (a.comment_count || 0)).slice(0, topN);
+  const processedSongs = React.useMemo(() => {
+    const validSongs = songs.filter(s => s && typeof s === 'object');
+    return validSongs.filter(s => (s.comment_count || 0) > 0).sort((a,b) => (b.comment_count || 0) - (a.comment_count || 0)).slice(0, topN);
+  }, [songs, topN]);
 
   useEffect(() => {
     if (chartRef.current && processedSongs.length > 0) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { GenreStat } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions, generateColorShades } from '@/utils/chartUtils';
@@ -32,7 +32,7 @@ const GenreVotesChart: React.FC<GenreVotesChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const processedData = data.filter(d => d.totalUpvotes > 0).sort((a, b) => b.totalUpvotes - a.totalUpvotes).slice(0, topN);
+  const processedData = useMemo(() => [...data].filter(d => d.totalUpvotes > 0).sort((a, b) => b.totalUpvotes - a.totalUpvotes).slice(0, topN), [data, topN]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {

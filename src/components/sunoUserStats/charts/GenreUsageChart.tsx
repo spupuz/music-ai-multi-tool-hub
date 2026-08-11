@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { GenreStat } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions, generateColorShades } from '@/utils/chartUtils';
@@ -32,7 +32,7 @@ const GenreUsageChart: React.FC<GenreUsageChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const processedData = data.sort((a, b) => b.count - a.count).slice(0, topN);
+  const processedData = useMemo(() => [...data].sort((a, b) => b.count - a.count).slice(0, topN), [data, topN]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
