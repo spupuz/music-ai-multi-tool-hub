@@ -12,7 +12,7 @@ export function useLyricManager(
     const [historyModalContent, setHistoryModalContent] = useState<{ blockId: string; line: LyricLineData } | null>(null);
 
     const handleAddLyricLine = (blockId: string) => {
-        const newLine: LyricLineData = { id: `lyric-${Date.now()}-${Math.random()}`, currentText: '', history: [] };
+        const newLine: LyricLineData = { id: crypto.randomUUID(), currentText: '', history: [] };
         setArrangement(prev => prev.map(block =>
             block.id === blockId ? { ...block, lyrics: [...block.lyrics, newLine] } : block
         ));
@@ -20,7 +20,7 @@ export function useLyricManager(
     };
     
     const handleInsertLyricLineAfter = (blockId: string, afterIndex: number) => {
-        const newLine: LyricLineData = { id: `lyric-${Date.now()}-${Math.random()}`, currentText: '', history: [] };
+        const newLine: LyricLineData = { id: crypto.randomUUID(), currentText: '', history: [] };
         setArrangement(prev => prev.map(block => {
             if (block.id !== blockId) return block;
     

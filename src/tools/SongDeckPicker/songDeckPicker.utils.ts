@@ -49,7 +49,7 @@ export const parseKeyValueFormat = (line: string): SongCardInterface | { error: 
         return { error: "Missing ArtistName or Title in custom format entry." };
     }
 
-    card.id = `custom-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    card.id = crypto.randomUUID();
     if (!card.color) card.color = generateRandomColor();
     card.isBonusApplied = false;
 
