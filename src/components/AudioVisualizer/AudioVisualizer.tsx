@@ -121,4 +121,4 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyserNodes, isPlay
   );
 };
 
-export default AudioVisualizer;
+export default React.memo(AudioVisualizer);

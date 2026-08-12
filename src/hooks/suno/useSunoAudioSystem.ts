@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { Howl, Howler } from 'howler';
 import type { EqualizerBand, PlayerState } from '@/types';
 import { DEFAULT_EQ_BANDS_CONFIG } from './constants';
@@ -190,13 +190,17 @@ export const useSunoAudioSystem = ({ playerState, setErrorPlayer }: UseSunoAudio
     };
   }, []);
 
+  const analyserNodes = useMemo(() => {
+    return {
+      left: analyserNodeLeftRef.current,
+      right: analyserNodeRightRef.current
+    };
+  }, [isAudioSystemReady]);
+
   return {
     isAudioSystemReady,
     ensureAudioSystemReady,
     audioContext: audioContextRef.current,
-    analyserNodes: {
-      left: analyserNodeLeftRef.current,
-      right: analyserNodeRightRef.current
-    }
+    analyserNodes
   };
 };
