@@ -70,10 +70,13 @@ const Select: React.FC<SelectProps> = ({
         type="button"
         onClick={handleToggle}
         disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
         className={`
           w-full flex items-center justify-between px-4 py-2.5 rounded-xl
           transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]
           border backdrop-blur-md shadow-lg font-bold text-sm
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500
           ${disabled 
             ? 'opacity-40 cursor-not-allowed border-white/5 bg-black/10' 
             : isOpen 
@@ -92,12 +95,17 @@ const Select: React.FC<SelectProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/60 dark:bg-gray-900/40 backdrop-blur-xl shadow-2xl animate-fadeIn">
+        <div
+          className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/60 dark:bg-gray-900/40 backdrop-blur-xl shadow-2xl animate-fadeIn"
+          role="listbox"
+        >
           <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 py-1">
             {options.map((option) => (
               <button
                 key={option.value}
                 type="button"
+                role="option"
+                aria-selected={value === option.value}
                 onClick={() => {
                   onChange(option.value);
                   setIsOpen(false);
