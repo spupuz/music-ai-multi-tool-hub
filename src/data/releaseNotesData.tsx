@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.7",
+    content: (
+      <section id="version-2.6.7">
+        <SectionTitle>Version 2.6.7 - 2026-08-12</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Smoother audio visualizer</STRONG>: the Suno player's <CODE>AudioVisualizer</CODE> is wrapped in <CODE>React.memo</CODE> and its <CODE>analyserNodes</CODE> prop is memoized with <CODE>useMemo</CODE>, so frequent playback time updates no longer restart its <CODE>requestAnimationFrame</CODE> loop (fixes animation micro-stutters during playback).</LI>
+          <LI><STRONG>Select accessibility</STRONG>: the custom Select dropdown now exposes WAI-ARIA <CODE>listbox</CODE>/<CODE>option</CODE> roles with <CODE>aria-haspopup</CODE>, <CODE>aria-expanded</CODE> and <CODE>aria-selected</CODE> states, plus a visible <CODE>focus-visible</CODE> ring for keyboard users.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Stronger IDs</STRONG>: <CODE>Math.random()</CODE>-based identifiers in the Song Structure Builder and Song Deck Picker (blocks, lyric lines, imported/returned cards) are now generated with <CODE>crypto.randomUUID()</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.6",
     content: (
       <section id="version-2.6.6">

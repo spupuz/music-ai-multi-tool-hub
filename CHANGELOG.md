@@ -9,6 +9,15 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.7] - 2026-08-12
+
+### Changed
+- **Smoother audio visualizer**: the Suno player's `AudioVisualizer` is wrapped in `React.memo` and its `analyserNodes` prop is memoized with `useMemo`, so frequent playback time updates no longer restart its `requestAnimationFrame` loop (fixes animation micro-stutters during playback).
+- **Select accessibility**: the custom Select dropdown now exposes WAI-ARIA `listbox`/`option` roles with `aria-haspopup`, `aria-expanded` and `aria-selected` states, plus a visible `focus-visible` ring for keyboard users.
+
+### Security
+- **Stronger IDs**: `Math.random()`-based identifiers in the Song Structure Builder and Song Deck Picker (blocks, lyric lines, imported/returned cards) are now generated with `crypto.randomUUID()`.
+
 ## [2.6.6] - 2026-08-11
 
 ### Changed
