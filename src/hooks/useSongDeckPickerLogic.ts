@@ -203,7 +203,7 @@ export const useSongDeckPickerLogic = ({ trackLocalEvent }: ToolProps) => {
             const groupToRemove = specialModes.songGroups.find(g => g.id === groupId);
             if (groupToRemove) {
                 const songsToReturn: SongCardInterface[] = groupToRemove.songs.map((logEntry): SongCardInterface => ({
-                    id: `returned-group-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+                    id: crypto.randomUUID(),
                     artistName: logEntry.artistName,
                     title: logEntry.title,
                     imageUrl: logEntry.imageUrl,
@@ -259,7 +259,7 @@ export const useSongDeckPickerLogic = ({ trackLocalEvent }: ToolProps) => {
 
         if (newClickCount >= LOGGED_SONGS_CLEAR_RETURN_CLICKS_NEEDED) {
             const cardsToReturn: SongCardInterface[] = persistenceState.loggedCards.map((logEntry): SongCardInterface => ({
-                id: `returned-${logEntry.timestamp}-${Math.random().toString(36).substring(2, 9)}`,
+                id: crypto.randomUUID(),
                 artistName: logEntry.artistName,
                 title: logEntry.title,
                 imageUrl: logEntry.imageUrl,

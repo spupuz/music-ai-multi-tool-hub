@@ -78,7 +78,7 @@ export function useImportExport({
             if (blockHeaderMatch) {
                 processCurrentBlock();
                 currentBlock = {
-                    id: `${Date.now()}-${Math.random()}`,
+                    id: crypto.randomUUID(),
                     type: blockHeaderMatch[1].trim(),
                     barCount: blockHeaderMatch[2] ? parseInt(blockHeaderMatch[2], 10) : undefined,
                     notes: '',
@@ -90,7 +90,7 @@ export function useImportExport({
                     currentBlock.notes = currentBlock.notes ? `${currentBlock.notes}\\n${noteText}` : noteText;
                 } else if (trimmedLine) {
                     currentBlock.lyrics.push({
-                        id: `imported-lyric-${Date.now()}-${Math.random()}`,
+                        id: crypto.randomUUID(),
                         currentText: trimmedLine,
                         history: []
                     });
@@ -232,11 +232,11 @@ export function useImportExport({
                         const lyricsContent = (parts[2] || '').trim().replace(/\\\\n/g, '\\n');
 
                         const lyricsData: LyricLineData[] = lyricsContent.split('\\n').map(lineText => ({
-                          id: `imported-csv-lyric-${Date.now()}-${Math.random()}`,
+                          id: crypto.randomUUID(),
                           currentText: lineText.trim(),
                           history: []
                         }));
-                        const tempBlock: SongStructureBlock = { id: `${Date.now()}-${Math.random()}`, type, notes: notesContent, lyrics: lyricsData };
+                        const tempBlock: SongStructureBlock = { id: crypto.randomUUID(), type, notes: notesContent, lyrics: lyricsData };
                         
                         const guessedCount = guessBarCount(tempBlock);
                         if(guessedCount !== undefined) {

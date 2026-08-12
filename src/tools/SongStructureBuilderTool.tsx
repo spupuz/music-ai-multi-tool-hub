@@ -95,7 +95,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const handleApplyTemplate = useCallback((template: { name: string; structure: { type: string; notes: string; barCount?: number }[] }, mode: 'replace' | 'append') => {
         const newBlocks: SongStructureBlock[] = template.structure.map(block => ({
             ...block,
-            id: `${Date.now()}-${Math.random()}`,
+            id: crypto.randomUUID(),
             lyrics: [],
         }));
 
@@ -123,11 +123,11 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 // Data Migration from v1 to v2 (notes field to lyrics array)
                 if (parsedData.arrangement && Array.isArray(parsedData.arrangement) && parsedData.arrangement.length > 0 && parsedData.arrangement[0] && parsedData.arrangement[0].lyrics === undefined) {
                     const migratedArrangement = parsedData.arrangement.map((block: any): SongStructureBlock => ({
-                        id: block.id || `${Date.now()}-${Math.random()}`,
+                        id: block.id || crypto.randomUUID(),
                         type: block.type || 'Verse',
                         notes: '', // New 'notes' field is for commentary
                         lyrics: (block.notes || '').split('\n').map((lineText: string): LyricLineData => ({
-                            id: `migrated-${Date.now()}-${Math.random()}`,
+                            id: crypto.randomUUID(),
                             currentText: lineText,
                             history: []
                         })),
@@ -260,7 +260,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const handleAddCustomBlock = () => {
         const trimmedName = customBlockName.trim();
         if (trimmedName && !predefinedBlockTypes.includes(trimmedName) && !arrangement.find(b => b.type === trimmedName)) {
-            const newBlock: SongStructureBlock = { id: `${Date.now()}-${Math.random()}`, type: trimmedName, notes: '', lyrics: [], barCount: 8 };
+            const newBlock: SongStructureBlock = { id: crypto.randomUUID(), type: trimmedName, notes: '', lyrics: [], barCount: 8 };
             setArrangement(prev => [...prev, newBlock]);
             setCustomBlockName('');
             trackLocalEvent(TOOL_CATEGORY, 'customBlockAdded', trimmedName);
@@ -281,7 +281,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         const blockToDuplicate = arrangement.find(block => block.id === id);
         const indexToInsert = arrangement.findIndex(block => block.id === id);
         if (blockToDuplicate && indexToInsert !== -1) {
-            const newBlock: SongStructureBlock = { ...blockToDuplicate, id: `${Date.now()}-${Math.random()}` };
+            const newBlock: SongStructureBlock = { ...blockToDuplicate, id: crypto.randomUUID() };
             const newArrangement = [...arrangement];
             newArrangement.splice(indexToInsert + 1, 0, newBlock);
             setArrangement(newArrangement);
@@ -365,7 +365,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         let newArrangement = [...arrangement];
 
         if (data.itemType === 'palette') {
-            const newBlock: SongStructureBlock = { id: `${Date.now()}-${Math.random()}`, type: data.type, notes: '', lyrics: [], barCount: 8 };
+            const newBlock: SongStructureBlock = { id: crypto.randomUUID(), type: data.type, notes: '', lyrics: [], barCount: 8 };
             newArrangement.splice(finalDropIndex, 0, newBlock);
             trackLocalEvent(TOOL_CATEGORY, 'blockAdded', data.type);
         } else if (data.itemType === 'timeline') {
