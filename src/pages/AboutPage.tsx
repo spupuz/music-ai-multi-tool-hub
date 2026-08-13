@@ -290,6 +290,7 @@ Thanks,
                 <Button
                   href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
                   target="_blank"
+                  rel="noopener noreferrer"
                   as="a"
                   variant="primary"
                   className="flex-1 rounded-md py-4 font-bold text-lg shadow-lg hover:scale-[1.02] transition-transform"
@@ -527,6 +528,7 @@ Thanks,
               <Button
                 href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
                 target="_blank"
+                rel="noopener noreferrer"
                 as="a"
                 variant="primary"
                 size="lg"

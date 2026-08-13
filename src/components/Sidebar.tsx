@@ -185,6 +185,7 @@ Thanks,
               <Button
                 href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
                 target="_blank"
+                rel="noopener noreferrer"
                 as="a"
                 variant="ghost"
                 size="sm"
