@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.8] - 2026-08-13
+
+### Changed
+- **Accessible buttons**: the shared `Button` component now shows a visible emerald keyboard focus ring (`focus-visible:ring-2`) on the "Report a bug" links across the Sidebar and About page, so keyboard users can tell where they are.
+
+### Security
+- **Safe external links**: all "Report a bug" links opening in a new tab now include `rel="noopener noreferrer"`, preventing the opened page from hijacking the app via `window.opener`.
+
 ## [2.6.7] - 2026-08-12
 
 ### Changed

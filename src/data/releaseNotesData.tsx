@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.8",
+    content: (
+      <section id="version-2.6.8">
+        <SectionTitle>Version 2.6.8 - 2026-08-13</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Accessible buttons</STRONG>: the shared <CODE>Button</CODE> component now shows a visible emerald keyboard focus ring (<CODE>focus-visible:ring-2</CODE>) on the "Report a bug" links across the Sidebar and About page, so keyboard users can tell where they are.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Safe external links</STRONG>: all "Report a bug" links opening in a new tab now include <CODE>rel="noopener noreferrer"</CODE>, preventing the opened page from hijacking the app via <CODE>window.opener</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.7",
     content: (
       <section id="version-2.6.7">
