@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.9] - 2026-08-13
+
+### Changed
+- **Faster Suno player re-renders**: `SunoMusicPlayerTool` is wrapped in `React.memo`, so the component no longer re-renders when parent state changes without prop updates.
+
 ## [2.6.8] - 2026-08-13
 
 ### Changed

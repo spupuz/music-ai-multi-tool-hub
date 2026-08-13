@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.9",
+    content: (
+      <section id="version-2.6.9">
+        <SectionTitle>Version 2.6.9 - 2026-08-13</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Faster Suno player re-renders</STRONG>: <CODE>SunoMusicPlayerTool</CODE> is wrapped in <CODE>React.memo</CODE>, so the component no longer re-renders when parent state changes without prop updates.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.8",
     content: (
       <section id="version-2.6.8">
