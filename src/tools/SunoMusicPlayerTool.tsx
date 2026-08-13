@@ -864,4 +864,5 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   );
 };
 
-export default SunoMusicPlayerTool;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when parent state changes without prop updates.
+export default React.memo(SunoMusicPlayerTool);
