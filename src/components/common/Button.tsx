@@ -50,6 +50,7 @@ const Button: React.FC<ButtonProps> = ({
         shadow-sm active:shadow-inner border
         ${isArchitect ? 'border-white/10' : 'border-2 border-black/10'}
         ${wide ? 'w-full' : ''}
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-900
     `.trim();
     
     // Size Styles - Better padding for a "premium" touch
