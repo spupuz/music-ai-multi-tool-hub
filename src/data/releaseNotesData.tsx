@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.10",
+    content: (
+      <section id="version-2.6.10">
+        <SectionTitle>Version 2.6.10 - 2026-08-14</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Accessible import/export modals</STRONG>: the Suno community spinner's export textarea now carries an <CODE>aria-label</CODE>, the import file picker and JSON textarea have proper <CODE>htmlFor</CODE>/<CODE>id</CODE> label associations, so screen readers announce these fields correctly.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.9",
     content: (
       <section id="version-2.6.9">

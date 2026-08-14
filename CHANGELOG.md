@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.10] - 2026-08-14
+
+### Changed
+- **Accessible import/export modals**: the Suno community spinner's export textarea now carries an `aria-label`, the import file picker and JSON textarea have proper `htmlFor`/`id` label associations, so screen readers announce these fields correctly.
+
 ## [2.6.9] - 2026-08-13
 
 ### Changed
