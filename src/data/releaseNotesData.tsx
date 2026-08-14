@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.11",
+    content: (
+      <section id="version-2.6.11">
+        <SectionTitle>Version 2.6.11 - 2026-08-14</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>No more public CORS proxy fallbacks</STRONG>: the Suno service now relies strictly on the verified Cloudflare Worker proxy for all fetches and short-URL resolution, removing the hardcoded fallback chain of unvetted public proxies (corsproxy.io, allorigins, thingproxy, cors-anywhere, etc.).</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Removed unvetted public CORS proxies</STRONG>: third-party public proxy fallbacks could intercept traffic and exposed the app to SSRF-style risks; all Suno API reads and <CODE>suno.com/song</CODE> link resolution now go through the Worker proxy only.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.10",
     content: (
       <section id="version-2.6.10">

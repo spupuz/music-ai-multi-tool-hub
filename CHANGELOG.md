@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.11] - 2026-08-14
+
+### Changed
+- **No more public CORS proxy fallbacks**: the Suno service now relies strictly on the verified Cloudflare Worker proxy for all fetches and short-URL resolution, removing the hardcoded fallback chain of unvetted public proxies (corsproxy.io, allorigins, thingproxy, cors-anywhere, etc.).
+
+### Security
+- **Removed unvetted public CORS proxies**: third-party public proxy fallbacks could intercept traffic and exposed the app to SSRF-style risks; all Suno API reads and `suno.com/song` link resolution now go through the Worker proxy only.
+
 ## [2.6.10] - 2026-08-14
 
 ### Changed
