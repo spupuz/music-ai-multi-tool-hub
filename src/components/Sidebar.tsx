@@ -78,7 +78,7 @@ Thanks,
       event.preventDefault();
       const url = new URL(window.location.origin + window.location.pathname);
       url.searchParams.set('tool', toolId);
-      window.open(url.toString(), '_blank');
+      window.open(url.toString(), '_blank', 'noopener,noreferrer');
       if (trackLocalEvent) {
         trackLocalEvent('Navigation', 'openInNewTab', toolId);
       }
