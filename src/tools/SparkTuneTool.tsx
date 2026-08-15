@@ -254,23 +254,23 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                         <CollapsibleSection title="Sonic DNA" defaultOpen icon={<MusicNoteIcon className="w-4 h-4" />}>
                             <div className="flex items-end gap-3">
                                 <InputField id="genre" label="Genre Vector" value={genre} onChange={setGenre} placeholder="e.g., Cosmic Disco" className="flex-grow mb-0" />
-                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} aria-label="Randomize genre" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="mood" label="Vibe Spectrum" value={mood} onChange={setMood} placeholder="e.g., Euphoric & Spacey" className="flex-grow mb-0" />
-                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} aria-label="Randomize mood" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="instrumentation" label="Arsenal Gear" value={instrumentation} onChange={setInstrumentation} placeholder="e.g., Laser Harps & Funky Basslines" className="flex-grow mb-0" />
-                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} aria-label="Randomize instrumentation" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
                                 <InputField id="themeOrKeyword" label="Core Theme" value={themeOrKeyword} onChange={setThemeOrKeyword} placeholder="e.g., Alien Jungle Party" className="flex-grow mb-0" />
-                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} aria-label="Randomize theme" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                              <div className="flex items-end gap-3">
                                 <InputField id="vocalStyle" label="Vocal Signal" value={vocalStyle} onChange={setVocalStyle} placeholder="e.g., Female Vocals, Instrumental" className="flex-grow mb-0" />
-                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} aria-label="Randomize vocal style" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <InputField id="tempo" label="Pulse (BPM)" value={tempo} onChange={setTempo} placeholder="e.g., 120 BPM" className="mb-0" />

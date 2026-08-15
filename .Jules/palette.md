@@ -1,0 +1,1 @@
+## 2024-06-18 - Missing ARIA Labels on Icon Buttons\n**Learning:** Many icon-only buttons (`RefreshIcon`, `SparklesIcon`, `DeleteIcon`) used for tool actions lacked `aria-label` attributes, impacting screen reader accessibility.\n**Action:** Ensure all icon-only buttons include descriptive `aria-label`s.
