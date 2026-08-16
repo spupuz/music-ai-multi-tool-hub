@@ -180,7 +180,7 @@ Thanks,
           <div className="mt-6 flex justify-center">
             <Button
               onClick={() => {
-                window.open("https://github.com/spupuz/music-ai-multi-tool-hub", "_blank");
+                window.open("https://github.com/spupuz/music-ai-multi-tool-hub", "_blank", "noopener,noreferrer");
                 trackLocalEvent && trackLocalEvent('Github', 'ClickedGitHubStar', 'AboutPage');
               }}
               variant="secondary"
@@ -343,7 +343,7 @@ Thanks,
         <div className="mt-12 flex flex-col items-center">
             <Button
               onClick={() => {
-                window.open("https://github.com/spupuz/music-ai-multi-tool-hub", "_blank");
+                window.open("https://github.com/spupuz/music-ai-multi-tool-hub", "_blank", "noopener,noreferrer");
                 trackLocalEvent && trackLocalEvent('Github', 'ClickedGitHubStar', 'AboutPage');
               }}
               variant="primary"
