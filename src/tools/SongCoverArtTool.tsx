@@ -435,7 +435,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                       <div className="flex gap-2">
                         <input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
                         <input type="text" value={fontColorHexInput} onChange={handleFontColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                        <Button onClick={handleRandomFontColor} variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                        <Button onClick={handleRandomFontColor} aria-label="Randomize font color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                       </div>
                   </div>
                 ) : (
@@ -444,14 +444,14 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                         <label className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Vector A</label>
                         <div className="flex gap-1">
                           <input type="color" value={gradientColor1} onChange={(e) => setGradientColor1(e.target.value)} className="w-10 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                          <Button onClick={handleRandomGradientColor1} variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
+                          <Button onClick={handleRandomGradientColor1} aria-label="Randomize gradient color A" variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
                         </div>
                     </div>
                     <div className="space-y-2">
                         <label className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Vector B</label>
                         <div className="flex gap-1">
                           <input type="color" value={gradientColor2} onChange={(e) => setGradientColor2(e.target.value)} className="w-10 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                          <Button onClick={handleRandomGradientColor2} variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
+                          <Button onClick={handleRandomGradientColor2} aria-label="Randomize gradient color B" variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
                         </div>
                     </div>
                   </div>
@@ -466,7 +466,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     <div className="flex gap-2">
                       <input type="color" value={strokeColor} onChange={(e) => setStrokeColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
                       <input type="text" value={strokeColorHexInput} onChange={handleStrokeColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                      <Button onClick={handleRandomStrokeColor} variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                      <Button onClick={handleRandomStrokeColor} aria-label="Randomize stroke color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                     </div>
                   </div>
                 )}
@@ -479,7 +479,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                        <div className="flex gap-2">
                         <input type="color" value={textShadowColor} onChange={(e) => setTextShadowColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
                         <input type="text" value={textShadowColorHexInput} onChange={handleTextShadowColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                        <Button onClick={handleRandomShadowColor} variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                        <Button onClick={handleRandomShadowColor} aria-label="Randomize shadow color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                       </div>
                     </div>
                   )}
@@ -570,7 +570,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                         <div className="flex gap-2">
                            <input type="color" value={vignetteColor} onChange={(e) => setVignetteColor(e.target.value)} className="w-12 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl" />
                            <input type="text" value={vignetteColorHexInput} onChange={handleVignetteColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs" />
-                           <Button onClick={handleRandomVignetteColor} variant="ghost" size="sm" className="border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                          <Button onClick={handleRandomVignetteColor} aria-label="Randomize vignette color" variant="ghost" size="sm" className="border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                         </div>
                     </div>
                     <SliderField id="noiseAmount" label="Grain" value={noiseAmount} onChange={setNoiseAmount} />

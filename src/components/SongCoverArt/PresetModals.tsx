@@ -70,7 +70,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
                     </div>
                     <div className="flex gap-2">
                       <Button onClick={() => handleLoadPreset(preset.id)} variant="ghost" size="xs" className="px-3 border-blue-500/20 text-blue-400 hover:bg-blue-500/10">Deploy</Button>
-                      <Button onClick={() => handleDeletePreset(preset.id)} variant="ghost" size="xs" className="px-3 border-red-500/20 text-red-400 hover:bg-red-500/10"><DeleteIcon className="w-3 h-3"/></Button>
+                      <Button onClick={() => handleDeletePreset(preset.id)} aria-label="Delete preset" variant="ghost" size="xs" className="px-3 border-red-500/20 text-red-400 hover:bg-red-500/10"><DeleteIcon className="w-3 h-3"/></Button>
                     </div>
                   </li>
                 ))}
