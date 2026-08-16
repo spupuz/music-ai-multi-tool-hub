@@ -9,6 +9,18 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.12] - 2026-08-16
+
+### Added
+- **Keyboard-accessible file uploads**: custom file upload buttons in the Suno player playlist manager now support `tabIndex`, `role="button"`, and Enter/Space key handling with visible focus rings, so keyboard and screen-reader users can trigger TXT/CSV playlist imports.
+- **ARIA labels for icon-only buttons**: randomize buttons in Song Cover Art and SparkTune, plus the preset delete button, now carry descriptive `aria-label`s so screen readers announce their purpose.
+
+### Changed
+- **Faster Sidebar re-renders**: the Sidebar component is wrapped in `React.memo` and the tool grouping is memoized with `useMemo`, cutting CPU time on every render.
+
+### Fixed
+- **Reverse tabnabbing**: `window.open(..., '_blank')` calls in the Sidebar and About page now pass `'noopener,noreferrer'`, preventing newly opened pages from accessing the opener window.
+
 ## [2.6.11] - 2026-08-14
 
 ### Changed

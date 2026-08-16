@@ -8,6 +8,27 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.12",
+    content: (
+      <section id="version-2.6.12">
+        <SectionTitle>Version 2.6.12 - 2026-08-16</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Keyboard-accessible file uploads</STRONG>: custom file upload buttons in the Suno player playlist manager now support <CODE>tabIndex</CODE>, <CODE>role="button"</CODE>, and Enter/Space key handling with visible focus rings, so keyboard and screen-reader users can trigger TXT/CSV playlist imports.</LI>
+          <LI><STRONG>ARIA labels for icon-only buttons</STRONG>: randomize buttons in Song Cover Art and SparkTune, plus the preset delete button, now carry descriptive <CODE>aria-label</CODE>s so screen readers announce their purpose.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Faster Sidebar re-renders</STRONG>: the Sidebar component is wrapped in <CODE>React.memo</CODE> and the tool grouping is memoized with <CODE>useMemo</CODE>, cutting CPU time on every render.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Reverse tabnabbing</STRONG>: <CODE>window.open(..., '_blank')</CODE> calls in the Sidebar and About page now pass <CODE>'noopener,noreferrer'</CODE>, preventing newly opened pages from accessing the opener window.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.11",
     content: (
       <section id="version-2.6.11">
