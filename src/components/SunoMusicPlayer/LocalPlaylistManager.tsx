@@ -62,9 +62,25 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               <button onClick={handleExportCurrentPlaylistToFile} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-md border-2 border-blue-700/30 flex items-center justify-center transition-colors uppercase tracking-widest"><FileTxtIcon />&nbsp;Export to TXT</button>
               <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
-              <label htmlFor="import-txt-playlist" className="py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-md border-2 border-teal-700/30 flex items-center justify-center cursor-pointer transition-colors uppercase tracking-widest"><FileTxtIcon />&nbsp;Import TXT</label>
+              <label
+                htmlFor="import-txt-playlist"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputTxtRef.current?.click(); } }}
+                className="py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-md border-2 border-teal-700/30 flex items-center justify-center cursor-pointer transition-colors uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-green-600"
+              >
+                <FileTxtIcon />&nbsp;Import TXT
+              </label>
               <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
-              <label htmlFor="import-csv-playlist" className="py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-md border-2 border-teal-700/30 flex items-center justify-center cursor-pointer transition-colors uppercase tracking-widest"><FileCsvIcon />&nbsp;Import CSV</label>
+              <label
+                htmlFor="import-csv-playlist"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputCsvRef.current?.click(); } }}
+                className="py-2 px-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-md border-2 border-teal-700/30 flex items-center justify-center cursor-pointer transition-colors uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-green-600"
+              >
+                <FileCsvIcon />&nbsp;Import CSV
+              </label>
             </div>
             <div className="pt-2 border-t-2 border-gray-300 dark:border-green-700/30">
               <h4 className="text-sm font-bold text-green-700 dark:text-green-600 mb-2 uppercase tracking-widest">Local Named Playlists</h4>
@@ -142,11 +158,23 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
               Export TXT
             </Button>
             <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
-            <label htmlFor="import-txt-playlist" className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
+            <label
+              htmlFor="import-txt-playlist"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputTxtRef.current?.click(); } }}
+              className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
               <FileTxtIcon className="w-4 h-4 ml-1 opacity-60"/> Import TXT
             </label>
             <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
-            <label htmlFor="import-csv-playlist" className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
+            <label
+              htmlFor="import-csv-playlist"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInputCsvRef.current?.click(); } }}
+              className="flex items-center justify-start p-3 border border-white/10 hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
               <FileCsvIcon className="w-4 h-4 ml-1 opacity-60"/> Import CSV
             </label>
           </div>
