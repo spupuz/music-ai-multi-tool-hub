@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { ToolId } from '@/Layout';
 import Button from '@/components/common/Button';
 import { useTheme } from '@/context/ThemeContext';
@@ -87,7 +87,9 @@ Thanks,
     }
   };
 
-  const groupedTools = tools.reduce((acc, tool) => {
+  // ⚡ Bolt: Memoize the grouping of tools to prevent O(n) recalculation on every render
+  // where n is the number of tools in the application. This reduces CPU time during re-renders.
+  const groupedTools = useMemo(() => tools.reduce((acc, tool) => {
     // Exclude Release Notes and Special Mentions from regular grouping
     if (tool.id === 'releaseNotes' || tool.id === 'specialMentions') {
       return acc;
@@ -98,7 +100,7 @@ Thanks,
     }
     acc[category].push(tool);
     return acc;
-  }, {} as Record<string, SidebarTool[]>);
+  }, {} as Record<string, SidebarTool[]>), [tools]);
 
 
   return (
@@ -289,4 +291,6 @@ Thanks,
   );
 };
 
-export default Sidebar;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when Layout state
+// changes but Sidebar props (like tools array or activeToolId) remain the same.
+export default React.memo(Sidebar);
