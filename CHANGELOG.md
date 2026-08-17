@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.13] - 2026-08-17
+
+### Changed
+- **Optimized Music Theory Wiki search**: cached parsed HTML content in a `useMemo` map to prevent expensive `ReactDOMServer.renderToStaticMarkup` calls on every keystroke during search, improving responsiveness.
+
+### Added
+- **Wiki search optimization notes**: added learning documentation in `.jules/bolt.md` about caching React content trees for search.
+
 ## [2.6.12] - 2026-08-16
 
 ### Added

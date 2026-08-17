@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.13",
+    content: (
+      <section id="version-2.6.13">
+        <SectionTitle>Version 2.6.13 - 2026-08-17</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Optimized Music Theory Wiki search</STRONG>: cached parsed HTML content in a <CODE>useMemo</CODE> map to prevent expensive <CODE>ReactDOMServer.renderToStaticMarkup</CODE> calls on every keystroke during search, improving responsiveness.</LI>
+        </UL>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Wiki search optimization notes</STRONG>: added learning documentation in <CODE>.jules/bolt.md</CODE> about caching React content trees for search.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.12",
     content: (
       <section id="version-2.6.12">
