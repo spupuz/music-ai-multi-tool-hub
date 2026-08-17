@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.14",
+    content: (
+      <section id="version-2.6.14">
+        <SectionTitle>Version 2.6.14 - 2026-08-17</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Cloudflare Pages security headers</STRONG>: added <CODE>public/_headers</CODE> to enforce <CODE>X-Frame-Options: DENY</CODE>, <CODE>X-Content-Type-Options: nosniff</CODE>, <CODE>Referrer-Policy: strict-origin-when-cross-origin</CODE>, <CODE>Strict-Transport-Security</CODE>, <CODE>X-XSS-Protection</CODE>, and <CODE>Permissions-Policy</CODE> on all responses.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.13",
     content: (
       <section id="version-2.6.13">

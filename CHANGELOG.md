@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.14] - 2026-08-17
+
+### Security
+- **Cloudflare Pages security headers**: added `public/_headers` to enforce `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security`, `X-XSS-Protection`, and `Permissions-Policy` on all responses.
+
 ## [2.6.13] - 2026-08-17
 
 ### Changed
