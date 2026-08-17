@@ -1,0 +1,3 @@
+## 2023-10-27 - [Topic Search Optimization using React useMemo]
+**Learning:** Found a case where `ReactDOMServer.renderToStaticMarkup(topic.content)` was being repeatedly called on every keystroke in a search filter.
+**Action:** When filtering complex React content trees using `ReactDOMServer.renderToStaticMarkup`, always cache the generated string representation using `useMemo` mapped to a static identifier (like a `Map<TopicId, string>`), rather than parsing the React nodes on every render/keystroke. Returning modified objects from the hook directly (e.g. `{ ...topic, searchableContent }`) can cause reference equality issues downstream.

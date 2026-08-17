@@ -25,13 +25,11 @@ export const useWikiLogic = (trackLocalEvent: (category: string, action: string,
         setExpandedCategories(initialExpansionState);
     }, [selectedTopicId, categories]);
 
-    const filteredWikiTopics = useMemo(() => {
-        if (!searchTerm.trim()) return wikiTopics;
-        const lowerSearchTerm = searchTerm.toLowerCase();
-        return wikiTopics.filter(topic => {
-            const titleMatch = topic.title.toLowerCase().includes(lowerSearchTerm);
-            const keywordMatch = topic.keywords.some(keyword => keyword.toLowerCase().includes(lowerSearchTerm));
-            
+    // ⚡ Bolt: Cache parsed HTML content to string once on initialization
+    // to prevent expensive ReactDOMServer calls on every keystroke during search.
+    const topicSearchContentMap = useMemo(() => {
+        const map = new Map<string, string>();
+        wikiTopics.forEach(topic => {
             let contentText = '';
             try {
                 const htmlContent = ReactDOMServer.renderToStaticMarkup(topic.content);
@@ -39,9 +37,22 @@ export const useWikiLogic = (trackLocalEvent: (category: string, action: string,
             } catch (e) {
                 console.error("Error processing topic content for search:", topic.title, e);
             }
-            return titleMatch || keywordMatch || contentText.includes(lowerSearchTerm);
+            map.set(topic.id, contentText);
         });
-    }, [searchTerm]);
+        return map;
+    }, []);
+
+    const filteredWikiTopics = useMemo(() => {
+        if (!searchTerm.trim()) return wikiTopics;
+        const lowerSearchTerm = searchTerm.toLowerCase();
+        return wikiTopics.filter(topic => {
+            const titleMatch = topic.title.toLowerCase().includes(lowerSearchTerm);
+            const keywordMatch = topic.keywords.some(keyword => keyword.toLowerCase().includes(lowerSearchTerm));
+            const searchableContentText = topicSearchContentMap.get(topic.id) || '';
+
+            return titleMatch || keywordMatch || searchableContentText.includes(lowerSearchTerm);
+        });
+    }, [searchTerm, topicSearchContentMap]);
 
     const selectedTopic = useMemo(() => {
         const topicExistsInFiltered = filteredWikiTopics.find(topic => topic.id === selectedTopicId);
