@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.15",
+    content: (
+      <section id="version-2.6.15">
+        <SectionTitle>Version 2.6.15 - 2026-08-18</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed Server-Side Request Forgery (SSRF) in Suno proxy</STRONG>: the Cloudflare Worker's Suno proxy now uses the <CODE>URL</CODE> constructor to safely compose target URLs and strictly enforces hostname matching, preventing path manipulation attacks (e.g., <CODE>@attacker.com</CODE> authority injection) that could redirect outbound fetches to malicious hosts.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Memoized DetailedSongPerformanceTable</STRONG>: wrapped the large song performance table component in <CODE>React.memo</CODE> to prevent unnecessary re-renders when parent state changes, reducing lag in the Suno User Stats page.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.14",
     content: (
       <section id="version-2.6.14">

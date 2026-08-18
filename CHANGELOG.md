@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.15] - 2026-08-18
+
+### Security
+- **Fixed Server-Side Request Forgery (SSRF) in Suno proxy**: the Cloudflare Worker's Suno proxy now uses the `URL` constructor to safely compose target URLs and strictly enforces hostname matching, preventing path manipulation attacks (e.g., `@attacker.com` authority injection) that could redirect outbound fetches to malicious hosts.
+
+### Changed
+- **Memoized DetailedSongPerformanceTable**: wrapped the large song performance table component in `React.memo` to prevent unnecessary re-renders when parent state changes, reducing lag in the Suno User Stats page.
+
 ## [2.6.14] - 2026-08-17
 
 ### Security
