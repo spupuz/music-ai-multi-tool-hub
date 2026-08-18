@@ -438,4 +438,6 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
   );
 };
 
-export default DetailedSongPerformanceTable;
+// ⚡ Bolt: Wrapped in React.memo to prevent expensive re-renders of this large table
+// when parent component updates but the table's props haven't changed.
+export default React.memo(DetailedSongPerformanceTable);
