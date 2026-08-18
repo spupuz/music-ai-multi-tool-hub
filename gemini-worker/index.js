@@ -52,15 +52,34 @@ function corsHeaders(origin) {
  * restrictions. Only fixed base hosts are allowed (no open/SSRF proxy).
  * Responses are cached at the edge with a per-endpoint TTL.
  */
-async function proxySunoRequest(request, url, baseUrl) {
+async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
     const origin = request.headers.get('Origin') || '';
     const cors = corsHeaders(origin);
-    const path = url.pathname.replace(/^\/suno(-web)?/, '') || '/';
-    const targetUrl = `${baseUrl}${path}${url.search}`;
+
+    // Normalize path to prevent path traversal and ensure it starts with /
+    let path = url.pathname.substring(prefixMatched.length);
+    if (!path.startsWith('/')) {
+        path = '/' + path;
+    }
+
+    let targetUrlObj;
+    try {
+        targetUrlObj = new URL(path + url.search, baseUrl);
+    } catch (e) {
+        return new Response(JSON.stringify({ error: 'Invalid URL format' }), { status: 400, headers: cors });
+    }
+
+    // SSRF Protection: strictly enforce that the final URL's hostname matches the baseUrl's hostname
+    const expectedHost = new URL(baseUrl).hostname;
+    if (targetUrlObj.hostname !== expectedHost) {
+        return new Response(JSON.stringify({ error: 'SSRF Attempt Blocked' }), { status: 403, headers: cors });
+    }
+
+    const targetUrlString = targetUrlObj.toString();
     const ttlSeconds = cacheTtlForPath(path);
 
     try {
-        const cached = await caches.default.match(targetUrl);
+        const cached = await caches.default.match(targetUrlString);
         if (cached) {
             const body = await cached.text();
             return new Response(body, {
@@ -73,7 +92,7 @@ async function proxySunoRequest(request, url, baseUrl) {
     }
 
     try {
-        const sunoRes = await fetch(targetUrl, {
+        const sunoRes = await fetch(targetUrlString, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -91,7 +110,7 @@ async function proxySunoRequest(request, url, baseUrl) {
 
         if (sunoRes.ok && ttlSeconds > 0) {
             try {
-                await caches.default.put(targetUrl, new Response(body, {
+                await caches.default.put(targetUrlString, new Response(body, {
                     status: 200,
                     headers: { 'Cache-Control': `public, max-age=${ttlSeconds}` },
                 }));
@@ -135,13 +154,13 @@ export default {
 
         // ── GET /suno/* (Suno Studio API proxy) ──────────────────────────────────
         if (request.method === 'GET' && url.pathname.startsWith('/suno')) {
-            const isWeb = url.pathname.startsWith('/suno-web');
-            const isApi = url.pathname.startsWith('/suno/');
+            const isWeb = url.pathname === '/suno-web' || url.pathname.startsWith('/suno-web/');
+            const isApi = url.pathname === '/suno' || url.pathname.startsWith('/suno/');
             if (isWeb) {
-                return proxySunoRequest(request, url, SUNO_WEB_BASE);
+                return proxySunoRequest(request, url, SUNO_WEB_BASE, '/suno-web');
             }
             if (isApi) {
-                return proxySunoRequest(request, url, SUNO_API_BASE);
+                return proxySunoRequest(request, url, SUNO_API_BASE, '/suno');
             }
             return new Response('Not Found', { status: 404, headers: cors });
         }
