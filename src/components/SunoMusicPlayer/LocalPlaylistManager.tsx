@@ -99,16 +99,16 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
                         </p>
                       </div>
                       <div className="flex-shrink-0 flex items-center space-x-1.5">
-                        <button onClick={() => handleLoadClick(p.id)} className="py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded border-2 border-blue-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Load Playlist (replaces queue)">
+                        <button onClick={() => handleLoadClick(p.id)} className="py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded border-2 border-blue-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Load Playlist (replaces queue)" aria-label="Load Playlist (replaces queue)">
                           {loadConfirm.id === p.id && loadConfirm.count > 0 ? `? (${3 - loadConfirm.count})` : <LoadIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
-                        <button onClick={() => handleAppendClick(p.id)} className="py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded border-2 border-teal-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Append content to this playlist">
+                        <button onClick={() => handleAppendClick(p.id)} className="py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded border-2 border-teal-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Append content to this playlist" aria-label="Append content to this playlist">
                           {appendConfirm.id === p.id && appendConfirm.count > 0 ? `? (${3 - appendConfirm.count})` : <AppendIcon className="w-4 h-4 mx-auto" />}
                         </button>
-                        <button onClick={() => handleUpdateClick(p.id)} className="py-1 px-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded border-2 border-yellow-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Update this playlist from queue">
+                        <button onClick={() => handleUpdateClick(p.id)} className="py-1 px-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded border-2 border-yellow-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Update this playlist from queue" aria-label="Update this playlist from queue">
                           {updateConfirm.id === p.id && updateConfirm.count > 0 ? `? (${3 - updateConfirm.count})` : <RefreshIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
-                        <button onClick={() => handleDeleteClick(p.id)} className="py-1 px-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded border-2 border-red-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Delete Playlist">
+                        <button onClick={() => handleDeleteClick(p.id)} className="py-1 px-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded border-2 border-red-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Delete Playlist" aria-label="Delete Playlist">
                           {deleteConfirm.id === p.id && deleteConfirm.count > 0 ? `? (${3 - deleteConfirm.count})` : <TrashIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
                       </div>
@@ -213,16 +213,16 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button onClick={() => handleLoadClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-blue-500/10 border-blue-500/20 text-blue-600 hover:bg-blue-500 hover:text-white" title="Load Playlist">
+                      <Button onClick={() => handleLoadClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-blue-500/10 border-blue-500/20 text-blue-600 hover:bg-blue-500 hover:text-white" title="Load Playlist" aria-label="Load Playlist">
                         {loadConfirm.id === p.id && loadConfirm.count > 0 ? `?? (${3 - loadConfirm.count})` : "Load"}
                       </Button>
-                      <Button onClick={() => handleAppendClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-teal-500/10 border-teal-500/20 text-teal-600 hover:bg-teal-500 hover:text-white" title="Append to Playlist">
+                      <Button onClick={() => handleAppendClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-teal-500/10 border-teal-500/20 text-teal-600 hover:bg-teal-500 hover:text-white" title="Append to Playlist" aria-label="Append to Playlist">
                         {appendConfirm.id === p.id && appendConfirm.count > 0 ? `?? (${3 - appendConfirm.count})` : "Add"}
                       </Button>
-                      <Button onClick={() => handleUpdateClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-yellow-500/10 border-yellow-500/20 text-yellow-600 hover:bg-yellow-500 hover:text-black" title="Update Playlist">
+                      <Button onClick={() => handleUpdateClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-yellow-500/10 border-yellow-500/20 text-yellow-600 hover:bg-yellow-500 hover:text-black" title="Update Playlist" aria-label="Update Playlist">
                         {updateConfirm.id === p.id && updateConfirm.count > 0 ? `?? (${3 - updateConfirm.count})` : "Refresh"}
                       </Button>
-                      <Button onClick={() => handleDeleteClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-red-500/10 border-red-500/20 text-red-600 hover:bg-red-500 hover:text-white" title="Delete">
+                      <Button onClick={() => handleDeleteClick(p.id)} variant="ghost" size="sm" className="flex-1 text-[10px] font-black uppercase tracking-widest bg-red-500/10 border-red-500/20 text-red-600 hover:bg-red-500 hover:text-white" title="Delete" aria-label="Delete">
                         {deleteConfirm.id === p.id && deleteConfirm.count > 0 ? `?? (${3 - deleteConfirm.count})` : "Del"}
                       </Button>
                     </div>

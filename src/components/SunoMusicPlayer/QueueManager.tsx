@@ -80,6 +80,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
             <button 
               onClick={handleExportPlaylistCsv} 
               title="Export current playlist view to CSV" 
+              aria-label="Export current playlist view to CSV"
               className="p-2 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold border-2 border-indigo-700/30 rounded-md disabled:opacity-50 transition-colors uppercase tracking-widest"
               disabled={queue.length === 0}
             >
@@ -171,6 +172,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
           <Button 
             onClick={handleExportPlaylistCsv} 
             title="Export current list to CSV" 
+            aria-label="Export current list to CSV"
             variant="ghost"
             size="sm"
             className="p-3 border-white/10 hover:bg-white/10 rounded-xl shadow-none"
