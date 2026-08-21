@@ -267,8 +267,13 @@ export default {
         }
 
         const { model, contents, config } = body;
-        if (!model || !contents) {
-            return new Response('Missing model/contents', { status: 400, headers: cors });
+        if (!model || typeof model !== 'string' || !contents) {
+            return new Response('Missing or invalid model/contents', { status: 400, headers: cors });
+        }
+
+        // Validate model name to prevent path traversal or URL injection
+        if (!/^[a-zA-Z0-9.-]+$/.test(model)) {
+            return new Response('Invalid model name format', { status: 400, headers: cors });
         }
 
         const geminiUrl = `${GEMINI_BASE}/${model}:generateContent?key=${env.GEMINI_API_KEY}`;
