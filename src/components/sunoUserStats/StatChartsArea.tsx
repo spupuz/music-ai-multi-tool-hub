@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './charts/chartSetup';
 import type { AggregatedStats, SongTrendData, SongEngagementData } from '@/types/sunoUserStatsTypes';
 import type { SunoClip } from '@/types';
@@ -86,6 +86,19 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
   };
 
   const chartWithCoverArtMinHeight = 'min-h-[11rem] sm:min-h-[12rem] md:min-h-[14rem]';
+
+
+  const uniqueSongsForScatterPlots = useMemo(() => {
+    if (!stats) return [];
+
+    // ⚡ Bolt: Replaced O(n^2) array.filter with findIndex with an O(n) Map approach
+    // to deduplicate combined songs, and memoized it to prevent recalculation
+    // and re-renders on every parent update.
+    const map = new Map<string, SunoClip>();
+    stats.topPlayedSongs.forEach(song => map.set(song.id, song));
+    stats.topUpvotedSongs.forEach(song => map.set(song.id, song));
+    return Array.from(map.values());
+  }, [stats?.topPlayedSongs, stats?.topUpvotedSongs]);
 
   const periodOptions: { value: TrendPeriod; label: string }[] = [
     { value: "sinceLastUpdate", label: "Since Last Update" },
@@ -203,8 +216,8 @@ const StatChartsArea: React.FC<StatChartsAreaProps> = ({ stats, username, topNVa
       <p className="text-xs text-gray-500 mt-1 italic text-center"> Tag Pair Performance shows average metrics for songs containing specific pairs of tags (min. 3 songs per pair). </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-8  "> {/* Changed to 2 columns */}
-        <ChartContainer title={uiMode === 'architect' ? "Song Performance: Plays vs. Upvotes" : "Performance: Plays vs. Likes"} heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total likes (Y-axis). The line indicates the user's overall average like rate. Helps identify high/low engagement songs."> <PlaysUpvotesScatterPlot songs={stats.topPlayedSongs.concat(stats.topUpvotedSongs).filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)} averageUpvoteRateOverall={stats.overallUpvoteRate} {...commonChartProps} /> </ChartContainer>
-        <ChartContainer title="Song Performance: Plays vs. Comments" heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total comments (Y-axis). The line indicates the user's overall average like rate (for songs >20 plays). Helps identify 'talkable' songs."> <PlaysCommentsScatterPlotChart songs={stats.topPlayedSongs.concat(stats.topUpvotedSongs).filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i)} averageCommentRateOverall={stats.overallCommentRate} {...commonChartProps} /> </ChartContainer>
+        <ChartContainer title={uiMode === 'architect' ? "Song Performance: Plays vs. Upvotes" : "Performance: Plays vs. Likes"} heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total likes (Y-axis). The line indicates the user's overall average like rate. Helps identify high/low engagement songs."> <PlaysUpvotesScatterPlot songs={uniqueSongsForScatterPlots} averageUpvoteRateOverall={stats.overallUpvoteRate} {...commonChartProps} /> </ChartContainer>
+        <ChartContainer title="Song Performance: Plays vs. Comments" heightClassName="h-80 sm:h-96 md:h-[28rem]" tooltipText="Visualizes each song by its total plays (X-axis) vs. total comments (Y-axis). The line indicates the user's overall average like rate (for songs >20 plays). Helps identify 'talkable' songs."> <PlaysCommentsScatterPlotChart songs={uniqueSongsForScatterPlots} averageCommentRateOverall={stats.overallCommentRate} {...commonChartProps} /> </ChartContainer>
       </div>
        <p className="text-xs text-gray-500 mt-1 italic text-center"> Scatter Plots show songs based on their total plays and upvotes/comments. Line indicates overall average rate for the respective metric. </p>
       
