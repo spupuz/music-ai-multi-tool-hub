@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import { getBaseChartOptions, generateColorShades } from '@/utils/chartUtils';
 
@@ -32,7 +32,7 @@ const SongsByDayOfWeekChart: React.FC<SongsByDayOfWeekChartProps> = ({
   }, []);
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const chartData = daysOfWeek.map((day, index) => data[index.toString()] || 0);
+  const chartData = useMemo(() => daysOfWeek.map((day, index) => data[index.toString()] || 0), [data]);
 
   useEffect(() => {
     if (chartRef.current && chartData.some(count => count > 0)) {

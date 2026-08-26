@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { SunoClip } from '@/types';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -24,12 +24,12 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart<'scatter'> | null>(null);
 
-  const chartData = songs.map(song => ({
+  const chartData = useMemo(() => songs.map(song => ({
     x: song.play_count || 0,
     y: song.upvote_count || 0,
     title: song.title,
     upvoteRate: song.play_count > 0 ? ((song.upvote_count || 0) / song.play_count) * 100 : 0,
-  }));
+  })), [songs]);
 
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
