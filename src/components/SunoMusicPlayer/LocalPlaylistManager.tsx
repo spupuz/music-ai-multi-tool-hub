@@ -99,16 +99,16 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
                         </p>
                       </div>
                       <div className="flex-shrink-0 flex items-center space-x-1.5">
-                        <button onClick={() => handleLoadClick(p.id)} className="py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded border-2 border-blue-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Load Playlist (replaces queue)">
+                        <button onClick={() => handleLoadClick(p.id)} className="py-1 px-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded border-2 border-blue-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Load Playlist (replaces queue)" aria-label={`Load playlist ${p.name} (replaces queue)`}>
                           {loadConfirm.id === p.id && loadConfirm.count > 0 ? `? (${3 - loadConfirm.count})` : <LoadIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
-                        <button onClick={() => handleAppendClick(p.id)} className="py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded border-2 border-teal-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Append content to this playlist">
+                        <button onClick={() => handleAppendClick(p.id)} className="py-1 px-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded border-2 border-teal-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Append content to this playlist" aria-label={`Append content to playlist ${p.name}`}>
                           {appendConfirm.id === p.id && appendConfirm.count > 0 ? `? (${3 - appendConfirm.count})` : <AppendIcon className="w-4 h-4 mx-auto" />}
                         </button>
-                        <button onClick={() => handleUpdateClick(p.id)} className="py-1 px-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded border-2 border-yellow-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Update this playlist from queue">
+                        <button onClick={() => handleUpdateClick(p.id)} className="py-1 px-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded border-2 border-yellow-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Update this playlist from queue" aria-label={`Update playlist ${p.name} from queue`}>
                           {updateConfirm.id === p.id && updateConfirm.count > 0 ? `? (${3 - updateConfirm.count})` : <RefreshIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
-                        <button onClick={() => handleDeleteClick(p.id)} className="py-1 px-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded border-2 border-red-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Delete Playlist">
+                        <button onClick={() => handleDeleteClick(p.id)} className="py-1 px-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded border-2 border-red-700/30 min-w-[3.5rem] text-center transition-colors uppercase tracking-tighter" title="Delete Playlist" aria-label={`Delete playlist ${p.name}`}>
                           {deleteConfirm.id === p.id && deleteConfirm.count > 0 ? `? (${3 - deleteConfirm.count})` : <TrashIcon className="w-3.5 h-3.5 mx-auto" />}
                         </button>
                       </div>
