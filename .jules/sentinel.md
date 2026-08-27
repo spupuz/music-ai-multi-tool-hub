@@ -6,3 +6,7 @@
 **Vulnerability:** CORS policy allows any origin starting with `http://localhost:` to bypass restrictions.
 **Learning:** `startsWith` is dangerous for origin validation as it allows origins like `http://localhost:80.malicious.com` or `http://localhost.evil.com`.
 **Prevention:** Use strict equality for specific origins or parse the origin as a URL and validate the hostname and port properly.
+## 2024-08-21 - [Prevent Path Traversal and URL Injection in Gemini Proxy]
+**Vulnerability:** The Gemini API Proxy Worker interpolated the user-provided `model` string directly into the external API URL without validation, opening up potential path traversal or URL injection vectors against the upstream Google APIs.
+**Learning:** Even internal proxy endpoints acting on behalf of safe frontends need rigorous sanitization for dynamic route/URL parameters.
+**Prevention:** Strictly validate dynamic segments of upstream URLs against a rigid whitelist or restrictive regex (like `^[a-zA-Z0-9.-]+$`) before interpolation.
