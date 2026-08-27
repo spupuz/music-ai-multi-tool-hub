@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import { getBaseChartOptions } from '@/utils/chartUtils';
 
@@ -33,7 +33,7 @@ const SongsByHourOfDayChart: React.FC<SongsByHourOfDayChartProps> = ({
 
 
   const hoursOfDay = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-  const chartData = hoursOfDay.map((_, index) => data[index.toString()] || 0);
+  const chartData = useMemo(() => hoursOfDay.map((_, index) => data[index.toString()] || 0), [data]);
 
   useEffect(() => {
     if (chartRef.current && chartData.some(count => count > 0)) {

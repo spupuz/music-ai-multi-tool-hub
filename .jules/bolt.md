@@ -5,3 +5,6 @@
 ## 2026-08-18 - [DetailedSongPerformanceTable React.memo Optimization]
 **Learning:** Found a case where a large table component (`DetailedSongPerformanceTable`) handling numerous rows of sorted data was re-rendering excessively when its parent component updated, despite the table's props remaining unchanged. This codebase-specific bottleneck caused noticeable lag in the UI.
 **Action:** Wrapped the expensive `DetailedSongPerformanceTable` UI component in `React.memo()` to prevent redundant re-renders when parent state changes but component props are stable.
+## 2024-05-18 - [Optimizing Chart Data Memoization]
+**Learning:** React Chart.js wrapper components often re-compute expensive data transformations (like `.map()` for chart axes) inside the component body, meaning they are re-calculated on every render even when props haven't changed.
+**Action:** Always wrap data array transformations for charts in `useMemo` hooks, especially for scatter plots and bar charts that may process thousands of data points on render.
