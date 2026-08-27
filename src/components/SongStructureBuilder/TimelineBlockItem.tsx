@@ -85,8 +85,8 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
                         </div>
                     </div>
                     <div className="flex items-center gap-1"> 
-                        <Button onClick={() => onDuplicateBlock(block.id)} variant="ghost" size="xs" className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10 rounded-xl border-none shadow-none transition-all" title="Duplicate Block" startIcon={<DuplicateIcon className="w-4 h-4" />} /> 
-                        <Button onClick={() => onRemoveBlock(block.id)} variant="ghost" size="xs" className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-xl border-none shadow-none transition-all" title="Remove Block" startIcon={<TrashIcon className="w-4 h-4" />} /> 
+                        <Button onClick={() => onDuplicateBlock(block.id)} aria-label="Duplicate Block" variant="ghost" size="xs" className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-500/10 rounded-xl border-none shadow-none transition-all" title="Duplicate Block" startIcon={<DuplicateIcon className="w-4 h-4" />} />
+                        <Button onClick={() => onRemoveBlock(block.id)} aria-label="Remove Block" variant="ghost" size="xs" className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-xl border-none shadow-none transition-all" title="Remove Block" startIcon={<TrashIcon className="w-4 h-4" />} />
                     </div>
                 </div>
                 
@@ -128,11 +128,11 @@ const TimelineBlockItem: React.FC<TimelineBlockItemProps> = ({
                               </span>
                             </div>
                             <div className="flex items-center opacity-0 group-hover/lyric:opacity-100 transition-all gap-0.5 pr-1">
-                                <Button onClick={() => onReorderLyricLine(block.id, lyricIndex, 'up')} disabled={lyricIndex === 0} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 disabled:opacity-20 border-none shadow-none transition-colors" title="Move Up" startIcon={<UpArrowIcon className="w-3 h-3" />} />
-                                <Button onClick={() => onReorderLyricLine(block.id, lyricIndex, 'down')} disabled={lyricIndex === block.lyrics.length - 1} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 disabled:opacity-20 border-none shadow-none transition-colors" title="Move Down" startIcon={<DownArrowIcon className="w-3 h-3" />} />
-                                <Button onClick={() => onInsertLyricLineAfter(block.id, lyricIndex)} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-green-500/20 text-green-500 border-none shadow-none transition-colors" title="Insert Below" startIcon={<PlusIcon className="w-3 h-3" />} />
-                                {lyric.history.length > 0 && <Button onClick={() => onShowHistory(block.id, lyric)} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-yellow-500/20 text-yellow-500 border-none shadow-none transition-colors" title="Vault Access" startIcon={<HistoryIcon className="w-3 h-3" />} />}
-                                <Button onClick={() => onDeleteLyricLine(block.id, lyric.id)} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-500 border-none shadow-none transition-colors" title="Erase Line" startIcon={<TrashIcon className="w-3 h-3" />} />
+                                <Button onClick={() => onReorderLyricLine(block.id, lyricIndex, 'up')} aria-label="Move Up" disabled={lyricIndex === 0} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 disabled:opacity-20 border-none shadow-none transition-colors" title="Move Up" startIcon={<UpArrowIcon className="w-3 h-3" />} />
+                                <Button onClick={() => onReorderLyricLine(block.id, lyricIndex, 'down')} aria-label="Move Down" disabled={lyricIndex === block.lyrics.length - 1} variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 disabled:opacity-20 border-none shadow-none transition-colors" title="Move Down" startIcon={<DownArrowIcon className="w-3 h-3" />} />
+                                <Button onClick={() => onInsertLyricLineAfter(block.id, lyricIndex)} aria-label="Insert Below" variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-green-500/20 text-green-500 border-none shadow-none transition-colors" title="Insert Below" startIcon={<PlusIcon className="w-3 h-3" />} />
+                                {lyric.history.length > 0 && <Button onClick={() => onShowHistory(block.id, lyric)} aria-label="Vault Access" variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-yellow-500/20 text-yellow-500 border-none shadow-none transition-colors" title="Vault Access" startIcon={<HistoryIcon className="w-3 h-3" />} />}
+                                <Button onClick={() => onDeleteLyricLine(block.id, lyric.id)} aria-label="Erase Line" variant="ghost" size="xs" className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-500 border-none shadow-none transition-colors" title="Erase Line" startIcon={<TrashIcon className="w-3 h-3" />} />
                             </div>
                         </div>
                     ))}
