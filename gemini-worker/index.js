@@ -38,7 +38,17 @@ const ALLOWED_ORIGINS = [
 ];
 
 function corsHeaders(origin) {
-    const isAllowed = ALLOWED_ORIGINS.includes(origin) || (origin && origin.startsWith('http://localhost:'));
+    let isAllowed = ALLOWED_ORIGINS.includes(origin);
+    if (!isAllowed && origin) {
+        try {
+            const parsedOrigin = new URL(origin);
+            if (parsedOrigin.protocol === 'http:' && (parsedOrigin.hostname === 'localhost' || parsedOrigin.hostname === '127.0.0.1')) {
+                isAllowed = true;
+            }
+        } catch (e) {
+            // Ignore invalid URLs
+        }
+    }
     const allowed = isAllowed ? origin : ALLOWED_ORIGINS[0];
     return {
         'Access-Control-Allow-Origin': allowed,
