@@ -8,6 +8,29 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.16",
+    content: (
+      <section id="version-2.6.16">
+        <SectionTitle>Version 2.6.16 - 2026-08-27</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed overly permissive CORS matching in the Worker</STRONG>: replaced the <CODE>http://localhost:</CODE> prefix check (which allowed spoofed origins like <CODE>http://localhost.evil.com</CODE>) with strict hostname/port validation so only genuine localhost/127.0.0.1 origins are accepted.</LI>
+          <LI><STRONG>Added model name validation to the Gemini proxy</STRONG>: reject <CODE>model</CODE> values that don't match <CODE>^[a-zA-Z0-9.-]+$</CODE>, preventing path traversal / URL injection into the upstream Gemini URL.</LI>
+        </UL>
+        <SubSectionTitle>Accessibility</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Added ARIA labels to icon-only buttons</STRONG>: the Local Playlist manager, Queue manager, and Song Structure Builder now expose descriptive <CODE>aria-label</CODE>s (including interpolated playlist name context) on their icon-only action buttons for screen readers.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Memoized chart data generation</STRONG>: chart data transformations in the Suno User Stats scatter/bar charts are now wrapped in <CODE>useMemo</CODE> to avoid recomputation on every render and to preserve memoized child components.</LI>
+          <LI><STRONG>Optimized scatter-plot deduplication</STRONG>: replaced the O(n²) <CODE>filter</CODE>/<CODE>findIndex</CODE> combination of top played/upvoted songs with a memoized O(n) <CODE>Map</CODE>-based approach.</LI>
+          <LI><STRONG>Wrapped Header in <CODE>React.memo</CODE></STRONG>: prevents unnecessary re-renders of the app header when layout state changes.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.15",
     content: (
       <section id="version-2.6.15">

@@ -9,6 +9,20 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.16] - 2026-08-27
+
+### Security
+- **Fixed overly permissive CORS matching in the Worker**: replaced the `http://localhost:` prefix check (which allowed spoofed origins like `http://localhost.evil.com`) with strict hostname/port validation so only genuine localhost/127.0.0.1 origins are accepted.
+- **Added model name validation to the Gemini proxy**: reject `model` values that don't match `^[a-zA-Z0-9.-]+$`, preventing path traversal / URL injection into the upstream Gemini URL.
+
+### Accessibility
+- **Added ARIA labels to icon-only buttons**: the Local Playlist manager, Queue manager, and Song Structure Builder now expose descriptive `aria-label`s (including interpolated playlist name context) on their icon-only action buttons for screen readers.
+
+### Changed
+- **Memoized chart data generation**: chart data transformations in the Suno User Stats scatter/bar charts are now wrapped in `useMemo` to avoid recomputation on every render and to preserve memoized child components.
+- **Optimized scatter-plot deduplication**: replaced the O(n²) `filter`/`findIndex` combination of top played/upvoted songs with a memoized O(n) `Map`-based approach.
+- **Wrapped Header in `React.memo`**: prevents unnecessary re-renders of the app header when layout state changes.
+
 ## [2.6.15] - 2026-08-18
 
 ### Security
