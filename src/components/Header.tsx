@@ -131,4 +131,5 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarOpen, appName
   );
 };
 
-export default Header;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when Layout state changes without Header props updates
+export default React.memo(Header);
