@@ -151,6 +151,19 @@ async function incrementKV(kv, key) {
     await kv.put(key, val.toString());
 }
 
+/**
+ * Constant-time string comparison to mitigate timing attacks.
+ */
+function timingSafeEqual(a, b) {
+    if (typeof a !== 'string' || typeof b !== 'string') return false;
+    if (a.length !== b.length) return false;
+    let result = 0;
+    for (let i = 0; i < a.length; i++) {
+        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    }
+    return result === 0;
+}
+
 export default {
     async fetch(request, env) {
         const origin = request.headers.get('Origin') || '';
@@ -266,7 +279,7 @@ export default {
                 return new Response(JSON.stringify({ valid: false, error: 'COMMITTEE_PASSWORD not configured' }),
                     { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
             }
-            const valid = typeof password === 'string' && password === env.COMMITTEE_PASSWORD;
+            const valid = timingSafeEqual(password, env.COMMITTEE_PASSWORD);
             return new Response(JSON.stringify({ valid }),
                 { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
         }

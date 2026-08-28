@@ -10,3 +10,7 @@
 **Vulnerability:** The Gemini API Proxy Worker interpolated the user-provided `model` string directly into the external API URL without validation, opening up potential path traversal or URL injection vectors against the upstream Google APIs.
 **Learning:** Even internal proxy endpoints acting on behalf of safe frontends need rigorous sanitization for dynamic route/URL parameters.
 **Prevention:** Strictly validate dynamic segments of upstream URLs against a rigid whitelist or restrictive regex (like `^[a-zA-Z0-9.-]+$`) before interpolation.
+## 2024-08-28 - [Timing Attack in Password Verification]
+**Vulnerability:** The `/verify-password` endpoint in the Gemini worker used the standard equality operator (`===`) for verifying the committee password. This basic comparison leaks information about the password length and character correctness because it short-circuits upon encountering the first mismatched character.
+**Learning:** Basic string equality operations are susceptible to timing attacks over the network since different inputs will take measurably different times to evaluate.
+**Prevention:** Always use a constant-time comparison algorithm (such as a bitwise XOR loop comparing every character regardless of match) when validating sensitive strings like passwords or cryptographic secrets.
