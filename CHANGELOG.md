@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.17] - 2026-08-28
+
+### Security
+- **Fixed timing attack on password verification**: the Gemini Worker's `/verify-password` endpoint now uses a constant-time string comparison (bitwise XOR loop) instead of the short-circuiting `===` operator, mitigating side-channel information leakage about the committee password.
+
+### Changed
+- **Memoized data-heavy performance tables**: `CohortPerformanceTable`, `SongDurationPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable` are now wrapped in `React.memo` to prevent unnecessary re-renders and re-sorts when the parent `StatChartsArea` updates its state (e.g. `selectedPeriod`) but their props remain unchanged.
+
 ## [2.6.16] - 2026-08-27
 
 ### Security

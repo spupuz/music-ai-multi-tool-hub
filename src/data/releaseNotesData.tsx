@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.17",
+    content: (
+      <section id="version-2.6.17">
+        <SectionTitle>Version 2.6.17 - 2026-08-28</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed timing attack on password verification</STRONG>: the Gemini Worker's <CODE>/verify-password</CODE> endpoint now uses a constant-time string comparison (bitwise XOR loop) instead of the short-circuiting <CODE>===</CODE> operator, mitigating side-channel information leakage about the committee password.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Memoized data-heavy performance tables</STRONG>: <CODE>CohortPerformanceTable</CODE>, <CODE>SongDurationPerformanceTable</CODE>, <CODE>TagGenrePerformanceTables</CODE>, and <CODE>TagPairPerformanceTable</CODE> are now wrapped in <CODE>React.memo</CODE> to prevent unnecessary re-renders and re-sorts when the parent <CODE>StatChartsArea</CODE> updates its state (e.g. <CODE>selectedPeriod</CODE>) but their props remain unchanged.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.16",
     content: (
       <section id="version-2.6.16">
