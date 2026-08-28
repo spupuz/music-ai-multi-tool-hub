@@ -61,4 +61,7 @@ const SongDurationPerformanceTable: React.FC<SongDurationPerformanceTableProps> 
   );
 };
 
-export default SongDurationPerformanceTable;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders
+// when the parent StatChartsArea updates its state (e.g. selectedPeriod)
+// but this component's props remain unchanged.
+export default React.memo(SongDurationPerformanceTable);

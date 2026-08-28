@@ -13,3 +13,7 @@
 ## 2023-11-20 - [Optimized array deduplication in StatChartsArea]
 **Learning:** Combining arrays and deduplicating them inline using `.filter` with `findIndex` on every render causes an O(n^2) performance bottleneck, especially for lists of objects. Additionally, generating a new array reference on each render can bypass React.memo optimizations in child components.
 **Action:** Always memoize expensive combinations/deduplications of arrays with `useMemo`. When deduplicating arrays of objects by an ID, use an O(n) approach like iterating and setting into a `Map` (keyed by ID), then extracting the values using `Array.from(map.values())`, rather than O(n^2) `Array.prototype.filter` with `Array.prototype.findIndex`.
+
+## 2024-05-19 - [Data-Heavy Performance Tables React.memo Optimization]
+**Learning:** Found a case where several unmemoized data-heavy performance tables (e.g., `TagGenrePerformanceTables`, `TagPairPerformanceTable`, `CohortPerformanceTable`) in `StatChartsArea` were re-rendering and unnecessarily re-sorting their arrays every time the parent component's state (such as `selectedPeriod`) updated.
+**Action:** Wrapped these heavy UI components in `React.memo()` to prevent redundant re-renders and costly re-sorts when their parent state changes but their own props remain stable.

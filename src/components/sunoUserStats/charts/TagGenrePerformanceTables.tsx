@@ -161,4 +161,7 @@ const TagGenrePerformanceTables: React.FC<TagGenrePerformanceTablesProps> = ({ t
   );
 };
 
-export default TagGenrePerformanceTables;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders and re-sorts
+// when the parent StatChartsArea updates its state (e.g. selectedPeriod)
+// but this component's props remain unchanged.
+export default React.memo(TagGenrePerformanceTables);

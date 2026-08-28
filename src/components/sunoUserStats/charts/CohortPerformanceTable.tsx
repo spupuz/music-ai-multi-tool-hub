@@ -64,4 +64,7 @@ const CohortPerformanceTable: React.FC<CohortPerformanceTableProps> = ({ cohortD
   );
 };
 
-export default CohortPerformanceTable;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders
+// when the parent StatChartsArea updates its state (e.g. selectedPeriod)
+// but this component's props remain unchanged.
+export default React.memo(CohortPerformanceTable);

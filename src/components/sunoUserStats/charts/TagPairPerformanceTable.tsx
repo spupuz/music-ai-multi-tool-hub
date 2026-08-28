@@ -114,4 +114,7 @@ const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPa
   );
 };
 
-export default TagPairPerformanceTable;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders and re-sorts
+// when the parent StatChartsArea updates its state (e.g. selectedPeriod)
+// but this component's props remain unchanged.
+export default React.memo(TagPairPerformanceTable);
