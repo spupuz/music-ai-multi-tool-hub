@@ -34,8 +34,24 @@ const GenreVotesChart: React.FC<GenreVotesChartProps> = ({
 
   const processedData = useMemo(() => [...data].filter(d => d.totalUpvotes > 0).sort((a, b) => b.totalUpvotes - a.totalUpvotes).slice(0, topN), [data, topN]);
 
+  // ⚡ Bolt: Memoize chart data transformations to prevent O(n) re-calculations on every render
+  const chartConfig = useMemo(() => {
+    if (!processedData || processedData.length === 0) return null;
+
+    const labels = processedData.map(d => d.name);
+    const counts = processedData.map(d => d.totalUpvotes);
+    const maxCount = Math.max(...counts, 0);
+    const suggestedMax = maxCount + Math.ceil(maxCount * 0.05);
+
+    const bgColors = generateColorShades(barColorStart, barColorEnd, processedData.length);
+    const borderColors = bgColors.map(c => c.replace(')', ', 0.7)').replace('rgb', 'rgba'));
+
+    return { labels, counts, suggestedMax, bgColors, borderColors };
+  }, [processedData, barColorStart, barColorEnd]);
+
+
   useEffect(() => {
-    if (chartRef.current && processedData.length > 0) {
+    if (chartRef.current && processedData.length > 0 && chartConfig) {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
       }
@@ -75,7 +91,7 @@ const GenreVotesChart: React.FC<GenreVotesChartProps> = ({
                 return Number(value).toLocaleString();
             }
         };
-        chartOptions.scales.y.suggestedMax = Math.max(...processedData.map(d => d.totalUpvotes)) + Math.ceil(Math.max(...processedData.map(d => d.totalUpvotes))*0.05);
+        chartOptions.scales.y.suggestedMax = chartConfig.suggestedMax;
 
         chartOptions.plugins.tooltip.callbacks = {
           title: function(tooltipItems: any) { 
@@ -120,12 +136,12 @@ const GenreVotesChart: React.FC<GenreVotesChartProps> = ({
         chartInstanceRef.current = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: processedData.map(d => d.name), 
+            labels: chartConfig.labels,
             datasets: [{
               label: 'Total Upvotes on Genre',
-              data: processedData.map(d => d.totalUpvotes),
-              backgroundColor: generateColorShades(barColorStart, barColorEnd, processedData.length),
-              borderColor: generateColorShades(barColorStart, barColorEnd, processedData.length).map(c => c.replace(')', ', 0.7)').replace('rgb', 'rgba')),
+              data: chartConfig.counts,
+              backgroundColor: chartConfig.bgColors,
+              borderColor: chartConfig.borderColors,
               borderWidth: 1,
               ...datasetOptions
             }]
@@ -143,7 +159,7 @@ const GenreVotesChart: React.FC<GenreVotesChartProps> = ({
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, barColorStart, barColorEnd, fontColor, gridColor, topN, onSetFilter, screenWidth]);
+  }, [processedData, chartConfig, fontColor, gridColor, topN, onSetFilter, screenWidth]);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No genre vote data available.</p>;

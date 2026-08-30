@@ -17,3 +17,7 @@
 ## 2024-05-19 - [Data-Heavy Performance Tables React.memo Optimization]
 **Learning:** Found a case where several unmemoized data-heavy performance tables (e.g., `TagGenrePerformanceTables`, `TagPairPerformanceTable`, `CohortPerformanceTable`) in `StatChartsArea` were re-rendering and unnecessarily re-sorting their arrays every time the parent component's state (such as `selectedPeriod`) updated.
 **Action:** Wrapped these heavy UI components in `React.memo()` to prevent redundant re-renders and costly re-sorts when their parent state changes but their own props remain stable.
+
+## 2024-06-25 - [Chart Array Mapping Re-Calculation Optimization]
+**Learning:** Certain components utilizing `Chart.js` (such as `GenreUsageChart`, `TagUsageChart`, `GenreVotesChart`, and `TagVotesChart`) computed label arrays and generated color shades inside the main component body, causing costly re-calculations (O(n) mappings) whenever state changes unrelated to data occurred (e.g. `screenWidth` updates from window resizes).
+**Action:** Extract expensive chart data transformations (such as `Array.map` for chart labels, datasets, and color generating functions) into a `useMemo` block that only recalculates when the source data (`processedData`) or theme settings change, rather than running redundantly on every render.
