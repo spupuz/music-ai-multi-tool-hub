@@ -14,8 +14,12 @@
 **Vulnerability:** The `/verify-password` endpoint in the Gemini worker used the standard equality operator (`===`) for verifying the committee password. This basic comparison leaks information about the password length and character correctness because it short-circuits upon encountering the first mismatched character.
 **Learning:** Basic string equality operations are susceptible to timing attacks over the network since different inputs will take measurably different times to evaluate.
 **Prevention:** Always use a constant-time comparison algorithm (such as a bitwise XOR loop comparing every character regardless of match) when validating sensitive strings like passwords or cryptographic secrets.
-
 ## 2026-08-30 - [Weak Randomness for Line IDs in LyricsSynchronizerTool]
 **Vulnerability:** Weak random number generation using Math.random() to create line IDs in `src/tools/LyricsSynchronizerTool.tsx`.
 **Learning:** Using Math.random() for generating IDs can lead to collisions and predictability, violating codebase security conventions which mandate crypto.randomUUID() for robust uniqueness.
 **Prevention:** Always use crypto.randomUUID() when generating unique identifiers.
+
+## 2024-08-29 - [Weak Randomness in ID Generation]
+**Vulnerability:** The codebase had remnants of using `Math.random().toString(16)` coupled with `Date.now()` to generate unique identifiers (e.g., in `LyricsSynchronizerTool.tsx`).
+**Learning:** `Math.random()` does not provide cryptographically secure pseudorandomness and its use for identifier generation can lead to collisions or predictability. This was addressed in previous components but missed in others, showing the need for comprehensive search when fixing patterns.
+**Prevention:** Use `crypto.randomUUID()` for all newly generated identifiers across the codebase to ensure robust, collision-resistant uniqueness without relying on weak pseudorandom number generators.
