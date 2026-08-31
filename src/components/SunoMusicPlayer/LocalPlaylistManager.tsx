@@ -85,7 +85,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
             <div className="pt-2 border-t-2 border-gray-300 dark:border-green-700/30">
               <h4 className="text-sm font-bold text-green-700 dark:text-green-600 mb-2 uppercase tracking-widest">Local Named Playlists</h4>
               <div className="flex flex-col sm:flex-row gap-2 mb-3">
-                <input type="text" value={newPlaylistName} onChange={(e) => setNewPlaylistName(e.target.value)} placeholder="Enter playlist name..." className="flex-grow px-3 py-2 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-green-600 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 text-gray-900 dark:text-white font-bold" />
+                <input type="text" value={newPlaylistName} onChange={(e) => setNewPlaylistName(e.target.value)} placeholder="Enter playlist name..." className="flex-grow px-3 py-2 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-green-600 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 text-gray-900 dark:text-white font-bold" aria-label="New Playlist Name" />
                 <button onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} disabled={!newPlaylistName.trim()} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md border-2 border-green-700/30 flex items-center justify-center disabled:opacity-50 transition-colors uppercase tracking-widest"><SaveIcon />&nbsp;Save New</button>
               </div>
               {savedCustomPlaylists.length > 0 && (
@@ -188,6 +188,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
                 onChange={(e) => setNewPlaylistName(e.target.value)} 
                 placeholder="New Playlist Name..." 
                 className="flex-grow px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" 
+                aria-label="New Playlist Name"
               />
               <Button 
                 onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} 
