@@ -110,7 +110,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         const existingLineAtIndex = prevParsedLines[index];
         let finalTimestamp = null;
-        let lineId = `line-${index}-${textFromRange.substring(0, 10)}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        let lineId = `line-${index}-${textFromRange.substring(0, 10)}-${Date.now()}-${crypto.randomUUID()}`;
 
         if (timestampFromRange !== null) {
           finalTimestamp = timestampFromRange;
