@@ -9,6 +9,17 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.18] - 2026-08-31
+
+### Security
+- **Fixed weak random ID generation in `LyricsSynchronizerTool`**: lyric line IDs are now generated with `crypto.randomUUID()` instead of `Math.random().toString(16)` combined with `Date.now()`, eliminating predictable/collision-prone identifiers for parsed lyric lines.
+
+### Changed
+- **Memoized chart data transformations in stat charts**: `GenreUsageChart`, `GenreVotesChart`, `TagUsageChart`, and `TagVotesChart` now compute labels, counts, `suggestedMax`, and color shades inside a `useMemo` block keyed on data/theme, preventing costly O(n) re-calculations on every render (e.g. on `screenWidth` changes from window resizes).
+
+### Accessibility
+- **Added `aria-label` to new-playlist input fields**: the two new-playlist name inputs in the Local Playlist manager (`LocalPlaylistManager.tsx`) now expose descriptive `aria-label`s for screen readers.
+
 ## [2.6.17] - 2026-08-28
 
 ### Security

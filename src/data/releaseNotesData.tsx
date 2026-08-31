@@ -8,6 +8,26 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.18",
+    content: (
+      <section id="version-2.6.18">
+        <SectionTitle>Version 2.6.18 - 2026-08-31</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed weak random ID generation in <CODE>LyricsSynchronizerTool</CODE></STRONG>: lyric line IDs are now generated with <CODE>crypto.randomUUID()</CODE> instead of <CODE>Math.random().toString(16)</CODE> combined with <CODE>Date.now()</CODE>, eliminating predictable/collision-prone identifiers for parsed lyric lines.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Memoized chart data transformations in stat charts</STRONG>: <CODE>GenreUsageChart</CODE>, <CODE>GenreVotesChart</CODE>, <CODE>TagUsageChart</CODE>, and <CODE>TagVotesChart</CODE> now compute labels, counts, <CODE>suggestedMax</CODE>, and color shades inside a <CODE>useMemo</CODE> block keyed on data/theme, preventing costly O(n) re-calculations on every render (e.g. on <CODE>screenWidth</CODE> changes from window resizes).</LI>
+        </UL>
+        <SubSectionTitle>Accessibility</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Added <CODE>aria-label</CODE> to new-playlist input fields</STRONG>: the two new-playlist name inputs in the Local Playlist manager (<CODE>LocalPlaylistManager.tsx</CODE>) now expose descriptive <CODE>aria-label</CODE>s for screen readers.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.17",
     content: (
       <section id="version-2.6.17">
