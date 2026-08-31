@@ -53,12 +53,12 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
   if (uiMode === 'classic') {
     return (
       <div className="mb-6">
-        <button onClick={() => setShowPlaylistManagement(!showPlaylistManagement)} className="w-full text-left text-md font-bold text-green-600 dark:text-green-600 hover:text-green-500 py-2 px-2 mb-2 flex justify-between items-center uppercase tracking-widest border-b-2 border-gray-100 dark:border-green-600/30" aria-expanded={showPlaylistManagement}>
+        <button onClick={() => setShowPlaylistManagement(!showPlaylistManagement)} className="w-full text-left text-md font-bold text-green-600 dark:text-green-600 hover:text-green-500 py-2 px-2 mb-2 flex justify-between items-center uppercase tracking-widest border-b-2 border-gray-100 dark:border-green-600/30" aria-expanded={showPlaylistManagement} aria-controls="playlist-management-panel">
           Playlist Import/Export & Local Saves
           <ChevronDownIcon className={`w-4 h-4 transform transition-transform ${showPlaylistManagement ? 'rotate-180' : ''}`} />
         </button>
         {showPlaylistManagement && (
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-green-600/30 space-y-4 text-xs shadow-inner">
+          <div id="playlist-management-panel" className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-green-600/30 space-y-4 text-xs shadow-inner">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               <button onClick={handleExportCurrentPlaylistToFile} className="py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-md border-2 border-blue-700/30 flex items-center justify-center transition-colors uppercase tracking-widest"><FileTxtIcon />&nbsp;Export to TXT</button>
               <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
@@ -142,12 +142,13 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
         size="lg"
         className="w-full text-left text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 py-6 px-10 glass-card border-white/10 mb-2 flex justify-between items-center group transition-all" 
         aria-expanded={showPlaylistManagement}
+        aria-controls="playlist-management-panel"
       >
         <span>Library & Export <span className="opacity-40 italic ml-2">Archives</span></span>
         <ChevronDownIcon className={`w-5 h-5 transform transition-transform duration-500 ${showPlaylistManagement ? 'rotate-180' : ''}`} />
       </Button>
       {showPlaylistManagement && (
-        <div className="p-6 glass-card border-white/10 space-y-6 animate-fadeIn">
+        <div id="playlist-management-panel" className="p-6 glass-card border-white/10 space-y-6 animate-fadeIn">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <Button 
               onClick={handleExportCurrentPlaylistToFile} 
