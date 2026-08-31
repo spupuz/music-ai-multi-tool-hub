@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.19",
+    content: (
+      <section id="version-2.6.19">
+        <SectionTitle>Version 2.6.19 - 2026-08-31</SectionTitle>
+        <SubSectionTitle>Accessibility</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Added <CODE>aria-controls</CODE> to local playlist manager toggle</STRONG>: the playlist Import/Export & Local Saves expandable button in <CODE>LocalPlaylistManager.tsx</CODE> now references its collapsible panel via <CODE>aria-controls</CODE> (alongside the existing <CODE>aria-expanded</CODE>), and the panel itself carries a matching <CODE>id="playlist-management-panel"</CODE> so screen readers can announce the relationship between the button and the panel it controls.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.18",
     content: (
       <section id="version-2.6.18">

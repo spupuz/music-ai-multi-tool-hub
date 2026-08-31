@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.19] - 2026-08-31
+
+### Accessibility
+- **Added `aria-controls` to local playlist manager toggle**: the playlist Import/Export & Local Saves expandable button in `LocalPlaylistManager.tsx` now references its collapsible panel via `aria-controls` (alongside the existing `aria-expanded`), and the panel itself carries a matching `id="playlist-management-panel"` so screen readers can announce the relationship between the button and the panel it controls.
+
 ## [2.6.18] - 2026-08-31
 
 ### Security
