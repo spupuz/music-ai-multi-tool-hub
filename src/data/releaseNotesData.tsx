@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.20",
+    content: (
+      <section id="version-2.6.20">
+        <SectionTitle>Version 2.6.20 - 2026-09-01</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed weak random ID generation in <CODE>LyricsSynchronizerTool</CODE></STRONG>: replaced remaining <CODE>Date.now()</CODE>-based lyric line ID generation with <CODE>crypto.randomUUID()</CODE> across parsed lyric lines, empty line placeholders, and LRC file imports to ensure robust, collision-resistant uniqueness.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.19",
     content: (
       <section id="version-2.6.19">

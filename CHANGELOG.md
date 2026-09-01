@@ -9,6 +9,11 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.20] - 2026-09-01
+
+### Security
+- **Fixed weak random ID generation in `LyricsSynchronizerTool`**: replaced remaining `Date.now()`-based lyric line ID generation with `crypto.randomUUID()` across parsed lyric lines, empty line placeholders, and LRC file imports to ensure robust, collision-resistant uniqueness.
+
 ## [2.6.19] - 2026-08-31
 
 ### Accessibility
