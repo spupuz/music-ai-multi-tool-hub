@@ -23,3 +23,7 @@
 **Vulnerability:** The codebase had remnants of using `Math.random().toString(16)` coupled with `Date.now()` to generate unique identifiers (e.g., in `LyricsSynchronizerTool.tsx`).
 **Learning:** `Math.random()` does not provide cryptographically secure pseudorandomness and its use for identifier generation can lead to collisions or predictability. This was addressed in previous components but missed in others, showing the need for comprehensive search when fixing patterns.
 **Prevention:** Use `crypto.randomUUID()` for all newly generated identifiers across the codebase to ensure robust, collision-resistant uniqueness without relying on weak pseudorandom number generators.
+## 2024-09-02 - [Weak Randomness in ID Generation]
+**Vulnerability:** Weak random number generation using `Date.now()` combined with template strings to create line IDs in `src/tools/LyricsSynchronizerTool.tsx`.
+**Learning:** Using `Date.now()` for generating IDs can lead to collisions and predictability, especially in fast loops. This violates codebase security conventions which mandate `crypto.randomUUID()` for robust uniqueness. The codebase had remnants of this pattern which I have fixed in this iteration.
+**Prevention:** Always use `crypto.randomUUID()` when generating unique identifiers to ensure robust, collision-resistant uniqueness without relying on weak pseudorandom number generators or predictable timestamps.
