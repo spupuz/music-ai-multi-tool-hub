@@ -62,7 +62,18 @@ const ImportExportModal: React.FC<ImportExportModalProps> = ({ show, onClose, on
                     <section>
                         <h4 className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-4 opacity-60">External Source</h4>
                         <input type="file" ref={importFileRef} accept=".txt,.csv" onChange={onFileImport} className="hidden" id="import-arrangement-file"/>
-                        <label htmlFor="import-arrangement-file" className="w-full h-[42px] bg-white/5 border border-dashed border-white/10 rounded-xl flex items-center justify-center gap-3 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all">
+                        <label
+                          htmlFor="import-arrangement-file"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              importFileRef.current?.click();
+                            }
+                          }}
+                          className="w-full h-[42px] bg-white/5 border border-dashed border-white/10 rounded-xl flex items-center justify-center gap-3 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
                           <ImportIcon className="w-3 h-3 text-gray-400" />
                           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Upload Data Stream</span>
                         </label>

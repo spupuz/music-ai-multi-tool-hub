@@ -7,3 +7,6 @@
 ## 2026-08-26 - [Add ARIA labels to icon-only buttons]
 **Learning:** Icon-only buttons lacking `aria-label` attributes are inaccessible to screen reader users, who rely on explicit textual descriptions to understand the button's action.
 **Action:** Always include a descriptive `aria-label` on buttons where the visual label is strictly icon-based, particularly within list items where context (e.g. playlist name) can be dynamically interpolated to provide a rich description.
+## 2026-08-26 - [Keyboard Accessible Drag-and-Drop Zones]
+**Learning:** Similar to hidden `<input>`s, `<div>`-based drag-and-drop file upload zones are inaccessible by keyboard if they rely solely on `onClick` or `onDrop` handlers.
+**Action:** Always add `tabIndex={0}`, `role="button"`, and `onKeyDown` handlers (for Enter/Space) to custom drag-and-drop zones, ensuring keyboard users can focus and activate them just like mouse users.
