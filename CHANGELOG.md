@@ -9,6 +9,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.21] - 2026-09-02
+
+### Accessibility
+- **Made drag-and-drop file upload zones keyboard accessible**: `ImageUpload.tsx` and the Song Structure Builder import zone (`ImportExportModal.tsx`) now expose `role="button"`, `tabIndex={0}`, `onKeyDown` handlers (Enter/Space) that trigger the file picker, and visible focus rings — so keyboard and screen-reader users can activate uploads.
+- **Added explanatory titles to disabled buttons in Suno Music Player**: buttons like "Save New" playlist, "Clear Queue", and "Copy Lyrics" now show a `title` explaining why they're disabled (e.g. "Please enter a name for the new playlist"), so users understand what's preventing the action.
+
 ## [2.6.20] - 2026-09-01
 
 ### Security

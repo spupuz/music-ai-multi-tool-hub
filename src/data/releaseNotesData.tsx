@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.21",
+    content: (
+      <section id="version-2.6.21">
+        <SectionTitle>Version 2.6.21 - 2026-09-02</SectionTitle>
+        <SubSectionTitle>Accessibility</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Made drag-and-drop file upload zones keyboard accessible</STRONG>: <CODE>ImageUpload.tsx</CODE> and the Song Structure Builder import zone (<CODE>ImportExportModal.tsx</CODE>) now expose <CODE>role="button"</CODE>, <CODE>tabIndex={0}</CODE>, <CODE>onKeyDown</CODE> handlers (Enter/Space) that trigger the file picker, and visible focus rings — so keyboard and screen-reader users can activate uploads.</LI>
+          <LI><STRONG>Added explanatory titles to disabled buttons in Suno Music Player</STRONG>: buttons like "Save New" playlist, "Clear Queue", and "Copy Lyrics" now show a <CODE>title</CODE> explaining why they're disabled (e.g. "Please enter a name for the new playlist"), so users understand what's preventing the action.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.20",
     content: (
       <section id="version-2.6.20">
