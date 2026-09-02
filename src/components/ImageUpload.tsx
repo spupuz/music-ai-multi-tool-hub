@@ -148,7 +148,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
     <div className="w-full">
       <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${uiMode === 'architect' ? 'text-gray-500' : 'text-green-400'}`}>{label}</label>
       <div
-        className={`group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl cursor-pointer transition-all shadow-inner
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleUploadClick();
+          }
+        }}
+        className={`group mt-1 flex flex-col justify-center items-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl cursor-pointer transition-all shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-500
           ${uiMode === 'architect' 
             ? 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-emerald-500/20' 
             : 'border-green-500 bg-slate-100 dark:bg-gray-800 hover:border-green-400 hover:bg-slate-200 dark:hover:bg-gray-700'}`}
