@@ -86,7 +86,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
               <h4 className="text-sm font-bold text-green-700 dark:text-green-600 mb-2 uppercase tracking-widest">Local Named Playlists</h4>
               <div className="flex flex-col sm:flex-row gap-2 mb-3">
                 <input type="text" value={newPlaylistName} onChange={(e) => setNewPlaylistName(e.target.value)} placeholder="Enter playlist name..." className="flex-grow px-3 py-2 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-green-600 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 text-gray-900 dark:text-white font-bold" aria-label="New Playlist Name" />
-                <button onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} disabled={!newPlaylistName.trim()} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md border-2 border-green-700/30 flex items-center justify-center disabled:opacity-50 transition-colors uppercase tracking-widest"><SaveIcon />&nbsp;Save New</button>
+                <button onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} disabled={!newPlaylistName.trim()} title={!newPlaylistName.trim() ? "Please enter a name for the new playlist" : undefined} className="py-2 px-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-md border-2 border-green-700/30 flex items-center justify-center disabled:opacity-50 transition-colors uppercase tracking-widest"><SaveIcon />&nbsp;Save New</button>
               </div>
               {savedCustomPlaylists.length > 0 && (
                 <div className="max-h-32 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-700 space-y-1.5">
@@ -123,6 +123,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
               <button
                 onClick={handleClearQueue}
                 disabled={isFetchingOrLoading || queueLength === 0}
+                title={(isFetchingOrLoading || queueLength === 0) ? "Cannot clear queue while empty or loading" : undefined}
                 className="w-full py-2 px-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-md border-2 border-red-700/30 text-xs uppercase tracking-widest disabled:opacity-50 transition-colors"
               >
                 {getClearQueueButtonText()}
@@ -194,6 +195,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
               <Button 
                 onClick={() => { handleSaveCurrentPlaylistLocally(newPlaylistName); setNewPlaylistName(''); }} 
                 disabled={!newPlaylistName.trim()} 
+                title={!newPlaylistName.trim() ? "Please enter a name for the new playlist" : undefined}
                 variant="primary"
                 className="font-black uppercase tracking-widest px-6"
                 backgroundColor="#10b981"
@@ -244,6 +246,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
             <Button
               onClick={handleClearQueue}
               disabled={isFetchingOrLoading || queueLength === 0}
+              title={(isFetchingOrLoading || queueLength === 0) ? "Cannot clear queue while empty or loading" : undefined}
               variant="ghost"
               className="w-full border-red-600 text-red-600 dark:text-red-500 hover:bg-red-600 hover:text-white font-black uppercase tracking-widest text-xs py-3"
             >
