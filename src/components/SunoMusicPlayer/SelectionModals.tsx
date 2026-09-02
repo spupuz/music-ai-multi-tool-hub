@@ -29,7 +29,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
           </div>
           {lyricsSourceField && <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-widest">Metadata Source: <code className="bg-gray-100 dark:bg-gray-700 font-mono px-1 rounded">{lyricsSourceField}</code></p>}
           <pre className="text-sm font-bold text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-y-auto flex-grow p-4 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-green-600/20 rounded-lg scrollbar-thin leading-relaxed shadow-inner">{lyricsToDisplay}</pre>
-          <button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} className="mt-6 py-2.5 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-md border-2 border-blue-700/30 transition-colors uppercase tracking-widest disabled:opacity-50">{copyLyricsStatus || "Copy Lyrics"}</button>
+          <button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} title={(!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song.") ? "Cannot copy lyrics: Lyrics not available" : undefined} className="mt-6 py-2.5 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-md border-2 border-blue-700/30 transition-colors uppercase tracking-widest disabled:opacity-50">{copyLyricsStatus || "Copy Lyrics"}</button>
         </div>
       </div>
     );
@@ -55,7 +55,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
 
         <div className="flex items-center justify-between pt-6 border-t border-white/10">
            {lyricsSourceField && <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">Source: <span className="text-emerald-600/50">{lyricsSourceField}</span></p>}
-           <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
+           <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} title={(!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song.") ? "Cannot copy lyrics: Lyrics not available" : undefined} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
              {copyLyricsStatus || "Copy Lyrics"}
            </Button>
         </div>

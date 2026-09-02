@@ -10,3 +10,6 @@
 ## 2026-08-26 - [Keyboard Accessible Drag-and-Drop Zones]
 **Learning:** Similar to hidden `<input>`s, `<div>`-based drag-and-drop file upload zones are inaccessible by keyboard if they rely solely on `onClick` or `onDrop` handlers.
 **Action:** Always add `tabIndex={0}`, `role="button"`, and `onKeyDown` handlers (for Enter/Space) to custom drag-and-drop zones, ensuring keyboard users can focus and activate them just like mouse users.
+## 2024-09-02 - [Explanatory titles for disabled buttons]
+**Learning:** Disabled buttons without an explanation for their disabled state can leave users confused about how to enable them or what is preventing the action.
+**Action:** When a button is conditionally disabled, provide a `title` attribute explaining the reason, such as "Please enter a name for the new playlist" when saving is disabled due to an empty input.
