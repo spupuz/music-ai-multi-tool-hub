@@ -27,3 +27,7 @@
 **Vulnerability:** Weak random number generation using `Date.now()` combined with template strings to create line IDs in `src/tools/LyricsSynchronizerTool.tsx`.
 **Learning:** Using `Date.now()` for generating IDs can lead to collisions and predictability, especially in fast loops. This violates codebase security conventions which mandate `crypto.randomUUID()` for robust uniqueness. The codebase had remnants of this pattern which I have fixed in this iteration.
 **Prevention:** Always use `crypto.randomUUID()` when generating unique identifiers to ensure robust, collision-resistant uniqueness without relying on weak pseudorandom number generators or predictable timestamps.
+## 2026-09-03 - [HIGH] Add rate limiting to login endpoint
+**Vulnerability:** The `/verify-password` endpoint used for committee authentication lacked rate limiting, making it vulnerable to brute force attacks.
+**Learning:** Authentication endpoints, even simple password verifications without usernames, must have strict rate limits to prevent brute force discovery of the shared secret.
+**Prevention:** Use a distributed KV store (e.g., Cloudflare Workers KV) keyed by client IP to track failed authentication attempts and temporarily block subsequent requests after a threshold is reached.
