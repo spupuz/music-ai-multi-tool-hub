@@ -70,8 +70,11 @@ export const useMP3CutterLogic = ({ trackLocalEvent }: Pick<ToolProps, 'trackLoc
   const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && wavesurferInstanceRef.current) {
-      setError(null); setIsLoading(true); setWaveformReady(false); setUrlLoadingProgress(''); setSunoUrlInput('');
-      setFileName(file.name); setSunoCoverArtUrl(null); setSunoArtistName(null);
+      setError(null); setIsLoading(true); setWaveformReady(false); setUrlLoadingProgress('');
+      // Keep metadata already fetched from a Suno/Riffusion URL; only the URL
+      // input is cleared since the uploaded file becomes the active source.
+      setSunoUrlInput('');
+      setFileName(file.name);
       wavesurferInstanceRef.current.load(URL.createObjectURL(file));
       trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'fileUploaded', file.type, file.size);
     }
@@ -129,14 +132,29 @@ export const useMP3CutterLogic = ({ trackLocalEvent }: Pick<ToolProps, 'trackLoc
         setUrlLoadingProgress('');
         trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'riffusionUrlLoadError', errorMsg);
       }
-} else { // Suno URL — TOS: never auto-load CDN audio, require manual MP3 upload
+} else { // Suno URL — TOS: never auto-load CDN audio; fetch metadata only, require manual MP3 upload.
       setError(null);
-      setUrlLoadingProgress('Suno URLs require manual MP3 upload (TOS compliance).');
-      setIsLoading(false);
-      setError(`Suno songs can't be auto-loaded for editing (TOS compliance). Please download "${sunoUrlInput.trim()}" via Suno's official download button, then upload the MP3 file below.`);
-      trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlRequiresUpload', sunoUrlInput.trim());
-      // Do NOT attempt to fetch or load Suno CDN audio — user must upload MP3 manually
-      return;
+      setUrlLoadingProgress('Resolving Suno song...');
+      try {
+        const songId = await resolveSunoUrlToPotentialSongId(sunoUrlInput, setUrlLoadingProgress);
+        if (!songId) throw new Error("Could not resolve the Suno URL to a song ID.");
+        setUrlLoadingProgress(`Fetching metadata for song ${songId.substring(0, 8)}...`);
+        const clip = await fetchSunoClipById(songId);
+        if (!clip) throw new Error("Could not fetch Suno song details.");
+        setFileName(clip.title || 'Suno song');
+        setSunoArtistName(clip.display_name || clip.handle || 'Unknown Artist');
+        setSunoCoverArtUrl(clip.image_url || null);
+        setUrlLoadingProgress('');
+        setError(`Suno metadata loaded: "${clip.title || 'this song'}". Audio can't be auto-loaded for editing (TOS compliance) — download the MP3 via Suno's official button, then upload it below.`);
+        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlMetadataLoaded', clip.title || songId);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Could not load Suno song metadata.";
+        setError(errorMsg);
+        setUrlLoadingProgress('');
+        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlLoadError', errorMsg);
+      } finally {
+        setIsLoading(false);
+      }
     }
   }, [sunoUrlInput, trackLocalEvent]);
 

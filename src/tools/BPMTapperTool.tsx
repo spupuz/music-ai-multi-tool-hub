@@ -171,7 +171,13 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       const reader = new FileReader();
       reader.onload = async (e) => {
         if (e.target?.result) {
-          await analyzeAudio(e.target.result as ArrayBuffer, file.name);
+          // Preserve metadata already fetched from a URL; only the audio source
+          // is replaced by the uploaded file (filename is the fallback title).
+          await analyzeAudio(e.target.result as ArrayBuffer, file.name, {
+            title: songTitle || file.name.replace(/\.[^/.]+$/, ""),
+            artist: artistName || 'Unknown Artist',
+            cover: coverArtUrl,
+          });
         }
       };
       reader.onerror = () => {

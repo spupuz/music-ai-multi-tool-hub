@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.26",
+    content: (
+      <section id="version-2.6.26">
+        <SectionTitle>Version 2.6.26 - 2026-09-03</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>File uploads no longer erase metadata</STRONG> in the analysis tools (Lyrics Synchronizer, MP3 Cutter, BPM Tapper): uploading an MP3 now keeps the title/artist/cover already fetched from a Suno/Riffusion URL or typed by the user (the filename is only used as a title fallback). MP3 Cutter additionally now resolves Suno URLs and fills in the song metadata, matching the other tools, while still requiring a manual MP3 upload for the audio (TOS compliance).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.25",
     content: (
       <section id="version-2.6.25">

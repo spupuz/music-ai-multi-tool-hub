@@ -174,8 +174,11 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const handleAudioFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setAudioSrc(URL.createObjectURL(file)); setAudioFileName(file.name); setSongTitle(file.name.replace(/\.[^/.]+$/, ""));
-      setArtistName(''); setSunoUrlInput(''); setSunoCoverArtUrl(null);
+      setAudioSrc(URL.createObjectURL(file));
+      setAudioFileName(file.name);
+      // Keep metadata already fetched from a Suno/Riffusion URL or typed by the
+      // user; only fall back to the filename when no title is set yet.
+      setSongTitle(prev => prev.trim() ? prev : file.name.replace(/\.[^/.]+$/, ""));
       setError(null); trackLocalEvent(TOOL_CATEGORY, 'audioFileUploaded', file.name);
     }
   };
