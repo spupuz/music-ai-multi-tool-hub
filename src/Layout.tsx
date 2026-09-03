@@ -304,21 +304,26 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
-    try {
-      const lastPing = safeGetItem(LAST_DAILY_LOCAL_PING_KEY);
-      if (lastPing !== today) {
-        const visitsLog: string[] = JSON.parse(safeGetItem(LOCAL_VISITS_LOG_KEY) || '[]');
-        if (!visitsLog.includes(today)) {
-          visitsLog.push(today);
-          if (visitsLog.length > 90) { 
-            visitsLog.splice(0, visitsLog.length - 90);
-          }
-          safeSetItem(LOCAL_VISITS_LOG_KEY, JSON.stringify(visitsLog));
-        }
-        safeSetItem(LAST_DAILY_LOCAL_PING_KEY, today);
+    let visitsLog: string[] = [];
+    const storedLog = safeGetItem(LOCAL_VISITS_LOG_KEY);
+    if (storedLog) {
+      try {
+        const parsed = JSON.parse(storedLog);
+        if (Array.isArray(parsed)) visitsLog = parsed;
+      } catch {
+        visitsLog = [];
       }
-    } catch (error) {
-      console.error("Error in local daily active ping logic:", error);
+    }
+    const lastPing = safeGetItem(LAST_DAILY_LOCAL_PING_KEY);
+    if (lastPing !== today) {
+      if (!visitsLog.includes(today)) {
+        visitsLog.push(today);
+        if (visitsLog.length > 90) {
+          visitsLog.splice(0, visitsLog.length - 90);
+        }
+      }
+      safeSetItem(LOCAL_VISITS_LOG_KEY, JSON.stringify(visitsLog));
+      safeSetItem(LAST_DAILY_LOCAL_PING_KEY, today);
     }
   }, []);
 

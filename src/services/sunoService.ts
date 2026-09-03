@@ -41,6 +41,22 @@ export const isAudioUrlBroken = (url: string): boolean => {
   return FORBIDDEN_AUDIO_PATTERNS.some(p => lower.includes(p)) || !lower.startsWith('http');
 };
 
+const isForbiddenMediaUrl = (url: string | null | undefined): boolean => {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  return FORBIDDEN_AUDIO_PATTERNS.some(p => lower.includes(p));
+};
+
+// Strip Suno's "forbidden" placeholder media URLs out of clips so they never leak
+// into localStorage caches or get loaded by accident (TOS: never stream Suno CDN
+// media into our own players). This also shrinks the cached payloads.
+const sanitizeSunoClipMedia = <T extends { audio_url?: string; video_url?: string }>(clip: T): T => {
+  const next = { ...clip };
+  if (isForbiddenMediaUrl(next.audio_url)) next.audio_url = '';
+  if (isForbiddenMediaUrl(next.video_url)) next.video_url = '';
+  return next;
+};
+
 export const getSunoEmbedUrl = (clipId: string): string => {
   return `https://suno.com/embed/${clipId}`;
 };
@@ -245,12 +261,14 @@ export const fetchSunoSongsByUsername = async (
       
       if (onProgress) onProgress(`Fetched page ${currentPage}${totalPagesEstimate ? ` of ~${totalPagesEstimate}` : ''}... (${fetchedClips.length} new valid clips)`, currentPage, totalPagesEstimate);
 
-      const enrichedClips = fetchedClips.map(clip => ({
-        ...clip,
-        suno_song_url: `https://suno.com/song/${clip.id}`,
-        suno_creator_url: `https://suno.com/@${clip.handle || username}`,
-        image_url: clip.image_large_url || clip.image_url || (clip.image_urls ? clip.image_urls.image_url : null),
-      }));
+      const enrichedClips = fetchedClips.map(clip =>
+        sanitizeSunoClipMedia({
+          ...clip,
+          suno_song_url: `https://suno.com/song/${clip.id}`,
+          suno_creator_url: `https://suno.com/@${clip.handle || username}`,
+          image_url: clip.image_large_url || clip.image_url || (clip.image_urls ? clip.image_urls.image_url : null),
+        }),
+      );
 
       allClips = allClips.concat(enrichedClips);
       
@@ -311,12 +329,12 @@ export const fetchSunoClipById = async (clipId: string, forceRefresh = false): P
         return null;
     }
 
-    const enrichedClip = {
+    const enrichedClip = sanitizeSunoClipMedia({
         ...clipData,
         suno_song_url: `https://suno.com/song/${clipData.id}`,
         suno_creator_url: `https://suno.com/@${clipData.handle}`,
-        image_url: clipData.image_large_url || clipData.image_url || (clipData.image_urls ? clipData.image_urls.image_url : null),
-    };
+        image_url: clipData.image_large_url || clipData.image_url || (clipData.image_urls ? clipData.image_urls.image_url : null) || null,
+    });
     cacheSet(CACHE_NAMESPACE_SONG, clipId, enrichedClip);
     return enrichedClip;
 
@@ -449,12 +467,14 @@ export const fetchSunoPlaylistById = async (
     if (onProgress) onProgress(`Fetched page ${Number(currentPageNum) + 1}${totalPagesEstimate ? ` of ~${totalPagesEstimate}` : ''}... (${fetchedClipsFromPage.length} new clips)`, Number(currentPageNum), totalPagesEstimate);
 
     if (fetchedClipsFromPage.length > 0) {
-      const enrichedClips = fetchedClipsFromPage.map(clip => ({
-        ...clip,
-        suno_song_url: `https://suno.com/song/${clip.id}`,
-        suno_creator_url: `https://suno.com/@${clip.handle || pageData.user_handle || (playlistDetail ? playlistDetail.creator_handle : '')}`,
-        image_url: clip.image_large_url || clip.image_url || (clip.image_urls ? clip.image_urls.image_url : (playlistDetail ? playlistDetail.image_url : null)),
-      }));
+      const enrichedClips = fetchedClipsFromPage.map(clip =>
+        sanitizeSunoClipMedia({
+          ...clip,
+          suno_song_url: `https://suno.com/song/${clip.id}`,
+          suno_creator_url: `https://suno.com/@${clip.handle || pageData.user_handle || (playlistDetail ? playlistDetail.creator_handle : '')}`,
+          image_url: clip.image_large_url || clip.image_url || (clip.image_urls ? clip.image_urls.image_url : (playlistDetail ? playlistDetail.image_url : null)),
+        }),
+      );
       allPlaylistClips = allPlaylistClips.concat(enrichedClips);
     }
     

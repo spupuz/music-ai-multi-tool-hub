@@ -18,6 +18,11 @@ function parseChangelog() {
 
         // MD to JSX converter with basic nested list support
         let jsxContent = bodyLines.map(line => {
+            // Skip HTML comments (<!-- ... -->) and markdown H1/H2 headings — they
+            // are template scaffolding, not release-note content. H3 (### ) is
+            // converted to <SubSectionTitle> below.
+            if (line.trim().startsWith('<!--') || line.trim().startsWith('-->')) return null;
+            if (line.match(/^#{1,2}\s/)) return null;
             if (line.startsWith('### ')) {
                 return `<SubSectionTitle>${line.replace('### ', '').trim()}</SubSectionTitle>`;
             }
@@ -34,7 +39,7 @@ function parseChangelog() {
                 return `<P>${text}</P>`;
             }
             return line;
-        });
+        }).filter(item => item !== null);
 
         // Group LIs into ULs (supports one level of nesting)
         const groupedJsx = [];

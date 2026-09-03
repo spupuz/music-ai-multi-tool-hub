@@ -6,8 +6,23 @@ export interface ReleaseNoteItem {
   content: React.ReactNode;
 }
 
-(export const releaseNotes: ReleaseNoteItem\[\] = \[)
-    {
+export const releaseNotes: ReleaseNoteItem[] = [
+  {
+    version: "2.6.24",
+    content: (
+      <section id="version-2.6.24">
+        <SectionTitle>Version 2.6.24 - 2026-09-03</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>localStorage quota self-healing</STRONG>: <CODE>safeStorage</CODE> now evicts the largest regenerable caches (<CODE>sunoMusicPlayer_user_</CODE>/<CODE>playlist_</CODE> dumps, <CODE>sunoUserStats_</CODE> snapshots, song info caches) and transient logs before failing, so the app no longer spams "quota has been exceeded" errors or drops the last-session / user-cache persistence when storage fills up.</LI>
+          <LI><STRONG>Suno "forbidden" media placeholder</STRONG>: clips whose <CODE>audio_url</CODE>/<CODE>video_url</CODE> are Suno's <CODE>.../api/forbidden</CODE> placeholder are now sanitized before caching, so the placeholder never leaks into localStorage or triggers blocked cross-origin requests.</LI>
+          <LI><STRONG>Daily active ping robustness</STRONG>: a corrupted <CODE>myVisitsLog</CODE> JSON no longer throws on startup.</LI>
+          <LI><STRONG>Broken release-notes build</STRONG>: <CODE>sync-release-notes.js</CODE> no longer injects markdown template comments/headings into <CODE>releaseNotesData.tsx</CODE>, and the polluted <CODE>CHANGELOG.md</CODE> (v2.6.23 bullets duplicated across older sections) was cleaned up so <CODE>npm run build</CODE> succeeds.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.23",
     content: (
       <section id="version-2.6.23">
@@ -20,7 +35,6 @@ export interface ReleaseNoteItem {
           <LI><STRONG>Footer</STRONG>: rimosso @flickerlog, visualizza solo @spupuz.</LI>
           <LI><STRONG>SongDeckPicker</STRONG>: anteprima iframe Suno embed al posto di audio CDN per le card classifica.</LI>
         </UL>
-        <SubSectionTitle>Changed</SubSectionTitle>
       </section>
     )
   },

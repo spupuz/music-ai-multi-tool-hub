@@ -158,10 +158,8 @@ export const useSunoInputProcessor = ({
       setLastFetchedTimestamp(currentTimestamp);
       if (result.profileDetail || result.clips.length > 0) {
         const cachedData = { identifier: usernameToFetch, type: 'user', profileDetail: result.profileDetail, playlistDetail: null, clips: result.clips, lastFetched: currentTimestamp };
-        try {
-          safeSetItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData));
-        } catch (e) {
-          console.warn('Failed to persist user cache:', e);
+        if (!safeSetItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData))) {
+          console.warn('Failed to persist user cache to localStorage. Data is kept in memory for this session.');
         }
       }
       if (result.clips.length === 0 && result.profileDetail) {
@@ -234,10 +232,8 @@ export const useSunoInputProcessor = ({
       setLastFetchedTimestamp(currentTimestamp);
       if (result.playlistDetail || result.clips.length > 0) {
         const cachedData = { identifier: playlistIdToFetch, type: 'playlist', playlistDetail: result.playlistDetail, profileDetail: null, clips: result.clips, lastFetched: currentTimestamp };
-        try {
-          safeSetItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData));
-        } catch (e) {
-          console.warn('Failed to persist playlist cache:', e);
+        if (!safeSetItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData))) {
+          console.warn('Failed to persist playlist cache to localStorage. Data is kept in memory for this session.');
         }
       }
       if (result.clips.length === 0 && result.playlistDetail) {
@@ -463,14 +459,12 @@ export const useSunoInputProcessor = ({
   }, [identifierInput, parseInput]);
 
   useEffect(() => {
-    try {
-      safeSetItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
-        type: currentIdentifierType,
-        id: currentIdentifier,
-        input: identifierInput,
-      }));
-    } catch (e) {
-      console.warn('Failed to persist last session:', e);
+    if (!safeSetItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
+      type: currentIdentifierType,
+      id: currentIdentifier,
+      input: identifierInput,
+    }))) {
+      console.warn('Failed to persist last session to localStorage. It will be restored when storage space is available.');
     }
   }, [currentIdentifier, currentIdentifierType, identifierInput]);
 
