@@ -277,6 +277,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                         onClick={() => onAnalyzeSong(song)} 
                         className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-xs py-0.5 px-1.5 border border-indigo-500 rounded hover:bg-indigo-100 dark:hover:bg-indigo-700 transition-colors"
                         title="Analyze song lifecycle"
+                        aria-label={`Analyze performance for ${song.title}`}
                       >
                         Analyze
                       </button>
