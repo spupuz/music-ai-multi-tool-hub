@@ -274,12 +274,33 @@ export default {
 
         // ── /verify-password endpoint ──────────────────────────────────────────────
         if (url.pathname === '/verify-password') {
+            const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+            const rateLimitKey = `ratelimit:verify-password:${ip}`;
+            let attempts = 0;
+
+            if (env.STATS_KV) {
+                attempts = parseInt(await env.STATS_KV.get(rateLimitKey) || '0', 10);
+                if (attempts >= 5) {
+                    return new Response(JSON.stringify({ valid: false, error: 'Too many attempts. Please try again later.' }),
+                        { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '300' } });
+                }
+            }
+
             const { password } = body;
             if (!env.COMMITTEE_PASSWORD) {
                 return new Response(JSON.stringify({ valid: false, error: 'COMMITTEE_PASSWORD not configured' }),
                     { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
             }
             const valid = timingSafeEqual(password, env.COMMITTEE_PASSWORD);
+
+            if (env.STATS_KV) {
+                if (!valid) {
+                    await env.STATS_KV.put(rateLimitKey, (attempts + 1).toString(), { expirationTtl: 300 });
+                } else if (attempts > 0) {
+                    await env.STATS_KV.delete(rateLimitKey);
+                }
+            }
+
             return new Response(JSON.stringify({ valid }),
                 { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
         }
