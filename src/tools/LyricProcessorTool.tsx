@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
 import { safeGetItem, safeRemoveItem } from '@/services/safeStorage';
@@ -53,7 +52,6 @@ const toTitleCase = (str: string): string => {
 
 
 const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [songTitle, setSongTitle] = useState<string>('');
   const [creatorName, setCreatorName] = useState<string>('');
   const [creatorHandle, setCreatorHandle] = useState<string>(''); // New state
@@ -383,32 +381,21 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Lyric Lab
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-            Semantic Signal Refinement • Advanced Linguistic Extraction
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Lyric Lab</h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-            Advanced Lyric Decomposition • Neural Verse Synthesizer
-          </p>
-        </header>
-      )}
+    <div className={`w-full `}>
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Lyric Lab</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Lyric analysis • Verse formatting
+        </p>
+      </header>
 
-      <main className="w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+      <main className="w-full glass-card p-2 sm:p-8 md:p-12 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
 
         {/* URL Load Section */}
-        <div className="flex flex-col sm:flex-row items-end gap-2 mb-8 bg-white/5 p-4 rounded-2xl border border-white/10 animate-fadeIn relative z-10">
+        <div className="flex flex-col sm:flex-row items-end gap-2 mb-8 bg-white dark:bg-white/5 p-4 rounded-2xl border border-gray-200 dark:border-white/10 animate-fadeIn relative z-10">
           <div className="flex-grow w-full">
             <InputField 
               id="sunoUrlInput" 
@@ -458,7 +445,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 type="checkbox" 
                 checked={showLineNumbers} 
                 onChange={(e) => setShowLineNumbers(e.target.checked)} 
-                className="w-4 h-4 rounded-md border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/20 transition-all"
+                className="w-4 h-4 rounded-md border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-emerald-500 focus:ring-emerald-500/20 transition-all"
               />
               <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-emerald-500 transition-colors">Line Numbers</span>
             </label>
@@ -478,9 +465,9 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             
             {/* Formatting Toolbar */}
             <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Button onClick={handleUpperCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="UPPERCASE">AA</Button>
-              <Button onClick={handleLowerCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="lowercase">aa</Button>
-              <Button onClick={handleTitleCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white/10 dark:bg-black/40 border-white/10 text-xs font-black" title="Title Case">Aa</Button>
+              <Button onClick={handleUpperCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="UPPERCASE">AA</Button>
+              <Button onClick={handleLowerCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="lowercase">aa</Button>
+              <Button onClick={handleTitleCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="Title Case">Aa</Button>
             </div>
           </div>
         </div>
@@ -488,7 +475,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         {/* Controls */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 relative z-10">
           {/* Format & Analyze */}
-          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
+          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-gray-200 dark:border-white/5 space-y-6">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 opacity-70 mb-2">Refinery & Analysis</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <CheckboxField id="removeSquare" label="Strip [ ]" checked={removeSquareBrackets} onChange={setRemoveSquareBrackets} />
@@ -496,13 +483,13 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <CheckboxField id="removeCurly" label="Strip { }" checked={removeCurlyBrackets} onChange={setRemoveCurlyBrackets} />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} variant="ghost" startIcon={<StatsIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-blue-500/20 text-blue-500">Count Syllables</Button>
+              <Button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} variant="ghost" startIcon={<StatsIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-blue-500/20 text-blue-500">Count Syllables</Button>
               <Button onClick={handleCleanLyrics} disabled={isLoading || !lyricsInput.trim()} variant="primary" startIcon={<SparklesIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px]" backgroundColor="#10b981">Clean & Header</Button>
             </div>
           </div>
 
           {/* Find & Replace */}
-          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-white/5 space-y-4">
+          <div className="bg-black/5 dark:bg-black/20 p-8 rounded-3xl border border-gray-200 dark:border-white/5 space-y-4">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 opacity-70">Find & Replace</h3>
               <Button onClick={() => setShowAdvancedOptions(!showAdvancedOptions)} variant="ghost" size="xs" className="text-[8px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors underline underline-offset-4 border-none shadow-none">{showAdvancedOptions ? 'Simple mode' : 'Advanced regex'}</Button>
@@ -520,14 +507,14 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               </div>
             )}
 
-            <Button onClick={handleReplaceAll} disabled={isLoading || !findText} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
+            <Button onClick={handleReplaceAll} disabled={isLoading || !findText} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
             {replaceMessage && <p className="text-[10px] font-black uppercase tracking-widest text-center mt-2 text-emerald-500 animate-fadeIn">{replaceMessage}</p>}
           </div>
         </div>
 
         {/* Output */}
         {processedOutput && (
-          <div className="mt-12 pt-10 border-t border-white/10 animate-fadeIn relative z-10">
+          <div className="mt-12 pt-10 border-t border-gray-200 dark:border-white/10 animate-fadeIn relative z-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6 text-center opacity-70">Processed Output</h3>
             <TextAreaField
               id="outputArea"

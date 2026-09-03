@@ -8,6 +8,33 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.0",
+    content: (
+      <section id="version-2.7.0">
+        <SectionTitle>Version 2.7.0 - 2026-09-04</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Unified design system</STRONG>: the two UI modes (Architect/Classic) are merged into a single clean style; the mode toggle in the header is removed and only light/dark theme remains. The theme tokens are centralized in <CODE>index.css</CODE>.</LI>
+          <LI><STRONG>Legibility</STRONG>: micro-label font sizes bumped and letter-spacing tightened app-wide (centralized overrides), so labels are readable without touching every component.</LI>
+          <LI><STRONG>Theme-aware colors</STRONG>: all tools now use light/dark-correct text, borders, and panels — no more white-on-white or translucent-white elements that were invisible in light mode.</LI>
+          <LI><STRONG>Clearer vocabulary</STRONG>: replaced the sci-fi "architect" jargon in Suno User Stats (Affinity→Upvotes, Flux→Plays, Echoes→Comments, Genesis→Created, Span→Duration, Signals→Songs, Observers→Followers, Ops→Actions, etc.) and across other tools (Neural FX→Effects, Live Signal→Live, Advanced Neural Mapping→Advanced Options, ...).</LI>
+          <LI><STRONG>Tool names</STRONG>: renamed to clearer names — Style Architect→Random Music Style, Magic Spin→Community Spinner, Resource Nexus→Resource Directory; "Vault"/"Chrono Vault" sections renamed to Favorites/History/Saved.</LI>
+          <LI><STRONG>SparkTune</STRONG>: challenge templates and form labels rewritten in plain language (no more "synchronize our networks", "Arsenal Gear", "Extraction Deadline", ...).</LI>
+          <LI><STRONG>Suno User Stats tables</STRONG>: standardized readable font sizes and theme-aware headers/rows across Cohort, Tag Correlation, Duration, Tag, Genre, and Detailed Song Performance tables; SVG sort indicators replace emoji arrows.</LI>
+          <LI><STRONG>Charts</STRONG>: lighter card background and softer grid lines in light mode (grid/axis slightly darkened for clarity); chart cards are now theme-aware.</LI>
+          <LI><STRONG>Cleaner shell</STRONG>: removed decorative background orbs/aurora and gradient text effects; simplified header, sidebar, and footer typography.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI>White-on-white and low-contrast text/panels in light mode across all tools.</LI>
+          <LI>Sidebar items now truly left-align (Tailwind <CODE>justify-center</CODE>/<CODE>justify-start</CODE> conflict).</LI>
+          <LI>"About This Hub" now uses the full browser width instead of a narrow centered column.</LI>
+          <LI>Profile stats (Songs/Followers/Plays/Upvotes/Comments) displayed with larger, readable labels and values.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.27",
     content: (
       <section id="version-2.6.27">

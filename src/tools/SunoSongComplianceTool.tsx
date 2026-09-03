@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { ToolProps, ToolId } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import { fetchSunoClipById, resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
 import { analyzeLyricsLanguageDetailsGemini, checkContentRatingGemini } from '@/services/aiAnalysisService';
 import { getCountryDetails, getFlagEmoji } from '@/utils/countryData';
@@ -52,7 +51,6 @@ interface BatchSummary {
 
 
 const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNavigate }) => {
-  const { uiMode } = useTheme();
   const [sunoUrlsInput, setSunoUrlsInput] = useState<string>('');
   const [titleFormatPattern, setTitleFormatPattern] = useState<string>('[SSC<number>, <country/code>]');
   const [durationLimitSeconds, setDurationLimitSeconds] = useState<number>(300); // Default 5 minutes
@@ -402,39 +400,28 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
     }
 
     return (
-      <div className={`p-4 rounded-3xl border border-white/10 shadow-xl transition-all hover:scale-[1.02] ${bgColor}`}>
+      <div className={`p-4 rounded-3xl border border-gray-200 dark:border-white/10 shadow-xl transition-all hover:scale-[1.02] ${bgColor}`}>
         <h4 className={`text-sm font-black uppercase tracking-tight mb-2 ${textColor} flex items-center`}>
           <span className="mr-3">{icon}</span>
           {title}
         </h4>
         <p className={`text-xs font-medium opacity-80 ${detailTextColor}`}>{message}</p>
-        {detailContent && (<div className="mt-3 pt-3 border-t border-white/10">{detailContent}</div>)}
+        {detailContent && (<div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/10">{detailContent}</div>)}
       </div>
     )
   };
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4' : 'max-w-5xl mx-auto'} pb-20`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Song Compliance
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+    <div className="w-full max-w-5xl mx-auto pb-20">
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Compliance Check</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             Heuristic Enforcement Hub • Validate metadata and content against contest protocols
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Compliance Check</h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-              Heuristic Enforcement Hub • Validate metadata and content against contest protocols
-          </p>
-        </header>
-      )}
+        </p>
+      </header>
 
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn">
         <div className="space-y-4 md:space-y-8">
           <div className="mb-2 md:mb-4">
             <label htmlFor="committeePassword" className="block text-[10px] font-black uppercase tracking-[0.3em] text-yellow-600 dark:text-yellow-400 mb-1 ml-1 leading-none">Committee Access Password</label>
@@ -442,7 +429,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
               <input type="password" id="committeePassword" value={enteredPassword} onChange={handlePasswordChange}
                 onKeyDown={(e) => e.key === 'Enter' && handleVerifyPassword()}
                 placeholder="TOKEN REQUIRED"
-                className="flex-grow px-12 py-3 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:opacity-20" />
+                className="flex-grow px-12 py-3 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:opacity-20" />
               <Button 
                 onClick={handleVerifyPassword} 
                 disabled={isVerifying || !enteredPassword.trim()}
@@ -458,27 +445,27 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
           </div>
 
           <div className="flex flex-row gap-2 md:gap-4">
-            <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
+            <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
             <input type="file" ref={fileInputRef} onChange={handleLoadUrlsFromFile} accept=".txt" style={{ display: 'none' }} id="load-urls-file" />
-            <Button onClick={() => fileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-white/10 p-2 md:p-3 h-8 md:h-auto">LOAD CACHE</Button>
+            <Button onClick={() => fileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">LOAD CACHE</Button>
           </div>
           <div>
-            <label htmlFor="sunoUrlsInput" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-1 ml-1 leading-none">Song Signal Vectors (One per line)</label>
-            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or FlowMusic.app song URLs here..." rows={3} className="block w-full px-4 py-2.5 md:py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold resize-y transition-all min-h-[60px] md:min-h-auto" disabled={isLoading} />
+            <label htmlFor="sunoUrlsInput" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-1 ml-1 leading-none">Song URLs (One per line)</label>
+            <textarea id="sunoUrlsInput" value={sunoUrlsInput} onChange={(e) => setSunoUrlsInput(e.target.value)} placeholder="Paste Suno, Riffusion, or FlowMusic.app song URLs here..." rows={3} className="block w-full px-4 py-2.5 md:py-3 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white text-sm sm:text-base font-bold resize-y transition-all min-h-[60px] md:min-h-auto" disabled={isLoading} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="titleFormatPattern" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Pattern Schema <InfoIcon tooltip="Define the title structure. Use <number> for SSC version and <country/code> for country. E.g., '[SSC<number>] My Song (<country/code>)'" /></label>
-              <input type="text" id="titleFormatPattern" value={titleFormatPattern} onChange={(e) => setTitleFormatPattern(e.target.value)} className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
+              <input type="text" id="titleFormatPattern" value={titleFormatPattern} onChange={(e) => setTitleFormatPattern(e.target.value)} className="block w-full px-4 py-3 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
             </div>
             <div>
-              <label htmlFor="durationLimit" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Temporal Constraint (sec) <InfoIcon tooltip="Maximum allowed song duration in seconds." /></label>
-              <input type="number" id="durationLimit" value={durationLimitSeconds} onChange={(e) => setDurationLimitSeconds(Math.max(1, parseInt(e.target.value)) || 300)} min="1" className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
+              <label htmlFor="durationLimit" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Duration Constraint (sec) <InfoIcon tooltip="Maximum allowed song duration in seconds." /></label>
+              <input type="number" id="durationLimit" value={durationLimitSeconds} onChange={(e) => setDurationLimitSeconds(Math.max(1, parseInt(e.target.value)) || 300)} min="1" className="block w-full px-4 py-3 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl shadow-inner placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all" disabled={isLoading} />
             </div>
           </div>
           <div>
             <label htmlFor="contentRating" className="block text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-2 ml-1">Rating Protocol</label>
-            <select id="contentRating" value={selectedRating} onChange={(e) => setSelectedRating(e.target.value as RatingLevel)} className="block w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl shadow-inner focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all appearance-none" disabled={isLoading}>
+            <select id="contentRating" value={selectedRating} onChange={(e) => setSelectedRating(e.target.value as RatingLevel)} className="block w-full px-4 py-3 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl shadow-inner focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 text-gray-900 dark:text-white sm:text-base font-bold transition-all appearance-none" disabled={isLoading}>
               {ratingOptions.map(option => (<option key={option.value} value={option.value} className="bg-gray-900">{option.label}</option>))}
             </select>
           </div>
@@ -492,7 +479,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
             className="w-full font-black uppercase tracking-[0.3em] text-sm py-5 h-auto shadow-emerald-500/20 rounded-3xl"
             startIcon={isLoading ? null : <ComplianceCheckIcon className="w-6 h-6" />}
           >
-            {isLoading ? 'ANALYZING SIGNAL...' : 'RUN COMPLIANCE CHECKS'}
+            {isLoading ? 'ANALYZING SONGS...' : 'RUN COMPLIANCE CHECKS'}
           </Button>
         </div>
 
@@ -501,42 +488,42 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
         {exportStatusMessage && <p className={`mt-2 text-sm text-center ${exportStatusMessage.includes('Error') ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-300'}`}>{exportStatusMessage}</p>}
 
         {batchSummary && !isLoading && (
-          <div className="mt-8 p-6 glass-card border-white/10 animate-fadeIn">
+          <div className="mt-8 p-6 glass-card border-gray-200 dark:border-white/10 animate-fadeIn">
             <h3 className="text-sm font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-6 text-center">Batch Intelligence Summary</h3>
             <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Processed</p><p className="font-black text-gray-900 dark:text-white text-lg">{batchSummary.totalProcessed}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">Passed</p><p className="font-black text-emerald-600 dark:text-emerald-200 text-lg">{batchSummary.passedAllChecks}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Titles</p><p className="font-black text-yellow-600 dark:text-yellow-200 text-lg">{batchSummary.titleIssues}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-cyan-500 mb-1">Time</p><p className="font-black text-cyan-600 dark:text-cyan-300 text-lg">{batchSummary.durationIssues}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-orange-500 mb-1">Rating</p><p className="font-black text-orange-600 dark:text-orange-300 text-lg">{batchSummary.contentRatingIssues}</p></div>
-              <div className="bg-white/5 dark:bg-black/20 p-3 rounded-2xl border border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-red-500 mb-1">Errors</p><p className="font-black text-red-600 dark:text-red-300 text-lg">{batchSummary.processingErrors}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Processed</p><p className="font-black text-gray-900 dark:text-white text-lg">{batchSummary.totalProcessed}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">Passed</p><p className="font-black text-emerald-600 dark:text-emerald-200 text-lg">{batchSummary.passedAllChecks}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-yellow-500 mb-1">Titles</p><p className="font-black text-yellow-600 dark:text-yellow-200 text-lg">{batchSummary.titleIssues}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-cyan-500 mb-1">Time</p><p className="font-black text-cyan-600 dark:text-cyan-300 text-lg">{batchSummary.durationIssues}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-orange-500 mb-1">Rating</p><p className="font-black text-orange-600 dark:text-orange-300 text-lg">{batchSummary.contentRatingIssues}</p></div>
+              <div className="bg-white dark:bg-black/20 p-3 rounded-2xl border border-gray-200 dark:border-white/5 text-center"><p className="text-[8px] font-black uppercase tracking-widest text-red-500 mb-1">Errors</p><p className="font-black text-red-600 dark:text-red-300 text-lg">{batchSummary.processingErrors}</p></div>
             </div>
           </div>
         )}
 
         {batchRunResults.length > 0 && (
           <div className="mt-12 space-y-8">
-            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+            <div className="flex justify-between items-center border-b border-gray-200 dark:border-white/10 pb-4">
               <div className="flex animate-pulse items-center justify-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
                 Analysis Logs
               </div>
-               <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-white/10">Export Summary</Button>
+               <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-gray-200 dark:border-white/10">Export Summary</Button>
             </div>
             <ScrollReveal className="stagger-fade">
             {batchRunResults.map((result, index) => (
-              <div key={result.inputUrl + index} className="p-6 glass-card border-white/10 shadow-xl transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-2xl animate-fadeIn">
+              <div key={result.inputUrl + index} className="p-6 glass-card border-gray-200 dark:border-white/10 shadow-xl transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-2xl animate-fadeIn">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Analysis In Progress</span>
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow ml-4" title={result.inputUrl}>Signal: {result.inputUrl}</p>
-                  {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Signal</Button>}
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow ml-4" title={result.inputUrl}>Song: {result.inputUrl}</p>
+                  {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Song</Button>}
                 </div>
                 {result.processingError && !result.clipData && (<ResultDisplay title="Processing Error" status={false} message={result.processingError} />)}
                 {result.clipData && (
                   <div className="space-y-6">
-                    <div className="p-4 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5">
+                    <div className="p-4 bg-white dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5">
                       <div className="flex flex-col sm:flex-row gap-6 items-center">
                         {result.clipData.image_url && (
                           <img src={result.clipData.image_url} alt="Cover Art" loading="lazy" decoding="async" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
@@ -549,7 +536,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                       </div>
                     </div>
                     {result.clipData.id && (
-                      <div className="my-4 p-2 bg-white/5 rounded-2xl border border-white/5">
+                      <div className="my-4 p-2 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/5">
                         <iframe
                           src={`https://suno.com/embed/${result.clipData.id}`}
                           className="w-full h-24 rounded-xl border-0 opacity-80 hover:opacity-100 transition-opacity"
@@ -564,10 +551,10 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                         <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-center">
                           <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Lyrical Content</p>
                         </div>
-                        <div className="p-4 bg-white/5 dark:bg-black/20 border border-white/5 rounded-2xl max-h-40 overflow-y-auto text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed scrollbar-thin">
+                        <div className="p-4 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-2xl max-h-40 overflow-y-auto text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed scrollbar-thin">
                           {result.songLyrics}
                         </div>
-                        <Button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} variant="ghost" size="xs" startIcon={<LyricsIcon className="w-3 h-3" />} className="w-full font-black uppercase tracking-widest text-[8px] border-white/5 hover:bg-white/5">Inject into Lyric Lab</Button>
+                        <Button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} variant="ghost" size="xs" startIcon={<LyricsIcon className="w-3 h-3" />} className="w-full font-black uppercase tracking-widest text-[8px] border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-white/5">Inject into Lyric Lab</Button>
                       </div>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

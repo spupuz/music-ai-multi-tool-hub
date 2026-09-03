@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import ScrollReveal from '@/components/ScrollReveal';
 import { 
@@ -123,7 +122,7 @@ const SearchBar: React.FC<{ searchTerm: string; onSearchChange: (term: string) =
       value={searchTerm}
       onChange={(e) => onSearchChange(e.target.value)}
       placeholder="Search cross-platform resources..."
-      className="w-full pl-12 pr-4 py-4 bg-white/5 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+      className="w-full pl-12 pr-4 py-4 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
       aria-label="Search music resources"
     />
   </div>
@@ -150,7 +149,7 @@ const CategoryFilterButtons: React.FC<{
         onClick={() => onSelectCategory(category.id)}
         variant={selectedCategoryId === category.id ? "primary" : "ghost"}
         size="xs"
-        className="font-black uppercase tracking-widest text-[9px] px-4 border-white/5"
+        className="font-black uppercase tracking-widest text-[9px] px-4 border-gray-200 dark:border-white/5"
         backgroundColor={selectedCategoryId === category.id ? "#10b981" : undefined}
       >
         {category.name}
@@ -160,7 +159,6 @@ const CategoryFilterButtons: React.FC<{
 );
 
 const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
@@ -218,28 +216,17 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-10 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Resource Nexus
-          </h1>
-          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-            Elite directory of professional tools and clandestine networks for music pioneers
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
-            Resource Nexus
-          </h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-            Elite directory of professional tools and clandestine networks for music pioneers
-          </p>
-        </header>
-      )}
+    <div className={`w-full `}>
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+          Resource Directory
+        </h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          A curated directory of professional tools and resources for music creators
+        </p>
+      </header>
 
-      <main className="w-full glass-card p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
+      <main className="w-full glass-card p-8 md:p-12 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] pointer-events-none"></div>
         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
@@ -250,8 +237,8 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
         />
 
         {filteredCategories.length === 0 && (
-          <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-3xl bg-white/5 animate-fadeIn">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">No resources matched the current filter vector.</p>
+          <div className="py-20 text-center border-2 border-dashed border-gray-200 dark:border-white/5 rounded-3xl bg-white dark:bg-white/5 animate-fadeIn">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">No resources matched the current filter.</p>
           </div>
         )}
 
@@ -272,7 +259,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackLocalEvent(TOOL_CATEGORY, 'resourceLinkClicked', item.title)}
-                    className="group flex flex-col p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 hover:border-emerald-500/30 hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"
+                    className="group flex flex-col p-6 bg-white dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5 hover:border-emerald-500/30 hover:bg-gray-50 dark:hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white group-hover:text-emerald-500 transition-colors">{item.title}</h3>
@@ -280,7 +267,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                     </div>
                     <p className="text-xs font-bold text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{item.description}</p>
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity">
-                      Open Nexus
+                      Open Link
                       <ChevronRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </a>
@@ -290,9 +277,9 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/5 text-center relative z-10">
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-white/5 text-center relative z-10">
           <p className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 opacity-40">
-            Nexus Disclaimer: External vectors lead to non-affiliated domains. Review terms before deployment.
+            Disclaimer: External links lead to non-affiliated domains. Review their terms before use.
           </p>
         </div>
       </main>

@@ -1,16 +1,11 @@
-
 import React, { createContext, useContext, useEffect, useMemo, useCallback, useState } from 'react';
 import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 type Theme = 'dark' | 'light';
-export type UiMode = 'architect' | 'classic';
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
-  uiMode: UiMode;
-  toggleUiMode: () => void;
-  setUiMode: (mode: UiMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -28,17 +23,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return 'dark';
   });
 
-  const [uiMode, setUiModeState] = useState<UiMode>(() => {
-    if (typeof window !== 'undefined') {
-      const storedUiMode = safeGetItem('aiMultiToolHub_uiMode');
-      if (storedUiMode === 'architect' || storedUiMode === 'classic') {
-        return storedUiMode;
-      }
-      return 'architect'; // Default to new UI
-    }
-    return 'architect';
-  });
-
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -50,32 +34,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [theme]);
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('ui-architect', 'ui-classic');
-    root.classList.add(`ui-${uiMode}`);
-    try {
-      safeSetItem('aiMultiToolHub_uiMode', uiMode);
-    } catch (e) {
-      console.warn('Failed to persist UI mode preference:', e);
-    }
-  }, [uiMode]);
-
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   }, []);
 
-  const toggleUiMode = useCallback(() => {
-    setUiModeState((prev) => (prev === 'architect' ? 'classic' : 'architect'));
-  }, []);
-
-  const setUiMode = useCallback((mode: UiMode) => {
-    setUiModeState(mode);
-  }, []);
-
   const value = useMemo(
-    () => ({ theme, toggleTheme, uiMode, toggleUiMode, setUiMode }),
-    [theme, toggleTheme, uiMode, toggleUiMode, setUiMode]
+    () => ({ theme, toggleTheme }),
+    [theme, toggleTheme]
   );
 
   return (

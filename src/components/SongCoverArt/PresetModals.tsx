@@ -40,7 +40,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
     <>
       {showSavePresetModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 scale-alpha animate-in fade-in duration-300">
-          <div className="glass-card p-10 max-w-md w-full border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="glass-card p-10 max-w-md w-full border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-[40px] pointer-events-none"></div>
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 text-center">Commit Art Style</h3>
             <div className="space-y-6">
@@ -57,15 +57,15 @@ const PresetModals: React.FC<PresetModalsProps> = ({
       
       {showLoadPresetModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
-          <div className="glass-card p-10 max-w-lg w-full border-white/10 shadow-2xl flex flex-col max-h-[85vh] relative overflow-hidden">
+          <div className="glass-card p-10 max-w-lg w-full border-gray-200 dark:border-white/10 shadow-2xl flex flex-col max-h-[85vh] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-[40px] pointer-events-none"></div>
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-500 mb-8 text-center">Style Repository</h3>
             {savedArtStylePresets.length > 0 ? (
               <ul className="flex-grow overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                 {savedArtStylePresets.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(preset => (
-                  <li key={preset.id} className="group p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 hover:border-white/10 transition-all duration-300 flex justify-between items-center shadow-lg">
+                  <li key={preset.id} className="group p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/10 hover:border-gray-300 dark:hover:border-white/10 transition-all duration-300 flex justify-between items-center shadow-lg">
                     <div className="space-y-1">
-                      <p className="text-[11px] font-black uppercase tracking-wider text-white opacity-80 group-hover:opacity-100 transition-opacity">{preset.name}</p>
+                      <p className="text-[11px] font-black uppercase tracking-wider text-gray-900 dark:text-white opacity-80 group-hover:opacity-100 transition-opacity">{preset.name}</p>
                       <p className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-500">Decoded: {new Date(preset.createdAt).toLocaleDateString()}</p>
                     </div>
                     <div className="flex gap-2">
@@ -81,7 +81,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 text-center">Repository Empty</p>
               </div>
             )}
-            <div className="mt-8 pt-6 border-t border-white/5">
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-white/5">
               <Button onClick={() => setShowLoadPresetModal(false)} variant="ghost" size="sm" className="w-full font-black uppercase tracking-widest text-[10px]">Return to Console</Button>
             </div>
           </div>
@@ -90,9 +90,9 @@ const PresetModals: React.FC<PresetModalsProps> = ({
       
       {showImportExportModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
-          <div className="glass-card p-10 max-w-md w-full border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="glass-card p-10 max-w-md w-full border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/5 blur-[60px] pointer-events-none"></div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-600 dark:text-purple-500 mb-8 text-center">Neural Sync / Backup</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-600 dark:text-purple-500 mb-8 text-center">Backup</h3>
             
             <div className="space-y-6">
               <Button onClick={handleExportPresets} disabled={savedArtStylePresets.length === 0} variant="primary" size="sm" className="w-full font-black uppercase tracking-widest text-[9px] py-4 rounded-2xl shadow-purple-500/10" backgroundColor="#8b5cf6">
@@ -100,11 +100,11 @@ const PresetModals: React.FC<PresetModalsProps> = ({
               </Button>
               
               <div className="relative">
-                <TextAreaField id="importPresetJsonTextArea" label="Import Signal Buffer" value={configToImportJson} onChange={setConfigToImportJson} rows={4} className="mb-4" placeholder="Paste JSON architecture here..." />
+                <TextAreaField id="importPresetJsonTextArea" label="Import JSON" value={configToImportJson} onChange={setConfigToImportJson} rows={4} className="mb-4" placeholder="Paste JSON architecture here..." />
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 bg-white/5 border border-dashed border-white/10 rounded-2xl text-center group hover:bg-white/10 transition-all cursor-pointer relative">
+                <div className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer relative">
                   <input type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                   <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-green-500 transition-colors">Select Architecture File</div>
                 </div>
@@ -116,8 +116,8 @@ const PresetModals: React.FC<PresetModalsProps> = ({
                 <Button onClick={() => processPresetImport('replace')} variant="ghost" size="xs" className="w-full font-black uppercase tracking-widest text-[8px] py-3 rounded-xl border-orange-500/20 text-orange-400">Override Active</Button>
               </div>
 
-              <div className="pt-4 border-t border-white/5">
-                <Button onClick={() => setShowImportExportModal(false)} variant="ghost" size="sm" className="w-full font-black uppercase tracking-widest text-[9px]">Abort Sync</Button>
+              <div className="pt-4 border-t border-gray-200 dark:border-white/5">
+                <Button onClick={() => setShowImportExportModal(false)} variant="ghost" size="sm" className="w-full font-black uppercase tracking-widest text-[9px]">Close</Button>
               </div>
             </div>
           </div>

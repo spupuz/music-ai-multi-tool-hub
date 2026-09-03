@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
 import { useSunoUserStatsData } from '@/hooks/useSunoUserStatsData';
-import { useTheme } from '@/context/ThemeContext';
 import Spinner from '@/components/Spinner';
 import UserProfileCard from '@/components/sunoUserStats/UserProfileCard';
 import StatDisplayCard from '@/components/sunoUserStats/StatDisplayCard';
@@ -122,7 +121,6 @@ const knownAppLocalStoragePrefixes = [
 
 
 const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const {
     username,
     setUsername,
@@ -225,33 +223,22 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            User Statistics
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-            High-fidelity profile analytics • Neural performance mapping
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">
-            User Stats
-          </h1>
-          <p className="mt-1 md:mt-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-2xl mx-auto opacity-60">High-fidelity profile analytics • Neural performance mapping</p>
-        </header>
-      )}
+    <div className="w-full">
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+          User Stats
+        </h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">High-fidelity profile analytics • Performance mapping</p>
+      </header>
 
-      <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
+      <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[100px] pointer-events-none"></div>
         
         <form onSubmit={handleSubmit} className="mb-10 flex flex-col sm:flex-row items-stretch sm:items-end gap-3 animate-in fade-in slide-in-from-top-4 duration-500 w-full max-w-full overflow-hidden">
           <div className="flex-grow w-full">
             <InputField 
               id="usernameInput" 
-              label="Neural Identifier (Username)" 
+              label="Username" 
               value={username} 
               onChange={setUsername} 
               placeholder="@username" 
@@ -273,7 +260,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </Button>
         </form>
 
-        <section className="mb-10 p-8 bg-white/5 border border-white/10 rounded-3xl relative group overflow-hidden">
+        <section className="mb-10 p-8 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl relative group overflow-hidden">
           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6 flex items-center gap-2">
             <TargetIcon className="w-3 h-3" /> System Intelligence / Data Node
           </h3>
@@ -284,7 +271,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost" 
               size="xs" 
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />} 
-              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 flex flex-row items-center justify-center shadow-none"
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-gray-200 dark:border-white/10 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 flex flex-row items-center justify-center shadow-none"
             >
               {getClearCurrentUserCacheButtonText()}
             </Button>
@@ -294,7 +281,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost" 
               size="xs" 
               startIcon={<ExportIcon className="w-3.5 h-3.5" />} 
-              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 flex flex-row items-center justify-center shadow-none"
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-gray-200 dark:border-white/10 hover:bg-blue-500/10 hover:text-blue-400 hover:border-blue-500/20 flex flex-row items-center justify-center shadow-none"
             >
               Export Snapshot
             </Button>
@@ -305,7 +292,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost" 
               size="xs" 
               startIcon={<ImportIcon className="w-3.5 h-3.5" />} 
-              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 hover:bg-teal-500/10 hover:text-teal-400 hover:border-teal-500/20 flex flex-row items-center justify-center shadow-none"
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-gray-200 dark:border-white/10 hover:bg-teal-500/10 hover:text-teal-400 hover:border-teal-500/20 flex flex-row items-center justify-center shadow-none"
             >
               Inject Data Feed
             </Button>
@@ -315,7 +302,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost" 
               size="xs" 
               startIcon={<TrashIcon className="w-3.5 h-3.5" />} 
-              className="font-black uppercase tracking-widest text-[8px] py-4 border-white/10 bg-white/5 hover:bg-red-600/20 hover:text-white hover:border-red-600/40 flex flex-row items-center justify-center shadow-none"
+              className="font-black uppercase tracking-widest text-[8px] py-4 border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-red-600/20 hover:text-gray-900 dark:hover:text-white hover:border-red-600/40 flex flex-row items-center justify-center shadow-none"
             >
               {getClearAllHubDataButtonText()}
             </Button>
@@ -331,7 +318,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {isLoading && progressMessage && (
           <div className="my-8 p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-emerald-500 text-center animate-pulse">
-            Neural Mapping in Progress: {progressMessage}
+            Fetching data: {progressMessage}
           </div>
         )}
         
@@ -345,24 +332,24 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <UserProfileCard profile={storedData.profile} />
              {storedData.lastFetched && ( <p className="text-xs text-gray-500 dark:text-gray-500 text-center -mt-4 mb-6"> Data last fetched: {formatLastFetched(storedData.lastFetched)} </p> )}
             <section className="my-10 space-y-8">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 border-b border-white/5 pb-4">Composition Analytics</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 border-b border-gray-200 dark:border-white/5 pb-4">Composition Analytics</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <StatDisplayCard title="Neural Library" value={formatNumber(storedData.aggregatedStats?.totalSongs)} icon={<SongIcon />} tooltipText="Total public songs retrieved." />
-                <StatDisplayCard title="Temporal Mass" value={formatDuration(storedData.aggregatedStats?.totalDurationSec)} icon={<DurationIcon />} tooltipText="Total duration of all fetched content." />
+                <StatDisplayCard title="Total Songs" value={formatNumber(storedData.aggregatedStats?.totalSongs)} icon={<SongIcon />} tooltipText="Total public songs retrieved." />
+                <StatDisplayCard title="Total Duration" value={formatDuration(storedData.aggregatedStats?.totalDurationSec)} icon={<DurationIcon />} tooltipText="Total duration of all fetched content." />
                 <StatDisplayCard title="Mean Duration" value={formatDuration(storedData.aggregatedStats?.avgDurationSec)} icon={<DurationIcon className="opacity-70"/>} tooltipText="Average composition length."/>
                 <StatDisplayCard title="Playback Density" value={formatNumber(storedData.aggregatedStats?.avgPlaysPerSong, 1)} icon={<TotalPlaysIcon className="opacity-70"/>} tooltipText="Average plays received per song." />
-                <StatDisplayCard title="Consensus Flux" value={formatNumber(storedData.aggregatedStats?.avgUpvotesPerSong, 1)} icon={<TotalUpvotesIcon className="opacity-70"/>} tooltipText="Average upvotes received per song." />
+                <StatDisplayCard title="Avg Upvotes" value={formatNumber(storedData.aggregatedStats?.avgUpvotesPerSong, 1)} icon={<TotalUpvotesIcon className="opacity-70"/>} tooltipText="Average upvotes received per song." />
                 <StatDisplayCard title="Feedback Resonance" value={formatNumber(storedData.aggregatedStats?.avgCommentsPerSong, 1)} icon={<TotalCommentsIcon className="opacity-70"/>} tooltipText="Average comments received per song." /> 
-                <StatDisplayCard title="Affinity Quotient" value={`${formatNumber(storedData.aggregatedStats?.avgSongUpvoteRate, 2)}%`} icon={<TargetIcon />} tooltipText="Average upvotes per play (Songs > 20p)." />
+                <StatDisplayCard title="Upvote Rate" value={`${formatNumber(storedData.aggregatedStats?.avgSongUpvoteRate, 2)}%`} icon={<TargetIcon />} tooltipText="Average upvotes per play (Songs > 20p)." />
                 <StatDisplayCard title="Dialogue Rate" value={`${formatNumber(storedData.aggregatedStats?.avgCommentRatePer1000Plays, 1)} / 1k`} icon={<TotalCommentsIcon />} tooltipText="Average comments per 1k plays (Songs > 20p)." />
-                <StatDisplayCard title="Expansion (7d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate7dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease7d, 0, true)}`} icon={<GrowthIcon />} tooltipText="7-day follower growth vector."/>
-                <StatDisplayCard title="Expansion (30d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate30dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease30d, 0, true)}`} icon={<GrowthIcon />} tooltipText="30-day follower growth vector." />
+                <StatDisplayCard title="Expansion (7d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate7dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease7d, 0, true)}`} icon={<GrowthIcon />} tooltipText="7-day follower growth."/>
+                <StatDisplayCard title="Expansion (30d)" value={`${formatPercentage(storedData.aggregatedStats?.followerGrowthRate30dPercentage)}`} description={`Delta: ${formatNumber(storedData.aggregatedStats?.followerAbsoluteIncrease30d, 0, true)}`} icon={<GrowthIcon />} tooltipText="30-day follower growth." />
                 <StatDisplayCard title="Apex Duration" value={storedData.aggregatedStats?.longestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.longestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="Longest composition in library." />
                 <StatDisplayCard title="Nadir Duration" value={storedData.aggregatedStats?.shortestSong?.title || 'N/A'} description={formatDuration(storedData.aggregatedStats?.shortestSong?.metadata?.duration)} icon={<SongIcon />} tooltipText="Shortest composition in library." />
-                <StatDisplayCard title="Peak Cycle (Day)" value={storedData.aggregatedStats?.productivity?.mostProductiveDay || 'N/A'} icon={<CalendarDaysIcon />} tooltipText="Most productive day of week." />
-                <StatDisplayCard title="Peak Cycle (Hour)" value={storedData.aggregatedStats?.productivity?.mostProductiveHour || 'N/A'} icon={<ClockIcon />} tooltipText="Most productive hour of cycle." />
-                <StatDisplayCard title="Hit Flux (Plays)" value={storedData.aggregatedStats?.hitRatePlays !== null ? `${formatNumber(storedData.aggregatedStats.hitRatePlays, 1)}%` : 'N/A'} description="> avg plays" icon={<BullseyeIcon />} />
-                <StatDisplayCard title="Hit Flux (Upvotes)" value={storedData.aggregatedStats?.hitRateUpvotes !== null ? `${formatNumber(storedData.aggregatedStats.hitRateUpvotes, 1)}%` : 'N/A'} description="> avg upvotes" icon={<BullseyeIcon />} />
+                <StatDisplayCard title="Most Productive Day" value={storedData.aggregatedStats?.productivity?.mostProductiveDay || 'N/A'} icon={<CalendarDaysIcon />} tooltipText="Most productive day of week." />
+                <StatDisplayCard title="Most Productive Hour" value={storedData.aggregatedStats?.productivity?.mostProductiveHour || 'N/A'} icon={<ClockIcon />} tooltipText="Most productive hour of cycle." />
+                <StatDisplayCard title="Hit Rate (Plays)" value={storedData.aggregatedStats?.hitRatePlays !== null ? `${formatNumber(storedData.aggregatedStats.hitRatePlays, 1)}%` : 'N/A'} description="> avg plays" icon={<BullseyeIcon />} />
+                <StatDisplayCard title="Hit Rate (Upvotes)" value={storedData.aggregatedStats?.hitRateUpvotes !== null ? `${formatNumber(storedData.aggregatedStats.hitRateUpvotes, 1)}%` : 'N/A'} description="> avg upvotes" icon={<BullseyeIcon />} />
               </div>
             </section>
 
@@ -373,11 +360,11 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <Button 
                     onClick={() => setIsDetailedTableOpen(!isDetailedTableOpen)} 
                     variant="ghost" 
-                    className="w-full flex items-center justify-between py-6 px-8 bg-white/5 border-white/10 rounded-3xl group hover:bg-white/10 transition-all shadow-xl"
+                    className="w-full flex items-center justify-between py-6 px-8 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 rounded-3xl group hover:bg-white dark:hover:bg-white/10 transition-all shadow-xl"
                   >
                     <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">
                       <TableIcon className="mr-4 w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" /> 
-                      Detailed Signal Performance Repository
+                      Detailed Song Performance
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 text-emerald-600 transform transition-transform duration-500 ${isDetailedTableOpen ? 'rotate-180' : ''}`}> <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /> </svg>
                   </Button>
@@ -405,11 +392,11 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           onClose={() => setIsLifecycleModalOpen(false)}
         />
       )}
-      <div className="mt-12 pt-8 border-t border-white/5 text-center px-8">
+      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-white/5 text-center px-8">
         <p className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-600 leading-relaxed max-w-xl mx-auto">
-          <strong className="text-yellow-600 dark:text-yellow-500 mr-2">Neural Link Warning:</strong> 
+          <strong className="text-yellow-600 dark:text-yellow-500 mr-2">Data Warning:</strong> 
           If data streams appear desynchronized or stale, initiate a hard buffer purge (Clear Site Data). 
-          Signal persistence is limited to local thermal storage.
+          Data persistence is limited to local storage.
         </p>
       </div>
     </div>

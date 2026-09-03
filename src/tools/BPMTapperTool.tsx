@@ -2,7 +2,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
@@ -26,7 +25,6 @@ const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRIN
 
 
 const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [activeTab, setActiveTab] = useState<'tapper' | 'finder'>('tapper');
 
   // --- BPM Tapper State ---
@@ -242,26 +240,15 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-3xl mx-auto px-4 pb-20' : 'max-w-3xl mx-auto'}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Tempo & Key
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-            High-fidelity rhythm analysis • Harmonic detection
-          </p>
+    <div className={`w-full max-w-3xl mx-auto`}>
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Tempo & Key</h1>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">High-fidelity rhythm analysis • Harmonic detection</p>
         </header>
-      ) : (
-        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Tempo & Key</h1>
-          <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">High-fidelity rhythm analysis • Harmonic detection</p>
-        </header>
-      )}
 
 
       {/* Premium Tabs */}
-      <div className="flex justify-center mb-12 p-2 bg-white/5 rounded-2xl border border-white/10 w-fit mx-auto backdrop-blur-xl gap-2 shadow-2xl shadow-black/20">
+      <div className="flex justify-center mb-12 p-2 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 w-fit mx-auto backdrop-blur-xl gap-2 shadow-2xl shadow-black/20">
         <Button 
           onClick={() => setActiveTab('tapper')} 
           variant={activeTab === 'tapper' ? 'primary' : 'ghost'}
@@ -269,7 +256,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
             ${activeTab === 'tapper' 
               ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
-              : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+              : 'text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'}`}
         >
           BPM Tapper
         </Button>
@@ -280,14 +267,14 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
             ${activeTab === 'finder' 
               ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
-              : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+              : 'text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'}`}
         >
-          Signal Finder
+          Song Finder
         </Button>
       </div>
 
       {activeTab === 'tapper' && (
-        <main className="glass-card p-10 md:p-14 border-white/10 shadow-2xl relative overflow-hidden text-center animate-fadeIn">
+        <main className="glass-card p-10 md:p-14 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden text-center animate-fadeIn">
           {/* Decorative Glow */}
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/20 blur-[100px] pointer-events-none transition-opacity duration-300 ${tapFeedback ? 'opacity-100' : 'opacity-40'}`}></div>
 
@@ -322,7 +309,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost" 
               size="sm" 
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
-              className="px-10 font-black uppercase tracking-widest text-[10px] border-white/10 text-red-500 hover:bg-red-500/10"
+              className="px-10 font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 text-red-500 hover:bg-red-500/10"
             >
               Reset Stream
             </Button>
@@ -331,7 +318,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       )}
 
       {activeTab === 'finder' && (
-        <main className="w-full glass-card p-3 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <main className="w-full glass-card p-3 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
           <div className="space-y-8 relative z-10">
             {/* URL Input Group */}
             <div>
@@ -343,7 +330,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   value={finderUrlInput} 
                   onChange={(e) => setFinderUrlInput(e.target.value)} 
                   placeholder="Suno or Riffusion URL..." 
-                  className="flex-grow px-6 py-3.5 bg-white/10 dark:bg-black/20 border border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" 
+                  className="flex-grow px-6 py-3.5 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-2xl text-sm font-bold placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" 
                   disabled={finderState === 'loading' || finderState === 'analyzing'} 
                 />
                 <Button 
@@ -367,7 +354,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
             {/* File Upload Group */}
             <div>
-              <label htmlFor="audioFile" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">Local Signal Import</label>
+              <label htmlFor="audioFile" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">Local Audio Import</label>
               <div className="relative group">
                 <input 
                   type="file" 
@@ -378,7 +365,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                   disabled={finderState === 'loading' || finderState === 'analyzing'} 
                 />
-                <div className="px-6 py-8 border-2 border-dashed border-white/10 rounded-3xl bg-white/5 group-hover:bg-white/10 group-hover:border-green-500/30 transition-all text-center">
+                <div className="px-6 py-8 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-3xl bg-white dark:bg-white/5 group-hover:bg-gray-100 dark:group-hover:bg-white/10 group-hover:border-green-500/30 transition-all text-center">
                   <p className="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-emerald-500 transition-colors">
                     {fileName || "Drop audio file or click to browse"}
                   </p>
@@ -393,14 +380,14 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
           {/* Results Section */}
           <div className="mt-12 min-h-[16rem] flex flex-col items-center justify-center p-8 bg-slate-50/50 dark:bg-black/30 rounded-3xl border border-gray-200 dark:border-white/5 relative z-10">
-            {finderState === 'idle' && <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600">System idle. Awaiting signal.</p>}
+            {finderState === 'idle' && <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600">System idle. Awaiting audio.</p>}
             {(finderState === 'loading' || finderState === 'analyzing') && (
               <div className="flex flex-row items-center gap-6 p-6">
                 <Spinner color="text-emerald-500" />
                 <div className="text-left">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 animate-pulse flex items-center gap-2">
                     <SparklesIcon className="w-3 h-3" />
-                    Processing Signal
+                    Processing Audio
                   </p>
                   <p className="text-xs font-bold uppercase tracking-widest opacity-60">{finderProgress}</p>
                 </div>
@@ -410,33 +397,33 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             {finderState === 'success' && (
               <div className="text-center animate-fadeIn w-full space-y-8">
                 {(songTitle || artistName || coverArtUrl) && (
-                  <div className="p-6 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-6 text-left">
+                  <div className="p-6 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 flex items-center gap-6 text-left">
                     {coverArtUrl && (
                       <div className="relative shrink-0">
                         <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full scale-125"></div>
                         <img loading="lazy" decoding="async" 
                           src={coverArtUrl} 
                           alt={songTitle || 'Song Cover'} 
-                          className="w-24 h-24 object-cover rounded-xl border border-white/20 relative z-10 shadow-2xl" 
+                          className="w-24 h-24 object-cover rounded-xl border border-gray-300 dark:border-white/20 relative z-10 shadow-2xl" 
                           onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_IMAGE_DATA_URI; }} 
                         />
                       </div>
                     )}
                     <div className="overflow-hidden">
-                      {songTitle && <p className="text-lg font-black uppercase tracking-tight text-white truncate">{songTitle}</p>}
+                      {songTitle && <p className="text-lg font-black uppercase tracking-tight text-gray-900 dark:text-white truncate">{songTitle}</p>}
                       {artistName && <p className="text-xs font-black uppercase tracking-widest text-gray-500 truncate">by {artistName}</p>}
                     </div>
                   </div>
                 )}
                 
                 <div className="grid grid-cols-2 gap-6">
-                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="p-6 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/5">
                     <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 mb-2 opacity-70">Detected Key</p>
-                    <p className="text-4xl font-black uppercase tracking-tighter text-white">{detectedKey || 'N/A'}</p>
+                    <p className="text-4xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">{detectedKey || 'N/A'}</p>
                   </div>
-                  <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="p-6 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/5">
                     <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 mb-2 opacity-70">Detected BPM</p>
-                    <p className="text-4xl font-black uppercase tracking-tighter text-white">{detectedBpm !== null ? Math.round(detectedBpm) : 'N/A'}</p>
+                    <p className="text-4xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">{detectedBpm !== null ? Math.round(detectedBpm) : 'N/A'}</p>
                   </div>
                 </div>
               </div>

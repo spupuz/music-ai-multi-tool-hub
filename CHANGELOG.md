@@ -1,3 +1,22 @@
+## [2.7.0] - 2026-09-04
+
+### Changed
+- **Unified design system**: the two UI modes (Architect/Classic) are merged into a single clean style; the mode toggle in the header is removed and only light/dark theme remains. The theme tokens are centralized in `index.css`.
+- **Legibility**: micro-label font sizes bumped and letter-spacing tightened app-wide (centralized overrides), so labels are readable without touching every component.
+- **Theme-aware colors**: all tools now use light/dark-correct text, borders, and panels — no more white-on-white or translucent-white elements that were invisible in light mode.
+- **Clearer vocabulary**: replaced the sci-fi "architect" jargon in Suno User Stats (Affinity→Upvotes, Flux→Plays, Echoes→Comments, Genesis→Created, Span→Duration, Signals→Songs, Observers→Followers, Ops→Actions, etc.) and across other tools (Neural FX→Effects, Live Signal→Live, Advanced Neural Mapping→Advanced Options, ...).
+- **Tool names**: renamed to clearer names — Style Architect→Random Music Style, Magic Spin→Community Spinner, Resource Nexus→Resource Directory; "Vault"/"Chrono Vault" sections renamed to Favorites/History/Saved.
+- **SparkTune**: challenge templates and form labels rewritten in plain language (no more "synchronize our networks", "Arsenal Gear", "Extraction Deadline", ...).
+- **Suno User Stats tables**: standardized readable font sizes and theme-aware headers/rows across Cohort, Tag Correlation, Duration, Tag, Genre, and Detailed Song Performance tables; SVG sort indicators replace emoji arrows.
+- **Charts**: lighter card background and softer grid lines in light mode (grid/axis slightly darkened for clarity); chart cards are now theme-aware.
+- **Cleaner shell**: removed decorative background orbs/aurora and gradient text effects; simplified header, sidebar, and footer typography.
+
+### Fixed
+- White-on-white and low-contrast text/panels in light mode across all tools.
+- Sidebar items now truly left-align (Tailwind `justify-center`/`justify-start` conflict).
+- "About This Hub" now uses the full browser width instead of a narrow centered column.
+- Profile stats (Songs/Followers/Plays/Upvotes/Comments) displayed with larger, readable labels and values.
+
 ## [2.6.27] - 2026-09-03
 
 ### Fixed

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import { Line } from 'react-chartjs-2';
 import { useCountUp } from '@/hooks/useCountUp';
 import '@/components/sunoUserStats/charts/chartSetup';
@@ -79,16 +78,15 @@ const StatCard = ({ title, value, sub, icon }: { title: string, value: any, sub:
     <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-3xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors"></div>
     <div className="flex justify-between items-start mb-4 relative z-10">
       <div className="text-emerald-500">{icon}</div>
-      <div className="text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full tracking-widest leading-none">{sub}</div>
+      <div className="text-xs font-medium text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full leading-none">{sub}</div>
     </div>
     <div className="text-3xl font-black text-gray-900 dark:text-white leading-none mb-1 tabular-nums relative z-10">{count.toLocaleString()}</div>
-    <div className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest relative z-10">{title}</div>
+    <div className="text-xs font-medium text-gray-500 dark:text-gray-400 relative z-10">{title}</div>
   </div>
   );
 };
 
 const StatsPage: React.FC<ToolProps> = () => {
-  const { uiMode } = useTheme();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +109,7 @@ const StatsPage: React.FC<ToolProps> = () => {
   }, []);
 
   if (loading) return <div className="flex justify-center items-center py-24"><Spinner size="w-12 h-12" /></div>;
-  if (error) return <div className="text-center py-20 text-red-500 font-bold uppercase tracking-widest">Error: {error}</div>;
+  if (error) return <div className="text-center py-20 text-red-500 font-semibold">Error: {error}</div>;
   if (!stats) return null;
 
   const validCountryEntries = Object.entries(stats.countries as Record<string, number>)
@@ -161,165 +159,12 @@ const StatsPage: React.FC<ToolProps> = () => {
     ]
   };
 
-  if (uiMode === 'classic') {
-    return (
-      <div className="w-full text-gray-900 dark:text-white pb-20 px-4 animate-fadeIn">
-        <header className="mb-10 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Analytics
-          </h1>
-          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-            Hub-wide engagement and global reach metrics
-          </p>
-        </header>
-
-        <main className="space-y-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Unique Visitors", value: stats.total.uniques, icon: <UserStatsIcon className="w-6 h-6 text-emerald-600" /> },
-              { title: "Total Pageviews", value: stats.total.pageviews, icon: <BookOpenIcon className="w-6 h-6 text-emerald-600" /> },
-              { title: "Engagement", value: stats.liveCount > 0 ? `${stats.liveCount} Online` : "Streaming", icon: <SignalIcon className="w-6 h-6 text-emerald-600" /> },
-              { title: "Countries", value: countriesReached, icon: <StatsIcon className="w-6 h-6 text-emerald-600" /> }
-            ].map((stat, idx) => (
-              <div key={idx} className="glass-card p-6 border-2 border-emerald-600/50 dark:border-emerald-500/30 flex flex-col items-center shadow-sm">
-                <div className="mb-3">{stat.icon}</div>
-                <div className="text-2xl font-bold text-gray-900 dark:text-white tabular-nums"><AnimatedStat value={stat.value} /></div>
-                <div className="text-xs text-gray-500 font-bold uppercase tracking-widest">{stat.title}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="glass-card p-8 border border-gray-100 dark:border-gray-800 relative shadow-sm">
-             <div className="flex items-center justify-between mb-8">
-               <h3 className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                 <GlobeAltIcon className="text-emerald-600 w-4 h-4" /> Global Deployment Reach
-               </h3>
-               {tooltipContent && (
-                  <div className="bg-emerald-600 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest animate-pulse whitespace-nowrap">
-                    {tooltipContent}
-                  </div>
-               )}
-             </div>
-             
-             <div className="w-full bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-100 dark:border-gray-800 flex items-center justify-center overflow-hidden">
-               <ComposableMap width={800} height={400} projectionConfig={{ rotate: [-10, 0, 0], scale: 140 }}>
-                 <Sphere stroke="#00000010" strokeWidth={0.5} id="1" fill="transparent" />
-                 <Graticule stroke="#00000005" strokeWidth={0.3} />
-                 <Geographies geography={geoUrl}>
-                   {({ geographies }) =>
-                     geographies.map((geo) => {
-                       const countryName = geo.properties.name;
-                       const count = mapData[countryName] || 0;
-                       return (
-                         <Geography
-                           key={geo.rsmKey}
-                           geography={geo}
-                           onMouseEnter={() => setTooltipContent(`${countryName}: ${count.toLocaleString()} visits`)}
-                           onMouseLeave={() => setTooltipContent("")}
-                           style={{
-                             default: {
-                               fill: getCountryFill(count, document.documentElement.classList.contains('dark') ? "#1e293b" : "#e2e8f0"),
-                               outline: "none",
-                               stroke: "#00000020",
-                               strokeWidth: 0.3
-                             },
-                             hover: {
-                               fill: "#10b981",
-                               outline: "none",
-                               cursor: "pointer"
-                             },
-                             pressed: {
-                               fill: "#059669",
-                               outline: "none"
-                             }
-                           }}
-                         />
-                       );
-                     })
-                   }
-                 </Geographies>
-               </ComposableMap>
-             </div>
-             <div className="mt-6 flex items-center justify-between">
-                 <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                    Satellite Overview
-                 </div>
-                 <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                    <span>0 Vector</span>
-                    <div className="w-32 h-1.5 rounded-full bg-gray-200 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-                       <div className="absolute top-0 left-0 h-full bg-emerald-500 shadow-[0_0_8px_#10b981]" style={{ width: '100%' }}></div>
-                    </div>
-                    <span>{maxVisitors.toLocaleString()} Peak</span>
-                 </div>
-              </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 glass-card p-6 border border-gray-100 dark:border-gray-800 shadow-inner">
-               <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-6 flex justify-between items-center px-1">
-                  <span className="uppercase tracking-widest text-xs">Activity Timeline</span>
-                  <span className="text-[10px] font-normal text-gray-400 italic uppercase">Last 30 days</span>
-               </h3>
-               <div className="h-[300px]">
-                  <Line 
-                    data={timelineData} 
-                    options={{ 
-                      maintainAspectRatio: false,
-                      plugins: { legend: { display: false } },
-                      scales: { 
-                          y: { 
-                            beginAtZero: true, 
-                            grid: { color: 'rgba(16, 185, 129, 0.05)' },
-                            ticks: { color: "#64748b", font: { weight: 'bold' as const, size: 10 } }
-                          },
-                          x: { 
-                            grid: { display: false }, 
-                            ticks: { color: "#64748b", font: { weight: 'bold' as const, size: 10 } } 
-                          }
-                      }
-                    }} 
-                  />
-               </div>
-            </div>
-
-            <div className="glass-card p-6 border border-gray-100 dark:border-gray-800 shadow-inner">
-               <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-2">Country Access List</h3>
-               <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-6">
-                 {countriesReached.toLocaleString()} countries tracked
-               </p>
-               <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                 {validCountryEntries
-                   .sort((a, b) => b.count - a.count)
-                   .map(({ alpha2, count, country }) => {
-                     return (
-                       <div key={alpha2} className="flex items-center justify-between p-2 bg-gray-50/50 dark:bg-gray-800/30 rounded border border-gray-100/50 dark:border-gray-700/50 tabular-nums">
-                         <div className="flex items-center gap-3">
-                           <span>{country ? getFlag(country.codeAlpha2) : '🏳️'}</span>
-                           <span className="text-xs font-bold truncate max-w-[120px] tracking-tight uppercase">{country.name}</span>
-                         </div>
-                         <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full">{count.toLocaleString()}</span>
-                       </div>
-                     )
-                   })
-                 }
-               </div>
-            </div>
-          </div>
-        </main>
-
-        <footer className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
-          <p className="text-sm text-gray-500">Music AI Multi-Tool Hub &copy; {new Date().getFullYear()}</p>
-        </footer>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 animate-fadeIn pb-12">
       <header className="mb-14 text-center pt-8 px-4 animate-fadeIn">
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none italic mb-4 text-gradient-animated">Analytics</h1>
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-            Neural Infrastructure Monitoring • Global Deployment Reach
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Global Reach • Infrastructure Monitoring
         </p>
       </header>
 
@@ -332,13 +177,12 @@ const StatsPage: React.FC<ToolProps> = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3 glass-card p-8 border-white/10 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[120px] pointer-events-none"></div>
           <div className="flex items-center justify-between mb-8 relative z-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-800 dark:text-gray-100 flex items-center gap-2">
-              <GlobeAltIcon className="text-emerald-500 w-4 h-4" /> Global Deployment Reach
+            <h3 className="text-sm font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+              <GlobeAltIcon className="text-emerald-500 w-4 h-4" /> Global Reach
             </h3>
             {tooltipContent && (
-               <div className="bg-emerald-600 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl animate-pulse whitespace-nowrap">
+               <div className="bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-xl animate-pulse whitespace-nowrap">
                  {tooltipContent}
                </div>
             )}
@@ -385,10 +229,10 @@ const StatsPage: React.FC<ToolProps> = () => {
           </div>
           
           <div className="mt-8 flex items-center justify-between relative z-10">
-             <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-600">
+             <div className="text-xs font-medium text-gray-500 dark:text-gray-600">
                 Satellite Overview
              </div>
-             <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+             <div className="flex items-center gap-3 text-xs font-medium text-gray-500 dark:text-gray-400">
                 <span>0 Vector</span>
                 <div className="w-32 h-1.5 rounded-full bg-slate-800 dark:bg-slate-900 border border-white/5 relative overflow-hidden">
                    <div className="absolute top-0 left-0 h-full bg-emerald-500 shadow-[0_0_10px_#10b981]" style={{ width: '100%' }}></div>
@@ -399,7 +243,7 @@ const StatsPage: React.FC<ToolProps> = () => {
         </div>
 
         <div className="lg:col-span-2 glass-card p-8 border-white/10 shadow-2xl">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-800 dark:text-gray-100 mb-8">Activity Vector Timeline</h3>
+          <h3 className="text-sm font-bold text-gray-800 dark:text-gray-100 mb-8">Activity Vector Timeline</h3>
           <div className="h-[300px]">
             <Line 
               data={timelineData} 
@@ -423,8 +267,8 @@ const StatsPage: React.FC<ToolProps> = () => {
         </div>
 
         <div className="glass-card p-8 border-white/10 shadow-2xl overflow-hidden">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-800 dark:text-gray-100 mb-2">Country Access List</h3>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 dark:text-gray-500 mb-8">
+          <h3 className="text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">Country Access List</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
             {countriesReached.toLocaleString()} countries tracked
           </p>
           <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
@@ -437,9 +281,9 @@ const StatsPage: React.FC<ToolProps> = () => {
                        <span className="text-lg filter grayscale group-hover:grayscale-0 transition-all duration-300">
                          {country ? getFlag(country.codeAlpha2) : '🏳️'}
                        </span>
-                       <span className="text-[11px] font-black uppercase tracking-tight text-gray-600 dark:text-gray-400 group-hover:text-emerald-500 transition-colors truncate max-w-[140px] leading-none">{country.name}</span>
+                       <span className="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-emerald-500 transition-colors truncate max-w-[140px] leading-none">{country.name}</span>
                      </div>
-                     <span className="text-[10px] font-black bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full tabular-nums">{count.toLocaleString()}</span>
+                     <span className="text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full tabular-nums">{count.toLocaleString()}</span>
                    </div>
                  )
                })

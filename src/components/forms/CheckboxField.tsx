@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from '@/context/ThemeContext';
 
 interface CheckboxFieldProps {
   id: string;
@@ -17,10 +16,9 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   id, label, checked, onChange, disabled,
   className = "mb-4", description, title, labelTextColor
 }) => {
-  const { uiMode } = useTheme();
   const labelColorClass = labelTextColor 
     ? labelTextColor 
-    : (uiMode === 'architect' ? "text-gray-800 dark:text-gray-200" : "text-gray-700 dark:text-emerald-300");
+    : "text-gray-800 dark:text-gray-200";
 
   return (
     <div className={`flex items-start ${className}`}>
@@ -32,9 +30,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
                 onChange={(e) => onChange(e.target.checked)}
                 disabled={disabled}
                 className={`h-4 w-4 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed
-                  ${uiMode === 'architect' 
-                    ? 'text-emerald-600 border-white/20 focus:ring-emerald-500/30 bg-white/5' 
-                    : 'text-emerald-600 dark:text-emerald-500 border-gray-300 dark:border-gray-600 focus:ring-emerald-500 dark:focus:ring-emerald-400 bg-white dark:bg-gray-700'}`}
+                  text-emerald-600 border-gray-300 dark:border-white/20 focus:ring-emerald-500/30 bg-white dark:bg-white/5`}
                 title={title}
                 aria-describedby={description ? `${id}-description` : undefined}
             />

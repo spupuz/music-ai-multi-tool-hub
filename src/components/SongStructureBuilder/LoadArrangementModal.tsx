@@ -17,15 +17,15 @@ const LoadArrangementModal: React.FC<LoadArrangementModalProps> = ({ show, onClo
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
-            <div className="glass-card p-8 md:p-10 max-w-lg w-full border-white/10 shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh]">
+            <div className="glass-card p-8 md:p-10 max-w-lg w-full border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh]">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-green-500/5 blur-[80px] pointer-events-none"></div>
                 
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 sticky top-0 z-10">Vault Access</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600 dark:text-green-500 mb-8 sticky top-0 z-10">Saved Arrangements</h3>
                 
                 {savedArrangements.length > 0 ? (
                     <div className="overflow-y-auto pr-2 custom-scrollbar flex-grow space-y-3 pb-6">
                         {savedArrangements.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(item => (
-                            <div key={item.id} className="p-5 bg-white/5 dark:bg-black/20 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all group">
+                            <div key={item.id} className="p-5 bg-white dark:bg-black/20 rounded-2xl border border-gray-200 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10 transition-all group">
                                 <div className="flex justify-between items-center gap-4">
                                     <div className="min-w-0">
                                         <p className="font-black text-xs uppercase tracking-widest text-gray-900 dark:text-white truncate mb-1">{item.name}</p>
@@ -48,12 +48,12 @@ const LoadArrangementModal: React.FC<LoadArrangementModalProps> = ({ show, onClo
                     </div>
                 ) : (
                     <div className="flex-grow flex flex-col items-center justify-center py-20 opacity-40">
-                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 text-center">Neural Vault Empty</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 text-center">No saved arrangements</p>
                     </div>
                 )}
                 
-                <div className="mt-6 pt-6 border-t border-white/5 sticky bottom-0 z-10">
-                    <Button onClick={onClose} variant="ghost" size="sm" className="w-full font-black uppercase tracking-widest text-[9px] border-white/10">Close Terminal</Button>
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/5 sticky bottom-0 z-10">
+                    <Button onClick={onClose} variant="ghost" size="sm" className="w-full font-black uppercase tracking-widest text-[9px] border-gray-200 dark:border-white/10">Close Terminal</Button>
                 </div>
             </div>
         </div>

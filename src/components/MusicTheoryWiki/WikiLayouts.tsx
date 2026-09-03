@@ -17,14 +17,14 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
     searchTerm, setSearchTerm, visibleCategories, filteredWikiTopics,
     expandedCategories, toggleCategoryExpansion, selectedTopicId, handleSelectTopic
 }) => (
-    <aside className="w-full md:w-80 md:min-w-[320px] md:shrink-0 p-4 rounded-3xl border border-white/20 glass-nav self-start md:sticky md:top-24 max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 shadow-2xl transition-all duration-300">
+    <aside className="w-full md:w-80 md:min-w-[320px] md:shrink-0 p-4 rounded-3xl border border-gray-300 dark:border-white/20 glass-nav self-start md:sticky md:top-24 max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 shadow-2xl transition-all duration-300">
         <div className="relative mb-6">
             <input
                 type="search"
                 placeholder="Search topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all duration-300 font-bold text-sm"
+                className="w-full px-4 py-3 bg-white dark:bg-black/20 border border-gray-300 dark:border-white/20 rounded-2xl placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all duration-300 font-bold text-sm"
                 aria-label="Search wiki topics"
             />
         </div>
@@ -42,7 +42,7 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
                     <Button
                         onClick={() => toggleCategoryExpansion(category)}
                         variant="ghost"
-                        className="w-full flex justify-between items-center text-left text-[11px] font-black uppercase tracking-[0.15em] text-emerald-700 dark:text-emerald-400 mb-2 p-3 hover:bg-white/10 dark:hover:bg-white/5 rounded-2xl border-none shadow-none transition-all duration-300"
+                        className="w-full flex justify-between items-center text-left text-[11px] font-black uppercase tracking-[0.15em] text-emerald-700 dark:text-emerald-400 mb-2 p-3 hover:bg-gray-100 dark:hover:bg-white/5 rounded-2xl border-none shadow-none transition-all duration-300"
                         aria-expanded={!!expandedCategories[category]}
                         endIcon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-3.5 h-3.5 transform transition-transform duration-300 ${expandedCategories[category] ? 'rotate-0' : '-rotate-90'}`}>
@@ -53,7 +53,7 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
                         <span>{category} <span className="opacity-40 italic ml-1">({topicsInCategory.length})</span></span>
                     </Button>
                     {expandedCategories[category] && (
-                        <ul className="space-y-1.5 pl-3 border-l-[3px] border-white/10 ml-2 animate-fadeIn">
+                        <ul className="space-y-1.5 pl-3 border-l-[3px] border-gray-200 dark:border-white/10 ml-2 animate-fadeIn">
                             {topicsInCategory.map(topic => (
                                 <li key={topic.id}>
                                     <Button
@@ -61,8 +61,8 @@ export const WikiSidebar: React.FC<WikiSidebarProps> = ({
                                         variant="ghost"
                                         className={`w-full text-left text-sm px-3 py-2.5 rounded-xl transition-all duration-200 font-bold border-none shadow-none justify-start
                                             ${selectedTopicId === topic.id 
-                                                ? 'bg-white/30 dark:bg-white/20 text-emerald-600 dark:text-emerald-400 shadow-md border border-white/20' 
-                                                : 'text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'}`}
+                                                ? 'bg-white dark:bg-white/20 text-emerald-600 dark:text-emerald-400 shadow-md border border-gray-300 dark:border-white/20' 
+                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'}`}
                                         aria-current={selectedTopicId === topic.id ? 'page' : undefined}
                                     >
                                         {topic.title}
@@ -87,7 +87,7 @@ interface WikiArticleProps {
 export const WikiArticle: React.FC<WikiArticleProps> = ({
     selectedTopic, filteredWikiTopics, relatedTopics, handleSelectTopic
 }) => (
-    <article id="wiki-article-content" className="flex-1 p-6 md:p-10 rounded-3xl border border-white/10 min-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white/10 animate-fadeIn">
+    <article id="wiki-article-content" className="flex-1 p-6 md:p-10 rounded-3xl border border-gray-200 dark:border-white/10 min-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-white/10 animate-fadeIn">
         {selectedTopic ? (
             <div className="space-y-8">
                 <div>
@@ -100,7 +100,7 @@ export const WikiArticle: React.FC<WikiArticleProps> = ({
                 </div>
 
                 {relatedTopics.length > 0 && (
-                    <div className="mt-16 pt-10 border-t border-white/10">
+                    <div className="mt-16 pt-10 border-t border-gray-200 dark:border-white/10">
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-6">Related Topics</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {relatedTopics.map(topic => (
@@ -108,7 +108,7 @@ export const WikiArticle: React.FC<WikiArticleProps> = ({
                                     key={`related-${topic.id}`}
                                     onClick={() => handleSelectTopic(topic.id)}
                                     variant="ghost"
-                                    className="p-5 h-auto rounded-2xl border border-white/10 hover:border-emerald-500/20 hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-300 text-left group flex flex-col items-start gap-1 shadow-none"
+                                    className="p-5 h-auto rounded-2xl border border-gray-200 dark:border-white/10 hover:border-emerald-500/20 hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-300 text-left group flex flex-col items-start gap-1 shadow-none"
                                 >
                                     <div className="text-sm font-black text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors uppercase tracking-tight">{topic.title}</div>
                                     <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 dark:text-gray-600 mt-1">{topic.category}</div>
@@ -120,7 +120,7 @@ export const WikiArticle: React.FC<WikiArticleProps> = ({
             </div>
         ) : filteredWikiTopics.length > 0 ? (
             <div className="h-full flex items-center justify-center text-center">
-                <div className="max-w-md p-8 glass-card border-white/10 animate-pulse">
+                <div className="max-w-md p-8 glass-card border-gray-200 dark:border-white/10 animate-pulse">
                     <p className="text-xs font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 italic">Select a topic from the menu to discover more about AI music composition.</p>
                 </div>
             </div>

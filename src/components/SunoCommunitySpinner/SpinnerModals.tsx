@@ -32,7 +32,7 @@ export const LoadModal: React.FC<LoadModalProps> = ({ isOpen, onClose, savedWhee
                         ))
                     )}
                 </div>
-                <Button onClick={onClose} variant="ghost" className="w-full py-4 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest border-white/10 hover:bg-white/5">Close</Button>
+                <Button onClick={onClose} variant="ghost" className="w-full py-4 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest border-gray-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/5">Close</Button>
             </div>
         </div>
     );
@@ -55,7 +55,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, confi
                 <textarea readOnly aria-label="Export configuration JSON" value={configJson} className="w-full h-64 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs mb-6 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent text-gray-900 dark:text-white" />
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Button onClick={onDownload} variant="primary" size="lg" backgroundColor="#10b981" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Download .json File</Button>
-                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-white/10 text-gray-500">Close</Button>
+                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-gray-200 dark:border-white/10 text-gray-500">Close</Button>
                 </div>
             </div>
         </div>
@@ -85,12 +85,12 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, confi
                 </div>
                 <div className="mb-6">
                     <label htmlFor="import-json-textarea" className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Option 2: Paste JSON Data</label>
-                    <textarea id="import-json-textarea" value={configJson} onChange={(e) => onJsonChange(e.target.value)} placeholder="Paste your Magic Spin Wheel JSON configuration here..." className="w-full h-48 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent text-gray-900 dark:text-white" />
+                    <textarea id="import-json-textarea" value={configJson} onChange={(e) => onJsonChange(e.target.value)} placeholder="Paste your Spinner Wheel JSON configuration here..." className="w-full h-48 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent text-gray-900 dark:text-white" />
                     {importError && <p className="mt-2 text-xs text-red-600 dark:text-red-400 font-medium">Error: {importError}</p>}
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Button onClick={onImport} variant="primary" size="lg" backgroundColor="#8b5cf6" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Import Configuration</Button>
-                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-white/10 text-gray-500">Cancel</Button>
+                    <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-gray-200 dark:border-white/10 text-gray-500">Cancel</Button>
                 </div>
             </div>
         </div>

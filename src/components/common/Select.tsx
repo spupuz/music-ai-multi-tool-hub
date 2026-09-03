@@ -78,10 +78,10 @@ const Select: React.FC<SelectProps> = ({
           border backdrop-blur-md shadow-lg font-bold text-sm
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500
           ${disabled 
-            ? 'opacity-40 cursor-not-allowed border-white/5 bg-black/10' 
+            ? 'opacity-40 cursor-not-allowed border-gray-200 dark:border-white/5 bg-black/10' 
             : isOpen 
-              ? 'border-white/40 ring-4 ring-white/10 dark:ring-white/5 bg-white/20 dark:bg-white/10' 
-              : 'border-white/20 hover:border-white/30 bg-white/10 dark:bg-white/5 hover:bg-white/15 dark:hover:bg-white/10'
+              ? 'border-white/40 ring-4 ring-white/10 dark:ring-white/5 bg-white dark:bg-white/10' 
+              : 'border-gray-300 dark:border-white/20 hover:border-white/30 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10'
           }
           dark:text-white text-gray-900 ${className}
         `}
@@ -96,7 +96,7 @@ const Select: React.FC<SelectProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl animate-fadeIn"
+          className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-gray-300 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl animate-fadeIn"
           role="listbox"
         >
           <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 py-1">

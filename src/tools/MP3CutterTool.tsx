@@ -1,7 +1,6 @@
 import React from 'react';
 import type { ToolProps } from '@/Layout';
 import { useMP3CutterLogic } from '@/hooks/useMP3CutterLogic';
-import { useTheme } from '@/context/ThemeContext';
 import Spinner from '@/components/Spinner';
 import Button from '@/components/common/Button';
 import { LinkIcon, UploadIcon, DownloadIcon, PlayIcon, PauseIcon, StopIcon, CropIcon, ImportIcon } from '@/components/Icons';
@@ -28,7 +27,6 @@ const TimeInput: React.FC<{ label: string; value: string; onChange: (val: string
 );
 
 const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const {
     wavesurferRef,
     waveformReady,
@@ -63,26 +61,15 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            MP3 Cutter
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-            Precision Audio Trimming • Non-Destructive Signal Editing
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-lg sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">MP3 Cutter</h1>
-          <p className="mt-1 md:mt-4 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-              Precision Audio Trimming • Non-Destructive Signal Editing
-          </p>
-        </header>
-      )}
+    <div className={`w-full `}>
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">MP3 Cutter</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Precision Audio Trimming • Non-Destructive Audio Editing
+        </p>
+      </header>
 
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-[100px] pointer-events-none"></div>
@@ -99,7 +86,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 id="sunoUrlInput"
                 value={sunoUrlInput}
                 onChange={(e) => setSunoUrlInput(e.target.value)}
-                className="block w-full flex-1 rounded-2xl sm:rounded-none sm:rounded-l-2xl border-white/10 bg-white/10 dark:bg-black/20 px-4 py-3.5 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+                className="block w-full flex-1 rounded-2xl sm:rounded-none sm:rounded-l-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 px-4 py-3.5 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-500 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
                 placeholder="suno.com/..., riffusion.com/..., flowmusic.app/..."
                 disabled={isLoading}
               />
@@ -126,7 +113,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
 
           {/* File Upload Section */}
-          <div className="flex flex-row items-center justify-center gap-6 p-4 bg-white/5 dark:bg-black/20 rounded-2xl border border-white/5">
+          <div className="flex flex-row items-center justify-center gap-6 p-4 bg-white dark:bg-black/20 rounded-2xl border border-gray-200 dark:border-white/5">
             <input type="file" accept=".mp3" onChange={handleFileChange} className="hidden" ref={fileInputRef} aria-label="Upload MP3 file"/>
             <Button
               onClick={() => fileInputRef.current?.click()}
@@ -183,7 +170,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         )}
 
 
-        <div id="waveform-container" ref={wavesurferRef} className="w-full h-32 bg-white/5 dark:bg-black/40 rounded-2xl border border-white/10 my-8 shadow-inner overflow-hidden">
+        <div id="waveform-container" ref={wavesurferRef} className="w-full h-32 bg-white dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-white/10 my-8 shadow-inner overflow-hidden">
           {!waveformReady && !isLoading && <div className="flex items-center justify-center h-full text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 opacity-40">Waveform will appear here</div>}
         </div>
         
@@ -250,7 +237,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     aria-label="Volume control"
                 />
             </div>
-            <div className="flex flex-row items-center justify-center gap-6 p-6 bg-white/5 dark:bg-black/20 rounded-3xl border border-white/5 shadow-inner">
+            <div className="flex flex-row items-center justify-center gap-6 p-6 bg-white dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5 shadow-inner">
                 <Button
                   onClick={handleCropAndDownload}
                   disabled={!waveformReady || selection.end <= selection.start || isSelectionTooLong}

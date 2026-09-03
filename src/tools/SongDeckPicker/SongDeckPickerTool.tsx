@@ -19,7 +19,7 @@ const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://ww
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
 
 const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-    const { theme, uiMode } = useTheme();
+    const { theme } = useTheme();
     const logic = useSongDeckPickerLogic({ trackLocalEvent });
     
     const [isSnippetPlaying, setIsSnippetPlaying] = useState(false);
@@ -121,30 +121,19 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     ];
 
     return (
-        <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white pb-20 px-4' : 'text-gray-900 dark:text-white'} animate-fadeIn`}>
-          {uiMode === 'classic' ? (
-            <header className="mb-10 text-center pt-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-                Song Deck Picker
-              </h1>
-              <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-                Curated song libraries • Advanced filtering • Interactive Decks
-              </p>
-            </header>
-          ) : (
-            <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-              <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Song Deck Picker</h1>
-              <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-                Curated song libraries • Advanced filtering • Interactive Decks
-              </p>
-            </header>
-          )}
+        <div className="w-full text-gray-900 dark:text-white animate-fadeIn">
+          <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Song Deck Picker</h1>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Curated song libraries • Advanced filtering • Interactive Decks
+            </p>
+          </header>
 
-          <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+          <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         <div className="max-w-6xl mx-auto space-y-12">
         
         <nav 
-            className="sticky top-4 z-[60] p-3 md:p-4 mb-12 rounded-3xl flex flex-wrap items-center justify-between gap-6 glass-card border-white/20 shadow-2xl transition-all duration-500 overflow-visible" 
+            className="sticky top-4 z-[60] p-3 md:p-4 mb-12 rounded-3xl flex flex-wrap items-center justify-between gap-6 glass-card border-gray-300 dark:border-white/20 shadow-2xl transition-all duration-500 overflow-visible" 
         >
             <div className="flex items-center gap-4 min-w-[200px]">
                 <Select 

@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { MetronomeIcon, StopIcon } from '@/components/Icons';
@@ -18,7 +17,6 @@ type SubdivisionType = 'none' | 'eighth' | 'sixteenth' | 'triplet';
 type ClickSoundType = 'classic' | 'woodblock' | 'digital';
 
 const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [bpm, setBpm] = useState<number>(() => {
     const savedBpm = safeGetItem(LOCAL_STORAGE_BPM_KEY);
     return savedBpm ? parseInt(savedBpm, 10) : 120;
@@ -226,26 +224,15 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
     return (
-      <div className={`w-full ${uiMode === 'classic' ? 'text-gray-900 dark:text-white px-4 pb-20' : 'text-gray-900 dark:text-white'} animate-fadeIn`}>
-        {uiMode === 'classic' ? (
-          <header className="mb-10 text-center pt-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-              Metronome
-            </h1>
-            <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-              Temporal Synchronization Core • Precision Rhythmic Alignment
-            </p>
-          </header>
-        ) : (
-          <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Metronome</h1>
-            <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-                Temporal Synchronization Core • Precision Rhythmic Alignment
-            </p>
-          </header>
-        )}
+      <div className={`w-full text-gray-900 dark:text-white animate-fadeIn`}>
+        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Metronome</h1>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Time Synchronization Core • Precision Rhythmic Alignment
+          </p>
+        </header>
 
-        <main className="w-full max-w-lg mx-auto glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <main className="w-full max-w-lg mx-auto glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 blur-[80px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 blur-[80px] pointer-events-none"></div>
 

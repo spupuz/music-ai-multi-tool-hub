@@ -8,7 +8,6 @@ import {
   DiatonicChordInfo
 } from '@/utils/musicTheoryUtils';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { MusicNoteIcon, SparklesIcon, SparkTuneIcon as SpeakerIcon } from '@/components/Icons';
@@ -43,7 +42,6 @@ const calculateFrequencyForNote = (noteName: string, octave: number = 4): number
 
 
 const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [rootNote, setRootNote] = useState<string>('C');
   const [scaleType, setScaleType] = useState<string>('Major');
   
@@ -171,26 +169,15 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Scale & Chord Viewer
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
+    <div className="w-full">
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Scale & Chord Viewer</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             Musical Theory Matrix • Interactive Harmonic Map
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Scale & Chord Viewer</h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-              Musical Theory Matrix • Interactive Harmonic Map
-          </p>
-        </header>
-      )}
+        </p>
+      </header>
 
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
 

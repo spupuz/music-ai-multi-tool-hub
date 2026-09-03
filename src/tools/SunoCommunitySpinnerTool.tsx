@@ -23,7 +23,7 @@ import { useWheelState } from '@/components/SunoCommunitySpinner/hooks/useWheelS
 import { WheelConfigData } from '@/components/SunoCommunitySpinner/types';
 
 const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-    const { theme, uiMode } = useTheme();
+    const { theme } = useTheme();
 
     // -- HOOKS --
     const {
@@ -175,7 +175,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 
                 const selectedActivity = wheelSegments[winningSegmentIndex]; 
                 const detail = activityDetails[selectedActivity]?.detailText; 
-                const personalizedMsg = `What's the plan for today, ${userName.trim() || 'Suno Explorer'}? Your "${activityWheelTitle.trim() || 'Magic Spin Wheel'}" has chosen:`; 
+                const personalizedMsg = `What's the plan for today, ${userName.trim() || 'Suno Explorer'}? Your "${activityWheelTitle.trim() || 'Community Spinner Wheel'}" has chosen:`; 
                 
                 setSpinResult({ 
                     activity: selectedActivity, 
@@ -229,7 +229,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     
     const handleClearCurrentWheel = () => { 
         loadConfigData({ 
-            activityWheelTitle: 'Magic Spin Wheel', 
+            activityWheelTitle: 'Community Spinner Wheel', 
             userName: '', 
             activitiesString: defaultActivitiesListEnglish.join('\n'), 
             activityDetails: {}, 
@@ -237,7 +237,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             numberOfSegmentsOnWheel: 12, 
             selectedActivitiesForWheel: {}, 
             wheelActivityWeights: {}, 
-            customTitle: 'Magic Spin Wheel', 
+            customTitle: 'Community Spinner Wheel', 
             customLogo: null, 
             selectedLogoSize: '96px', 
             toolAccentColor: DEFAULT_TOOL_ACCENT_COLOR, 
@@ -315,46 +315,35 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
     return (
-        <div className={`w-full flex flex-col min-h-[calc(100vh-4rem)] overflow-x-hidden ${uiMode === 'classic' ? 'pb-20 px-4' : ''}`} style={{ backgroundColor: toolBackgroundColor, color: toolTextColor }}>
-            {uiMode === 'classic' ? (
-                <header className="mb-6 text-center pt-8">
-                    <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-                        Community Spinner
-                    </h1>
-                    <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-                        Crowdsourced inspiration • Neural style randomization
-                    </p>
-                </header>
-            ) : (
-                <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Community Spinner</h1>
-                    <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-lg mx-auto opacity-60">Crowdsourced inspiration • Neural style randomization</p>
-                </header>
-            )}
+        <div className="w-full flex flex-col min-h-[calc(100vh-4rem)] overflow-x-hidden" style={{ backgroundColor: toolBackgroundColor, color: toolTextColor }}>
+            <header className="mb-2 md:mb-12 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Community Spinner</h1>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Crowdsourced inspiration • Style randomization</p>
+            </header>
             
             {soundError && ( <div className="w-full max-w-md mx-auto p-2 mb-3 bg-red-700 text-white text-xs text-center rounded-md shadow"> {soundError} </div> )}
             
             <div className="w-full max-w-6xl mx-auto px-4">
                 {isConfigPanelOpen && (
-                    <div id="spinner-config-panel" className="glass-card p-6 md:p-8 border-white/10 shadow-2xl mb-12 relative overflow-hidden">
+                    <div id="spinner-config-panel" className="glass-card p-6 md:p-8 border-gray-200 dark:border-white/10 shadow-2xl mb-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] pointer-events-none"></div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-h-[70vh] lg:max-h-none overflow-y-auto pr-2 scrollbar-thin">
                             {/* Column 1: Spinner Identity & Wheel Management */}
                             <div className="space-y-6">
                                 <section> 
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Signal Identity</h3> 
-                                    <InputField id="activityWheelTitle" label="Stream Designation" value={activityWheelTitle} onChange={setActivityWheelTitle} className="mb-4"/> 
-                                    <InputField id="userName" label="Operator Profile" value={userName} onChange={setUserName} className="mb-2"/> 
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Identity</h3> 
+                                    <InputField id="activityWheelTitle" label="Wheel Title" value={activityWheelTitle} onChange={setActivityWheelTitle} className="mb-4"/> 
+                                    <InputField id="userName" label="Your Name" value={userName} onChange={setUserName} className="mb-2"/> 
                                 </section>
-                                <section className="pt-6 border-t border-white/5">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Vault Control</h3>
+                                <section className="pt-6 border-t border-gray-200 dark:border-white/5">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 px-1">Manage</h3>
                                     <div className="flex flex-col sm:flex-row gap-3"> 
-                                        <Button onClick={handleSaveConfiguration} variant="primary" size="xs" backgroundColor="#10b981" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 rounded-xl shadow-lg border-white/10">Commit</Button> 
-                                        <Button onClick={() => setShowLoadModal(true)} disabled={savedWheels.length === 0} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Archive ({savedWheels.length})</Button> 
+                                        <Button onClick={handleSaveConfiguration} variant="primary" size="xs" backgroundColor="#10b981" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 rounded-xl shadow-lg border-white/10">Save</Button> 
+                                        <Button onClick={() => setShowLoadModal(true)} disabled={savedWheels.length === 0} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 rounded-xl">Archive ({savedWheels.length})</Button> 
                                     </div>
                                     <div className="flex flex-col sm:flex-row gap-3 mt-4"> 
-                                        <Button onClick={handleExportSetup} variant="ghost" size="xs" startIcon={<ExportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Back Up</Button> 
-                                        <Button onClick={() => { setImportError(''); setConfigToImportJson(''); setShowImportModal(true);}} variant="ghost" size="xs" startIcon={<ImportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-white/10 bg-white/5 rounded-xl">Restore</Button> 
+                                        <Button onClick={handleExportSetup} variant="ghost" size="xs" startIcon={<ExportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 rounded-xl">Back Up</Button> 
+                                        <Button onClick={() => { setImportError(''); setConfigToImportJson(''); setShowImportModal(true);}} variant="ghost" size="xs" startIcon={<ImportIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[9px] py-3 border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 rounded-xl">Restore</Button> 
                                     </div>
                                     <div className="mt-6">
                                         <ConfirmationButton 
@@ -376,7 +365,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                     <div className="flex items-center justify-end mb-4">
                                         <ConfirmationButton onConfirm={handleResetToDefault} label="Reset to Default Stream" confirmLabel="Confirm?" className="text-[9px] font-black uppercase tracking-widest text-emerald-600/60 hover:text-emerald-500 underline underline-offset-4 transition-all" /> 
                                     </div>
-                                    <CheckboxField id="showAddEditDetails" label="Advanced Neural Mapping" checked={showAddEditDetails} onChange={setShowAddEditDetails} className="mb-0"/>
+                                    <CheckboxField id="showAddEditDetails" label="Advanced Options" checked={showAddEditDetails} onChange={setShowAddEditDetails} className="mb-0"/>
                                     {showAddEditDetails && activitiesArray.length > 0 && ( 
                                         <div className="mt-6 p-4 bg-black/20 rounded-2xl border border-white/5 max-h-48 overflow-y-auto space-y-4 scrollbar-thin"> 
                                             {activitiesArray.map((act, idx) => ( 
@@ -516,7 +505,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
 
             {/* MAIN WHEEL DISPLAY AREA - STABLE POSITIONING */}
-            <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+            <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
                 {wheelSegments.length > 0 && !isSumMismatch ? (
                     <div className="flex flex-col items-center transition-all duration-500 ease-in-out">
                         <div ref={canvasContainerRef} className="relative w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] md:w-[480px] md:h-[480px] rounded-full shadow-[0_0_60px_rgba(0,0,0,0.6)] border-4 border-gray-700/50 bg-gray-900/20">
@@ -539,7 +528,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                         {/* Result Presentation - Flow-Optimized to prevent jump */}
                         <div className="mt-8 min-h-[120px] w-full flex flex-col items-center justify-start">
                             {spinResult && !isSpinning && (
-                                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 text-center p-1 w-full max-w-2xl bg-black/10 rounded-2xl backdrop-blur-sm border border-white/10 shadow-2xl">
+                                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 text-center p-1 w-full max-w-2xl bg-black/10 rounded-2xl backdrop-blur-sm border border-gray-200 dark:border-white/10 shadow-2xl">
                                     <p className="text-sm font-bold uppercase tracking-widest opacity-70 mb-3 px-4">{spinResult.personalizedMessage}</p>
                                     <div className="inline-block px-8 py-5 rounded-xl shadow-lg border-2 w-full sm:w-auto" style={{ backgroundColor: toolAccentColor, borderColor: lightenDarkenColor(toolAccentColor, 30) }}>
                                         <h2 className="text-xl sm:text-3xl font-black leading-tight" style={{ color: getAdjustedTextColorForContrast(toolAccentColor) }}>{spinResult.activity}</h2>
@@ -572,7 +561,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </main>
 
             <footer className="w-full py-8 px-4 bg-transparent dark:bg-black/10 border-t border-gray-200 dark:border-white/5 mt-auto text-center">
-                <p className="text-[10px] sm:text-xs text-slate-400 dark:text-gray-500 font-black uppercase tracking-[4px]">Suno Community Magic Spin Wheel • Stay Creative</p>
+                <p className="text-[10px] sm:text-xs text-slate-400 dark:text-gray-500 font-black uppercase tracking-[4px]">Suno Community Spinner Wheel • Stay Creative</p>
             </footer>
 
             {/* Modals */}

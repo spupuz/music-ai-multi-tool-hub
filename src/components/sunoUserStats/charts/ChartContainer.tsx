@@ -11,7 +11,7 @@ interface ChartContainerProps {
 
 const ChartContainer: React.FC<ChartContainerProps> = ({ title, children, heightClassName, tooltipText }) => {
   return (
-    <div className="bg-gray-800/40 dark:bg-gray-850/40 backdrop-blur-sm rounded-xl p-1 sm:p-6 border border-gray-700/50 shadow-xl flex flex-col">
+    <div className="bg-gray-50 dark:bg-gray-850/40 backdrop-blur-sm rounded-xl p-1 sm:p-6 border border-gray-200 dark:border-gray-700/50 shadow-xl flex flex-col">
       <div className="flex items-center justify-center mb-5 gap-2 px-1">
         <h4 className="text-sm sm:text-md font-semibold text-emerald-700 dark:text-emerald-200 text-center line-clamp-2">{title}</h4>
         {tooltipText && <InfoIconWithTooltip text={tooltipText} className="flex-shrink-0" />}

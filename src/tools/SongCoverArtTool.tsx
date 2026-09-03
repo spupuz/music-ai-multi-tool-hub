@@ -12,7 +12,6 @@ import SelectField from '@/components/forms/SelectField';
 import CheckboxField from '@/components/forms/CheckboxField';
 import SliderField from '@/components/forms/SliderField';
 import Button from '@/components/common/Button';
-import { useTheme } from '@/context/ThemeContext';
 
 
 import {
@@ -31,7 +30,6 @@ import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 
 const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [songUrlInput, setSongUrlInput] = useState<string>('');
   const [songName, setSongName] = useState<string>('');
   const [artistTitle, setArtistTitle] = useState<string>('');
@@ -292,7 +290,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   const handleAddTextAndOverlayToImage = async () => {
     if (!songName.trim() || !artistTitle.trim() || !inputImageBase64) { setError('Missing Title, Artist, or Main Image.'); return; }
-    setError(null); setProcessedImage(null); setAppState(AppState.Processing); setProgressMessage('Applying Signal Processing...');
+    setError(null); setProcessedImage(null); setAppState(AppState.Processing); setProgressMessage('Applying Image Processing...');
     try {
       const txtOpts = currentTextOptions();
       const imgFilters = { brightness, contrast, saturation, grayscale, sepia, hueRotate, blur, vignetteIntensity, vignetteColor, noiseAmount, duotone, duotoneColor1, duotoneColor2 };
@@ -364,38 +362,27 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   return (
-    <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-6 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Cover Art Lab
-          </h1>
-          <p className="mt-2 text-[11px] font-medium text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-center">
-            High-Fidelity Cover Art • Cinematic Signal Processing
-          </p>
-        </header>
-      ) : (
-        <header className="mb-8 md:mb-16 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Cover Art Lab</h1>
-          <p className="mt-1 md:mt-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 opacity-60 mx-auto max-w-2xl">
-            High-Fidelity Cover Art • Cinematic Signal Processing
-          </p>
-        </header>
-      )}
+    <div className="w-full">
+      <header className="mb-8 md:mb-16 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Cover Art Lab</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          High-Fidelity Cover Art • Cinematic Image Processing
+        </p>
+      </header>
 
       <canvas ref={previewCanvasRef} style={{ display: 'none' }}></canvas>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
         {/* Column 1: Generation & Input */}
         <div className="space-y-8">
-          <section className="glass-card p-8 border-white/10 shadow-xl">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6">Source Signal</h3>
+          <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-xl">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-6">Source Song</h3>
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500">Remote Stream</label>
                 <div className="flex gap-2">
-                  <input type="text" value={songUrlInput} onChange={(e) => setSongUrlInput(e.target.value)} placeholder="Suno / Riffusion / Flow Music URL" className="flex-grow px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold" />
-                  <Button onClick={handleLoadFromUrl} variant="primary" size="xs" className="px-4" startIcon={<RefreshIcon className="w-3 h-3" />}>Sync</Button>
+                  <input type="text" value={songUrlInput} onChange={(e) => setSongUrlInput(e.target.value)} placeholder="Suno / Riffusion / Flow Music URL" className="flex-grow px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-xs font-bold" />
+                  <Button onClick={handleLoadFromUrl} variant="primary" size="xs" className="px-4" startIcon={<RefreshIcon className="w-3 h-3" />}>Load</Button>
                 </div>
               </div>
               <div className="space-y-4">
@@ -405,16 +392,16 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
           </section>
 
-          <section className="glass-card p-8 border-white/10 shadow-xl">
+          <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-xl">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-6">Visual Core</h3>
             <ImageUpload onImageUpload={handleImageUpload} label="Deploy Main Canvas" />
           </section>
 
-          <section className="glass-card p-8 border-white/10 shadow-xl relative overflow-hidden">
+          <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-xl relative overflow-hidden">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">Geometric Typography</h3>
               <div className="flex gap-2">
-                <Button onClick={() => setShowLoadPresetModal(true)} variant="ghost" size="xs" startIcon={<LoadIcon className="w-3 h-3" />} className="flex items-center justify-center">Vault</Button>
+                <Button onClick={() => setShowLoadPresetModal(true)} variant="ghost" size="xs" startIcon={<LoadIcon className="w-3 h-3" />} className="flex items-center justify-center">Presets</Button>
                 <Button onClick={() => setShowSavePresetModal(true)} variant="ghost" size="xs" startIcon={<SaveIcon className="w-3.5 h-3.5" />} className="flex items-center justify-center">Commit</Button>
               </div>
             </div>
@@ -424,9 +411,9 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <SelectField id="fontFamily" label="Font Vector" value={fontFamily} onChange={setFontFamily} options={availableFonts} />
                 <div className="space-y-2">
                   <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Color Processing</label>
-                  <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/10">
-                    <Button onClick={() => setTextColorMode('solid')} variant="ghost" size="sm" className={`flex-1 ${textColorMode === 'solid' ? 'bg-white/10' : ''}`}>Solid</Button>
-                    <Button onClick={() => setTextColorMode('gradient')} variant="ghost" size="sm" className={`flex-1 ${textColorMode === 'gradient' ? 'bg-white/10' : ''}`}>Gradient</Button>
+                  <div className="flex gap-2 p-1 bg-white dark:bg-white/5 rounded-xl border border-gray-200 dark:border-white/10">
+                    <Button onClick={() => setTextColorMode('solid')} variant="ghost" size="sm" className={`flex-1 ${textColorMode === 'solid' ? 'bg-white dark:bg-white/10' : ''}`}>Solid</Button>
+                    <Button onClick={() => setTextColorMode('gradient')} variant="ghost" size="sm" className={`flex-1 ${textColorMode === 'gradient' ? 'bg-white dark:bg-white/10' : ''}`}>Gradient</Button>
                   </div>
                 </div>
 
@@ -434,9 +421,9 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   <div className="space-y-2">
                       <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Active Hue</label>
                       <div className="flex gap-2">
-                        <input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                        <input type="text" value={fontColorHexInput} onChange={handleFontColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                        <Button onClick={handleRandomFontColor} aria-label="Randomize font color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                        <input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
+                        <input type="text" value={fontColorHexInput} onChange={handleFontColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-xs uppercase" />
+                        <Button onClick={handleRandomFontColor} aria-label="Randomize font color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-gray-200 dark:border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                       </div>
                   </div>
                 ) : (
@@ -444,15 +431,15 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     <div className="space-y-2">
                         <label className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Vector A</label>
                         <div className="flex gap-1">
-                          <input type="color" value={gradientColor1} onChange={(e) => setGradientColor1(e.target.value)} className="w-10 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                          <Button onClick={handleRandomGradientColor1} aria-label="Randomize gradient color A" variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
+                          <input type="color" value={gradientColor1} onChange={(e) => setGradientColor1(e.target.value)} className="w-10 h-10 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
+                          <Button onClick={handleRandomGradientColor1} aria-label="Randomize gradient color A" variant="ghost" size="sm" className="px-2 border-gray-200 dark:border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
                         </div>
                     </div>
                     <div className="space-y-2">
                         <label className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Vector B</label>
                         <div className="flex gap-1">
-                          <input type="color" value={gradientColor2} onChange={(e) => setGradientColor2(e.target.value)} className="w-10 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                          <Button onClick={handleRandomGradientColor2} aria-label="Randomize gradient color B" variant="ghost" size="sm" className="px-2 border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
+                          <input type="color" value={gradientColor2} onChange={(e) => setGradientColor2(e.target.value)} className="w-10 h-10 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
+                          <Button onClick={handleRandomGradientColor2} aria-label="Randomize gradient color B" variant="ghost" size="sm" className="px-2 border-gray-200 dark:border-white/10"><SparklesIcon className="w-3.5 h-3.5"/></Button>
                         </div>
                     </div>
                   </div>
@@ -462,12 +449,12 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <div className="space-y-6">
                 <CheckboxField id="hasStroke" label="Edge Distortion" checked={hasStroke} onChange={setHasStroke} />
                 {hasStroke && (
-                  <div className="space-y-4 pl-4 border-l border-white/10">
+                  <div className="space-y-4 pl-4 border-l border-gray-200 dark:border-white/10">
                     <SliderField id="strokeThickness" label="Weight" value={strokeThickness} onChange={setStrokeThickness} max={10} step={0.1} />
                     <div className="flex gap-2">
-                      <input type="color" value={strokeColor} onChange={(e) => setStrokeColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                      <input type="text" value={strokeColorHexInput} onChange={handleStrokeColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                      <Button onClick={handleRandomStrokeColor} aria-label="Randomize stroke color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                      <input type="color" value={strokeColor} onChange={(e) => setStrokeColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
+                      <input type="text" value={strokeColorHexInput} onChange={handleStrokeColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-xs uppercase" />
+                      <Button onClick={handleRandomStrokeColor} aria-label="Randomize stroke color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-gray-200 dark:border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                     </div>
                   </div>
                 )}
@@ -475,12 +462,12 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <div className="space-y-4">
                   <CheckboxField id="hasTextShadow" label="Shadow Depth" checked={hasTextShadow} onChange={setHasTextShadow} />
                   {hasTextShadow && (
-                    <div className="space-y-4 pl-4 border-l border-white/10">
+                    <div className="space-y-4 pl-4 border-l border-gray-200 dark:border-white/10">
                        <SliderField id="textShadowBlur" label="Softness" value={textShadowBlur} onChange={setTextShadowBlur} max={20} />
                        <div className="flex gap-2">
-                        <input type="color" value={textShadowColor} onChange={(e) => setTextShadowColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white/5 border border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
-                        <input type="text" value={textShadowColorHexInput} onChange={handleTextShadowColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs uppercase" />
-                        <Button onClick={handleRandomShadowColor} aria-label="Randomize shadow color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                        <input type="color" value={textShadowColor} onChange={(e) => setTextShadowColor(e.target.value)} className="w-12 h-10 flex-shrink-0 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl cursor-pointer overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-[9px]" />
+                        <input type="text" value={textShadowColorHexInput} onChange={handleTextShadowColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-xs uppercase" />
+                        <Button onClick={handleRandomShadowColor} aria-label="Randomize shadow color" variant="ghost" size="sm" className="px-3 flex-shrink-0 border-gray-200 dark:border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                       </div>
                     </div>
                   )}
@@ -488,7 +475,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               </div>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-white/5 grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <h4 className="text-[9px] font-black uppercase text-gray-500 opacity-60">Title Alignment</h4>
                 <SelectField id="songNamePosition" label="Position" value={songNamePosition} onChange={setSongNamePosition} options={textPositionOptions} />
@@ -513,7 +500,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         {/* Column 2: Mastering & Output */}
         <div className="space-y-8">
-          <section className="glass-card p-8 border-white/10 shadow-2xl relative overflow-hidden flex flex-col">
+          <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden flex flex-col">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-8">Processed Output</h3>
             <div className="aspect-square w-full bg-black/40 rounded-3xl overflow-hidden border border-white/10 shadow-inner relative group">
               {filteredPreviewUrl ? (
@@ -527,7 +514,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               {isLoading && (
                 <div className="absolute inset-0 bg-black/80 flex items-center justify-center gap-4">
                   <Spinner size="w-8 h-8" color="text-emerald-500" />
-                  <span className="text-xs font-bold uppercase text-white/60">Processing Signal...</span>
+                  <span className="text-xs font-bold uppercase text-white/60">Processing Image...</span>
                 </div>
               )}
             </div>
@@ -547,7 +534,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </section>
 
           <div className="space-y-8">
-            <section className="glass-card p-8 border-white/10 shadow-xl">
+            <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-xl">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-6">Master Adjustments</h3>
               <div className="space-y-4">
                 <SliderField id="brightness" label="Luminance" value={brightness} onChange={setBrightness} />
@@ -562,16 +549,16 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
                 <details className="group mt-6">
                   <summary className="cursor-pointer py-2 text-[9px] font-black uppercase tracking-widest text-green-600/60 flex justify-between items-center">
-                    Neural FX <span className="text-[10px]">▼</span>
+                    Effects <span className="text-[10px]">▼</span>
                   </summary>
-                  <div className="mt-4 space-y-6 pt-4 border-t border-white/5">
+                  <div className="mt-4 space-y-6 pt-4 border-t border-gray-200 dark:border-white/5">
                     <SliderField id="vignetteIntensity" label="Vignette" value={vignetteIntensity} onChange={setVignetteIntensity} />
                     <div className="space-y-2">
                         <label className="text-[8px] font-black uppercase tracking-widest text-gray-500 ml-1">Vignette Hue</label>
                         <div className="flex gap-2">
-                           <input type="color" value={vignetteColor} onChange={(e) => setVignetteColor(e.target.value)} className="w-12 h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl" />
-                           <input type="text" value={vignetteColorHexInput} onChange={handleVignetteColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs" />
-                          <Button onClick={handleRandomVignetteColor} aria-label="Randomize vignette color" variant="ghost" size="sm" className="border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
+                           <input type="color" value={vignetteColor} onChange={(e) => setVignetteColor(e.target.value)} className="w-12 h-10 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl" />
+                           <input type="text" value={vignetteColorHexInput} onChange={handleVignetteColorHexChange} className="flex-grow min-w-0 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-xs" />
+                          <Button onClick={handleRandomVignetteColor} aria-label="Randomize vignette color" variant="ghost" size="sm" className="border-gray-200 dark:border-white/10"><SparklesIcon className="w-4 h-4"/></Button>
                         </div>
                     </div>
                     <SliderField id="noiseAmount" label="Grain" value={noiseAmount} onChange={setNoiseAmount} />
@@ -580,11 +567,11 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                       <div className="grid grid-cols-2 gap-2 mt-4">
                         <div className="space-y-2">
                           <label className="text-[8px] font-black uppercase tracking-widest text-gray-500">Duo A</label>
-                          <input type="color" value={duotoneColor1} onChange={(e) => setDuotoneColor1(e.target.value)} className="w-full h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl" />
+                          <input type="color" value={duotoneColor1} onChange={(e) => setDuotoneColor1(e.target.value)} className="w-full h-10 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[8px] font-black uppercase tracking-widest text-gray-500">Duo B</label>
-                          <input type="color" value={duotoneColor2} onChange={(e) => setDuotoneColor2(e.target.value)} className="w-full h-10 p-0.5 bg-white/5 border border-white/10 rounded-xl" />
+                          <input type="color" value={duotoneColor2} onChange={(e) => setDuotoneColor2(e.target.value)} className="w-full h-10 p-0.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl" />
                         </div>
                       </div>
                     )}
@@ -594,11 +581,11 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </section>
 
             {inputImageBase64 && (
-              <section className="glass-card p-8 border-white/10 shadow-xl">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 opacity-60">Signal Overlay</h3>
+              <section className="glass-card p-8 border-gray-200 dark:border-white/10 shadow-xl">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 opacity-60">Image Overlay</h3>
                 <ImageUpload onImageUpload={handleOverlayImageUpload} label="Deploy Watermark" />
                 {overlayImageBase64 && (
-                  <div className="mt-8 space-y-4 pt-6 border-t border-white/5">
+                  <div className="mt-8 space-y-4 pt-6 border-t border-gray-200 dark:border-white/5">
                     <SelectField id="overlayPosition" label="Position" value={overlayPosition} onChange={setOverlayPosition} options={overlayPositionOptions} />
                     <SliderField id="size" label="Scale" value={overlaySizePercent} onChange={setOverlaySizePercent} min={5} max={100} />
                     <SliderField id="opacity" label="Opacity" value={overlayOpacity*100} onChange={(v) => setOverlayOpacity(v/100)} />

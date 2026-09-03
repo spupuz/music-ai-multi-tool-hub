@@ -5,7 +5,6 @@ import Sidebar from '@/components/Sidebar';
 import CookieConsentPopup from '@/components/CookieConsentPopup';
 import ToolErrorBoundary from '@/components/ToolErrorBoundary';
 import { ToastProvider } from '@/components/ToastProvider';
-import { useTheme } from '@/context/ThemeContext';
 import { useTelemetry } from '@/hooks/useTelemetry';
 import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
@@ -165,11 +164,11 @@ const tools: Tool[] = [
   { id: 'mp3Cutter', name: 'MP3 Cutter', component: lazyWithPreload(() => import('@/tools/MP3CutterTool')), icon: <MP3CutterIcon />, category: "Creative AI & Content Tools" },
   { id: 'lyricProcessor', name: 'Lyric Lab', component: lazyWithPreload(() => import('@/tools/LyricProcessorTool')), icon: <LyricsIcon />, category: "Creative AI & Content Tools" },
   { id: 'lyricsSynchronizer', name: 'Lyrics Sync', component: lazyWithPreload(() => import('@/tools/LyricsSynchronizerTool')), icon: <LyricsSyncIcon />, category: "Creative AI & Content Tools" },
-  { id: 'randomMusicStyle', name: 'Style Architect', component: lazyWithPreload(() => import('@/tools/RandomMusicStyleGenerator/RandomMusicStyleGenerator')), icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
+  { id: 'randomMusicStyle', name: 'Random Music Style', component: lazyWithPreload(() => import('@/tools/RandomMusicStyleGenerator/RandomMusicStyleGenerator')), icon: <LightbulbIcon />, category: "Creative AI & Content Tools" },
   { id: 'creativeConceptBlender', name: 'Concept Blender', component: lazyWithPreload(() => import('@/tools/CreativeConceptBlender/CreativeConceptBlender').then(m => ({ default: m.CreativeConceptBlender }))), icon: <LightbulbIcon className="w-5 h-5 transform scale-x-[-1]" />, category: "Creative AI & Content Tools" },
-  { id: 'localMusicResourceDirectory', name: 'Resource Nexus', component: lazyWithPreload(() => import('@/tools/LocalMusicResourceDirectoryTool')), icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
+  { id: 'localMusicResourceDirectory', name: 'Resource Directory', component: lazyWithPreload(() => import('@/tools/LocalMusicResourceDirectoryTool')), icon: <ResourceDirectoryIcon />, category: "Creator Resources & Learning" }, 
   { id: 'musicTheoryWiki', name: 'Music Theory Wiki', component: lazyWithPreload(() => import('@/tools/MusicTheoryWikiTool')), icon: <BookOpenIcon />, category: "Creator Resources & Learning" },
-  { id: 'sunoCommunitySpinner', name: 'Magic Spin', component: lazyWithPreload(() => import('@/tools/SunoCommunitySpinnerTool')), icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
+  { id: 'sunoCommunitySpinner', name: 'Community Spinner', component: lazyWithPreload(() => import('@/tools/SunoCommunitySpinnerTool')), icon: <CommunitySpinnerIcon />, category: "Community & Fun Tools"},
   { id: 'chordProgressionGenerator', name: 'Chord Progressions', component: lazyWithPreload(() => import('@/tools/ChordProgressionTool')), icon: <TuneIcon />, category: "Music Theory & Composition" }, 
   { id: 'scaleChordViewer', name: 'Scale & Chord Viewer', component: lazyWithPreload(() => import('@/tools/ScaleChordViewerTool')), icon: <ScaleChordIcon />, category: "Music Theory & Composition" },
   { id: 'songDeckPicker', name: 'Song Deck', component: lazyWithPreload(() => import('@/tools/SongDeckPicker/SongDeckPickerTool')), icon: <CardsIcon />, category: "Community & Fun Tools" },
@@ -190,7 +189,7 @@ const ToolNotFoundComponent: React.FC = () => (
 
 const ToolLoadingFallback: React.FC = () => (
   <div className="w-full max-w-5xl mx-auto animate-fadeIn">
-    <div className="glass-card p-2 sm:p-6 md:p-10 border-white/10 relative overflow-hidden">
+    <div className="glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 relative overflow-hidden">
       <div className="mb-8 md:mb-12 text-center pt-0 md:pt-4">
         <div className="skeleton-bar h-8 w-2/3 mx-auto rounded-xl" />
         <div className="skeleton-bar h-4 w-1/3 mx-auto mt-3 rounded-md" />
@@ -219,7 +218,6 @@ const Layout: React.FC = () => {
   activeToolRef.current = activeToolId;
   const [showCookieConsent, setShowCookieConsent] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
-  const { theme, uiMode, toggleUiMode } = useTheme();
 
   useEffect(() => {
     if ('requestIdleCallback' in window) {
@@ -401,15 +399,6 @@ const Layout: React.FC = () => {
       <div className="fixed top-0 left-0 right-0 z-[60] h-0.5 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent animate-progress-bar pointer-events-none" aria-hidden="true" />
       <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} appName="Music AI Multi-Tool Hub" />
       <div className="flex flex-1 pt-16 relative overflow-hidden">
-        {/* Animated Background Orbs + aurora — pre-blurred radial gradients (no blur() filter, GPU-friendly drift) */}
-        {uiMode !== 'classic' && (
-          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-            <div className="absolute inset-0 bg-aurora" />
-            <div className="absolute -top-40 -left-40 w-[36rem] h-[36rem] rounded-full [background:radial-gradient(circle,rgba(16,185,129,0.16),transparent_62%)] animate-orb-drift"></div>
-            <div className="absolute -bottom-40 -right-40 w-[36rem] h-[36rem] rounded-full [background:radial-gradient(circle,rgba(59,130,246,0.13),transparent_62%)] animate-orb-drift" style={{ animationDelay: '-8s' }}></div>
-          </div>
-        )}
-
         <Sidebar 
           isOpen={isSidebarOpen} 
           onClose={toggleSidebar} 
@@ -420,7 +409,7 @@ const Layout: React.FC = () => {
           onPreloadTool={preloadTool}
         />
         <main className={`flex-1 w-full max-w-full overflow-x-hidden transition-[margin-left] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'md:ml-80 ml-0' : 'ml-0'}`}>
-          <div className={`${uiMode === 'classic' ? 'px-1 sm:px-4 lg:px-8 max-w-full items-start' : 'px-0 sm:px-6 lg:px-12 max-w-[1600px] items-center'} pt-2 pb-12 mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col`}> 
+          <div className="px-0 sm:px-6 lg:px-12 max-w-[1600px] items-center pt-2 pb-12 mx-auto animate-fadeIn w-full overflow-x-hidden flex flex-col"> 
             <div className="w-full max-w-full">
               {ActiveToolComponent ? (
                 <React.Suspense fallback={<ToolLoadingFallback />}>
@@ -435,15 +424,15 @@ const Layout: React.FC = () => {
           </div>
         </main>
       </div>
-      <footer className={`relative z-20 py-8 px-6 text-center text-xs ${uiMode === 'classic' ? 'bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 text-gray-600' : 'glass-nav text-gray-500'}`}>
+      <footer className="relative z-20 py-8 px-6 text-center text-xs glass-nav text-gray-500">
         <div className="max-w-4xl mx-auto space-y-4">
-          <p className={`${uiMode === 'classic' ? 'font-medium opacity-80' : 'font-black uppercase tracking-widest text-[10px] opacity-60'}`}>&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
+          <p className="text-xs opacity-70">&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
           <p className="leading-relaxed">
             Developed by <span className="font-bold text-gray-700 dark:text-gray-300">@spupuz</span>. 
             <br className="sm:hidden" /> For creative purposes. 
             Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-all underline-offset-4">Privacy Policy</a> before use.
           </p>
-          <div className={`pt-2 flex items-center justify-center gap-2 opacity-40 hover:opacity-80 transition-opacity ${uiMode === 'classic' ? 'text-xs font-bold' : 'text-[10px] font-black uppercase tracking-[0.2em]'}`}>
+          <div className="pt-2 flex items-center justify-center gap-2 opacity-40 hover:opacity-80 transition-opacity text-xs font-medium">
             i <HeartIcon className="w-3.5 h-3.5 text-red-500 animate-pulse" /> Vibe Coding
           </div>
         </div>

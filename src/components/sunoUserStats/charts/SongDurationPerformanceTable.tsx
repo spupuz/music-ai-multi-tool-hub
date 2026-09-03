@@ -23,35 +23,35 @@ const SongDurationPerformanceTable: React.FC<SongDurationPerformanceTableProps> 
   };
 
   return (
-    <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
+    <div className="glass-card p-6 border-gray-200 dark:border-white/5 bg-white dark:bg-white/5 shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 blur-3xl pointer-events-none"></div>
       
       <div className="mb-6 flex items-center gap-3">
         <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">Temporal Span Performance</h3>
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Duration Performance</h3>
       </div>
 
-      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-white/5 bg-white/2">
-        <table className="min-w-full divide-y divide-white/5 border-collapse">
-          <thead className="bg-[#0a0a0a]/80 backdrop-blur-md">
+      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-gray-200 dark:border-white/5 bg-white dark:bg-transparent">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5 border-collapse">
+          <thead className="bg-gray-50 dark:bg-white/5">
             <tr>
-              <th scope="col" className="px-6 py-4 text-left text-[8px] font-black text-gray-500 uppercase tracking-[0.3em]">Temporal Bucket</th>
-              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Nodes</th>
-              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Flux</th>
-              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Affinity</th>
-              <th scope="col" className="px-4 py-4 text-right text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Avg Echoes</th>
-              <th scope="col" className="px-6 py-4 text-right text-[8px] font-black text-emerald-500/60 uppercase tracking-[0.2em]" title="For songs with >20 plays in this bucket">Affinity%</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Duration Range</th>
+              <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400">Songs</th>
+              <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400">Avg Plays</th>
+              <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400">Avg Upvotes</th>
+              <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400">Avg Comments</th>
+              <th scope="col" className="px-4 py-3 text-right text-xs font-semibold text-emerald-600 dark:text-emerald-400" title="For songs with >20 plays in this bucket">Upvotes%</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-200 dark:divide-white/5">
             {durationPerformanceData.map((bucket) => (
-              <tr key={bucket.bucketName} className="group hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-[10px] font-black text-white/90 uppercase tracking-widest">{bucket.bucketName}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-400 tracking-widest">{bucket.songCount.toLocaleString()}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgPlays)}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgUpvotes)}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{formatNumberDisplay(bucket.avgComments)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-emerald-500/80 tracking-widest">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
+              <tr key={bucket.bucketName} className="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{bucket.bucketName}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{bucket.songCount.toLocaleString()}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{formatNumberDisplay(bucket.avgPlays)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{formatNumberDisplay(bucket.avgUpvotes)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{formatNumberDisplay(bucket.avgComments)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{formatPercentageDisplay(bucket.avgUpvoteRate)}</td>
               </tr>
             ))}
           </tbody>

@@ -3,39 +3,25 @@
 @tailwind utilities;
 
 :root {
-  /* --- Architect Mode Tokens (Light) --- */
+  /* --- Unified Design Tokens (Light) --- */
   --premium-bg: #f8fafc;
-  --premium-glass: rgba(255, 255, 255, 0.4);
-  --premium-border: rgba(255, 255, 255, 0.3);
+  --premium-glass: rgba(255, 255, 255, 0.66);
+  --premium-border: rgba(15, 23, 42, 0.08);
   --premium-text: #0f172a;
+  --premium-text-muted: #475569;
   --premium-accent: #059669;
   --premium-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-
-  /* --- Classic Mode Tokens (Light) --- */
-  --classic-bg: #f9fafb;          /* gray-50 */
-  --classic-surface: #ffffff;     /* white */
-  --classic-border: #d1fae5;      /* green-100 */
-  --classic-accent: #16a34a;      /* green-600 */
-  --classic-text: #111827;        /* gray-900 */
-  --classic-text-muted: #6b7280;  /* gray-500 */
 }
 
 .dark {
-  /* --- Architect Mode Tokens (Dark) --- */
+  /* --- Unified Design Tokens (Dark) --- */
   --premium-bg: #020617;
-  --premium-glass: rgba(15, 23, 42, 0.3);
-  --premium-border: rgba(255, 255, 255, 0.08);
+  --premium-glass: rgba(15, 23, 42, 0.55);
+  --premium-border: rgba(255, 255, 255, 0.1);
   --premium-text: #f1f5f9;
+  --premium-text-muted: #94a3b8;
   --premium-accent: #10b981;
   --premium-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.5);
-
-  /* --- Classic Mode Tokens (Dark) --- */
-  --classic-bg: #030712;          /* gray-950 */
-  --classic-surface: #111827;     /* gray-900 */
-  --classic-border: #16a34a;      /* green-600 */
-  --classic-accent: #22c55e;      /* green-500 */
-  --classic-text: #f9fafb;        /* gray-50 */
-  --classic-text-muted: #9ca3af;  /* gray-400 */
 }
 
 /* Custom styles */
@@ -63,29 +49,45 @@ body {
   transition: background-color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* =======================================================
+   UNIFIED LEGIBILITY OVERRIDES
+   The design system is centralized here. Micro-typography
+   classes are nudged up and their letter-spacing tightened
+   app-wide so labels stay readable without touching every
+   component. Unlayered rules win over Tailwind's layered
+   utilities.
+   ======================================================= */
+.text-\[9px\]  { font-size: 11px; }
+.text-\[10px\] { font-size: 12px; }
+.text-\[11px\] { font-size: 12px; }
+
+.tracking-\[0\.3em\] { letter-spacing: 0.12em; }
+.tracking-\[0\.2em\] { letter-spacing: 0.1em; }
+.tracking-\[0\.1em\] { letter-spacing: 0.06em; }
+
 .glass-card {
   background: var(--premium-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--premium-border);
   box-shadow: var(--premium-shadow);
-  border-radius: 1.5rem; /* rounded-3xl */
+  border-radius: 1.25rem; /* rounded-2xl */
   transition: box-shadow 0.3s ease;
 }
 .glass-card:hover {
-  box-shadow: var(--premium-shadow), 0 0 30px -8px var(--premium-accent);
+  box-shadow: var(--premium-shadow);
 }
 
 .glass-nav {
-  background: rgba(248, 250, 252, 0.9); /* slate-50/90 */
+  background: rgba(248, 250, 252, 0.92); /* slate-50/92 */
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.5); /* gray-200/50 */
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08); /* gray-900/8 */
 }
 
 .dark .glass-nav {
-  background: rgba(3, 7, 18, 0.8); /* gray-950/80 */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(2, 6, 23, 0.85); /* gray-950/85 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Premium Scrollbar */
@@ -136,88 +138,6 @@ body {
   100% { opacity: 1; transform: translateY(0px); } 
 }
 
-/* =======================================================
-   UI MODE SPECIFIC OVERRIDES
-   4 combinations: Classic Light, Classic Dark,
-                   Architect Light, Architect Dark
-   ======================================================= */
-
-/* ---- CLASSIC MODE (applies to both light + dark) ---- */
-/*
- * Classic mode design intent:
- *   - System sans-serif font (NOT Inter)
- *   - Solid, opaque cards (NO glassmorphism/backdrop blur)
- *   - Light: white surface, gray-200 borders
- *   - Dark: gray-900 surface, green-600 borders
- *   - All 4 combinations (uiMode × theme) must look DISTINCTLY different
- */
-.ui-classic body {
-  @apply font-architect not-italic; /* Original Inter font, no italics */
-}
-
-.ui-classic h1, 
-.ui-classic h2, 
-.ui-classic h3 {
-  @apply font-architect uppercase tracking-[0.1em] not-italic; /* Clean tech headers, NOT italic */
-}
-
-.ui-classic h1 {
-  @apply font-bold text-emerald-600 dark:text-emerald-400; /* Color only, size managed by components */
-}
-
-.ui-classic h4, 
-.ui-classic h5, 
-.ui-classic h6,
-.ui-classic span,
-.ui-classic p,
-.ui-classic div,
-.ui-classic .font-header {
-  @apply font-architect not-italic normal-case; /* Force normal case and no italics for body/secondary text */
-}
-
-/* Classic Light body: pale gray background */
-.ui-classic:not(.dark) body {
-  background-color: var(--classic-bg); /* gray-50 */
-  color: var(--classic-text);
-}
-
-/* Classic Dark body: deep solid black—NOT the Architect's cosmic dark */
-.ui-classic.dark body {
-  background-color: var(--classic-bg); /* gray-950 */
-  color: var(--classic-text);
-}
-
-/* Classic: disable ALL glassmorphism effects regardless of light/dark */
-.ui-classic .glass-card {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-radius: 0.75rem;
-}
-
-/* Classic Light — solid white cards with thinner gray border */
-.ui-classic:not(.dark) .glass-card {
-  background: var(--classic-surface) !important; /* white */
-  border: 2px solid #e5e7eb !important;          /* gray-200 */
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
-}
-
-/* Classic Dark — solid gray-900 cards with thinner green-600 border */
-.ui-classic.dark .glass-card {
-  background: var(--classic-surface) !important; /* gray-900 */
-  border: 2px solid var(--classic-border) !important; /* green-600 */
-  box-shadow: 0 4px 20px rgba(22, 163, 74, 0.05); /* subtle green glow reduced */
-}
-
-/* ---- ARCHITECT MODE (applies to both light + dark) ---- */
-.ui-architect body {
-  @apply font-architect;
-}
-
-/* Disable animated pulse in Classic mode */
-.ui-classic .animate-pulse {
-  animation: none;
-}
-
 /* Confetti System */
 .confetti-piece { 
   position: absolute; 
@@ -253,33 +173,6 @@ body {
 
 .animate-flash {
   animation: flash 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Architect background orbs — pre-blurred radial gradients (no expensive blur() filter).
-   Drift uses transform only, so it stays on the GPU compositor thread. */
-@keyframes orb-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(0, -2rem, 0) scale(1.06); }
-}
-
-.animate-orb-drift {
-  animation: orb-drift 16s ease-in-out infinite;
-  will-change: transform;
-}
-
-/* Subtle animated aurora gradient behind the orbs */
-.bg-aurora {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(59, 130, 246, 0.06), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 20% 40%, rgba(139, 92, 246, 0.05), transparent 60%);
-  animation: aurora-shift 12s ease-in-out infinite alternate;
-  will-change: background-position;
-}
-
-@keyframes aurora-shift {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 20%; }
 }
 
 /* Skip rendering off-screen list items (large queues/logs/directories).
@@ -326,51 +219,6 @@ body {
     linear-gradient(90deg, var(--premium-accent) 1px, transparent 1px);
   background-size: 48px 48px;
   opacity: 0.04;
-}
-
-/* Glass card glow — animated border on hover */
-.glass-card-hover {
-  position: relative;
-  transition: box-shadow 0.3s ease;
-}
-.glass-card-hover::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--premium-accent), #60a5fa, #a78bfa, var(--premium-accent));
-  background-size: 300% 300%;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: -1;
-  pointer-events: none;
-}
-.glass-card-hover:hover::before {
-  opacity: 0.6;
-}
-.glass-card-hover:hover {
-  box-shadow: 0 0 30px -5px var(--premium-accent);
-}
-
-/* Animated gradient text for headers */
-.text-gradient-animated {
-  background: linear-gradient(135deg,
-    var(--premium-accent),
-    #60a5fa 25%,
-    #a78bfa 50%,
-    var(--premium-accent) 75%,
-    var(--premium-accent)
-  );
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 4s ease-in-out infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 /* Loading skeleton shimmer — animates background-position only (GPU/compositor cheap) */

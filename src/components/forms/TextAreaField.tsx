@@ -1,15 +1,13 @@
 
 import React from 'react';
-import { useTheme } from '@/context/ThemeContext';
 
 const InfoIcon: React.FC<{tooltip: string, className?: string}> = ({tooltip, className=""}) => {
-    const { uiMode } = useTheme();
     return (
         <div className={`inline-block relative group ${className}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 text-gray-400 cursor-help ${uiMode === 'architect' ? 'hover:text-emerald-500' : 'hover:text-emerald-600'}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-4 h-4 text-gray-400 cursor-help hover:text-emerald-500`}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
             </svg>
-            <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-60 p-2 text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 pointer-events-none text-left ${uiMode === 'architect' ? 'bg-slate-900/90 text-white border border-white/10 backdrop-blur-md' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-600'}`}>
+            <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-60 p-2 text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 pointer-events-none text-left bg-slate-900/90 text-white border border-white/10 backdrop-blur-md`}>
                 {tooltip}
             </div>
         </div>
@@ -38,17 +36,14 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
   readOnly = false,
   className = "mb-4", borderClassName = "", textareaRef, info, labelTextColor
 }) => {
-  const { uiMode } = useTheme();
   
   const labelColorClass = labelTextColor 
     ? labelTextColor 
-    : (uiMode === 'architect' ? "text-gray-900 dark:text-gray-300" : "text-gray-700 dark:text-emerald-400");
+    : "text-gray-900 dark:text-gray-300";
 
   const inputStyles = borderClassName 
     ? borderClassName
-    : (uiMode === 'architect'
-      ? `bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/10 focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 placeholder-gray-500`
-      : `bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-emerald-500 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-emerald-500 dark:focus:border-emerald-400 placeholder-gray-400 dark:placeholder-gray-500 shadow-sm`);
+    : `bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 placeholder-gray-500`;
 
   return (
     <div className={className}>

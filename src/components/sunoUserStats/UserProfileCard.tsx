@@ -1,6 +1,5 @@
 import React from 'react';
 import type { SunoProfileDetail } from '@/types';
-import { useTheme } from '@/context/ThemeContext';
 
 const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
@@ -38,20 +37,18 @@ const TotalCommentsIcon: React.FC<{ className?: string }> = ({ className = "w-5 
 
 
 const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
-  const { uiMode } = useTheme();
-
   if (!profile) {
     return (
-      <div className="mb-10 bg-white/5 p-8 rounded-3xl border border-white/5 text-center animate-pulse">
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-          {uiMode === 'architect' ? 'Waiting for neural link... No profile data detected.' : 'Loading profile data...'}
+      <div className="mb-10 bg-white dark:bg-white/5 p-8 rounded-3xl border border-gray-200 dark:border-white/5 text-center animate-pulse">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Loading profile data...
         </p>
       </div>
     );
   }
 
   return (
-    <div className="mb-10 glass-card p-8 md:p-10 border-white/10 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative overflow-hidden group">
+    <div className="mb-10 glass-card p-8 md:p-10 border-gray-200 dark:border-white/10 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 relative overflow-hidden group">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"></div>
       
       <div className="relative shrink-0">
@@ -66,15 +63,15 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
 
       <div className="flex-1 text-center md:text-left min-w-0 z-10">
         <div className="mb-2">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-500/60 mb-1 block">
-            {uiMode === 'architect' ? 'Creator Entity' : 'Suno Profile'}
+          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1 block">
+            Suno Profile
           </span>
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none truncate" title={profile.display_name}>
+          <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tighter uppercase leading-none truncate" title={profile.display_name}>
             {profile.display_name}
           </h2>
         </div>
         
-        <p className="text-sm font-black uppercase tracking-[0.2em] text-emerald-500/80 mb-6 truncate group-hover:text-emerald-400 transition-colors" title={`@${profile.handle}`}>
+        <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-6 truncate group-hover:text-emerald-500 transition-colors" title={`@${profile.handle}`}>
           <a href={`https://suno.com/@${profile.handle}`} target="_blank" rel="noopener noreferrer" className="hover:line-through decoration-2">
             @{profile.handle}
           </a>
@@ -83,7 +80,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
         {profile.bio && (
           <div className="mb-8 relative">
             <div className="absolute left-0 top-0 w-0.5 h-full bg-emerald-500/10 hidden md:block"></div>
-            <p className="text-[11px] font-medium text-gray-400 leading-relaxed md:pl-6 italic max-w-xl">
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed md:pl-6 italic max-w-xl">
               {profile.bio}
             </p>
           </div>
@@ -91,18 +88,18 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
         
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 mt-2">
           {[
-            { label: uiMode === 'architect' ? 'Signals' : 'Songs', value: profile.num_total_clips, icon: <ClipsIcon className="w-3 h-3" /> },
-            { label: uiMode === 'architect' ? 'Observers' : 'Followers', value: profile.num_followers, icon: <FollowersIcon className="w-3 h-3" /> },
-            { label: uiMode === 'architect' ? 'Flux' : 'Plays', value: profile.total_plays, icon: <TotalPlaysIcon className="w-3 h-3" /> },
-            { label: uiMode === 'architect' ? 'Affinity' : 'Upvotes', value: profile.total_upvotes, icon: <TotalUpvotesIcon className="w-3 h-3" /> },
-            { label: uiMode === 'architect' ? 'Echoes' : 'Comments', value: profile.total_comments, icon: <TotalCommentsIcon className="w-3 h-3" /> },
+            { label: 'Songs', value: profile.num_total_clips, icon: <ClipsIcon className="w-4 h-4" /> },
+            { label: 'Followers', value: profile.num_followers, icon: <FollowersIcon className="w-4 h-4" /> },
+            { label: 'Plays', value: profile.total_plays, icon: <TotalPlaysIcon className="w-4 h-4" /> },
+            { label: 'Upvotes', value: profile.total_upvotes, icon: <TotalUpvotesIcon className="w-4 h-4" /> },
+            { label: 'Comments', value: profile.total_comments, icon: <TotalCommentsIcon className="w-4 h-4" /> },
           ].map((stat, idx) => (
-            <div key={idx} className="flex flex-col gap-1 group/stat">
-              <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover/stat:text-emerald-500 transition-colors">
+            <div key={idx} className="flex flex-col gap-1.5 group/stat">
+              <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 group-hover/stat:text-emerald-500 transition-colors">
                 {stat.icon}
                 {stat.label}
               </div>
-              <div className="text-sm font-black text-white tracking-widest">
+              <div className="text-xl font-bold text-gray-900 dark:text-white tabular-nums">
                 {typeof stat.value === 'number' ? stat.value.toLocaleString() : '---'}
               </div>
             </div>

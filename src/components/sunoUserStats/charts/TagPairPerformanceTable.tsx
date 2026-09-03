@@ -42,69 +42,75 @@ const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPa
   };
 
   const SortArrow: React.FC<{ column: SortableTagPairColumn }> = ({ column }) => {
-    if (sortColumn !== column) return <span className="opacity-30">↕️</span>;
-    return sortDirection === 'asc' ? <span aria-label="sorted ascending">🔼</span> : <span aria-label="sorted descending">🔽</span>;
+    const isAsc = sortColumn === column && sortDirection === 'asc';
+    const isDesc = sortColumn === column && sortDirection === 'desc';
+    return (
+      <span className="inline-flex flex-col shrink-0">
+        <svg className={`w-2 h-2 ${isAsc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
+        <svg className={`w-2 h-2 ${isDesc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
+      </span>
+    );
   };
   
-  const thClasses = "px-0.5 sm:px-3 py-1 sm:py-2 text-left text-[9px] sm:text-xs font-medium text-emerald-300 uppercase tracking-tighter sm:tracking-wider cursor-pointer select-none hover:bg-gray-700 transition-colors";
+  const thClasses = "px-2 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-white/10 transition-colors whitespace-nowrap";
 
   if (!tagPairData || tagPairData.length === 0) {
     return <p className="text-gray-400 text-center py-4">No tag pair performance data available (min. 3 songs per pair required).</p>;
   }
 
   return (
-    <div className="glass-card p-6 border-white/5 bg-white/5 shadow-2xl relative overflow-hidden">
+    <div className="glass-card p-6 border-gray-200 dark:border-white/5 bg-white dark:bg-white/5 shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl pointer-events-none"></div>
       
       <div className="mb-6 flex items-center gap-3">
         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">Tag Correlation Analysis (Top {topN})</h3>
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Tag Correlation Analysis (Top {topN})</h3>
       </div>
 
-      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-white/5 bg-white/2">
-        <table className="min-w-full divide-y divide-white/5 border-collapse">
-          <thead className="bg-[#0a0a0a]/80 backdrop-blur-md">
+      <div className="overflow-x-auto custom-scrollbar rounded-2xl border border-gray-200 dark:border-white/5 bg-white dark:bg-transparent">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5 border-collapse">
+          <thead className="bg-gray-50 dark:bg-white/5">
             <tr>
               <th scope="col" className={thClasses} onClick={() => handleSort('tagPair')} aria-sort={sortColumn === 'tagPair' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                <div className="flex items-center gap-2 group/header px-6">
-                  <span className={sortColumn === 'tagPair' ? 'text-blue-500' : 'group-hover/header:text-gray-300'}>Neural Pair</span>
+                <div className="flex items-center gap-2 group/header">
+                  <span className={sortColumn === 'tagPair' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Tag Pair</span>
                   <SortArrow column="tagPair" />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('songCount')} aria-sort={sortColumn === 'songCount' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                <div className="flex items-center justify-end gap-2 group/header px-4">
-                  <span className={sortColumn === 'songCount' ? 'text-blue-500' : 'group-hover/header:text-gray-300'}>Nodes</span>
+                <div className="flex items-center justify-end gap-2 group/header">
+                  <span className={sortColumn === 'songCount' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Nodes</span>
                   <SortArrow column="songCount" />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgPlays')} aria-sort={sortColumn === 'avgPlays' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                <div className="flex items-center justify-end gap-2 group/header px-4">
-                  <span className={sortColumn === 'avgPlays' ? 'text-blue-500' : 'group-hover/header:text-gray-300'}>Flux</span>
+                <div className="flex items-center justify-end gap-2 group/header">
+                  <span className={sortColumn === 'avgPlays' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Plays</span>
                   <SortArrow column="avgPlays" />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgUpvotes')} aria-sort={sortColumn === 'avgUpvotes' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                <div className="flex items-center justify-end gap-2 group/header px-4">
-                  <span className={sortColumn === 'avgUpvotes' ? 'text-blue-500' : 'group-hover/header:text-gray-300'}>Affinity</span>
+                <div className="flex items-center justify-end gap-2 group/header">
+                  <span className={sortColumn === 'avgUpvotes' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Upvotes</span>
                   <SortArrow column="avgUpvotes" />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgComments')} aria-sort={sortColumn === 'avgComments' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
-                <div className="flex items-center justify-end gap-2 group/header px-6">
-                  <span className={sortColumn === 'avgComments' ? 'text-blue-500' : 'group-hover/header:text-gray-300'}>Echoes</span>
+                <div className="flex items-center justify-end gap-2 group/header">
+                  <span className={sortColumn === 'avgComments' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Comments</span>
                   <SortArrow column="avgComments" />
                 </div>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-200 dark:divide-white/5">
             {sortedAndFilteredData.map((item) => (
-              <tr key={item.tagPair} className="group hover:bg-white/5 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-[10px] font-black text-white/90 uppercase tracking-widest truncate max-w-[150px]" title={item.tagPair}>{item.tagPair}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-400 tracking-widest">{item.songCount.toLocaleString()}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{item.avgPlays.toFixed(1)}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{item.avgUpvotes.toFixed(1)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-[10px] font-black text-gray-300 tracking-widest">{item.avgComments.toFixed(1)}</td>
+              <tr key={item.tagPair} className="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white truncate max-w-[150px]" title={item.tagPair}>{item.tagPair}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{item.songCount.toLocaleString()}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{item.avgPlays.toFixed(1)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{item.avgUpvotes.toFixed(1)}</td>
+                <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-700 dark:text-gray-300 tabular-nums">{item.avgComments.toFixed(1)}</td>
               </tr>
             ))}
           </tbody>

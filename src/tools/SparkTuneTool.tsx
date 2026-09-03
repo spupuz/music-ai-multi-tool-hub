@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { ToolProps } from '@/Layout';
 import type { SparkTuneChallengeData } from '@/types';
-import { useTheme } from '@/context/ThemeContext';
 import InputField from '@/components/forms/InputField';
 import TextAreaField from '@/components/forms/TextAreaField';
 import Button from '@/components/common/Button';
@@ -25,7 +24,7 @@ const LOCAL_STORAGE_KEY = 'promptSparkChallenges_v1';
 
 const predefinedGenres = ["Cyberpunk Industrial", "Lofi Jazz Hop", "Ethereal Dream Pop", "Aggressive Phonk", "Vintage Soul-Funk", "Cinematic Orchestral", "Retrowave / Synthwave", "Dark Trap", "Bossa Nova Lounge", "Heavy Metal Core"];
 const predefinedMoods = ["Vibrant & Euphoric", "Melancholic & Rainy", "Dark & Sinister", "Epic & Heroic", "Mystical & Foggy", "Gritty & Urban", "Chill & Relaxed", "Aggressive & Intense", "Playful & Quirky", "Nostalgic & Warm"];
-const predefinedThemes = ["Lost in Deep Space", "Cyber City Rain", "Ancient Ritual", "Underwater Kingdom", "Haunted Victorian Mansion", "Robot Revolution", "Desert Caravan", "Temporal Paradox", "Neon Jungle", "Summit of the Mountain"];
+const predefinedThemes = ["Lost in Deep Space", "Cyber City Rain", "Ancient Ritual", "Underwater Kingdom", "Haunted Victorian Mansion", "Robot Revolution", "Desert Caravan", "Time Paradox", "Neon Jungle", "Summit of the Mountain"];
 const predefinedInstrumentations = ["Solo Acoustic Guitar", "Aggressive Sawtooth Synths", "Smooth Rhodes & Saxophone", "Glitchy 808 Drums", "Grand Piano & Cello", "Distant Echoing Pads", "Funky Slap Bass", "Tribal Percussion", "Lo-fi Vinyl Crackle", "8-bit Chiptune Leads"];
 const predefinedVocalStyles = ["Male Vocals", "Female Vocals", "Instrumental / No Vocals", "Whispered Vocals", "Operatic Vocals", "Rap Vocals", "Harmonized Backing Vocals", "A-cappella", "Robotic Vocals"];
 
@@ -37,17 +36,17 @@ const CollapsibleSection: React.FC<{
 }> = ({ title, children, defaultOpen = false, icon }) => {
     const [isOpen, setIsOpen] = React.useState(defaultOpen);
     return (
-        <div className="glass-card p-0 border-white/5 mb-2 overflow-hidden transition-all duration-500 shadow-none">
+        <div className="glass-card p-0 border-gray-200 dark:border-white/5 mb-2 overflow-hidden transition-all duration-500 shadow-none">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full p-5 flex flex-row items-center justify-start text-left group hover:bg-white/5 transition-all duration-300 border-none h-auto gap-6 outline-none appearance-none bg-transparent"
+                className="w-full p-5 flex flex-row items-center justify-start text-left group hover:bg-white dark:hover:bg-white/5 transition-all duration-300 border-none h-auto gap-6 outline-none appearance-none bg-transparent"
                 aria-expanded={isOpen}
             >
                 <div className="flex flex-col items-center shrink-0 w-10">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${
                         isOpen 
                         ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.2)]' 
-                        : 'bg-white/5 border-white/5 text-gray-400'
+                        : 'bg-white dark:bg-white/5 border-gray-200 dark:border-white/5 text-gray-400'
                     }`}>
                         {icon || <SparklesIcon className="w-5 h-5" />}
                     </div>
@@ -64,7 +63,7 @@ const CollapsibleSection: React.FC<{
             </button>
             <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 pointer-events-none'}`}>
                 <div className="overflow-hidden">
-                    <div className="p-3 sm:p-8 pt-1 sm:pt-2 space-y-4 sm:space-y-6 border-t border-white/5">
+                    <div className="p-3 sm:p-8 pt-1 sm:pt-2 space-y-4 sm:space-y-6 border-t border-gray-200 dark:border-white/5">
                         {children}
                     </div>
                 </div>
@@ -74,7 +73,6 @@ const CollapsibleSection: React.FC<{
 };
 
 const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-    const { uiMode } = useTheme();
     const [challengeName, setChallengeName] = useState('');
     const [organizedBy, setOrganizedBy] = useState('');
     const [dueDate, setDueDate] = useState('');
@@ -121,7 +119,7 @@ const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
     const handleGeneratePost = () => {
         if (!challengeName || !organizedBy || !dueDate) {
-            alert("Please fill in Challenge Identity, Mastermind, and Extraction Deadline!");
+            alert("Please fill in Challenge Name, Organized By, and Submission Deadline!");
             return;
         }
 
@@ -129,52 +127,52 @@ const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
         const mainInfo = `
-🚀 **NEW SONIC MISSION: ${challengeName.toUpperCase()}** 🚀
+🚀 **NEW CHALLENGE: ${challengeName.toUpperCase()}** 🚀
 
-Greetings Architects! It's time to synchronize our neural networks for a new creative excavation.
+Get ready for a new creative challenge!
 
-**THE BLUEPRINT:**
-- **Genre Vector:** ${genre || 'Any / Open'}
-- **Vibe Spectrum:** ${mood || 'Any / Open'}
-- **Core Theme:** ${themeOrKeyword || 'Open Interpretation'}
-- **Arsenal Gear:** ${instrumentation || 'Any / Open'}
-- **Vocal Signal:** ${vocalStyle || 'Any / Open'}
-${tempo ? `- **Pulse (BPM):** ${tempo}` : ''}
-${durationConstraint ? `- **Time Warp:** ${durationConstraint}` : ''}
-${lyricPart ? `- **Lyric Core / Mandatory Phrase:** "${lyricPart}"` : ''}
+**THE BRIEF:**
+- **Genre:** ${genre || 'Any / Open'}
+- **Mood:** ${mood || 'Any / Open'}
+- **Theme:** ${themeOrKeyword || 'Open Interpretation'}
+- **Instrumentation:** ${instrumentation || 'Any / Open'}
+- **Vocal Style:** ${vocalStyle || 'Any / Open'}
+${tempo ? `- **BPM:** ${tempo}` : ''}
+${durationConstraint ? `- **Max Duration:** ${durationConstraint}` : ''}
+${lyricPart ? `- **Mandatory Lyric Phrase:** "${lyricPart}"` : ''}
 ${negativeConstraints ? `- **BANNED ELEMENTS (TWIST):** ${negativeConstraints}` : ''}
 
-**CHRONOLOGY:**
-💥 **Extraction Deadline:** ${formattedDate}
+**TIMELINE:**
+💥 **Submission Deadline:** ${formattedDate}
 
-**ACCESS PORTALS:**
-${sunoSampleLink ? `- Suno Pulse Sample: ${sunoSampleLink}` : ''}
-${audioSampleLink ? `- Audio Feed Sample: ${audioSampleLink}` : ''}
-${submissionLink ? `- Deployment Portal: ${submissionLink}` : ''}
-${showcasePlaylistLink ? `- Showcase Vector: ${showcasePlaylistLink}` : ''}
+**LINKS:**
+${sunoSampleLink ? `- Suno Sample: ${sunoSampleLink}` : ''}
+${audioSampleLink ? `- Audio Sample: ${audioSampleLink}` : ''}
+${submissionLink ? `- Submission Link: ${submissionLink}` : ''}
+${showcasePlaylistLink ? `- Showcase Playlist: ${showcasePlaylistLink}` : ''}
 
-**MASTERMIND:** ${organizedBy}
-${additionalDetails ? `\n**THE FINE PRINT:**\n${additionalDetails}` : ''}
+**ORGANIZED BY:** ${organizedBy}
+${additionalDetails ? `\n**DETAILS:**\n${additionalDetails}` : ''}
 
-Assemble your assets. Let the synthesis begin! 🎹✨
+Let's make some music! 🎹✨
         `;
 
         const reminderInfo = `
-⚠️ **TEMPORAL WARNING: ${challengeName.toUpperCase()}** ⚠️
+⚠️ **TIME WARNING: ${challengeName.toUpperCase()}** ⚠️
 
-Architects, the window for current creative extraction is closing rapidly!
+The deadline for this challenge is approaching fast!
 
-- **Target:** ${challengeName}
-- **Mastermind:** ${organizedBy}
-- **Final Extraction Sequence:** ${formattedDate}
+- **Challenge:** ${challengeName}
+- **Organized by:** ${organizedBy}
+- **Submission Deadline:** ${formattedDate}
 
-**MISSION PARAMETERS:**
-- ${genre ? `Genre: ${genre} | ` : ''}${mood ? `Vibe: ${mood}` : ''}
+**CHALLENGE DETAILS:**
+- ${genre ? `Genre: ${genre} | ` : ''}${mood ? `Mood: ${mood}` : ''}
 - ${themeOrKeyword ? `Theme: ${themeOrKeyword}` : ''}
 
-${submissionLink ? `📤 **DEPLOY YOUR SIGNAL HERE:** ${submissionLink}` : 'Deployment protocols ready in the mission hub.'}
+${submissionLink ? `📤 **SUBMIT YOUR SONG HERE:** ${submissionLink}` : 'Submission link will be shared in the challenge hub.'}
 
-Synchronize your efforts. The deadline is absolute. ⚡️
+Get your entry in on time! ⚡️
         `;
 
         setGeneratedAnnouncementPost(mainInfo.trim());
@@ -224,72 +222,61 @@ Synchronize your efforts. The deadline is absolute. ⚡️
 
 
     return (
-        <div className={`w-full ${uiMode === 'classic' ? 'max-w-7xl mx-auto px-4 pb-20' : ''}`}>
-            {uiMode === 'classic' ? (
-                <header className="mb-10 text-center pt-8">
-                    <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-                        SparkTune
-                    </h1>
-                    <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-                        AI Prompt Refinement • Musical Prompt Engineering Hub
-                    </p>
-                </header>
-            ) : (
-                <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">SparkTune</h1>
-                    <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-                        AI Prompt Refinement • Musical Prompt Engineering Hub
-                    </p>
-                </header>
-            )}
+        <div className="w-full">
+            <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">SparkTune</h1>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    AI Prompt Refinement • Musical Prompt Engineering Hub
+                </p>
+            </header>
 
             <main className="w-full relative">
                 <div className="grid lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-12 xl:col-span-7 space-y-2">
-                        <CollapsibleSection title="Deployment Intel" defaultOpen icon={<ComplianceCheckIcon className="w-4 h-4" />}>
-                          <InputField id="challengeName" label="Challenge Identity" value={challengeName} onChange={setChallengeName} placeholder="e.g., Galactic Grooves Contest" required />
-                          <InputField id="organizedBy" label="Mastermind" value={organizedBy} onChange={setOrganizedBy} placeholder="e.g., Your Discord Handle or Group Name" required />
-                          <InputField type="date" id="dueDate" label="Extraction Deadline" value={dueDate} onChange={setDueDate} required />
+                        <CollapsibleSection title="Challenge Details" defaultOpen icon={<ComplianceCheckIcon className="w-4 h-4" />}>
+                          <InputField id="challengeName" label="Challenge Name" value={challengeName} onChange={setChallengeName} placeholder="e.g., Galactic Grooves Contest" required />
+                          <InputField id="organizedBy" label="Organized By" value={organizedBy} onChange={setOrganizedBy} placeholder="e.g., Your Discord Handle or Group Name" required />
+                          <InputField type="date" id="dueDate" label="Submission Deadline" value={dueDate} onChange={setDueDate} required />
                         </CollapsibleSection>
                         
-                        <CollapsibleSection title="Sonic DNA" defaultOpen icon={<MusicNoteIcon className="w-4 h-4" />}>
+                        <CollapsibleSection title="Song Parameters" defaultOpen icon={<MusicNoteIcon className="w-4 h-4" />}>
                             <div className="flex items-end gap-3">
-                                <InputField id="genre" label="Genre Vector" value={genre} onChange={setGenre} placeholder="e.g., Cosmic Disco" className="flex-grow mb-0" />
-                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} aria-label="Randomize genre" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <InputField id="genre" label="Genre" value={genre} onChange={setGenre} placeholder="e.g., Cosmic Disco" className="flex-grow mb-0" />
+                                <Button onClick={() => setGenre(getRandomItem(predefinedGenres))} aria-label="Randomize genre" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-gray-200 dark:border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
-                                <InputField id="mood" label="Vibe Spectrum" value={mood} onChange={setMood} placeholder="e.g., Euphoric & Spacey" className="flex-grow mb-0" />
-                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} aria-label="Randomize mood" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <InputField id="mood" label="Mood" value={mood} onChange={setMood} placeholder="e.g., Euphoric & Spacey" className="flex-grow mb-0" />
+                                <Button onClick={() => setMood(getRandomItem(predefinedMoods))} aria-label="Randomize mood" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-gray-200 dark:border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
-                                <InputField id="instrumentation" label="Arsenal Gear" value={instrumentation} onChange={setInstrumentation} placeholder="e.g., Laser Harps & Funky Basslines" className="flex-grow mb-0" />
-                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} aria-label="Randomize instrumentation" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <InputField id="instrumentation" label="Instrumentation" value={instrumentation} onChange={setInstrumentation} placeholder="e.g., Laser Harps & Funky Basslines" className="flex-grow mb-0" />
+                                <Button onClick={() => setInstrumentation(getRandomItem(predefinedInstrumentations))} aria-label="Randomize instrumentation" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-gray-200 dark:border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="flex items-end gap-3">
-                                <InputField id="themeOrKeyword" label="Core Theme" value={themeOrKeyword} onChange={setThemeOrKeyword} placeholder="e.g., Alien Jungle Party" className="flex-grow mb-0" />
-                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} aria-label="Randomize theme" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <InputField id="themeOrKeyword" label="Theme" value={themeOrKeyword} onChange={setThemeOrKeyword} placeholder="e.g., Alien Jungle Party" className="flex-grow mb-0" />
+                                <Button onClick={() => setThemeOrKeyword(getRandomItem(predefinedThemes))} aria-label="Randomize theme" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-gray-200 dark:border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                              <div className="flex items-end gap-3">
-                                <InputField id="vocalStyle" label="Vocal Signal" value={vocalStyle} onChange={setVocalStyle} placeholder="e.g., Female Vocals, Instrumental" className="flex-grow mb-0" />
-                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} aria-label="Randomize vocal style" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-white/10 text-gray-500 hover:text-emerald-500"></Button>
+                                <InputField id="vocalStyle" label="Vocal Style" value={vocalStyle} onChange={setVocalStyle} placeholder="e.g., Female Vocals, Instrumental" className="flex-grow mb-0" />
+                                <Button onClick={() => setVocalStyle(getRandomItem(predefinedVocalStyles))} aria-label="Randomize vocal style" variant="ghost" size="xs" startIcon={<RefreshIcon className="w-3.5 h-3.5" />} className="px-3 border-gray-200 dark:border-white/10 text-gray-500 hover:text-emerald-500"></Button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <InputField id="tempo" label="Pulse (BPM)" value={tempo} onChange={setTempo} placeholder="e.g., 120 BPM" className="mb-0" />
-                                <InputField id="durationConstraint" label="Time Warp" value={durationConstraint} onChange={setDurationConstraint} placeholder="e.g., Max 1:45" className="mb-0" />
+                                <InputField id="tempo" label="BPM" value={tempo} onChange={setTempo} placeholder="e.g., 120 BPM" className="mb-0" />
+                                <InputField id="durationConstraint" label="Max Duration" value={durationConstraint} onChange={setDurationConstraint} placeholder="e.g., Max 1:45" className="mb-0" />
                             </div>
-                            <TextAreaField id="lyricPart" label="Lyric Core / Mandatory Phrase" value={lyricPart} onChange={setLyricPart} placeholder="e.g., 'The stars are aligning tonight!'" rows={3} className="mb-0" />
+                            <TextAreaField id="lyricPart" label="Mandatory Lyric Phrase" value={lyricPart} onChange={setLyricPart} placeholder="e.g., 'The stars are aligning tonight!'" rows={3} className="mb-0" />
                             <InputField id="negativeConstraints" label="Banned Elements (Twist)" value={negativeConstraints} onChange={setNegativeConstraints} placeholder="No guitars, must be A-cappella" className="mb-0" />
                         </CollapsibleSection>
 
-                        <CollapsibleSection title="Satellite Links" icon={<LinkIcon className="w-4 h-4" />}>
-                            <InputField type="url" id="sunoSampleLink" label="Suno Pulse Sample" value={sunoSampleLink} onChange={setSunoSampleLink} placeholder="https://suno.com/song/..." />
-                            <InputField type="url" id="audioSampleLink" label="Audio Feed Sample" value={audioSampleLink} onChange={setAudioSampleLink} placeholder="e.g., YouTube, Soundcloud..." />
-                            <InputField type="url" id="submissionLink" label="Deployment Portal" value={submissionLink} onChange={setSubmissionLink} placeholder="e.g., Discord channel, Google Form" />
-                            <InputField type="url" id="showcasePlaylistLink" label="Showcase Vector" value={showcasePlaylistLink} onChange={setShowcasePlaylistLink} placeholder="https://youtube.com/playlist?list=..." />
-                            <TextAreaField id="additionalDetails" label="The Fine Print" value={additionalDetails} onChange={setAdditionalDetails} placeholder="Judging criteria, extra rules..." rows={3} className="mb-0" />
+                        <CollapsibleSection title="Links" icon={<LinkIcon className="w-4 h-4" />}>
+                            <InputField type="url" id="sunoSampleLink" label="Suno Sample" value={sunoSampleLink} onChange={setSunoSampleLink} placeholder="https://suno.com/song/..." />
+                            <InputField type="url" id="audioSampleLink" label="Audio Sample" value={audioSampleLink} onChange={setAudioSampleLink} placeholder="e.g., YouTube, Soundcloud..." />
+                            <InputField type="url" id="submissionLink" label="Submission Link" value={submissionLink} onChange={setSubmissionLink} placeholder="e.g., Discord channel, Google Form" />
+                            <InputField type="url" id="showcasePlaylistLink" label="Showcase Playlist" value={showcasePlaylistLink} onChange={setShowcasePlaylistLink} placeholder="https://youtube.com/playlist?list=..." />
+                            <TextAreaField id="additionalDetails" label="Additional Details" value={additionalDetails} onChange={setAdditionalDetails} placeholder="Judging criteria, extra rules..." rows={3} className="mb-0" />
                         </CollapsibleSection>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-8 border-t border-white/5 relative z-20">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-8 border-t border-gray-200 dark:border-white/5 relative z-20">
                              <Button 
                                 onClick={handleGeneratePost} 
                                 variant="primary" 
@@ -305,7 +292,7 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                 variant="ghost" 
                                 size="lg" 
                                 startIcon={<HistoryIcon className="w-5 h-5" />}
-                                className="font-black uppercase tracking-widest text-[10px] h-16 border-white/10 text-gray-500 hover:text-white"
+                                className="font-black uppercase tracking-widest text-[10px] h-16 border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white"
                              >
                                 OPEN ARCHIVES ({savedChallenges.length})
                              </Button>
@@ -314,7 +301,7 @@ Synchronize your efforts. The deadline is absolute. ⚡️
 
                     <div className="lg:col-span-12 xl:col-span-5 space-y-2">
                         {(generatedAnnouncementPost || generatedReminderPost) ? (
-                            <div className="animate-fadeIn glass-card p-10 border-white/10 shadow-2xl relative overflow-hidden h-full flex flex-col min-h-[600px]">
+                            <div className="animate-fadeIn glass-card p-10 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden h-full flex flex-col min-h-[600px]">
                                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
                                 
                                 <div className="flex items-center gap-4 mb-6">
@@ -367,14 +354,14 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                     backgroundColor="#10b981"
                                     disabled={copyPostStatus === 'Rockstar! Copied to Clipboard!' || copyPostStatus === 'Oops! Copy Failed.'}
                                 >
-                                    {copyPostStatus || `COPY ${activePostTab.toUpperCase()} SIGNAL`}
+                                    {copyPostStatus || `COPY ${activePostTab.toUpperCase()} POST`}
                                 </Button>
                             </div>
                         ) : (
-                            <div className="glass-card p-20 border-white/5 bg-slate-50/50 dark:bg-black/10 flex flex-col items-center justify-center text-center opacity-20 h-full min-h-[600px]">
+                            <div className="glass-card p-20 border-gray-200 dark:border-white/5 bg-slate-50/50 dark:bg-black/10 flex flex-col items-center justify-center text-center opacity-20 h-full min-h-[600px]">
                                 <RecordIcon className="w-20 h-20 mb-8 animate-pulse text-gray-500" />
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] mb-4">Transmission Idle</h3>
-                                <p className="text-[8px] font-black uppercase tracking-widest max-w-[200px]">Awaiting sonic challenge blueprints for neural network synthesis.</p>
+                                <p className="text-[8px] font-black uppercase tracking-widest max-w-[200px]">Awaiting sonic challenge blueprints for network synthesis.</p>
                             </div>
                         )}
                     </div>
@@ -389,11 +376,11 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                         <HistoryIcon className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600 dark:text-emerald-500 leading-none">Chrono Vault</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600 dark:text-emerald-500 leading-none">History</h3>
                                         <p className="text-[8px] font-black uppercase tracking-widest text-gray-500 mt-2 opacity-60">Retrieved historical challenge records</p>
                                     </div>
                                 </div>
-                                <Button onClick={() => setShowLoadModal(false)} variant="ghost" size="xs" className="w-10 h-10 border-white/10 text-white/50 hover:text-white">&times;</Button>
+                                <Button onClick={() => setShowLoadModal(false)} variant="ghost" size="xs" className="w-10 h-10 border-gray-200 dark:border-white/10 text-white/50 hover:text-gray-900 dark:hover:text-white">&times;</Button>
                             </div>
 
                             {savedChallenges.length > 0 ? (
@@ -402,10 +389,10 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                         <div 
                                             key={challenge.id} 
                                             onClick={() => loadChallengeToForm(challenge)}
-                                            className="group relative p-6 bg-white/5 border border-white/5 rounded-3xl hover:border-emerald-500/50 hover:bg-white/10 cursor-pointer transition-all duration-300"
+                                            className="group relative p-6 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-3xl hover:border-emerald-500/50 hover:bg-white dark:hover:bg-white/10 cursor-pointer transition-all duration-300"
                                         >
                                             <div className="flex justify-between items-center mb-2">
-                                                <p className="text-sm font-black uppercase tracking-tight text-white group-hover:text-emerald-500 transition-colors">{challenge.challengeName}</p>
+                                                <p className="text-sm font-black uppercase tracking-tight text-gray-900 dark:text-white group-hover:text-emerald-500 transition-colors">{challenge.challengeName}</p>
                                                 <StarIcon className="w-4 h-4 text-yellow-500/20 group-hover:text-yellow-500 transition-colors" />
                                             </div>
                                             <div className="flex items-center gap-4 text-[8px] font-black uppercase tracking-[0.2em] text-gray-500">
@@ -423,8 +410,8 @@ Synchronize your efforts. The deadline is absolute. ⚡️
                                 </div>
                             )}
 
-                            <div className="mt-8 pt-8 border-t border-white/10">
-                                <Button onClick={() => setShowLoadModal(false)} variant="ghost" size="lg" className="w-full font-black uppercase tracking-widest text-[9px] border-white/10 py-6">EXIT VAULT</Button>
+                            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-white/10">
+                                <Button onClick={() => setShowLoadModal(false)} variant="ghost" size="lg" className="w-full font-black uppercase tracking-widest text-[9px] border-gray-200 dark:border-white/10 py-6">EXIT VAULT</Button>
                             </div>
                         </div>
                     </div>

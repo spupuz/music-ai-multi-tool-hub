@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import { useRandomMusicStyle } from '@/hooks/useRandomMusicStyle';
 import { AddCustomItemModal, ManageCustomItemsModal, ImportConfirmationModal, CategoryItemDisplay, ToggleSwitch } from './RandomMusicStyleGenerator.uiComponents';
 import Spinner from '@/components/Spinner';
@@ -12,7 +11,6 @@ import type { SavedStyleEntry } from '@/types';
 
 
 const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const {
     currentStyle,
     currentLockedCategories,
@@ -90,13 +88,13 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
       <div className="flex gap-2 mt-3">
         <Button onClick={() => handleLoadSavedStyle(item)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-500">Load</Button>
         {itemType === 'history' && (
-          <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className={`text-[9px] font-black uppercase tracking-widest px-3 border-white/10 ${isFavorite(styleToUse.id) ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
+          <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className={`text-[9px] font-black uppercase tracking-widest px-3 border-gray-200 dark:border-white/10 ${isFavorite(styleToUse.id) ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 'bg-white dark:bg-white/5 text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
             {isFavorite(styleToUse.id) ? 'Unfav' : 'Fav'}
           </Button>
         )}
         {itemType === 'favorite' && (
           <>
-            <Button onClick={() => setEditingNoteForId(styleToUse.id)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-white/5 border-white/10 text-gray-400 hover:text-white flex items-center"><NoteIcon className="w-3 h-3 mr-1" /> Note</Button>
+            <Button onClick={() => setEditingNoteForId(styleToUse.id)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"><NoteIcon className="w-3 h-3 mr-1" /> Note</Button>
             <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all">Delete</Button>
           </>
         )}
@@ -107,25 +105,14 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
 
 
   return (
-    <div className={`w-full max-w-5xl mx-auto ${uiMode === 'classic' ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-gray-200'} flex flex-col transition-all duration-500 animate-fadeIn overflow-hidden px-4 pb-20`}>
-      {uiMode === 'classic' ? (
-        <header className="mb-10 text-center pt-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Style Architect
-          </h1>
-          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
+    <div className="w-full max-w-5xl mx-auto text-gray-900 dark:text-gray-200 flex flex-col transition-all duration-500 animate-fadeIn overflow-hidden px-4 pb-20">
+      <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Random Music Style</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
             Aesthetic Fusion Core • Generate high-variance musical prompts
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-12 text-center pt-0 md:pt-4 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Style Architect</h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">
-              Aesthetic Fusion Core • Generate high-variance musical prompts
-          </p>
-        </header>
-      )}
-      <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-white/10 shadow-2xl relative overflow-hidden">
+        </p>
+      </header>
+      <main className="w-full max-w-full glass-card p-2 sm:p-8 md:p-12 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[100px] pointer-events-none"></div>
         <div className="flex flex-col items-center">
           <Button 
@@ -135,24 +122,24 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
             size="lg"
             className="w-full md:w-auto h-16 px-12 font-black uppercase tracking-[0.3em] text-sm shadow-[0_0_50px_rgba(16,185,129,0.3)] active:scale-95 transition-all"
           >
-            {isGenerating && !currentStyle ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />SYNCHRONIZING...</> : isGenerating ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />RE-SYNCHING...</> : 'INITIATE SYNTHESIS'}
+            {isGenerating && !currentStyle ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />GENERATING...</> : isGenerating ? <><Spinner size="w-6 h-6 mr-3" color="text-black" />REGENERATING...</> : 'INITIATE SYNTHESIS'}
           </Button>
 
-          <div className="mt-10 w-full max-w-xl p-6 bg-black/20 rounded-3xl border border-white/5 transition-all">
+          <div className="mt-10 w-full max-w-xl p-6 bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5 transition-all">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-6 text-center opacity-80">Advanced Logic Controllers</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
               <ToggleSwitch id="toggle-era" label="Era Matrix" checked={optionalCategoryToggles.includeEra} onChange={() => handleOptionalCategoryToggle('includeEra')} />
               <ToggleSwitch id="toggle-prodstyle" label="Production Grid" checked={optionalCategoryToggles.includeProductionStyle} onChange={() => handleOptionalCategoryToggle('includeProductionStyle')} />
               <ToggleSwitch id="toggle-keymode" label="Harmonic Lock" checked={optionalCategoryToggles.includeKeyModeSuggestion} onChange={() => handleOptionalCategoryToggle('includeKeyModeSuggestion')} />
               <ToggleSwitch id="toggle-purpose" label="Utility Context" checked={optionalCategoryToggles.includePurpose} onChange={() => handleOptionalCategoryToggle('includePurpose')} />
-              <ToggleSwitch id="toggle-influence" label="Neural Influence" checked={optionalCategoryToggles.includeInfluence} onChange={() => handleOptionalCategoryToggle('includeInfluence')} />
+              <ToggleSwitch id="toggle-influence" label="Influence" checked={optionalCategoryToggles.includeInfluence} onChange={() => handleOptionalCategoryToggle('includeInfluence')} />
               <ToggleSwitch id="toggle-sfx" label="FX Frequency" checked={optionalCategoryToggles.includeSoundDesignFocus} onChange={() => handleOptionalCategoryToggle('includeSoundDesignFocus')} />
             </div>
           </div>
 
           {currentStyle && !isGenerating && (
             <div className="mt-8 w-full bg-gray-100 dark:bg-gray-850 p-4 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
-              <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-6 border-b border-white/5 gap-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-6 border-b border-gray-200 dark:border-white/5 gap-6">
                 <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-0 whitespace-nowrap">Active Archetype:</h2>
                   <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                     <div className="flex items-center gap-3 justify-center w-full sm:w-auto">
@@ -161,7 +148,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                         variant="ghost" 
                         size="sm" 
                         startIcon={isFavorite(currentStyle.id) ? <StarFilledIcon /> : <StarEmptyIcon />}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${isFavorite(currentStyle.id) ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/20' : 'bg-white/5 border-white/10 text-gray-500 hover:text-white hover:bg-white/10'}`} 
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${isFavorite(currentStyle.id) ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/20' : 'bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10'}`} 
                         aria-label={isFavorite(currentStyle.id) ? "Remove from favorites" : "Add to favorites"}
                       />
                       <Button 
@@ -169,7 +156,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                         variant="ghost" 
                         size="sm" 
                         startIcon={<SunoPromptIcon className="w-3.5 h-3.5" />}
-                        className={`flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 border-white/10 h-10 rounded-xl transition-all ${sunoPromptMode ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 border-transparent hover:bg-emerald-400' : 'bg-white/5 text-gray-400 hover:text-white'} whitespace-nowrap`} 
+                        className={`flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 border-gray-200 dark:border-white/10 h-10 rounded-xl transition-all ${sunoPromptMode ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 border-transparent hover:bg-emerald-400' : 'bg-white dark:bg-white/5 text-gray-400 hover:text-gray-900 dark:hover:text-white'} whitespace-nowrap`} 
                         title={sunoPromptMode ? "Switch to Full Style View to see controls" : "Switch to Suno Prompt View for copying"}
                       >
                         {sunoPromptMode ? 'Mode: Prompt' : 'Mode: Full'}
@@ -181,7 +168,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                         variant="ghost" 
                         size="sm" 
                         startIcon={<TagIcon className="w-3.5 h-3.5" />}
-                        className="flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 bg-white/5 border-white/10 text-gray-400 hover:text-white h-10 rounded-xl transition-all whitespace-nowrap" 
+                        className="flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white h-10 rounded-xl transition-all whitespace-nowrap" 
                         disabled={!!copiedTagsFeedback}
                       >
                          {copiedTagsFeedback || 'COPY TAGS'}
@@ -191,7 +178,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                         variant="ghost" 
                         size="sm" 
                         startIcon={<CopyIcon className="w-3.5 h-3.5" />}
-                        className="flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 bg-white/5 border-white/10 text-gray-400 hover:text-white h-10 rounded-xl transition-all whitespace-nowrap" 
+                        className="flex-1 sm:flex-none text-[9px] font-black uppercase tracking-widest px-4 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white h-10 rounded-xl transition-all whitespace-nowrap" 
                         disabled={!!copiedFeedback}
                       >
                         {copiedFeedback || 'COPY ALL'}
@@ -222,15 +209,15 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
             </div>
           )}
           {!sunoPromptMode && (
-            <div className="mt-12 pt-8 border-t border-white/5 w-full flex justify-center">
+            <div className="mt-12 pt-8 border-t border-gray-200 dark:border-white/5 w-full flex justify-center">
               <Button 
                 onClick={() => setManageCustomModalOpen(true)} 
                 variant="ghost" 
                 size="md" 
                 startIcon={<UserIcon className="w-5 h-5 opacity-60" />}
-                className="py-4 px-10 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[11px] font-bold uppercase tracking-[0.3em] border border-white/5 transition-all shadow-2xl"
+                className="py-4 px-10 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-900 dark:text-white rounded-2xl text-[11px] font-bold uppercase tracking-[0.3em] border border-gray-200 dark:border-white/5 transition-all shadow-2xl"
               >
-                Custom Neural Parameters
+                Custom Parameters
               </Button>
             </div>
           )}
@@ -265,7 +252,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
             <div className="grid md:grid-cols-2 gap-x-8">
               <div>
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-500">History Vault</h3>
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-500">History</h3>
                   {history.length > 0 &&
                     <Button onClick={handleClearHistory} variant="ghost" size="xs" className="text-[8px] font-black uppercase tracking-widest text-red-500/60 hover:text-red-500 border-none underline underline-offset-4">
                       {getClearHistoryButtonText()}
@@ -275,7 +262,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                 {history.length > 0 ? (
                   <div className="space-y-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
                     {history.map(hEntry => (
-                      <div key={hEntry.style.id} className="bg-white/5 p-4 rounded-2xl border border-white/5 group transition-all hover:bg-white-[0.07] hover:border-white/10">
+                      <div key={hEntry.style.id} className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-gray-200 dark:border-white/5 group transition-all hover:bg-gray-100 dark:hover:bg-white-[0.07] hover:border-gray-200 dark:hover:border-white/10">
                         <p className="text-gray-400 text-[11px] font-bold break-words line-clamp-2 leading-relaxed" title={formatStyleForDisplay(hEntry.style)}>{formatStyleForSuno(hEntry.style)}</p>
                         <RenderSavedItemActions item={hEntry} itemType="history" />
                       </div>
@@ -291,7 +278,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                   className="w-full justify-between items-center p-0 h-auto hover:bg-transparent border-none"
                   aria-expanded={showFavoritesView}
                 >
-                  <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-500">Neural Favorites ({favorites.length})</h3>
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-500">Favorites ({favorites.length})</h3>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-4 h-4 text-emerald-500 transform transition-transform ${showFavoritesView ? 'rotate-180' : ''}`}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                 </Button>
                 {showFavoritesView && (favorites.length > 0 ? (
@@ -307,7 +294,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                               onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(fEntry.style.id)}
                               onBlur={() => setTimeout(() => { if (document.activeElement !== noteInputRef.current) handleSaveNote(fEntry.style.id); }, 100)}
                               className="flex-grow px-3 py-2 text-[10px] bg-black/40 border border-white/10 rounded-xl focus:border-emerald-500/50 text-white outline-none font-bold"
-                              placeholder="Add neural note..." aria-label={`Note for ${fEntry.style.genres.join(', ')}`}
+                              placeholder="Add note..." aria-label={`Note for ${fEntry.style.genres.join(', ')}`}
                             />
                             <Button onClick={() => handleSaveNote(fEntry.style.id)} variant="primary" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 py-2 h-auto bg-emerald-500 text-black">Commit</Button>
                           </div>

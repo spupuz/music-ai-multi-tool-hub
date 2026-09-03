@@ -12,7 +12,6 @@ import {
 } from '@/utils/musicTheoryUtils';
 import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
-import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { 
@@ -99,7 +98,6 @@ const calculateFrequencyForNote = (noteName: string, octave: number = 4): number
 
 
 const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
-  const { uiMode } = useTheme();
   const [rootNote, setRootNote] = useState<string>('C');
   const [mode, setMode] = useState<string>('Major');
   const [chordType, setChordType] = useState<'triad' | 'seventh'>('triad');
@@ -492,24 +490,13 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   return (
     <div className="w-full text-gray-900 dark:text-white pb-20 px-4 animate-fadeIn">
-      {uiMode === 'classic' ? (
-        <header className="mb-10 text-center pt-8">
-          <h1 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">
-            Chord Lab
-          </h1>
-          <p className="mt-3 text-sm font-medium text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center">
-            Generate progressions • Explore diatonic depths • Build sequences
-          </p>
-        </header>
-      ) : (
-        <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-500 leading-none italic drop-shadow-2xl mb-1 md:mb-4">Chord Lab</h1>
-          <p className="mt-1 md:mt-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-gray-500 dark:text-gray-400 max-w-xl mx-auto opacity-70">Generate progressions • Explore diatonic depths • Build sequences</p>
-        </header>
-      )}
+      <header className="mb-2 md:mb-14 text-center pt-0 md:pt-8 px-4 animate-fadeIn">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Chord Lab</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Generate progressions • Explore diatonic depths • Build sequences</p>
+      </header>
 
 
-      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+      <main className="w-full glass-card p-2 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
         
@@ -567,7 +554,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         {error && <div className="mb-6 p-3 bg-red-100 dark:bg-red-800 bg-opacity-70 text-red-800 dark:text-red-300 rounded-md text-sm text-center border border-red-300 dark:border-red-700" role="alert">{error}</div>}
 
         {generatedProgression.length > 0 && !isLoading && (
-          <div className="mb-12 p-8 bg-black/5 dark:bg-black/20 rounded-3xl border border-white/5 animate-fadeIn">
+          <div className="mb-12 p-8 bg-black/5 dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5 animate-fadeIn">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500 mb-8 text-center opacity-70">
                 {isRecording ? "Capture Active" : "Current Sequence"}
             </h3>
@@ -581,9 +568,9 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
             {!isRecording && (
                  <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3">
-                    <Button onClick={handleCopyToClipboard} disabled={copyButtonText === 'COPIED!'} variant="ghost" size="sm" startIcon={<CopyIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/10">{copyButtonText}</Button>
-                    <Button onClick={handleSaveToFavorites} disabled={saveFavButtonText === 'SAVED!'} variant="ghost" size="sm" startIcon={<StarIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/10"> {saveFavButtonText}</Button>
-                    <Button onClick={handleExportMidi} disabled={exportMidiButtonText === 'EXPORTED!'} variant="ghost" size="sm" startIcon={<MidiIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/10"> {exportMidiButtonText}</Button>
+                    <Button onClick={handleCopyToClipboard} disabled={copyButtonText === 'COPIED!'} variant="ghost" size="sm" startIcon={<CopyIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">{copyButtonText}</Button>
+                    <Button onClick={handleSaveToFavorites} disabled={saveFavButtonText === 'SAVED!'} variant="ghost" size="sm" startIcon={<StarIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {saveFavButtonText}</Button>
+                    <Button onClick={handleExportMidi} disabled={exportMidiButtonText === 'EXPORTED!'} variant="ghost" size="sm" startIcon={<MidiIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {exportMidiButtonText}</Button>
                 </div>
             )}
           </div>
@@ -628,15 +615,15 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           </div>
         )}
         
-        <div className="mt-12 pt-10 border-t border-white/10">
+        <div className="mt-12 pt-10 border-t border-gray-200 dark:border-white/10">
             <Button 
               onClick={() => setShowFavoritesView(!showFavoritesView)} 
               variant="ghost"
               size="lg"
-              className="w-full text-left text-sm font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 py-6 px-10 flex justify-between items-center transition-all group glass-card border-white/10" 
+              className="w-full text-left text-sm font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 py-6 px-10 flex justify-between items-center transition-all group glass-card border-gray-200 dark:border-white/10" 
               aria-expanded={showFavoritesView}
             >
-                <span>Favorite Vault <span className="opacity-40 italic ml-2">({favoriteProgressions.length})</span></span>
+                <span>Favorites <span className="opacity-40 italic ml-2">({favoriteProgressions.length})</span></span>
                 <ChevronDownIcon className={`w-5 h-5 transform transition-transform duration-500 ${showFavoritesView ? 'rotate-180' : ''}`} />
             </Button>
             {showFavoritesView && (
@@ -644,7 +631,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 {favoriteProgressions.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin">
                       {favoriteProgressions.map(fav => (
-                          <div key={fav.id} className="glass-card p-6 border-white/5 hover:border-white/10 transition-all group relative overflow-hidden">
+                          <div key={fav.id} className="glass-card p-6 border-gray-200 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10 transition-all group relative overflow-hidden">
                               <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] pointer-events-none"></div>
                               <p className="text-lg font-black uppercase tracking-tighter text-gray-900 dark:text-white leading-tight mb-1">{fav.progression.map(c => c.name).join(' · ')}</p>
                               <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-600 mb-4">
@@ -659,7 +646,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                         defaultValue={fav.note || ''} 
                                         onChange={(e) => handleNoteChange(fav.id, e.target.value)} 
                                         onKeyDown={(e) => e.key === 'Enter' && handleSaveNote(fav.id)} 
-                                        className="flex-grow px-4 py-2 bg-white/10 dark:bg-black/20 border border-white/10 rounded-xl text-xs font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/10 outline-none" 
+                                        className="flex-grow px-4 py-2 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl text-xs font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-emerald-500/10 outline-none" 
                                         placeholder="Note..." 
                                       />
                                       <Button onClick={() => handleSaveNote(fav.id)} variant="primary" size="sm" className="font-black" backgroundColor="#10b981">OK</Button>
@@ -681,7 +668,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                       ))}
                   </div>
                 ) : (
-                  <div className="p-12 text-center glass-card border-dashed border-white/10">
+                  <div className="p-12 text-center glass-card border-dashed border-gray-200 dark:border-white/10">
                     <p className="text-xs font-black uppercase tracking-[0.2em] text-gray-500 opacity-50 italic">Storage Empty</p>
                   </div>
                 )}
