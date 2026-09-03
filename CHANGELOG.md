@@ -9,6 +9,14 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 5. L'app si aggiornerà automaticamente al prossimo 'npm run dev' o al push su GitHub.
 -->
 
+## [2.6.22] - 2026-09-03
+
+### Changed
+- **Prevent chart recreation on resize/updates in Suno User Stats**: `CommentsTrendChart`, `FollowersTrendChart`, `PlaysTrendChart`, and `UpvotesTrendChart` now reuse their existing Chart.js instance (updating labels, dataset, and options in place via `update('none')`) instead of destroying and recreating the chart on every `screenWidth` change or data update, reducing jank and CPU churn during window resizes.
+
+### Security
+- **Added rate limiting to the `/verify-password` endpoint**: the Worker now enforces a 5-attempt cap (per client IP) over a 300-second window using the existing `STATS_KV` store, returning HTTP 429 with a `Retry-After` header once the threshold is hit, to prevent brute-force discovery of the shared committee password.
+
 ## [2.6.21] - 2026-09-02
 
 ### Accessibility

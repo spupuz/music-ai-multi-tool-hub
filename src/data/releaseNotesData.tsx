@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.6.22",
+    content: (
+      <section id="version-2.6.22">
+        <SectionTitle>Version 2.6.22 - 2026-09-03</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Prevent chart recreation on resize/updates in Suno User Stats</STRONG>: <CODE>CommentsTrendChart</CODE>, <CODE>FollowersTrendChart</CODE>, <CODE>PlaysTrendChart</CODE>, and <CODE>UpvotesTrendChart</CODE> now reuse their existing Chart.js instance (updating labels, dataset, and options in place via <CODE>update('none')</CODE>) instead of destroying and recreating the chart on every <CODE>screenWidth</CODE> change or data update, reducing jank and CPU churn during window resizes.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Added rate limiting to the <CODE>/verify-password</CODE> endpoint</STRONG>: the Worker now enforces a 5-attempt cap (per client IP) over a 300-second window using the existing <CODE>STATS_KV</CODE> store, returning HTTP 429 with a <CODE>Retry-After</CODE> header once the threshold is hit, to prevent brute-force discovery of the shared committee password.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.6.21",
     content: (
       <section id="version-2.6.21">
