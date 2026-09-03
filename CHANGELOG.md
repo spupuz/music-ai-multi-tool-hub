@@ -1,3 +1,8 @@
+## [2.6.25] - 2026-09-03
+
+### Fixed
+- **Lyrics Synchronizer**: loading a Suno URL now fetches and fills the song metadata (title, artist, cover art, and lyrics when the prompt looks like lyrics) while still requiring a manual MP3 upload for the audio (TOS compliance) — and it no longer wipes an MP3 that was already uploaded, so you can combine "upload MP3 + fetch the rest from the Suno URL".
+
 ## [2.6.24] - 2026-09-03
 
 ### Fixed

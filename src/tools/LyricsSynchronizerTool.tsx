@@ -185,8 +185,6 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     if (!urlInput) { setError("Please enter a Suno, Riffusion, or Flow Music Song URL."); return; }
     setIsUrlLoading(true); setError(null); setUrlLoadingProgress('Validating URL...');
     if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'urlLoadAttempted', urlInput);
-    if (audioFileInputRef.current) audioFileInputRef.current.value = ""; setAudioSrc(null); setAudioFileName(null);
-    setSongTitle(''); setArtistName(''); setSunoCoverArtUrl(null); setRawLyrics(''); setParsedLines([]);
 
     if (urlInput.includes('flowmusic.app') || urlInput.includes('producer.ai')) {
       setUrlLoadingProgress('Flow Music URL detected, transforming...');
@@ -205,6 +203,9 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     }
 
     if (urlInput.includes('riffusion.com') || urlInput.includes('flowmusic.app') || urlInput.includes('producer.ai')) {
+      // Riffusion/Flow auto-loads its own accessible GCS audio: replace any prior source.
+      if (audioFileInputRef.current) audioFileInputRef.current.value = ""; setAudioSrc(null); setAudioFileName(null);
+      setSongTitle(''); setArtistName(''); setSunoCoverArtUrl(null); setRawLyrics(''); setParsedLines([]);
       try {
         const songId = extractRiffusionSongId(urlInput);
         if (!songId) throw new Error("Could not extract Riffusion song ID from URL.");
@@ -246,15 +247,39 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "An unknown error occurred loading from Riffusion URL."; setError(errorMsg); if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'riffusionUrlLoadError', errorMsg);
       } finally { setIsUrlLoading(false); setUrlLoadingProgress(''); setSunoUrlInput(''); }
-} else { // Suno URL — TOS: never auto-load CDN audio, require manual MP3 upload
+} else { // Suno URL — TOS: never auto-load CDN audio; fetch metadata only, require manual MP3 upload.
       setError(null);
-      setUrlLoadingProgress('Suno URLs require manual MP3 upload (TOS compliance).');
-      setIsUrlLoading(false);
-      setError(`Suno songs can't be auto-loaded for synchronizing (TOS compliance). Please download "${sunoUrlInput.trim()}" via Suno's official download button, then upload the MP3 file below.`);
-      setSongTitle(''); setArtistName(''); setSunoCoverArtUrl(null); setRawLyrics('');
-// Do NOT attempt to resolve or fetch Suno CDN audio — user must upload MP3 manually
-      if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoUrlRequiresUpload', sunoUrlInput.trim());
-      return
+      setUrlLoadingProgress('Resolving Suno song...');
+      try {
+        const songId = await resolveSunoUrlToPotentialSongId(urlInput, setUrlLoadingProgress);
+        if (!songId) throw new Error("Could not resolve the Suno URL to a song ID.");
+        setUrlLoadingProgress(`Fetching metadata for song ${songId.substring(0, 8)}...`);
+        const clip = await fetchSunoClipById(songId);
+        if (!clip) throw new Error("Could not fetch Suno song details.");
+
+        setSongTitle(clip.title || '');
+        setArtistName(clip.display_name || clip.handle || '');
+        setSunoCoverArtUrl(clip.image_url || null);
+
+        // Best-effort prefill of the lyric buffer from the song's prompt, but only
+        // when it actually looks like lyrics (not just a style description).
+        const prompt = clip.metadata?.prompt || '';
+        const promptLooksLikeLyrics = prompt.includes('\n') || prompt.length > 50 || !(/^\[.*\](\s*\[.*\])*$/.test(prompt.trim()));
+        const lyrics = (promptLooksLikeLyrics && prompt.trim()) ? prompt : (clip.metadata?.gpt_description_prompt || '');
+        setRawLyrics(lyrics);
+
+        setStatusMessage(`Suno metadata loaded: "${clip.title || 'untitled'}" — audio requires manual MP3 upload (TOS compliance).`);
+        setTimeout(() => setStatusMessage(''), 6000);
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoUrlMetadataLoaded', clip.title || songId);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Could not load Suno song metadata.";
+        setError(errorMsg);
+        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoUrlLoadError', errorMsg);
+      } finally {
+        setIsUrlLoading(false);
+        setUrlLoadingProgress('');
+        setSunoUrlInput('');
+      }
     }
   }
 
