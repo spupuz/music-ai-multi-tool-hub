@@ -27,6 +27,7 @@ import {
 
 import { imageUrlToBase64, isValidHexColor, normalizeHexColor } from '@/components/SongCoverArt/utils';
 import PresetModals from '@/components/SongCoverArt/PresetModals';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 
 const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -303,8 +304,8 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     finally { setProgressMessage(''); }
   };
 
-  useEffect(() => { try { const stored = localStorage.getItem(SAVED_PRESETS_LOCAL_STORAGE_KEY); if (stored) setSavedArtStylePresets(JSON.parse(stored)); } catch (e) {} }, []);
-  useEffect(() => { try { localStorage.setItem(SAVED_PRESETS_LOCAL_STORAGE_KEY, JSON.stringify(savedArtStylePresets)); } catch (e) {} }, [savedArtStylePresets]);
+  useEffect(() => { try { const stored = safeGetItem(SAVED_PRESETS_LOCAL_STORAGE_KEY); if (stored) setSavedArtStylePresets(JSON.parse(stored)); } catch (e) {} }, []);
+  useEffect(() => { try { safeSetItem(SAVED_PRESETS_LOCAL_STORAGE_KEY, JSON.stringify(savedArtStylePresets)); } catch (e) {} }, [savedArtStylePresets]);
 
   const collectCurrentSettings = (): ArtStyleSettings => ({
     fontFamily, fontColor, hasStroke, strokeThickness, strokeColor, songNamePosition, artistNamePosition, relativeFontSize,

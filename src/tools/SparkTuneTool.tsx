@@ -18,6 +18,7 @@ import {
   MusicNoteIcon,
   LinkIcon
 } from '@/components/Icons';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 const TOOL_CATEGORY = 'PromptSpark';
 const LOCAL_STORAGE_KEY = 'promptSparkChallenges_v1';
@@ -100,7 +101,7 @@ const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const [showLoadModal, setShowLoadModal] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const stored = safeGetItem(LOCAL_STORAGE_KEY);
         if (stored) {
             try {
                 setSavedChallenges(JSON.parse(stored));
@@ -113,7 +114,7 @@ const PromptSparkTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const saveChallengeToLocal = (challenge: SparkTuneChallengeData) => {
         const updated = [challenge, ...savedChallenges.filter(c => c.id !== challenge.id)].slice(0, 20);
         setSavedChallenges(updated);
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+        safeSetItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
     };
 
     const getRandomItem = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];

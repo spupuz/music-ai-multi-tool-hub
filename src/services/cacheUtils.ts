@@ -1,3 +1,5 @@
+import { safeSetItem } from './safeStorage';
+
 const CACHE_PREFIX = 'hubCache_';
 
 interface CacheEntry<T> {
@@ -20,7 +22,7 @@ export function cacheGet<T>(namespace: string, key: string, ttlMs: number): T | 
 export function cacheSet<T>(namespace: string, key: string, value: T, maxEntries = 200): void {
   try {
     const fullKey = `${CACHE_PREFIX}${namespace}_${key}`;
-    localStorage.setItem(fullKey, JSON.stringify({ value, ts: Date.now() } as CacheEntry<T>));
+    safeSetItem(fullKey, JSON.stringify({ value, ts: Date.now() } as CacheEntry<T>));
 
     const prefix = `${CACHE_PREFIX}${namespace}_`;
     const keys = Object.keys(localStorage).filter(k => k.startsWith(prefix));

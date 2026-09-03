@@ -6,7 +6,24 @@ export interface ReleaseNoteItem {
   content: React.ReactNode;
 }
 
-export const releaseNotes: ReleaseNoteItem[] = [
+(export const releaseNotes: ReleaseNoteItem\[\] = \[)
+    {
+    version: "2.6.23",
+    content: (
+      <section id="version-2.6.23">
+        <SectionTitle>Version 2.6.23 - 2026-09-03</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno TOS compliance</STRONG>: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.</LI>
+          <LI><STRONG>safeStorage.ts</STRONG>: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.</LI>
+          <LI><STRONG>Sidebar</STRONG>: voci menu allineate a sinistra con indent per ogni voce.</LI>
+          <LI><STRONG>Footer</STRONG>: rimosso @flickerlog, visualizza solo @spupuz.</LI>
+          <LI><STRONG>SongDeckPicker</STRONG>: anteprima iframe Suno embed al posto di audio CDN per le card classifica.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+      </section>
+    )
+  },
   {
     version: "2.6.22",
     content: (

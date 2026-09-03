@@ -13,6 +13,7 @@ import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 
 import { LOGO_SVG_STRING, FALLBACK_IMAGE_DATA_URI, TOOL_CATEGORY_UI, LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, DEFAULT_PLAYLIST_HEIGHT_PX, MIN_PLAYLIST_HEIGHT_PX, MAX_PLAYLIST_HEIGHT_PX, MIN_SNIPPET_DURATION_SECONDS, MAX_SNIPPET_DURATION_SECONDS, LOCAL_CLICK_CONFIRM_NEEDED, LOCAL_CLICK_TIMEOUT_MS, EQ_PRESETS_FOR_UI } from '@/components/SunoMusicPlayer/constants';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 import { useTheme } from '@/context/ThemeContext';
 import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon, ChevronDownIcon, PlayIcon, PauseIcon, SkipBackIcon, SkipForwardIcon, ShuffleIcon } from '@/components/Icons';
 import KeyboardShortcutsModal from '@/components/SunoMusicPlayer/KeyboardShortcutsModal';
@@ -49,6 +50,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     handleClearAllSavedPlaylists, getClearAllSavedPlaylistsButtonText, clearAllSavedPlaylistsClickCount,
     removeSongFromQueue,
     handleClearQueue, getClearQueueButtonText,
+    embedClipId,
   } = useSunoAudioPlayer({ trackLocalEvent });
 
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
@@ -187,7 +189,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   useEffect(() => {
-    const savedHeight = localStorage.getItem(LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY);
+    const savedHeight = safeGetItem(LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY);
     if (savedHeight) {
       const numericHeight = parseInt(savedHeight, 10);
       const currentMaxHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight * 0.7) : MAX_PLAYLIST_HEIGHT_PX;
@@ -223,7 +225,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     const handleUp = () => {
       setIsResizing(false);
       if (playlistContainerRef.current) {
-        localStorage.setItem(LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, playlistContainerRef.current.style.height);
+        safeSetItem(LOCAL_STORAGE_PLAYLIST_HEIGHT_KEY, playlistContainerRef.current.style.height);
       }
     };
 
@@ -644,32 +646,53 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </div>
       )}
 
-      <AudioVisualizer analyserNodes={analyserNodes} isPlaying={playerState.status === PlaybackStatus.Playing} />
+      {!embedClipId && <AudioVisualizer analyserNodes={analyserNodes} isPlaying={playerState.status === PlaybackStatus.Playing} />}
 
-      <div className="flex items-center justify-between mb-4"> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.currentTime)}</div> <input type="range" min="0" max={playerState.duration || 0} value={playerState.currentTime} onChange={handleSeekSlider} className="flex-grow mx-3 h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-400" aria-label="Seek slider" /> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.duration)}</div> </div>
-
-      <div className="flex items-center justify-center gap-8 mb-8 mt-4">
-        <Button onClick={previousTrack} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Previous Track"> <SkipBackIcon className="w-6 h-6" /> </Button>
-        <Button onClick={togglePlayPause} variant="primary" className="p-10 bg-emerald-500 hover:bg-emerald-400 text-black rounded-full shadow-[0_0_40px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all" aria-label={playerState.status === PlaybackStatus.Playing ? "Pause" : "Play"} > {playerState.status === PlaybackStatus.Playing ? <PauseIcon className="w-10 h-10" /> : <PlayIcon className="w-10 h-10" />} </Button>
-        <Button onClick={() => nextTrack(false)} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Next Track"> <SkipForwardIcon className="w-6 h-6" /> </Button>
-        <Button onClick={toggleShuffle} variant="ghost" className={`p-6 rounded-full border ${playerState.isShuffle ? 'bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] border-emerald-500' : 'bg-slate-200/50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-400'}`} aria-pressed={playerState.isShuffle} aria-label="Toggle shuffle">
-          <ShuffleIcon className="w-6 h-6" />
-        </Button>
-      </div>
-
-      <div className="flex items-center justify-between text-xs mb-4">
-        <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-emerald-500" aria-label="Volume control" /> </div>
-        <div className="flex gap-2 items-center">
-          <label htmlFor="snippetModeCheckbox" className="text-gray-600 dark:text-gray-400 cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-300">Snippet Mode ({playerState.snippetDurationConfig}s):</label>
-          <input type="checkbox" id="snippetModeCheckbox" checked={playerState.isSnippetMode} onChange={toggleSnippetMode} className="form-checkbox h-3.5 w-3.5 text-emerald-500 bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 rounded focus:ring-emerald-400 focus:ring-offset-0" />
-          <input type="number" value={playerState.snippetDurationConfig} onChange={(e) => setSnippetDurationConfig(parseInt(e.target.value, 10))} min={MIN_SNIPPET_DURATION_SECONDS} max={MAX_SNIPPET_DURATION_SECONDS} className="w-12 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white focus:ring-emerald-400 focus:border-emerald-400" aria-label="Snippet duration in seconds" />
-
-          <Button onClick={() => setShowEq(!showEq)} variant="ghost" size="xs" className={`p-2 rounded-xl transition-all shadow-none ${showEq ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-white/5 border-white/10 text-gray-400'} hover:opacity-80`} aria-label="Toggle equalizer" aria-expanded={showEq} startIcon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>} />
-          <Button onClick={() => setShowShortcutsModal(true)} variant="ghost" size="xs" className="p-2 rounded-xl bg-white/5 border-white/10 text-gray-400 hover:opacity-80 shadow-none" aria-label="Show Keyboard Shortcuts" startIcon={<KeyboardIcon className="w-4 h-4" />} />
+      {embedClipId && playerState.currentSong && (
+        <div className="mb-6 w-full flex flex-col items-center animate-fadeIn">
+          <div className="w-full max-w-3xl aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/30">
+            <iframe
+              src={`https://suno.com/embed/${embedClipId}?autoplay=1`}
+              className="w-full h-full border-0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              title={playerState.currentSong.title}
+            />
+          </div>
+          <p className="mt-3 text-[9px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-600 text-center">
+            Playback by Suno's official embed player — no audio file is downloaded (TOS compliant)
+          </p>
         </div>
-      </div>
+      )}
 
-      {showEq && (
+      {!embedClipId && (
+        <>
+        <div className="flex items-center justify-between mb-4"> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.currentTime)}</div> <input type="range" min="0" max={playerState.duration || 0} value={playerState.currentTime} onChange={handleSeekSlider} className="flex-grow mx-3 h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-400" aria-label="Seek slider" /> <div className="text-xs text-gray-500 dark:text-gray-400">{formatTime(playerState.duration)}</div> </div>
+
+        <div className="flex items-center justify-center gap-8 mb-8 mt-4">
+          <Button onClick={previousTrack} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Previous Track"> <SkipBackIcon className="w-6 h-6" /> </Button>
+          <Button onClick={togglePlayPause} variant="primary" className="p-10 bg-emerald-500 hover:bg-emerald-400 text-black rounded-full shadow-[0_0_40px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all" aria-label={playerState.status === PlaybackStatus.Playing ? "Pause" : "Play"} > {playerState.status === PlaybackStatus.Playing ? <PauseIcon className="w-10 h-10" /> : <PlayIcon className="w-10 h-10" />} </Button>
+          <Button onClick={() => nextTrack(false)} variant="ghost" className="p-6 bg-slate-200/50 dark:bg-black/20 hover:bg-slate-300 dark:hover:bg-white/10 rounded-full border-gray-200 dark:border-white/10 shadow-xl" aria-label="Next Track"> <SkipForwardIcon className="w-6 h-6" /> </Button>
+          <Button onClick={toggleShuffle} variant="ghost" className={`p-6 rounded-full border ${playerState.isShuffle ? 'bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] border-emerald-500' : 'bg-slate-200/50 dark:bg-black/20 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-400'}`} aria-pressed={playerState.isShuffle} aria-label="Toggle shuffle">
+            <ShuffleIcon className="w-6 h-6" />
+          </Button>
+        </div>
+
+        <div className="flex items-center justify-between text-xs mb-4">
+          <div className="flex items-center gap-2"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg> <input type="range" min="0" max="1" step="0.01" value={playerState.volume} onChange={handleVolumeChangeSlider} className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-emerald-500" aria-label="Volume control" /> </div>
+          <div className="flex gap-2 items-center">
+            <label htmlFor="snippetModeCheckbox" className="text-gray-600 dark:text-gray-400 cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-300">Snippet Mode ({playerState.snippetDurationConfig}s):</label>
+            <input type="checkbox" id="snippetModeCheckbox" checked={playerState.isSnippetMode} onChange={toggleSnippetMode} className="form-checkbox h-3.5 w-3.5 text-emerald-500 bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 rounded focus:ring-emerald-400 focus:ring-offset-0" />
+            <input type="number" value={playerState.snippetDurationConfig} onChange={(e) => setSnippetDurationConfig(parseInt(e.target.value, 10))} min={MIN_SNIPPET_DURATION_SECONDS} max={MAX_SNIPPET_DURATION_SECONDS} className="w-12 px-1 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-gray-900 dark:text-white focus:ring-emerald-400 focus:border-emerald-400" aria-label="Snippet duration in seconds" />
+
+            <Button onClick={() => setShowEq(!showEq)} variant="ghost" size="xs" className={`p-2 rounded-xl transition-all shadow-none ${showEq ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-white/5 border-white/10 text-gray-400'} hover:opacity-80`} aria-label="Toggle equalizer" aria-expanded={showEq} startIcon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>} />
+            <Button onClick={() => setShowShortcutsModal(true)} variant="ghost" size="xs" className="p-2 rounded-xl bg-white/5 border-white/10 text-gray-400 hover:opacity-80 shadow-none" aria-label="Show Keyboard Shortcuts" startIcon={<KeyboardIcon className="w-4 h-4" />} />
+          </div>
+        </div>
+        </>
+      )}
+
+      {showEq && !embedClipId && (
         <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
           <div className="flex flex-wrap justify-center gap-3 mb-6"> 
             {Object.entries(EQ_PRESETS_FOR_UI).map(([key, { label }]) => (

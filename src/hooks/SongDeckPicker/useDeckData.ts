@@ -11,6 +11,7 @@ import {
     fetchRiffusionSongData, extractRiffusionSongId 
 } from '@/services/riffusionService';
 import { TOOL_CATEGORY, LOCAL_STORAGE_SONG_INFO_CACHE_KEY, SONG_INFO_CACHE_CLEAR_CLICKS_NEEDED, CONFIRM_TIMEOUT_MS } from '@/tools/SongDeckPicker/songDeckPicker.constants';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 
 interface UseDeckDataProps {
     trackLocalEvent: (category: string, action: string, label?: string, value?: number) => void;
@@ -37,7 +38,7 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
     // Initial Cache Loading
     useEffect(() => {
         try {
-            const storedSongCache = localStorage.getItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY);
+            const storedSongCache = safeGetItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY);
             if (storedSongCache) setSongInfoCache(new Map(JSON.parse(storedSongCache)));
         } catch (e) { console.error("Error loading song cache from localStorage:", e); }
     }, []);
@@ -45,7 +46,7 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
     // Cache Persistence
     useEffect(() => { 
         try { 
-            localStorage.setItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY, JSON.stringify(Array.from(songInfoCache.entries()))); 
+            safeSetItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY, JSON.stringify(Array.from(songInfoCache.entries()))); 
         } catch (e) { console.error("Error saving song info cache to localStorage", e); } 
     }, [songInfoCache]);
 
@@ -128,7 +129,11 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
                     if (!sunoSongId) throw new Error("Could not resolve Suno URL to a song ID.");
                     const clip = await fetchSunoClipById(sunoSongId);
                     if (clip) {
-                        const newCard: SongCardInterface = { id: clip.id, artistName: clip.display_name || clip.handle, title: clip.title, imageUrl: clip.image_url || undefined, webLink: clip.suno_song_url, audioUrl: clip.audio_url, color: generateRandomColor(), originalInputLine: line, sourceType: cardSourceType, isBonusApplied: false };
+                        const newCard: SongCardInterface = { id: clip.id, artistName: clip.display_name || clip.handle, title: clip.title, imageUrl: clip.image_url || undefined, webLink: clip.suno_song_url, color: generateRandomColor(), originalInputLine: line, sourceType: cardSourceType, isBonusApplied: false };
+                        // TOS compliance: Suno CDN audio (audio_url) is never fetched into our deck cards.
+                        // Instead, set embedClipId for official Suno iframe embed — no audio is streamed.
+                        if (clip.id) newCard.embedClipId = clip.id;
+                        // old audioUrl line removed — snippet playback disabled for Suno
                         newDeckBaseAccumulator.push(newCard);
                         setSongInfoCache(prev => new Map(prev).set(line, newCard));
                         successfulCardCreations++;
@@ -204,7 +209,7 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
 
         if (newClickCount >= SONG_INFO_CACHE_CLEAR_CLICKS_NEEDED) {
             setSongInfoCache(new Map());
-            localStorage.removeItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY);
+            safeRemoveItem(LOCAL_STORAGE_SONG_INFO_CACHE_KEY);
             setClearSongInfoCacheStatus('Song info cache cleared.');
             setClearSongInfoCacheClickCount(0);
             setTimeout(() => setClearSongInfoCacheStatus(''), 3000);

@@ -13,6 +13,7 @@ import Button from '@/components/common/Button';
 import { ComplianceCheckIcon, SaveIcon, LoadIcon, DownloadIcon, RefreshIcon, LyricsIcon } from '@/components/Icons';
 import { downloadSunoComplianceResultsAsCsv } from '@/services/csvExportService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
+import { safeSetItem } from '@/services/safeStorage';
 
 const TOOL_CATEGORY = 'SunoSongCompliance';
 const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
@@ -338,7 +339,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
   const handleProcessLyrics = (lyrics: string | null) => {
     if (!lyrics) return;
     try {
-      localStorage.setItem('lyricsToProcessForLyricProcessor', lyrics);
+      safeSetItem('lyricsToProcessForLyricProcessor', lyrics);
       if (onNavigate) onNavigate('lyricProcessor' as ToolId);
       trackLocalEvent(TOOL_CATEGORY, 'navigateToLyricProcessor', undefined, lyrics.length);
     } catch (e) {
@@ -547,9 +548,15 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                         </div>
                       </div>
                     </div>
-                    {result.clipData.audio_url && (
+                    {result.clipData.id && (
                       <div className="my-4 p-2 bg-white/5 rounded-2xl border border-white/5">
-                        <audio controls src={result.clipData.audio_url} className="w-full h-8 opacity-40 hover:opacity-100 transition-opacity">Audio not supported.</audio>
+                        <iframe
+                          src={`https://suno.com/embed/${result.clipData.id}`}
+                          className="w-full h-24 rounded-xl border-0 opacity-80 hover:opacity-100 transition-opacity"
+                          allow="autoplay; encrypted-media"
+                          title={`Preview: ${result.clipData.title}`}
+                          loading="lazy"
+                        />
                       </div>
                     )}
                     {result.songLyrics && (

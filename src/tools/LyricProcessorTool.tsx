@@ -3,8 +3,8 @@ import Spinner from '@/components/Spinner';
 import type { ToolProps } from '@/Layout';
 import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
-import { resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
-import { fetchSunoClipById } from '@/services/sunoService';
+import { resolveSunoUrlToPotentialSongId, fetchSunoClipById } from '@/services/sunoService';
+import { safeGetItem, safeRemoveItem } from '@/services/safeStorage';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 import { countSyllablesInLine } from '@/utils/lyricUtils';
 import InputField from '@/components/forms/InputField';
@@ -90,10 +90,10 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
   useEffect(() => {
-    const lyricsToLoad = localStorage.getItem('lyricsToProcessForLyricProcessor');
+    const lyricsToLoad = safeGetItem('lyricsToProcessForLyricProcessor');
     if (lyricsToLoad) {
       setLyricsInput(lyricsToLoad);
-      localStorage.removeItem('lyricsToProcessForLyricProcessor');
+      safeRemoveItem('lyricsToProcessForLyricProcessor');
       const lyricsTextarea = document.getElementById('lyricsInput');
       if (lyricsTextarea) lyricsTextarea.focus();
     }

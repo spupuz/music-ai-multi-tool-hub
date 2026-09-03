@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import { MetronomeIcon, StopIcon } from '@/components/Icons';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 const TOOL_CATEGORY = 'MetronomeTool';
 const LOCAL_STORAGE_BPM_KEY = 'metronome_bpm_v1';
@@ -19,18 +20,18 @@ type ClickSoundType = 'classic' | 'woodblock' | 'digital';
 const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const { uiMode } = useTheme();
   const [bpm, setBpm] = useState<number>(() => {
-    const savedBpm = localStorage.getItem(LOCAL_STORAGE_BPM_KEY);
+    const savedBpm = safeGetItem(LOCAL_STORAGE_BPM_KEY);
     return savedBpm ? parseInt(savedBpm, 10) : 120;
   });
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeSignature, setTimeSignature] = useState<string>(() => {
-    return localStorage.getItem(LOCAL_STORAGE_TS_KEY) || "4/4";
+    return safeGetItem(LOCAL_STORAGE_TS_KEY) || "4/4";
   });
   const [subdivision, setSubdivision] = useState<SubdivisionType>(() => {
-    return (localStorage.getItem(LOCAL_STORAGE_SUBDIVISION_KEY) as SubdivisionType) || 'none';
+    return (safeGetItem(LOCAL_STORAGE_SUBDIVISION_KEY) as SubdivisionType) || 'none';
   });
   const [clickSound, setClickSound] = useState<ClickSoundType>(() => {
-    return (localStorage.getItem(LOCAL_STORAGE_CLICKSOUND_KEY) as ClickSoundType) || 'classic';
+    return (safeGetItem(LOCAL_STORAGE_CLICKSOUND_KEY) as ClickSoundType) || 'classic';
   });
   const [visualBeat, setVisualBeat] = useState<number>(0); // 0: off, 1: normal, 2: accent
 
@@ -42,10 +43,10 @@ const MetronomeTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   const beatsPerBar = useMemo(() => parseInt(timeSignature.split('/')[0], 10), [timeSignature]);
 
-  useEffect(() => { localStorage.setItem(LOCAL_STORAGE_BPM_KEY, bpm.toString()); }, [bpm]);
-  useEffect(() => { localStorage.setItem(LOCAL_STORAGE_TS_KEY, timeSignature); }, [timeSignature]);
-  useEffect(() => { localStorage.setItem(LOCAL_STORAGE_SUBDIVISION_KEY, subdivision); }, [subdivision]);
-  useEffect(() => { localStorage.setItem(LOCAL_STORAGE_CLICKSOUND_KEY, clickSound); }, [clickSound]);
+  useEffect(() => { safeSetItem(LOCAL_STORAGE_BPM_KEY, bpm.toString()); }, [bpm]);
+  useEffect(() => { safeSetItem(LOCAL_STORAGE_TS_KEY, timeSignature); }, [timeSignature]);
+  useEffect(() => { safeSetItem(LOCAL_STORAGE_SUBDIVISION_KEY, subdivision); }, [subdivision]);
+  useEffect(() => { safeSetItem(LOCAL_STORAGE_CLICKSOUND_KEY, clickSound); }, [clickSound]);
 
   const initializeAudioContext = useCallback(async (): Promise<boolean> => {
     if (!audioContextRef.current) {

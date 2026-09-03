@@ -108,12 +108,15 @@ interface RankingModalProps {
     toolTextColor: string;
     audioRef: React.RefObject<HTMLAudioElement>;
     setIsSnippetPlaying: (val: boolean) => void;
+    // NEW: for Suno embed mode
+    showSnippetPlayback: boolean; // true = show playback controls (Riffusion), false = iframe embed (Suno)
 }
 
 export const RankingModal: React.FC<RankingModalProps> = (props) => {
     if (!props.revealedRankingCard) return null;
 
     const handleClose = () => {
+        // Stop any playing audio/snippet
         if (props.audioRef.current) {
             props.audioRef.current.pause();
             props.audioRef.current.src = "";
@@ -123,6 +126,11 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
     };
 
     const textColor = props.getAdjustedTextColorForContrast(props.revealedRankingCard.color || props.cardBackgroundColor, props.cardTextColor);
+    const card = props.revealedRankingCard;
+
+    // Determine if this card should show snippet playback (Riffusion/Flow) or iframe embed (Suno)
+    const isSunoCard = !!card.embedClipId;
+    const shouldShowSnippetPlayback = props.showSnippetPlayback && !isSunoCard && !!card.audioUrl;
 
     return (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-[100] p-4 animate-fadeIn"
@@ -131,33 +139,89 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
                 <div 
                     className="rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden border-4 flex flex-col aspect-[4/5] md:aspect-[3/4] w-full transform hover:scale-[1.02] transition-transform duration-500"
                     style={{ 
-                        backgroundColor: props.revealedRankingCard.color || props.cardBackgroundColor, 
+                        backgroundColor: card.color || props.cardBackgroundColor, 
                         borderColor: `${props.toolAccentColor}88`,
                         boxShadow: `0 0 60px -15px ${props.toolAccentColor}44`
                     }}
                 >
-                    <div className="relative h-2/3 w-full group overflow-hidden">
-                        <img 
-                            src={props.revealedRankingCard.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
-                            alt={`${props.revealedRankingCard.title} cover`} 
-                            loading="lazy" decoding="async"
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}
-                        />
-                        <div className="absolute top-6 left-6 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-2xl">
-                            <span className="text-2xl font-black text-white italic tracking-tighter">RANK #{props.revealedRankingCard.rank}</span>
+                    {/* Suno iframe embed preview */}
+                    {isSunoCard && (
+                        <div className="relative h-2/3 w-full group overflow-hidden">
+                            <iframe 
+                                src={`https://suno.com/embed/${card.embedClipId}`}
+                                className="w-full h-full object-cover rounded-t-[2.5rem] transition-transform duration-500 group-hover:scale-105" 
+                                allow="autoplay; encrypted-media"
+                                loading="lazy"
+                                title={`Preview: ${card.title}`}
+                            />
+                            <div className="absolute top-6 left-6 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-2xl">
+                                <span className="text-2xl font-black text-white italic tracking-tighter">RANK #{card.rank}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="h-1/3 flex flex-col justify-center items-center p-6 w-full bg-black/10 backdrop-blur-sm">
-                        <div className="text-center w-full min-w-0">
-                            <h3 className="text-3xl md:text-4xl font-black break-words line-clamp-2 leading-tight tracking-tighter mb-2" style={{ color: textColor, fontFamily: props.cardTextFont }}>
-                                {props.revealedRankingCard.title}
-                            </h3>
-                            <p className="text-xl md:text-2xl font-bold opacity-80 truncate" style={{ color: textColor, fontFamily: props.cardTextFont }}>
-                                by {props.revealedRankingCard.artistName}
+                    )}
+                    {/* Riffusion/Flow card with image + audio snippet */}
+                    {!isSunoCard && card.imageUrl && (
+                        <div className="relative h-2/3 w-full group overflow-hidden">
+                            <img 
+                                src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
+                                alt={`${card.title} cover`} 
+                                loading="lazy" decoding="async"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = props.FALLBACK_IMAGE_DATA_URI; }}
+                            />
+                            <div className="absolute top-6 left-6 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-2xl">
+                                <span className="text-2xl font-black text-white italic tracking-tighter">RANK #{card.rank}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Audio snippet playback controls (Riffusion/Flow only) */}
+                    {shouldShowSnippetPlayback && (
+                        <div className="relative h-2/3 w-full group overflow-hidden">
+                            {/* Keep the audio element for Riffusion/Flow snippet playback */}
+                            <audio ref={props.audioRef} onEnded={() => props.setIsSnippetPlaying(false)} onPause={() => props.setIsSnippetPlaying(false)} className="hidden" />
+                            <div className="absolute top-6 left-6 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-2xl">
+                                <span className="text-2xl font-black text-white italic tracking-tighter">RANK #{card.rank}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {shouldShowSnippetPlayback && (
+                        <div className="mt-8 text-center space-y-4">
+                            {props.isSnippetPlaying && (
+                                <div className="animate-fadeIn">
+                                    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 mb-4">
+                                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                                        <p className="text-sm font-black uppercase tracking-widest text-white">Playing {props.rankingRevealSnippetDuration}s snippet</p>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        <Button 
+                                            onClick={handleClose}
+                                            variant="danger"
+                                            size="md"
+                                            className="rounded-full !px-8 shadow-2xl transform hover:scale-105 active:scale-95 font-black uppercase tracking-widest"
+                                        >
+                                            SKIP & CLOSE
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+                            {!props.isSnippetPlaying && (
+                                <p className="text-sm font-black uppercase tracking-widest opacity-50 animate-pulse" style={{color: props.toolTextColor}}>
+                                    Click anywhere to close
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Fallback: if no image but has audioUrl, show a placeholder */}
+                    {!isSunoCard && !card.imageUrl && card.audioUrl && (
+                        <div className="mt-8 text-center space-y-4">
+                            <p className="text-sm font-black uppercase tracking-widest opacity-50 animate-pulse" style={{color: props.toolTextColor}}>
+                                Audio card — Click to close
                             </p>
                         </div>
-                    </div>
+                    )}
                 </div>
                 <div className="mt-8 text-center space-y-4">
                     {props.isSnippetPlaying && (
@@ -184,7 +248,6 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
                         </p>
                     )}
                 </div>
-                <audio ref={props.audioRef} onEnded={() => props.setIsSnippetPlaying(false)} onPause={() => props.setIsSnippetPlaying(false)} className="hidden" />
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { safeSetItem } from '@/services/safeStorage';
 import {
     LOCAL_STORAGE_TIMELINE_HEIGHT_KEY,
     DEFAULT_TIMELINE_HEIGHT_PX,
@@ -49,7 +50,7 @@ export function useTimelineResize() {
         const handleUp = () => {
             setIsResizing(false); 
             if (timelineContainerRef.current) {
-                localStorage.setItem(LOCAL_STORAGE_TIMELINE_HEIGHT_KEY, timelineContainerRef.current.style.height);
+                safeSetItem(LOCAL_STORAGE_TIMELINE_HEIGHT_KEY, timelineContainerRef.current.style.height);
             }
         };
     

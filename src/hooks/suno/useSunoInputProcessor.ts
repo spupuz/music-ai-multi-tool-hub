@@ -16,6 +16,7 @@ import {
   fetchRiffusionSongData, 
   extractRiffusionSongId 
 } from '@/services/riffusionService';
+import { safeSetItem } from '@/services/safeStorage';
 import { 
   TOOL_CATEGORY_PLAYER,
   sunoPlaylistUrlPattern,
@@ -158,7 +159,7 @@ export const useSunoInputProcessor = ({
       if (result.profileDetail || result.clips.length > 0) {
         const cachedData = { identifier: usernameToFetch, type: 'user', profileDetail: result.profileDetail, playlistDetail: null, clips: result.clips, lastFetched: currentTimestamp };
         try {
-          localStorage.setItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData));
+          safeSetItem(getCacheKey('user', usernameToFetch), JSON.stringify(cachedData));
         } catch (e) {
           console.warn('Failed to persist user cache:', e);
         }
@@ -234,7 +235,7 @@ export const useSunoInputProcessor = ({
       if (result.playlistDetail || result.clips.length > 0) {
         const cachedData = { identifier: playlistIdToFetch, type: 'playlist', playlistDetail: result.playlistDetail, profileDetail: null, clips: result.clips, lastFetched: currentTimestamp };
         try {
-          localStorage.setItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData));
+          safeSetItem(getCacheKey('playlist', playlistIdToFetch), JSON.stringify(cachedData));
         } catch (e) {
           console.warn('Failed to persist playlist cache:', e);
         }
@@ -463,7 +464,7 @@ export const useSunoInputProcessor = ({
 
   useEffect(() => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
+      safeSetItem(LOCAL_STORAGE_LAST_SESSION_KEY, JSON.stringify({
         type: currentIdentifierType,
         id: currentIdentifier,
         input: identifierInput,

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import type { SunoClip, SavedCustomPlaylist, SunoMusicPlayerStoredData, SunoProfileDetail, SunoPlaylistDetail } from '@/types';
 import { downloadSunoPlaylistAsCsv } from '@/services/csvExportService';
 import { cacheGetAll, cacheSet, cacheRemove, cacheRemoveNamespace } from '@/services/cacheUtils';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 import {
   LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY,
   LOCAL_STORAGE_PREFIX_USER,
@@ -35,7 +36,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
     if (!id) return null;
     try {
       const cacheKey = getCacheKey(type, id);
-      const dataStr = localStorage.getItem(cacheKey);
+      const dataStr = safeGetItem(cacheKey);
       if (dataStr) {
         return JSON.parse(dataStr) as SunoMusicPlayerStoredData;
       }
@@ -52,7 +53,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const storedPlaylists = localStorage.getItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY);
+      const storedPlaylists = safeGetItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY);
       if (storedPlaylists) setSavedCustomPlaylists(JSON.parse(storedPlaylists));
     } catch (e) {
       console.error("Error loading saved custom playlists:", e);
@@ -73,7 +74,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   useEffect(() => {
     if (!hasHydratedStorage.current) return;
     try {
-      localStorage.setItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY, JSON.stringify(savedCustomPlaylists));
+      safeSetItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY, JSON.stringify(savedCustomPlaylists));
     } catch (e) {
       console.error("Error saving custom playlists:", e);
     }
@@ -139,7 +140,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       let clearedCount = 0;
       allKeys.forEach(key => {
         if (prefixesToClear.some(prefix => key.startsWith(prefix))) {
-          localStorage.removeItem(key);
+          safeRemoveItem(key);
           clearedCount++;
         }
       });
@@ -164,11 +165,11 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       return;
     }
     try {
-      knownAppLocalStorageKeys.forEach(key => localStorage.removeItem(key));
+      knownAppLocalStorageKeys.forEach(key => safeRemoveItem(key));
       const allKeys = Object.keys(localStorage);
       allKeys.forEach(key => {
         if (knownAppLocalStoragePrefixes.some(prefix => key.startsWith(prefix))) {
-          localStorage.removeItem(key);
+          safeRemoveItem(key);
         }
       });
       setDataManagementStatus("All app data cleared. Reloading...");

@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Howl, Howler } from 'howler';
 import type { SunoClip, RiffusionSongData, EqualizerBand, PlayerState, SunoProfileDetail, SunoPlaylistDetail, SunoMusicPlayerStoredData, SavedCustomPlaylist, PlaylistAnalysis } from '@/types';
 import { PlaybackStatus } from '@/types';
-import { fetchSunoClipById, fetchSunoSongsByUsername, fetchSunoPlaylistById, extractSunoSongIdFromPath as extractSunoSongIdFromPathFromService, resolveSunoUrlToPotentialSongId } from '@/services/sunoService';
+import { fetchSunoClipById, fetchSunoSongsByUsername, fetchSunoPlaylistById, extractSunoSongIdFromPath as extractSunoSongIdFromPathFromService, resolveSunoUrlToPotentialSongId, isAudioUrlBroken } from '@/services/sunoService';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 import { downloadSunoPlaylistAsCsv } from '@/services/csvExportService';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 import { usePlaylistAnalysis } from './suno/usePlaylistAnalysis';
 import { useSunoAudioSystem } from './suno/useSunoAudioSystem';
 import { useSunoDataManagement } from './suno/useSunoDataManagement';
@@ -103,6 +104,7 @@ export interface UseSunoAudioPlayerReturn {
   removeSongFromQueue: (songId: string) => void;
   handleClearQueue: () => void;
   getClearQueueButtonText: () => string;
+  embedClipId: string | null;
 }
 
 // Known app storage keys and prefixes are now handled via constants.ts or within specialized hooks where appropriate.
@@ -168,6 +170,8 @@ export const useSunoAudioPlayer = ({
   const [errorPlayerHook, setErrorPlayerHookInternal] = useState<string | null>(null);
   const setErrorPlayer = useCallback((error: string | null) => setErrorPlayerHookInternal(error), []);
   const setUiError = useCallback((update: React.SetStateAction<string | null>) => setUiErrorHookInternal(update), []);
+
+  const [embedClipId, setEmbedClipId] = useState<string | null>(null);
 
   const currentSoundRef = useRef<Howl | null>(null);
   const currentPlayingSongIdRef = useRef<string | null>(null);
@@ -242,7 +246,7 @@ export const useSunoAudioPlayer = ({
   const [clearAllSavedPlaylistsClickCount, setClearAllSavedPlaylistsClickCount] = useState(0);
 
   useEffect(() => {
-    const storedDuration = localStorage.getItem(LOCAL_STORAGE_SNIPPET_DURATION_KEY);
+    const storedDuration = safeGetItem(LOCAL_STORAGE_SNIPPET_DURATION_KEY);
     if (storedDuration) {
       const parsed = parseInt(storedDuration, 10);
       if (!isNaN(parsed) && parsed >= MIN_SNIPPET_DURATION_SECONDS && parsed <= MAX_SNIPPET_DURATION_SECONDS) {
@@ -254,7 +258,7 @@ export const useSunoAudioPlayer = ({
   const setSnippetDurationConfig = useCallback((duration: number) => {
     const newDuration = Math.max(MIN_SNIPPET_DURATION_SECONDS, Math.min(MAX_SNIPPET_DURATION_SECONDS, duration));
     setPlayerState(prev => ({ ...prev, snippetDurationConfig: newDuration }));
-    localStorage.setItem(LOCAL_STORAGE_SNIPPET_DURATION_KEY, String(newDuration));
+    safeSetItem(LOCAL_STORAGE_SNIPPET_DURATION_KEY, String(newDuration));
     trackLocalEvent(TOOL_CATEGORY_PLAYER, 'snippetDurationChanged', String(newDuration));
   }, [trackLocalEvent, setPlayerState]);
 
@@ -277,6 +281,21 @@ export const useSunoAudioPlayer = ({
       currentSoundRef.current = null;
     }
 
+    // TOS compliance: never stream Suno CDN media (audio_url/video_url) into Howler.
+    // Suno clips always play through the official Suno embed iframe. Only Riffusion /
+    // Flow Music clips stream directly, via their own accessible GCS .m4a URLs.
+    const streamsDirectly = song.source === 'riffusion' && !!song.audio_url && !isAudioUrlBroken(song.audio_url);
+
+    if (!streamsDirectly) {
+      setEmbedClipId(song.id);
+      setIsLoadingPlayer(false);
+      setPlayerState(prev => ({ ...prev, status: PlaybackStatus.Playing, currentSong: song, duration: song.metadata?.duration || 0 }));
+      return;
+    }
+
+    setEmbedClipId(null);
+
+    const audioUrl = song.audio_url as string;
     const ready = await ensureAudioSystemReady();
     if (!ready) {
       setIsLoadingPlayer(false);
@@ -289,7 +308,7 @@ export const useSunoAudioPlayer = ({
     // in the useSunoAudioSystem hook. The following creates a new Howl instance associated with the global Howler context.
 
     const newSound = new Howl({
-      src: [song.audio_url],
+      src: [audioUrl],
       html5: false,
       volume: 1.0,
       format: ['mp3'],
@@ -621,7 +640,7 @@ export const useSunoAudioPlayer = ({
     setClearAllSavedPlaylistsClickCount(newClickCount);
     if (newClickCount >= 3) {
       setSavedCustomPlaylists([]);
-      localStorage.removeItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY);
+      safeRemoveItem(LOCAL_STORAGE_SAVED_CUSTOM_PLAYLISTS_KEY);
       setDataManagementStatus('All saved custom playlists cleared.');
       trackLocalEvent(TOOL_CATEGORY_PLAYER, 'allSavedPlaylistsCleared', undefined, 1);
       setClearAllSavedPlaylistsClickCount(0);
@@ -753,5 +772,6 @@ export const useSunoAudioPlayer = ({
     handleClearAllSavedPlaylists, getClearAllSavedPlaylistsButtonText, clearAllSavedPlaylistsClickCount,
     removeSongFromQueue,
     handleClearQueue, getClearQueueButtonText,
+    embedClipId,
   };
 };

@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { ToolProps } from '@/Layout';
 import { fetchSunoSongsByUsername } from '@/services/sunoService';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 import type { 
     SunoUserStoredData, AggregatedStats, TagStat, GenreStat, ProductivityStats, 
     HistoricalDataPoint, DailyCreationStat, SongInteractionPoint, SongTrendData, SongEngagementData,
@@ -21,7 +22,7 @@ const MIN_SONGS_FOR_TAG_PAIR = 3;
 
 const persistUserData = (key: string, data: SunoUserStoredData): boolean => {
     try {
-        localStorage.setItem(key, JSON.stringify(data));
+        safeSetItem(key, JSON.stringify(data));
         return true;
     } catch (e) {
         console.warn(`Failed to persist user data to localStorage for key "${key}". Data is kept in memory for this session.`);
@@ -281,7 +282,7 @@ export const useSunoUserStatsData = (passedTrackLocalEvent: ToolProps['trackLoca
     const normalizedUser = userToLoad.trim().toLowerCase().replace(/^@/, '');
     if (!normalizedUser) return;
     try {
-      const dataStr = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${normalizedUser}`);
+      const dataStr = safeGetItem(`${LOCAL_STORAGE_PREFIX}${normalizedUser}`);
       if (dataStr) {
         const parsedData: SunoUserStoredData = JSON.parse(dataStr);
         setStoredData(parsedData); setError(null);
@@ -375,7 +376,7 @@ export const useSunoUserStatsData = (passedTrackLocalEvent: ToolProps['trackLoca
   const clearUserData = useCallback(() => {
     if (!storedData?.username) return;
     try {
-      localStorage.removeItem(`${LOCAL_STORAGE_PREFIX}${storedData.username}`);
+      safeRemoveItem(`${LOCAL_STORAGE_PREFIX}${storedData.username}`);
       setStoredData(null); setError(null);      
       lastSubmittedUsernameRef.current = ''; 
       setProgressMessage(`Data for @${storedData.username} cleared.`); 
@@ -439,7 +440,7 @@ export const useSunoUserStatsData = (passedTrackLocalEvent: ToolProps['trackLoca
         }
 
         const usernameToImport = importedData.username;
-        const existingDataStr = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`);
+        const existingDataStr = safeGetItem(`${LOCAL_STORAGE_PREFIX}${usernameToImport}`);
 
         if (!existingDataStr) {
             // No existing data, just save the imported data

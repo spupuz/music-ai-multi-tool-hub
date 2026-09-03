@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useCallback, useState } from 'react';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 type Theme = 'dark' | 'light';
 export type UiMode = 'architect' | 'classic';
@@ -18,7 +19,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setTheme] = useState<Theme>(() => {
     // Check local storage or system preference, default to 'dark' for this app
     if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('aiMultiToolHub_theme');
+      const storedTheme = safeGetItem('aiMultiToolHub_theme');
       if (storedTheme === 'light' || storedTheme === 'dark') {
         return storedTheme;
       }
@@ -29,7 +30,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [uiMode, setUiModeState] = useState<UiMode>(() => {
     if (typeof window !== 'undefined') {
-      const storedUiMode = localStorage.getItem('aiMultiToolHub_uiMode');
+      const storedUiMode = safeGetItem('aiMultiToolHub_uiMode');
       if (storedUiMode === 'architect' || storedUiMode === 'classic') {
         return storedUiMode;
       }
@@ -43,7 +44,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
     try {
-      localStorage.setItem('aiMultiToolHub_theme', theme);
+      safeSetItem('aiMultiToolHub_theme', theme);
     } catch (e) {
       console.warn('Failed to persist theme preference:', e);
     }
@@ -54,7 +55,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     root.classList.remove('ui-architect', 'ui-classic');
     root.classList.add(`ui-${uiMode}`);
     try {
-      localStorage.setItem('aiMultiToolHub_uiMode', uiMode);
+      safeSetItem('aiMultiToolHub_uiMode', uiMode);
     } catch (e) {
       console.warn('Failed to persist UI mode preference:', e);
     }

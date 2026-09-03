@@ -28,6 +28,7 @@ import {
   RefreshIcon as LoadIcon,
   ChevronDownIcon
 } from '@/components/Icons';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 const TOOL_CATEGORY = 'ChordProgressionGenerator';
 const FAVORITES_STORAGE_KEY = 'chordProgFavorites_v1';
@@ -133,14 +134,14 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   useEffect(() => {
     try {
-        const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+        const storedFavorites = safeGetItem(FAVORITES_STORAGE_KEY);
         if (storedFavorites) setFavoriteProgressions(JSON.parse(storedFavorites));
     } catch (error) { console.error("Error loading favorites:", error); }
   }, []);
 
   useEffect(() => {
     try {
-        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteProgressions));
+        safeSetItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteProgressions));
     } catch (error) { console.error("Error saving favorites:", error); }
   }, [favoriteProgressions]);
 

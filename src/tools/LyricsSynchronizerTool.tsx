@@ -246,22 +246,17 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "An unknown error occurred loading from Riffusion URL."; setError(errorMsg); if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'riffusionUrlLoadError', errorMsg);
       } finally { setIsUrlLoading(false); setUrlLoadingProgress(''); setSunoUrlInput(''); }
-    } else { // Assume Suno
-      try {
-        const songId = await resolveSunoUrlToPotentialSongId(urlInput, setUrlLoadingProgress);
-        if (!songId) throw new Error("Could not resolve Suno URL to a song ID.");
-        setUrlLoadingProgress(`Fetching song details for ID: ${songId.substring(0, 8)}...`);
-        const clip = await fetchSunoClipById(songId);
-        if (!clip || !clip.audio_url) throw new Error(`Failed to fetch song details or audio URL for ID: ${songId.substring(0, 8)}...`);
-        setAudioSrc(clip.audio_url); setAudioFileName(clip.title || `Suno Song ${clip.id.substring(0, 8)}`);
-        setSongTitle(clip.title || ''); setArtistName(clip.display_name || clip.handle || ''); setSunoCoverArtUrl(clip.image_url || null);
-        setRawLyrics(clip.metadata?.prompt || ''); setUrlLoadingProgress(`Audio loaded: ${clip.title || 'Suno Song'}`);
-        if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoAudioLoaded', clip.title);
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "An unknown error occurred loading from Suno URL."; setError(errorMsg); if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoUrlLoadError', errorMsg);
-      } finally { setIsUrlLoading(false); setUrlLoadingProgress(''); setSunoUrlInput(''); }
+} else { // Suno URL — TOS: never auto-load CDN audio, require manual MP3 upload
+      setError(null);
+      setUrlLoadingProgress('Suno URLs require manual MP3 upload (TOS compliance).');
+      setIsUrlLoading(false);
+      setError(`Suno songs can't be auto-loaded for synchronizing (TOS compliance). Please download "${sunoUrlInput.trim()}" via Suno's official download button, then upload the MP3 file below.`);
+      setSongTitle(''); setArtistName(''); setSunoCoverArtUrl(null); setRawLyrics('');
+// Do NOT attempt to resolve or fetch Suno CDN audio — user must upload MP3 manually
+      if (trackLocalEvent) trackLocalEvent(TOOL_CATEGORY, 'sunoUrlRequiresUpload', sunoUrlInput.trim());
+      return
     }
-  };
+  }
 
   const handleMarkTimestamp = useCallback((lineId: string) => { if (audioRef.current) { const timestamp = audioRef.current.currentTime; setParsedLines(prevLines => prevLines.map(line => line.id === lineId ? { ...line, timestamp } : line)); trackLocalEvent(TOOL_CATEGORY, 'timestampMarked', lineId); } }, [trackLocalEvent]);
   const handleClearTimestamp = useCallback((lineId: string) => { setParsedLines(prevLines => prevLines.map(line => line.id === lineId ? { ...line, timestamp: null } : line)); trackLocalEvent(TOOL_CATEGORY, 'timestampCleared', lineId); }, [trackLocalEvent]);

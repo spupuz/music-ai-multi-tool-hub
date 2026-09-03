@@ -15,7 +15,7 @@ import { DeckLog } from '@/components/SongDeckPicker/DeckLog';
 import { DeckView } from '@/components/SongDeckPicker/DeckView';
 import { DeckFocusView, RankingModal } from '@/components/SongDeckPicker/DeckFocusView';
 
-const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
+const LOGO_SVG_STRING = `<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 L85 27.5 V72.5 L50 90 L15 72.5 V27.5 L50 10 Z' stroke='#059669' stroke-width='8' fill='transparent'/><circle cx='50' cy='35' r='7' fill='#14B8A6'/><circle cx='35' cy='65' r='6' fill='#14B8A6'/><circle cx='65' cy='65' r='6' fill='#14B8A6'/><line x1='50' y1='35' x2='35' x2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='35' x2='65' y2='65' stroke='#10B981' stroke-width='5' stroke-linecap='round'/><line x1='38' y1='63' x2='62' y2='63' stroke='#10B981' stroke-width='5' stroke-linecap='round'/></svg>`;
 const FALLBACK_IMAGE_DATA_URI = `data:image/svg+xml;base64,${btoa(LOGO_SVG_STRING)}`;
 
 const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -30,9 +30,15 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         return getAdjustedTextColor(backgroundColorHex, preferredTextColorHex || logic.toolTextColor);
     }, [logic.toolTextColor]);
 
+    // Suno embed mode: no CDN audio playback. Suno cards show iframe preview instead.
+    const hasSunoEmbed = (card: SongCardInterface): boolean => 
+        !!(card.embedClipId && logic.revealedRankingCard?.id === card.id);
+
     useEffect(() => {
+        // Riffusion/Flow audio snippet playback (preserve existing behavior)
         const isTopX = logic.revealedRankingCard && (logic.revealedRankingCard.rank || 0) <= logic.rankingRevealTopX;
-        if (isTopX && logic.revealedRankingCard?.audioUrl && audioRef.current) {
+        const isRiffusion = logic.revealedRankingCard?.sourceType === 'riffusion_url';
+        if (isTopX && isRiffusion && logic.revealedRankingCard?.audioUrl && audioRef.current) {
             const audio = audioRef.current;
             const playSnippet = () => {
                 if (audio.duration && isFinite(audio.duration)) {
@@ -63,7 +69,7 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             setIsSnippetPlaying(false);
             if (snippetTimeoutRef.current) clearTimeout(snippetTimeoutRef.current);
         }
-    }, [logic.revealedRankingCard, logic.rankingRevealSnippetDuration]);
+    }, [logic.revealedRankingCard, logic.rankingRevealSnippetDuration, logic.revealedRankingCard?.sourceType]);
     
     const effectiveCardTextColor = useMemo(() => {
         const bgToTest = logic.selectedCardForLogging?.color || logic.cardBackgroundColor;
@@ -214,7 +220,7 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
         <DeckLog {...logic} theme={theme} FALLBACK_IMAGE_DATA_URI={FALLBACK_IMAGE_DATA_URI} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
 
-        <RankingModal {...logic} audioRef={audioRef} setIsSnippetPlaying={setIsSnippetPlaying} isSnippetPlaying={isSnippetPlaying} FALLBACK_IMAGE_DATA_URI={FALLBACK_IMAGE_DATA_URI} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} />
+        <RankingModal {...logic} audioRef={audioRef} setIsSnippetPlaying={setIsSnippetPlaying} isSnippetPlaying={isSnippetPlaying} FALLBACK_IMAGE_DATA_URI={FALLBACK_IMAGE_DATA_URI} getAdjustedTextColorForContrast={getAdjustedTextColorForContrast} showSnippetPlayback={logic.revealedRankingCard?.sourceType !== 'suno_playlist' && logic.revealedRankingCard?.sourceType !== 'suno_short_url' && logic.revealedRankingCard?.sourceType !== 'suno_long_url' && logic.revealedRankingCard?.sourceType !== 'suno_general_url'} />
 
         </div>
         <style>{`

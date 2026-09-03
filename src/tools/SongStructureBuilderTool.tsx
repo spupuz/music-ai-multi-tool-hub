@@ -22,6 +22,7 @@ import BarsExplainer from '@/components/SongStructureBuilder/BarsExplainer';
 import { useTimelineResize } from '@/components/SongStructureBuilder/hooks/useTimelineResize';
 import { useLyricManager } from '@/components/SongStructureBuilder/hooks/useLyricManager';
 import { useImportExport } from '@/components/SongStructureBuilder/hooks/useImportExport';
+import { safeSetItem } from '@/services/safeStorage';
 
 
 const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -165,11 +166,11 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
     
     useEffect(() => {
         const dataToSave = { arrangement, songTitle, tags, blockTypeColors, bpm, beatsPerBar };
-        localStorage.setItem(LOCAL_STORAGE_CURRENT_WORK_KEY, JSON.stringify(dataToSave));
+        safeSetItem(LOCAL_STORAGE_CURRENT_WORK_KEY, JSON.stringify(dataToSave));
     }, [arrangement, songTitle, tags, blockTypeColors, bpm, beatsPerBar]);
     
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, JSON.stringify(savedArrangements));
+        safeSetItem(LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY, JSON.stringify(savedArrangements));
     }, [savedArrangements]);
 
 

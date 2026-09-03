@@ -15,6 +15,7 @@ import type {
     CustomItemsState, OptionalCategoryToggleState, CustomItemCategoryKey, 
     LockedCategoriesState, IntensityLevel, MultiSelectItemCategoryKey 
 } from '@/types';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 
 // Helper function (can be moved to utils if used elsewhere)
 const getRandomElements = <T,>(predefinedArr: T[], customArr: T[], count: number): T[] => {
@@ -65,7 +66,7 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
 
   const [categoryIntensity, setCategoryIntensity] = useState<Partial<Record<MultiSelectItemCategoryKey, IntensityLevel>>>(() => {
     try {
-        const storedIntensity = localStorage.getItem(CATEGORY_INTENSITY_STORAGE_KEY);
+        const storedIntensity = safeGetItem(CATEGORY_INTENSITY_STORAGE_KEY);
         return storedIntensity ? JSON.parse(storedIntensity) : initialCategoryIntensity;
     } catch (e) {
         console.error("Error loading category intensity settings from localStorage:", e);
@@ -75,7 +76,7 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
 
   useEffect(() => {
     try {
-        localStorage.setItem(CATEGORY_INTENSITY_STORAGE_KEY, JSON.stringify(categoryIntensity));
+        safeSetItem(CATEGORY_INTENSITY_STORAGE_KEY, JSON.stringify(categoryIntensity));
     } catch (e) {
         console.error("Error saving category intensity settings to localStorage:", e);
     }
@@ -95,21 +96,21 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
     const loadedCustomItems = { ...initialCustomItems };
     Object.keys(initialCustomItems).forEach(catKey => {
       try {
-        const stored = localStorage.getItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`);
+        const stored = safeGetItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`);
         if (stored) loadedCustomItems[catKey as CustomItemCategoryKey] = JSON.parse(stored);
       } catch (e) { console.error(`Error loading custom items for ${catKey}:`, e); }
     });
     setCustomItems(loadedCustomItems);
 
     try {
-        const storedToggles = localStorage.getItem(OPTIONAL_TOGGLES_STORAGE_KEY);
+        const storedToggles = safeGetItem(OPTIONAL_TOGGLES_STORAGE_KEY);
         if (storedToggles) setOptionalCategoryToggles(JSON.parse(storedToggles));
     } catch (e) { console.error("Error loading optional category toggles:", e); }
         
     try { 
-      const storedHistory = localStorage.getItem(HISTORY_STORAGE_KEY);
+      const storedHistory = safeGetItem(HISTORY_STORAGE_KEY);
       if (storedHistory) setHistory(JSON.parse(storedHistory));
-      const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY); 
+      const storedFavorites = safeGetItem(FAVORITES_STORAGE_KEY); 
       if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
     }
     catch (error) { console.error("Error loading saved data from localStorage:", error); setHistory([]); setFavorites([]); }
@@ -120,20 +121,20 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
   // Save data to localStorage when it changes
   useEffect(() => {
     Object.entries(customItems).forEach(([catKey, items]) => {
-      try { localStorage.setItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`, JSON.stringify(items)); } 
+      try { safeSetItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`, JSON.stringify(items)); } 
       catch (e) { console.error(`Error saving custom items for ${catKey}:`, e); }
     });
   }, [customItems]);
 
   useEffect(() => {
-    try { localStorage.setItem(OPTIONAL_TOGGLES_STORAGE_KEY, JSON.stringify(optionalCategoryToggles)); }
+    try { safeSetItem(OPTIONAL_TOGGLES_STORAGE_KEY, JSON.stringify(optionalCategoryToggles)); }
     catch (e) { console.error("Error saving optional category toggles:", e); }
   }, [optionalCategoryToggles]);
 
   useEffect(() => {
     try { 
-      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
-      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites)); 
+      safeSetItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+      safeSetItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites)); 
     }
     catch (error) { console.error("Error saving data to localStorage:", error); }
   }, [history, favorites]);
@@ -340,7 +341,7 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
     if (clearHistoryTimeoutRef.current) clearTimeout(clearHistoryTimeoutRef.current);
     const newClickCount = clearHistoryClickCount + 1;
     if (newClickCount >= 3) {
-        try { localStorage.removeItem(HISTORY_STORAGE_KEY); } catch (e) { console.error("Error removing history from localStorage:", e); }
+        try { safeRemoveItem(HISTORY_STORAGE_KEY); } catch (e) { console.error("Error removing history from localStorage:", e); }
         setHistory([]); trackLocalEvent(TOOL_CATEGORY, 'historyCleared', undefined, 1);
         setClearHistoryClickCount(0); clearHistoryTimeoutRef.current = null;
     } else {

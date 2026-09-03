@@ -1,8 +1,15 @@
+## [2.6.23] - 2026-09-03
 # Changelog
 
 <!--
 GUIDA RAPIDA ALL'AGGIORNAMENTO:
 1. Aggiungi una nuova sezione in cima sotto un'intestazione '## [Versione] - Data'
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 2. Usa '### Added', '### Changed', '### Removed', '### Fixed' per categorizzare i cambi.
 3. Usa i punti elenco '- ' per ogni voce.
 4. Salva il file.
@@ -11,6 +18,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.6.22] - 2026-09-03
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Prevent chart recreation on resize/updates in Suno User Stats**: `CommentsTrendChart`, `FollowersTrendChart`, `PlaysTrendChart`, and `UpvotesTrendChart` now reuse their existing Chart.js instance (updating labels, dataset, and options in place via `update('none')`) instead of destroying and recreating the chart on every `screenWidth` change or data update, reducing jank and CPU churn during window resizes.
 
@@ -39,6 +52,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Fixed weak random ID generation in `LyricsSynchronizerTool`**: lyric line IDs are now generated with `crypto.randomUUID()` instead of `Math.random().toString(16)` combined with `Date.now()`, eliminating predictable/collision-prone identifiers for parsed lyric lines.
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Memoized chart data transformations in stat charts**: `GenreUsageChart`, `GenreVotesChart`, `TagUsageChart`, and `TagVotesChart` now compute labels, counts, `suggestedMax`, and color shades inside a `useMemo` block keyed on data/theme, preventing costly O(n) re-calculations on every render (e.g. on `screenWidth` changes from window resizes).
 
 ### Accessibility
@@ -49,6 +68,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 ### Security
 - **Fixed timing attack on password verification**: the Gemini Worker's `/verify-password` endpoint now uses a constant-time string comparison (bitwise XOR loop) instead of the short-circuiting `===` operator, mitigating side-channel information leakage about the committee password.
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Memoized data-heavy performance tables**: `CohortPerformanceTable`, `SongDurationPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable` are now wrapped in `React.memo` to prevent unnecessary re-renders and re-sorts when the parent `StatChartsArea` updates its state (e.g. `selectedPeriod`) but their props remain unchanged.
 
@@ -62,6 +87,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Added ARIA labels to icon-only buttons**: the Local Playlist manager, Queue manager, and Song Structure Builder now expose descriptive `aria-label`s (including interpolated playlist name context) on their icon-only action buttons for screen readers.
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Memoized chart data generation**: chart data transformations in the Suno User Stats scatter/bar charts are now wrapped in `useMemo` to avoid recomputation on every render and to preserve memoized child components.
 - **Optimized scatter-plot deduplication**: replaced the O(n²) `filter`/`findIndex` combination of top played/upvoted songs with a memoized O(n) `Map`-based approach.
 - **Wrapped Header in `React.memo`**: prevents unnecessary re-renders of the app header when layout state changes.
@@ -72,6 +103,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Fixed Server-Side Request Forgery (SSRF) in Suno proxy**: the Cloudflare Worker's Suno proxy now uses the `URL` constructor to safely compose target URLs and strictly enforces hostname matching, preventing path manipulation attacks (e.g., `@attacker.com` authority injection) that could redirect outbound fetches to malicious hosts.
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Memoized DetailedSongPerformanceTable**: wrapped the large song performance table component in `React.memo` to prevent unnecessary re-renders when parent state changes, reducing lag in the Suno User Stats page.
 
 ## [2.6.14] - 2026-08-17
@@ -81,6 +118,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.6.13] - 2026-08-17
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Optimized Music Theory Wiki search**: cached parsed HTML content in a `useMemo` map to prevent expensive `ReactDOMServer.renderToStaticMarkup` calls on every keystroke during search, improving responsiveness.
 
@@ -94,6 +137,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **ARIA labels for icon-only buttons**: randomize buttons in Song Cover Art and SparkTune, plus the preset delete button, now carry descriptive `aria-label`s so screen readers announce their purpose.
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Faster Sidebar re-renders**: the Sidebar component is wrapped in `React.memo` and the tool grouping is memoized with `useMemo`, cutting CPU time on every render.
 
 ### Fixed
@@ -101,6 +150,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.6.11] - 2026-08-14
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **No more public CORS proxy fallbacks**: the Suno service now relies strictly on the verified Cloudflare Worker proxy for all fetches and short-URL resolution, removing the hardcoded fallback chain of unvetted public proxies (corsproxy.io, allorigins, thingproxy, cors-anywhere, etc.).
 
@@ -110,15 +165,33 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 ## [2.6.10] - 2026-08-14
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Accessible import/export modals**: the Suno community spinner's export textarea now carries an `aria-label`, the import file picker and JSON textarea have proper `htmlFor`/`id` label associations, so screen readers announce these fields correctly.
 
 ## [2.6.9] - 2026-08-13
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Faster Suno player re-renders**: `SunoMusicPlayerTool` is wrapped in `React.memo`, so the component no longer re-renders when parent state changes without prop updates.
 
 ## [2.6.8] - 2026-08-13
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Accessible buttons**: the shared `Button` component now shows a visible emerald keyboard focus ring (`focus-visible:ring-2`) on the "Report a bug" links across the Sidebar and About page, so keyboard users can tell where they are.
 
@@ -127,6 +200,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.6.7] - 2026-08-12
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Smoother audio visualizer**: the Suno player's `AudioVisualizer` is wrapped in `React.memo` and its `analyserNodes` prop is memoized with `useMemo`, so frequent playback time updates no longer restart its `requestAnimationFrame` loop (fixes animation micro-stutters during playback).
 - **Select accessibility**: the custom Select dropdown now exposes WAI-ARIA `listbox`/`option` roles with `aria-haspopup`, `aria-expanded` and `aria-selected` states, plus a visible `focus-visible` ring for keyboard users.
@@ -137,6 +216,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 ## [2.6.6] - 2026-08-11
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Faster stats charts**: sunoUserStats charts now memoize their sorting/aggregation with `useMemo` and copy arrays before sorting (`[...data].sort()`), eliminating prop mutation side effects and redundant re-sorts on every render.
 
 ### Fixed
@@ -144,6 +229,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.6.5] - 2026-08-07
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Support section revamp**: removed the Floot referral link from the About page and made the Buy Me a Coffee button more prominent (larger, emerald-highlighted card) in both support sections.
 
@@ -163,6 +254,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 ## [2.6.2] - 2026-08-06
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **Suno proxy cache optimization**: the Worker now caches per-endpoint — clips for 24h (immutable data), profiles for 10 min, playlists for 5 min, short links for 1h. Faster repeat loads and less load on Suno.
 
 ## [2.6.1] - 2026-08-06
@@ -176,6 +273,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Definitive Suno Proxy**: Suno API calls now route through the app's own Cloudflare Worker (`GET /suno/*`) instead of unreliable public CORS proxies. The Worker fetches Suno server-side (no browser CORS), caches responses at the edge for 10 minutes, and returns proper CORS headers. Public proxies remain only as a last-resort fallback.
 - **Short URL Resolution via Worker**: `suno.com/s/...` links are resolved through the Worker (`GET /suno-web/*`) first, falling back to public proxies.
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **sunoService**: Worker proxy URL is configurable via `VITE_SUNO_WORKER_URL` for local testing (pointing at a local `wrangler dev` instance).
 
@@ -199,6 +302,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Manual Vite Chunking**: Configured `rollupOptions.manualChunks` to split vendor dependencies, reducing main bundle size.
 
 ### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
+### Changed
 - **AI Analysis Service**: Added 30s request timeout and external abort signal support; refactored code-fence stripping into reusable `stripCodeFence` utility.
 - **Gemini Proxy Calls**: Enhanced error handling with distinct timeout vs. cancellation error messages.
 - **CSS Transition Optimization**: Replaced generic `transition-all` with specific property transitions (`transition-[transform,box-shadow,...]`) for better rendering performance.
@@ -214,6 +323,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 
 ## [2.3.0] - 2026-03-31
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Mobile UI & Accessibility Refinement**: Performed a high-precision overhaul for 375px+ viewports. Standardized responsive paddings and eliminated horizontal overflow across all tools.
 - **Light Mode Visual Polish**: Extensive theme-aware refactoring for `Suno Music Player`, `Visual Synth`, and `Creative Concept Blender`. Replaced hardcoded charcoal regions with dynamic, translucent slate surfaces.
@@ -232,6 +347,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Interactive World Map**: Real-time visualization of global activity with country-level breakdown.
 - **Centralized Icon System**: Introduced `components/Icons.tsx` to unify SVG icons across the application.
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Performance**: Optimized Hub Stats loading state with a smaller, more integrated Spinner.
 
@@ -260,6 +381,12 @@ GUIDA RAPIDA ALL'AGGIORNAMENTO:
 - **Official Open-Source Launch**: The repository is now public on GitHub!
 - **Removed Obsolete Links**: Deleted the unused Community Feedback Board links from the Sidebar and About page.
 
+### Changed
+- **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
+- **safeStorage.ts**: nuovo modulo auto-guarigione localStorage quota che si autopulisce quando lo storage è pieno.
+- **Sidebar**: voci menu allineate a sinistra con indent per ogni voce.
+- **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
+- **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 ### Changed
 - **Architecture**: Transitioned from Docker/Nginx/CORS-Proxy to a modern serverless stack.
 - **Documentation**: Completely rewritten README, DEPLOYMENT, and CONTEXT guides.

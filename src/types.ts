@@ -37,10 +37,18 @@ export interface SunoClipMetadata {
   [key: string]: any; // For any other potential metadata fields
 }
 
+export interface SunoMediaUrl {
+  url: string;
+  content_type: string;
+  delivery: string;
+  encoding?: string;
+}
+
 export interface SunoClip {
   id: string;
   video_url: string;
   audio_url: string;
+  media_urls?: SunoMediaUrl[];
   image_url: string | null; // Main image from top level
   image_large_url: string | null; // Large image from top level
   image_urls: SunoClipImageUrls; // Nested image URLs
@@ -276,7 +284,8 @@ export interface SongCardInterface {
   title: string;
   imageUrl?: string;
   webLink?: string;
-  audioUrl?: string; // For snippet playback in Ranking Reveal mode
+  audioUrl?: string; // For snippet playback in Ranking Reveal mode (Riffusion/Flow only)
+  embedClipId?: string; // Suno embed Clip ID — renders official Suno iframe, no CDN audio
   color?: string; // Hex color code for card background
   comment?: string;
   originalInputLine: string; // Store the original input line for export

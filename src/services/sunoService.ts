@@ -18,6 +18,33 @@ const isSunoCrossOriginHost = (url: string): boolean => {
   }
 };
 
+// --- Audio URL Utilities ---
+// TOS COMPLIANCE (verified against Suno ToS, rev. 2026-08-10, effective 2026-09-03):
+// Suno's Terms ("Permitted Commercial Use") state that obtaining a copy of an Output
+// "by any means other than a download channel made available by Suno is prohibited
+// (for example, recording or stream ripping are prohibited)". The public download policy
+// only permits streaming *on/through Suno* (its own player, links and the /embed/ player).
+// Loading a raw CDN media file (audio_url .mp3, video_url .mp4, or the .m4a bucket) into
+// our own player/analysis tools is functionally stream-ripping and is NOT TOS-compliant.
+//
+// Therefore this app NEVER streams Suno CDN media into third-party audio engines:
+//  - Music Player renders the official Suno embed iframe (getSunoEmbedUrl) for playback.
+//  - Analysis tools (MP3 Cutter, BPM Tapper, Lyrics Synchronizer) ask the user to upload
+//    an MP3 file instead of fetching Suno audio.
+// Riffusion / Flow Music is separate: riffusionService keeps its own accessible GCS .m4a URLs.
+
+const FORBIDDEN_AUDIO_PATTERNS = ['forbidden', '/api/forbidden'];
+
+export const isAudioUrlBroken = (url: string): boolean => {
+  if (!url) return true;
+  const lower = url.toLowerCase();
+  return FORBIDDEN_AUDIO_PATTERNS.some(p => lower.includes(p)) || !lower.startsWith('http');
+};
+
+export const getSunoEmbedUrl = (clipId: string): string => {
+  return `https://suno.com/embed/${clipId}`;
+};
+
 // Our own Cloudflare Worker proxies Suno server-side, bypassing browser CORS.
 // These are the same fixed endpoints used for Gemini/telemetry — see gemini-worker/index.js.
 // For local testing, set VITE_SUNO_WORKER_URL=http://localhost:8787 (wrangler dev).
@@ -214,7 +241,7 @@ export const fetchSunoSongsByUsername = async (
       }
 
       const rawClipsCount = pageData.clips.length;
-      const fetchedClips = pageData.clips.filter(clip => clip.audio_url && ['complete', 'streaming'].includes(clip.status));
+      const fetchedClips = pageData.clips.filter(clip => (clip.audio_url || clip.video_url) && ['complete', 'streaming'].includes(clip.status));
       
       if (onProgress) onProgress(`Fetched page ${currentPage}${totalPagesEstimate ? ` of ~${totalPagesEstimate}` : ''}... (${fetchedClips.length} new valid clips)`, currentPage, totalPagesEstimate);
 
@@ -417,7 +444,7 @@ export const fetchSunoPlaylistById = async (
     
     const fetchedClipsFromPage = pageData.playlist_clips
         ?.map(item => item.clip) 
-        .filter(clip => clip && clip.audio_url && ['complete', 'streaming'].includes(clip.status)) || [];
+        .filter(clip => clip && (clip.audio_url || clip.video_url) && ['complete', 'streaming'].includes(clip.status)) || [];
 
     if (onProgress) onProgress(`Fetched page ${Number(currentPageNum) + 1}${totalPagesEstimate ? ` of ~${totalPagesEstimate}` : ''}... (${fetchedClipsFromPage.length} new clips)`, Number(currentPageNum), totalPagesEstimate);
 

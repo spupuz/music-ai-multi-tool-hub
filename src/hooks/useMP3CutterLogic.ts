@@ -129,25 +129,14 @@ export const useMP3CutterLogic = ({ trackLocalEvent }: Pick<ToolProps, 'trackLoc
         setUrlLoadingProgress('');
         trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'riffusionUrlLoadError', errorMsg);
       }
-    } else { // Assume Suno URL
-      try {
-        const songId = await resolveSunoUrlToPotentialSongId(urlToProcess, setUrlLoadingProgress);
-        if (!songId) throw new Error("Could not resolve Suno URL to a song ID.");
-        setUrlLoadingProgress(`Fetching song details for ID: ${songId.substring(0, 8)}...`);
-        const clip = await fetchSunoClipById(songId);
-        if (!clip || !clip.audio_url) throw new Error(`Failed to fetch song details or audio URL for ID: ${songId.substring(0, 8)}...`);
-        setFileName(clip.title || `Suno Song ${clip.id.substring(0, 8)}`);
-        setSunoCoverArtUrl(clip.image_url || null); setSunoArtistName(clip.display_name || clip.handle || null);
-        setUrlLoadingProgress(`Loading audio: ${clip.title || 'Suno Song'}...`);
-        wavesurferInstanceRef.current.load(clip.audio_url);
-        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlLoaded', clip.title);
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "An unknown error occurred loading from Suno URL.";
-        setError(errorMsg);
-        setIsLoading(false);
-        setUrlLoadingProgress('');
-        trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlLoadError', errorMsg);
-      }
+} else { // Suno URL — TOS: never auto-load CDN audio, require manual MP3 upload
+      setError(null);
+      setUrlLoadingProgress('Suno URLs require manual MP3 upload (TOS compliance).');
+      setIsLoading(false);
+      setError(`Suno songs can't be auto-loaded for editing (TOS compliance). Please download "${sunoUrlInput.trim()}" via Suno's official download button, then upload the MP3 file below.`);
+      trackLocalEvent(TOOL_CATEGORY_MP3_CUTTER, 'sunoUrlRequiresUpload', sunoUrlInput.trim());
+      // Do NOT attempt to fetch or load Suno CDN audio — user must upload MP3 manually
+      return;
     }
   }, [sunoUrlInput, trackLocalEvent]);
 

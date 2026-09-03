@@ -20,6 +20,15 @@
 - **Navigation (`Sidebar.tsx`)**: Categorized access to all tools (App & Info, AI Music Platforms, Creative AI, etc.).
 - **Telemetry & Stats**: Visitor data and site-wide metrics are visualized in the **Hub Stats** page using `react-simple-maps` and Chart.js.
 
+## 🔊 Suno Audio Access Strategy (IMPORTANT — VERIFIED TOS-COMPLIANT)
+- **Background**: The Suno API now returns `audio_url: "https://studio-api.prod.suno.com/api/forbidden"` for many clips, and CDN mp3 links (`cdn1.suno.ai/<id>.mp3`) return 403.
+- **TOS compliance (verified)**: Suno's ToS (rev. 2026-08-10, eff. 2026-09-03) — *"Obtaining a copy of an Output by any means other than a download channel made available by Suno is prohibited (for example, recording or stream ripping are prohibited)"* — and the public download policy (streaming is unlimited only *on/through Suno*) mean loading **any** raw Suno CDN media (`.m4a`, `.mp3` `audio_url`, or `.mp4` `video_url`) into our own players/analysis tools is **NOT TOS-compliant** (equivalent to stream-ripping).
+- **Only two compliant playback paths**: (1) the official Suno iframe embed `https://suno.com/embed/<id>` (Suno's sanctioned hosted player), and (2) user-uploaded files.
+- **Music Player (`useSunoAudioPlayer.ts` + `SunoMusicPlayerTool.tsx`)**: Suno clips always render the official iframe embed via `embedClipId` (EQ/Snippet/seek/volume disabled — ownership moves to Suno's player). **Only Riffusion / Flow Music** (`song.source === 'riffusion'`) stream via Howler using their own accessible GCS `.m4a` URLs.
+- **Analysis tools** (MP3 Cutter, BPM Tapper, Lyrics Synchronizer): never auto-fetch Suno audio. They populate the song's metadata (title/artist/cover/lyrics) and ask the user to download + upload an MP3.
+- **Compliance tool**: previews via the Suno iframe embed, not an `<audio>` tag.
+- **Helpers**: `isAudioUrlBroken(url)` (detects `forbidden`), `getSunoEmbedUrl(clipId)` (builds embed URL). `Riffusion is separate` (`riffusionService.ts`).
+
 ## ⚠️ Important Rules for AI
 1. **Build verification**: Run `npm run build` locally to verify changes compile without errors before submitting.
 2. **Language**: English is the primary language for all interfaces and developer documentation.

@@ -42,6 +42,16 @@ The application follows a tool-based modular architecture centered around a main
 
 ## Critical Patterns
 
+### Suno Audio Access (TOS-Compliant)
+
+Suno's Terms of Service (rev. 2026-08-10, effective 2026-09-03) prohibit obtaining a copy of an Output "by any means other than a download channel made available by Suno (for example, recording or stream ripping)". The official download policy only permits streaming *on/through Suno* — its own player, links, and the official `/embed/` player. This means loading a raw Suno CDN media file (`audio_url` `.mp3`, `video_url` `.mp4`, or the `d2lwuy8qc234o3.cloudfront.net/1/clip/<id>.m4a` bucket) into our own players/analysis tools is **not** TOS-compliant (equivalent to stream-ripping). Follow these rules:
+
+- **NEVER stream Suno CDN media** (`.m4a`, `.mp3`, `.mp4`) into Howler/WaveSurfer/`<audio>`. The `video_url` mp4 fallback is NOT compliant — only the official embed or a user-uploaded file is allowed.
+- **Music Player (`useSunoAudioPlayer.ts` + `SunoMusicPlayerTool.tsx`)**: Suno clips always render the official Suno iframe `https://suno.com/embed/<clipId>?autoplay=1` (via `embedClipId` state). EQ/Snippet/seek/volume are disabled in Embed Mode — ownership moves to Suno's player. **Only Riffusion / Flow Music clips** (`song.source === 'riffusion'`) stream directly through Howler, using their own accessible GCS `.m4a` URLs from `riffusionService.ts`.
+- **Analysis tools** (MP3 Cutter, BPM Tapper, Lyrics Synchronizer): never auto-fetch Suno audio. They populate the song's metadata (title/artist/cover) and instruct the user to download an MP3 via Suno's official button and upload it. Riffusion URLs still auto-load their accessible GCS audio.
+- **Compliance tool**: preview via the Suno iframe embed, not an `<audio>` tag.
+- **Use `isAudioUrlBroken(url)`** (in `services/sunoService.ts`) to detect the `forbidden` marker; `getSunoEmbedUrl(clipId)` builds the official embed URL.
+
 ### Tool Component Pattern
 
 Each tool is a React component receiving `ToolProps`. Navigation between tools should be handled via the `onNavigate` prop.

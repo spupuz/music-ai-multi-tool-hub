@@ -20,6 +20,7 @@ import {
     OPTIONAL_TOGGLES_STORAGE_KEY,
     getRandomElement
 } from './CreativeConceptBlender.constants';
+import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 
 const ToggleSwitch: React.FC<{ id: string; label: string; checked: boolean; onChange: () => void; className?: string }> = ({ id, label, checked, onChange, className = "" }) => (
     <div className={`flex items-center justify-between w-full py-2 group cursor-pointer ${className}`} onClick={onChange}>
@@ -127,13 +128,13 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
 
   useEffect(() => {
     try {
-        const storedToggles = localStorage.getItem(OPTIONAL_TOGGLES_STORAGE_KEY);
+        const storedToggles = safeGetItem(OPTIONAL_TOGGLES_STORAGE_KEY);
         if (storedToggles) setOptionalCategoryToggles(JSON.parse(storedToggles));
     } catch (e) { console.error("Error loading optional category toggles:", e); }
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem(OPTIONAL_TOGGLES_STORAGE_KEY, JSON.stringify(optionalCategoryToggles)); }
+    try { safeSetItem(OPTIONAL_TOGGLES_STORAGE_KEY, JSON.stringify(optionalCategoryToggles)); }
     catch (e) { console.error("Error saving optional category toggles:", e); }
   }, [optionalCategoryToggles]);
 
@@ -202,7 +203,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
   const handleClearHistory = useCallback(() => {
     if(clearHistoryTimeoutRef.current) clearTimeout(clearHistoryTimeoutRef.current);
     const newClickCount = clearHistoryClickCount + 1;
-    if (newClickCount >= 3) { try { localStorage.removeItem(HISTORY_STORAGE_KEY); } catch(e){} setHistory([]); trackLocalEvent(TOOL_CATEGORY, 'conceptHistoryCleared'); setClearHistoryClickCount(0); } 
+    if (newClickCount >= 3) { try { safeRemoveItem(HISTORY_STORAGE_KEY); } catch(e){} setHistory([]); trackLocalEvent(TOOL_CATEGORY, 'conceptHistoryCleared'); setClearHistoryClickCount(0); } 
     else { setClearHistoryClickCount(newClickCount); clearHistoryTimeoutRef.current = window.setTimeout(() => setClearHistoryClickCount(0), 2000); }
   }, [clearHistoryClickCount, trackLocalEvent]);
 
@@ -212,10 +213,10 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
 
   useEffect(() => {
     try {
-        const storedHistory = localStorage.getItem(HISTORY_STORAGE_KEY); if (storedHistory) setHistory(JSON.parse(storedHistory));
-        const storedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY); if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
+        const storedHistory = safeGetItem(HISTORY_STORAGE_KEY); if (storedHistory) setHistory(JSON.parse(storedHistory));
+        const storedFavorites = safeGetItem(FAVORITES_STORAGE_KEY); if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
         const loadedCustomItems = {...initialCustomItems};
-        Object.keys(initialCustomItems).forEach(catKey => { try { const stored = localStorage.getItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`); if(stored) loadedCustomItems[catKey as CreativeCustomItemCategoryKey] = JSON.parse(stored); } catch(e){} });
+        Object.keys(initialCustomItems).forEach(catKey => { try { const stored = safeGetItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`); if(stored) loadedCustomItems[catKey as CreativeCustomItemCategoryKey] = JSON.parse(stored); } catch(e){} });
         setCustomItems(loadedCustomItems);
     } catch(e) { console.error("Error loading saved data from localStorage:", e); }
     return () => { if(clearHistoryTimeoutRef.current) clearTimeout(clearHistoryTimeoutRef.current); };
@@ -223,9 +224,9 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
   
   useEffect(() => {
     try {
-        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
-        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
-        Object.entries(customItems).forEach(([catKey, items]) => { localStorage.setItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`, JSON.stringify(items)); });
+        safeSetItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+        safeSetItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+        Object.entries(customItems).forEach(([catKey, items]) => { safeSetItem(`${CUSTOM_ITEMS_STORAGE_KEY_PREFIX}${catKey}`, JSON.stringify(items)); });
     } catch(e) { console.error("Error saving data to localStorage:", e); }
   }, [history, favorites, customItems]);
   

@@ -12,6 +12,7 @@ import {
     DEFAULT_RANKING_REVEAL_TOP_X, DEFAULT_RANKING_REVEAL_SNIPPET_DURATION,
     TOOL_CATEGORY 
 } from '@/tools/SongDeckPicker/songDeckPicker.constants';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 interface UseDeckPersistenceProps {
     trackLocalEvent: (category: string, action: string, label?: string, value?: number) => void;
@@ -46,16 +47,16 @@ export const useDeckPersistence = ({
     // Initial Loading
     useEffect(() => {
         try {
-            const storedLog = localStorage.getItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY);
+            const storedLog = safeGetItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY);
             if (storedLog) setLoggedCards(JSON.parse(storedLog));
-            const storedThemes = localStorage.getItem(LOCAL_STORAGE_SAVED_THEMES_KEY);
+            const storedThemes = safeGetItem(LOCAL_STORAGE_SAVED_THEMES_KEY);
             if (storedThemes) setSavedDeckThemes(JSON.parse(storedThemes));
         } catch (e) { console.error("Error loading persistence data from localStorage:", e); }
     }, []);
 
     // Sync to LocalStorage
-    useEffect(() => { try { localStorage.setItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY, JSON.stringify(loggedCards)); } catch (e) { console.warn("Failed to persist deck log to localStorage:", e); } }, [loggedCards]);
-    useEffect(() => { try { localStorage.setItem(LOCAL_STORAGE_SAVED_THEMES_KEY, JSON.stringify(savedDeckThemes)); } catch (e) { console.warn("Failed to persist deck themes to localStorage:", e); } }, [savedDeckThemes]);
+    useEffect(() => { try { safeSetItem(LOCAL_STORAGE_PICKED_SONGS_LOG_KEY, JSON.stringify(loggedCards)); } catch (e) { console.warn("Failed to persist deck log to localStorage:", e); } }, [loggedCards]);
+    useEffect(() => { try { safeSetItem(LOCAL_STORAGE_SAVED_THEMES_KEY, JSON.stringify(savedDeckThemes)); } catch (e) { console.warn("Failed to persist deck themes to localStorage:", e); } }, [savedDeckThemes]);
 
     const handleSaveTheme = useCallback(() => {
         setErrorSaveTheme(null);

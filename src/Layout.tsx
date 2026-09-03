@@ -7,6 +7,7 @@ import ToolErrorBoundary from '@/components/ToolErrorBoundary';
 import { ToastProvider } from '@/components/ToastProvider';
 import { useTheme } from '@/context/ThemeContext';
 import { useTelemetry } from '@/hooks/useTelemetry';
+import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 
 // Wraps React.lazy with an optional hover/focus preload so tool chunks
 // are fetched before the user actually clicks, without breaking on failure.
@@ -252,24 +253,24 @@ const Layout: React.FC = () => {
         const keyBase = `stat_${category}_${action}`;
         if (typeof value === 'number' || (label && typeof value === 'undefined')) { 
             const key = keyBase + (label ? `_${label.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}` : '');
-            const currentCount = parseInt(localStorage.getItem(key) || '0', 10);
-            localStorage.setItem(key, (currentCount + (typeof value === 'number' ? value : 1)).toString());
+            const currentCount = parseInt(safeGetItem(key) || '0', 10);
+            safeSetItem(key, (currentCount + (typeof value === 'number' ? value : 1)).toString());
         } else if (label && typeof value === 'string') { 
             const key = `statEvents_${category}_${action}_${label.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}`;
-            const eventList: string[] = JSON.parse(localStorage.getItem(key) || '[]');
+            const eventList: string[] = JSON.parse(safeGetItem(key) || '[]');
             eventList.push(value);
             if (eventList.length > 100) { 
                 eventList.splice(0, eventList.length - 100);
             }
-            localStorage.setItem(key, JSON.stringify(eventList));
+            safeSetItem(key, JSON.stringify(eventList));
         } else if (typeof value === 'string') { 
             const key = `statEvents_${category}_${action}`;
-            const eventList: string[] = JSON.parse(localStorage.getItem(key) || '[]');
+            const eventList: string[] = JSON.parse(safeGetItem(key) || '[]');
             eventList.push(value);
             if (eventList.length > 100) { 
                 eventList.splice(0, eventList.length - 100);
             }
-            localStorage.setItem(key, JSON.stringify(eventList));
+            safeSetItem(key, JSON.stringify(eventList));
         }
     } catch (error) {
         console.error("Error tracking local event:", category, action, label, value, error);
@@ -289,7 +290,7 @@ const Layout: React.FC = () => {
     }
 
     try {
-      const storedConsent = localStorage.getItem(COOKIE_CONSENT_KEY);
+      const storedConsent = safeGetItem(COOKIE_CONSENT_KEY);
       if (storedConsent === CONSENT_GIVEN_VALUE) {
         setShowCookieConsent(false);
       } else {
@@ -304,17 +305,17 @@ const Layout: React.FC = () => {
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     try {
-      const lastPing = localStorage.getItem(LAST_DAILY_LOCAL_PING_KEY);
+      const lastPing = safeGetItem(LAST_DAILY_LOCAL_PING_KEY);
       if (lastPing !== today) {
-        const visitsLog: string[] = JSON.parse(localStorage.getItem(LOCAL_VISITS_LOG_KEY) || '[]');
+        const visitsLog: string[] = JSON.parse(safeGetItem(LOCAL_VISITS_LOG_KEY) || '[]');
         if (!visitsLog.includes(today)) {
           visitsLog.push(today);
           if (visitsLog.length > 90) { 
             visitsLog.splice(0, visitsLog.length - 90);
           }
-          localStorage.setItem(LOCAL_VISITS_LOG_KEY, JSON.stringify(visitsLog));
+          safeSetItem(LOCAL_VISITS_LOG_KEY, JSON.stringify(visitsLog));
         }
-        localStorage.setItem(LAST_DAILY_LOCAL_PING_KEY, today);
+        safeSetItem(LAST_DAILY_LOCAL_PING_KEY, today);
       }
     } catch (error) {
       console.error("Error in local daily active ping logic:", error);
@@ -355,7 +356,7 @@ const Layout: React.FC = () => {
 
   const handleAcceptCookieConsent = useCallback(() => {
     try {
-      localStorage.setItem(COOKIE_CONSENT_KEY, CONSENT_GIVEN_VALUE);
+      safeSetItem(COOKIE_CONSENT_KEY, CONSENT_GIVEN_VALUE);
     } catch (error) {
       console.error("Error saving cookie consent:", error);
     }
@@ -433,7 +434,7 @@ const Layout: React.FC = () => {
         <div className="max-w-4xl mx-auto space-y-4">
           <p className={`${uiMode === 'classic' ? 'font-medium opacity-80' : 'font-black uppercase tracking-widest text-[10px] opacity-60'}`}>&copy; {new Date().getFullYear()} Music AI Multi-Tool Hub.</p>
           <p className="leading-relaxed">
-            Developed by <span className="font-bold text-gray-700 dark:text-gray-300">@spupuz</span> with support from <span className="font-bold text-gray-700 dark:text-gray-300">@flickerlog</span>. 
+            Developed by <span className="font-bold text-gray-700 dark:text-gray-300">@spupuz</span>. 
             <br className="sm:hidden" /> For creative purposes. 
             Please review our <a href="#" onClick={(e) => { e.preventDefault(); if (isSidebarOpen && !isDesktop) { setIsSidebarOpen(false); setTimeout(() => { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }, 300); } else { handleNavigate('about'); setTimeout(() => document.getElementById('privacy-policy')?.scrollIntoView({behavior: 'smooth'}), 50); }}} className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-all underline-offset-4">Privacy Policy</a> before use.
           </p>

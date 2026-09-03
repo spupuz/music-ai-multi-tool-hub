@@ -130,14 +130,14 @@ Thanks,
            </div>
         </header>
 
-        <nav className="flex-1 px-3 py-6 space-y-6 overflow-y-auto scrollbar-hide sm:scrollbar-default transition-all">
+        <nav className="flex-1 px-3 py-6 space-y-6 overflow-y-auto scrollbar-hide sm:scrollbar-default text-left transition-all">
           {categoryOrder.map(categoryName => {
             const toolsInCategory = groupedTools[categoryName] || [];
             if (toolsInCategory.length === 0) return null;
 
             return (
               <div key={categoryName} className="space-y-2">
-                <h3 className="px-4 text-[10px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-[0.2em] mb-3">
+                <h3 className="px-4 text-[10px] font-black uppercase text-gray-400 dark:text-gray-500 tracking-[0.2em] mb-3 text-left">
                   {categoryName}
                 </h3>
                 <div className="space-y-1">

@@ -208,10 +208,14 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         if (!songId) throw new Error("Could not resolve Suno URL.");
         setFinderProgress(`Fetching Suno song details...`);
         const data = await fetchSunoClipById(songId);
-        audioUrl = data?.audio_url;
         fetchedTitle = data?.title || fetchedTitle;
         fetchedArtist = data?.display_name || data?.handle || fetchedArtist;
         fetchedCoverArt = data?.image_url || null;
+        // TOS compliance: Suno CDN audio is never fetched for analysis. Direct the user
+        // to download an MP3 from Suno's official channel and upload it instead.
+        setFinderState('error');
+        setFinderError(`Suno songs can't be auto-downloaded for analysis (TOS compliance). Please download "${data?.title || 'this song'}" via Suno's official download button, then upload the MP3 file.`);
+        return;
       }
 
       if (!audioUrl) throw new Error("Could not find a valid audio URL for the provided link.");

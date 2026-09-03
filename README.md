@@ -80,6 +80,17 @@ Browser → Cloudflare Pages (static SPA)
 - **SPA routing** handled via `public/_redirects`
 - **Gemini + Suno proxy** at `gemini-proxy.spupuz.workers.dev` (Suno endpoints are cached per-endpoint)
 
+### Suno Audio Playback (TOS-Compliant)
+
+Per Suno's Terms of Service (verified against the 2026-08-10 revision, effective 2026-09-03), obtaining a copy of an Output "by any means other than a download channel made available by Suno" is prohibited, and streaming is only permitted *on/through Suno*. Consequently the app **never loads raw Suno CDN media** (`.m4a`, `.mp3` `audio_url`, or `.mp4` `video_url`) into its own players or analysis tools, because that is equivalent to stream-ripping.
+
+Two compliant playback paths are used:
+
+- **Music Player** renders the official Suno player via the iframe embed (`https://suno.com/embed/<clipId>`) for every Suno clip.
+- **Analysis tools** (MP3 Cutter, BPM Tapper, Lyrics Synchronizer) never auto-fetch Suno audio — they populate the song's metadata and ask the user to download an MP3 via Suno's official button and upload it.
+
+Riffusion / Flow Music is separate and still streams via its own accessible GCS `.m4a` URLs. See `services/sunoService.ts` and `CONTEXT.md` for full details.
+
 ---
 
 ## 💬 Support & Feedback
