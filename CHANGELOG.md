@@ -1,3 +1,9 @@
+## [2.6.27] - 2026-09-03
+
+### Fixed
+- **Lyrics Synchronizer**: the "SYNC VECTOR" button now actually marks the next unsynced line (it had no click handler), and the spacebar shortcut works whenever an audio file is loaded (it previously required the audio to be playing). Space no longer misfires when a button is focused — it activates the focused button natively.
+- **Select dropdown (Song Deck Picker / shared)**: the Picker Mode dropdown menu background is now near-opaque instead of transparent, with legible hover/selected option states in both light and dark mode.
+
 ## [2.6.26] - 2026-09-03
 
 ### Fixed

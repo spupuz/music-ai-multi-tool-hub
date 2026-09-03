@@ -96,7 +96,7 @@ const Select: React.FC<SelectProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/60 dark:bg-gray-900/40 backdrop-blur-xl shadow-2xl animate-fadeIn"
+          className="absolute z-[100] w-full mt-2 overflow-hidden rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl animate-fadeIn"
           role="listbox"
         >
           <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 py-1">
@@ -113,8 +113,8 @@ const Select: React.FC<SelectProps> = ({
                 className={`
                   w-full text-left px-4 py-3 text-sm font-bold transition-colors
                   ${value === option.value 
-                    ? 'bg-white/30 dark:bg-white/20 text-green-600 dark:text-green-400' 
-                    : 'hover:bg-white/20 dark:hover:bg-white/10 dark:text-white text-gray-800'
+                    ? 'bg-emerald-500/15 dark:bg-white/20 text-emerald-700 dark:text-emerald-400' 
+                    : 'hover:bg-gray-100 dark:hover:bg-white/10 dark:text-white text-gray-800'
                   }
                 `}
               >
