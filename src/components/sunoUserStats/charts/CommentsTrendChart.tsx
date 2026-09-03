@@ -28,12 +28,10 @@ const CommentsTrendChart: React.FC<CommentsTrendChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current && data && data.length > 0) { 
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const values = data.map(d => d.value);
+        const labels = data.map(d => d.timestamp);
         let yMinCalculated: number | undefined = undefined;
         let yMaxCalculated: number | undefined = undefined;
 
@@ -62,7 +60,7 @@ const CommentsTrendChart: React.FC<CommentsTrendChartProps> = ({
         
         const baseOptions = getBaseChartOptions(fontColor, gridColor);
 
-        const chartOptions = {
+        const chartOptions: any = {
           ...baseOptions,
           elements: {
             ...(baseOptions.elements || {}),
@@ -103,37 +101,49 @@ const CommentsTrendChart: React.FC<CommentsTrendChartProps> = ({
             },
           },
         };
+
+        const datasetConfig = {
+          label: 'Total Comments',
+          data: values,
+          borderColor: lineColor,
+          backgroundColor: lineColor + '33',
+          tension: data.length > 2 ? 0.1 : 0,
+          fill: data.length > 1,
+          pointRadius: data.length === 1 ? 5 : 3,
+          pointHoverRadius: data.length === 1 ? 7 : 5,
+          pointBackgroundColor: lineColor,
+        };
         
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: data.map(d => d.timestamp), 
-            datasets: [{
-              label: 'Total Comments',
-              data: values,
-              borderColor: lineColor,
-              backgroundColor: lineColor + '33',
-              tension: data.length > 2 ? 0.1 : 0,
-              fill: data.length > 1,
-              pointRadius: data.length === 1 ? 5 : 3,
-              pointHoverRadius: data.length === 1 ? 7 : 5,
-              pointBackgroundColor: lineColor,
-            }]
-          },
-          options: chartOptions as any,
-        });
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+  }, []);
 
   if (!data || data.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No data available for comments trend.</p>;
