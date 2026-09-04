@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.1",
+    content: (
+      <section id="version-2.7.1">
+        <SectionTitle>Version 2.7.1 - 2026-09-04</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Spinner Wheel export</STRONG>: Download button is now disabled when configuration is empty, with a tooltip explaining why.</LI>
+          <LI><STRONG>Suno User Stats</STRONG>: Inspect button in the Detailed Song Performance table now includes an <CODE>aria-label</CODE> for screen readers.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI>Accessibility improvement for the song analysis action button.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.0",
     content: (
       <section id="version-2.7.0">

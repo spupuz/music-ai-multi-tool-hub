@@ -1,3 +1,12 @@
+## [2.7.1] - 2026-09-04
+
+### Changed
+- **Spinner Wheel export**: Download button is now disabled when configuration is empty, with a tooltip explaining why.
+- **Suno User Stats**: Inspect button in the Detailed Song Performance table now includes an `aria-label` for screen readers.
+
+### Fixed
+- Accessibility improvement for the song analysis action button.
+
 ## [2.7.0] - 2026-09-04
 
 ### Changed
