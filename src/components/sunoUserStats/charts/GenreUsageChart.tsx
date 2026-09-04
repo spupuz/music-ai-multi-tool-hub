@@ -51,10 +51,6 @@ const GenreUsageChart: React.FC<GenreUsageChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0 && chartConfig) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
-
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor) as any;
@@ -132,33 +128,47 @@ const GenreUsageChart: React.FC<GenreUsageChartProps> = ({
           };
         }
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: chartConfig.labels,
-            datasets: [{
-              label: 'Genre Usage Count',
-              data: chartConfig.counts,
-              backgroundColor: chartConfig.bgColors,
-              borderColor: chartConfig.borderColors,
-              borderWidth: 1,
-              ...datasetOptions
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Genre Usage Count',
+          data: chartConfig.counts,
+          backgroundColor: chartConfig.bgColors,
+          borderColor: chartConfig.borderColors,
+          borderWidth: 1,
+          ...datasetOptions
+        };
+
+        // ⚡ Bolt: Mutate data and update without animation instead of destroying and rebuilding the chart on every render/resize
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = chartConfig.labels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: chartConfig.labels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [processedData, chartConfig, fontColor, gridColor, topN, onSetFilter, screenWidth]);
+
+  // ⚡ Bolt: Clean up the chart only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, chartConfig, fontColor, gridColor, topN, onSetFilter, screenWidth]);
+  }, []);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No genre usage data available.</p>;
