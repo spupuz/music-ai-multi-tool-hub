@@ -54,7 +54,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, confi
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Copy the JSON below or download as a file to share or backup your wheel.</p>
                 <textarea readOnly aria-label="Export configuration JSON" value={configJson} className="w-full h-64 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg font-mono text-xs mb-6 focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 focus:border-transparent text-gray-900 dark:text-white" />
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <Button onClick={onDownload} variant="primary" size="lg" backgroundColor="#10b981" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Download .json File</Button>
+                    <Button onClick={onDownload} disabled={!configJson} title={!configJson ? "Configuration is empty" : undefined} variant="primary" size="lg" backgroundColor="#10b981" className="flex-1 font-black uppercase tracking-widest py-6 shadow-xl">Download .json File</Button>
                     <Button onClick={onClose} variant="ghost" className="flex-1 font-black uppercase tracking-widest py-6 border-gray-200 dark:border-white/10 text-gray-500">Close</Button>
                 </div>
             </div>

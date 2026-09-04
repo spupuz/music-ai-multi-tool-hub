@@ -198,6 +198,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
     return <p className="text-center text-gray-500 dark:text-gray-400 py-4">No songs available to display in the table.</p>;
   }
 
+
   const columns = [
     { id: 'title', label: 'Song' },
     { id: 'upvotes', label: 'Upvotes' },
@@ -307,6 +308,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                       onClick={() => onAnalyzeSong(song)} 
                       variant="ghost" 
                       size="xs" 
+                      aria-label={`Analyze performance for ${song.title}`}
                       className="text-xs font-semibold py-2 px-4 border-gray-200 dark:border-white/5 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 shadow-xl transition-all duration-300"
                     >
                       Inspect
