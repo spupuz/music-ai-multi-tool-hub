@@ -1,3 +1,11 @@
+## [2.7.2] - 2026-09-04
+
+### Changed
+- **GenreUsageChart**: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize; chart cleanup moved to component unmount only.
+
+### Security
+- **Gemini proxy**: added per-IP rate limiting (10 requests/60s) on the unauthenticated Gemini API proxy endpoint to prevent denial-of-wallet and resource exhaustion.
+
 ## [2.7.1] - 2026-09-04
 
 ### Changed

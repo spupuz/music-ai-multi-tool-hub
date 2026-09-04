@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.2",
+    content: (
+      <section id="version-2.7.2">
+        <SectionTitle>Version 2.7.2 - 2026-09-04</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>GenreUsageChart</STRONG>: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize; chart cleanup moved to component unmount only.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Gemini proxy</STRONG>: added per-IP rate limiting (10 requests/60s) on the unauthenticated Gemini API proxy endpoint to prevent denial-of-wallet and resource exhaustion.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.1",
     content: (
       <section id="version-2.7.1">
