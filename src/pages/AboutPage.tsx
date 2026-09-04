@@ -272,10 +272,6 @@ Thanks,
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-3xl w-full mt-6 bg-white/5 p-6 rounded-2xl border border-white/10">
                 <div className="flex gap-3">
                   <div className="w-1 h-1 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Help cover server costs and hosting APIs.</p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="w-1 h-1 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Support effort for new features and updates.</p>
                 </div>
                 <div className="flex gap-3">
