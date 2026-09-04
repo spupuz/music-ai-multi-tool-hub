@@ -31,3 +31,7 @@
 **Vulnerability:** The `/verify-password` endpoint used for committee authentication lacked rate limiting, making it vulnerable to brute force attacks.
 **Learning:** Authentication endpoints, even simple password verifications without usernames, must have strict rate limits to prevent brute force discovery of the shared secret.
 **Prevention:** Use a distributed KV store (e.g., Cloudflare Workers KV) keyed by client IP to track failed authentication attempts and temporarily block subsequent requests after a threshold is reached.
+## 2025-03-04 - Rate Limiting on Unauthenticated AI Proxy Endpoint
+**Vulnerability:** The Gemini API proxy endpoint in the Cloudflare Worker lacked rate limiting, allowing any user (or malicious actor) to spam requests, potentially leading to API quota exhaustion and unexpected billing costs.
+**Learning:** Even though the API key is secured server-side, exposing an unauthenticated proxy endpoint without rate limits still creates a denial-of-wallet (DoW) and resource exhaustion vulnerability.
+**Prevention:** Implement rate limiting (e.g., using Cloudflare KV tracking by client IP) on all unauthenticated proxy endpoints that consume third-party API quotas.

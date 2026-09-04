@@ -306,6 +306,18 @@ export default {
         }
 
         // ── Gemini proxy (default / root) ──────────────────────────────────────────
+        const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+        const rateLimitKeyGemini = `ratelimit:gemini:${ip}`;
+
+        if (env.STATS_KV) {
+            const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyGemini) || '0', 10);
+            if (attempts >= 10) {
+                return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+                    { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+            }
+            await env.STATS_KV.put(rateLimitKeyGemini, (attempts + 1).toString(), { expirationTtl: 60 });
+        }
+
         if (!env.GEMINI_API_KEY) {
             return new Response('GEMINI_API_KEY missing', { status: 500, headers: cors });
         }
