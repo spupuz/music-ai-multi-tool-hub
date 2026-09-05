@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.4",
+    content: (
+      <section id="version-2.7.4">
+        <SectionTitle>Version 2.7.4 - 2026-09-06</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI><STRONG>BPM Tapper</STRONG>: the BPM Tools tabs now use proper WAI-ARIA <CODE>tablist</CODE>/<CODE>tab</CODE>/<CODE>tabpanel</CODE> semantics, and the TAP, Reset Stream, and Load buttons have accessible labels.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>DailySongCreationChart</STRONG>: Chart.js instance now updates its dataset and options in place (with <CODE>update('none')</CODE>) instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.2",
     content: (
       <section id="version-2.7.2">

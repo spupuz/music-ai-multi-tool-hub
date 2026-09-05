@@ -1,3 +1,11 @@
+## [2.7.4] - 2026-09-06
+
+### Added
+- **BPM Tapper**: the BPM Tools tabs now use proper WAI-ARIA `tablist`/`tab`/`tabpanel` semantics, and the TAP, Reset Stream, and Load buttons have accessible labels.
+
+### Changed
+- **DailySongCreationChart**: Chart.js instance now updates its dataset and options in place (with `update('none')`) instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.
+
 ## [2.7.2] - 2026-09-04
 
 ### Changed
