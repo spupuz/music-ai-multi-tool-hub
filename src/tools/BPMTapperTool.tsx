@@ -248,11 +248,18 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
 
       {/* Premium Tabs */}
-      <div className="flex justify-center mb-12 p-2 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 w-fit mx-auto backdrop-blur-xl gap-2 shadow-2xl shadow-black/20">
+      <div
+        className="flex justify-center mb-12 p-2 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10 w-fit mx-auto backdrop-blur-xl gap-2 shadow-2xl shadow-black/20"
+        role="tablist"
+        aria-label="BPM Tools"
+      >
         <Button 
           onClick={() => setActiveTab('tapper')} 
           variant={activeTab === 'tapper' ? 'primary' : 'ghost'}
           size="md"
+          role="tab"
+          aria-selected={activeTab === 'tapper'}
+          aria-controls="tapper-panel"
           className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
             ${activeTab === 'tapper' 
               ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
@@ -264,6 +271,9 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           onClick={() => setActiveTab('finder')} 
           variant={activeTab === 'finder' ? 'primary' : 'ghost'}
           size="md"
+          role="tab"
+          aria-selected={activeTab === 'finder'}
+          aria-controls="finder-panel"
           className={`px-10 py-3 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-xl border-none
             ${activeTab === 'finder' 
               ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' 
@@ -274,7 +284,11 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       </div>
 
       {activeTab === 'tapper' && (
-        <main className="glass-card p-10 md:p-14 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden text-center animate-fadeIn">
+        <main
+          id="tapper-panel"
+          role="tabpanel"
+          className="glass-card p-10 md:p-14 border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden text-center animate-fadeIn"
+        >
           {/* Decorative Glow */}
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/20 blur-[100px] pointer-events-none transition-opacity duration-300 ${tapFeedback ? 'opacity-100' : 'opacity-40'}`}></div>
 
@@ -294,6 +308,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 className={`w-full py-12 mb-8 text-2xl font-black uppercase tracking-[0.4em] shadow-2xl transition-all duration-150
                            ${tapFeedback ? 'scale-[0.98]' : ''}`}
                 backgroundColor="#10b981"
+                aria-label="Tap to calculate BPM"
             >
               TAP
             </Button>
@@ -310,6 +325,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               size="sm" 
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
               className="px-10 font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 text-red-500 hover:bg-red-500/10"
+              aria-label="Reset BPM taps"
             >
               Reset Stream
             </Button>
@@ -318,7 +334,11 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       )}
 
       {activeTab === 'finder' && (
-        <main className="w-full glass-card p-3 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden">
+        <main
+          id="finder-panel"
+          role="tabpanel"
+          className="w-full glass-card p-3 sm:p-6 md:p-10 border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-200 transition-all duration-500 animate-fadeIn overflow-hidden"
+        >
           <div className="space-y-8 relative z-10">
             {/* URL Input Group */}
             <div>
@@ -340,6 +360,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   startIcon={<LinkIcon className="w-4 h-4 ml-0.5" />}
                   className="px-8 font-black uppercase tracking-widest"
                   backgroundColor="#8b5cf6"
+                  aria-label="Load song from URL"
                 >
                   Load
                 </Button>

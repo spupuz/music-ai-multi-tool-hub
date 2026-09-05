@@ -1,4 +1,6 @@
-
-## 2024-05-18 - Missing ARIA Labels on Icon-Only Buttons
-**Learning:** Found multiple instances where icon-only buttons (`<Button>` and `<button>`) relied solely on the `title` attribute for tooltips, which is insufficient for screen readers and breaks accessibility standards. The `title` attribute doesn't reliably announce as an accessible name across all screen reader/browser combinations.
-**Action:** When implementing icon-only buttons, always ensure an explicit `aria-label` is provided, even if a `title` attribute is present for sighted users' tooltips.
+## 2023-10-27 - BPM Tapper Tool Accessibility
+**Learning:** Icon-only buttons or buttons that primarily rely on visual cues (like a giant "TAP" button with an icon) need clear, descriptive `aria-label`s to ensure screen reader users understand their function, especially when state (like active tabs) relies heavily on visual styling.
+**Action:** Always verify that interactive elements, especially primary action buttons in tools, have explicit `aria-label` attributes if their visible text is short or iconic, and ensure tab controls use standard accessibility patterns (`role="tab"`, `aria-selected`, etc) or at least have descriptive labels.
+## 2023-10-27 - BPM Tapper Tool Accessibility Tab Roles
+**Learning:** When using standard `role="tablist"` and `role="tab"` to improve screen reader accessibility of custom tab controls, it is necessary to also add `aria-controls` to the tab itself, and ensure the content wrapper container has the `role="tabpanel"` attribute and the corresponding `id`.
+**Action:** Always include the full suite of ARIA attributes (`role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`) when building custom tab navigations to ensure proper semantic structure.
