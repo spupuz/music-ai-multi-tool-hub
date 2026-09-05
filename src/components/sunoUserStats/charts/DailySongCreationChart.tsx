@@ -32,9 +32,6 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
@@ -68,35 +65,49 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
           }
         };
         
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'line',
-          data: {
-            datasets: [{
-              label: 'Songs Created',
-              data: data.map(d => ({ 
-                x: new Date(d.date).getTime() + new Date(d.date).getTimezoneOffset() * 60000, 
-                y: d.count 
-              })),
-              borderColor: lineColor,
-              backgroundColor: lineColor + '33', // semi-transparent fill
-              tension: 0.1,
-              fill: true,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: lineColor,
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Songs Created',
+          data: data.map(d => ({
+            x: new Date(d.date).getTime() + new Date(d.date).getTimezoneOffset() * 60000,
+            y: d.count
+          })),
+          borderColor: lineColor,
+          backgroundColor: lineColor + '33', // semi-transparent fill
+          tension: 0.1,
+          fill: true,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: lineColor,
+        };
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'line',
+            data: {
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
+    } else if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+      chartInstanceRef.current = null;
     }
+  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+  }, []);
 
   if (!data || data.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No daily song creation data for the last 30 days.</p>;
