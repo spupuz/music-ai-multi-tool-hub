@@ -31,18 +31,19 @@ const SongsByDayOfWeekChart: React.FC<SongsByDayOfWeekChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const chartData = useMemo(() => daysOfWeek.map((day, index) => data[index.toString()] || 0), [data]);
+  // ⚡ Bolt: Memoize static array to prevent recreation on every render
+  const daysOfWeek = useMemo(() => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], []);
+
+  // ⚡ Bolt: Memoize mapped data to prevent unnecessary re-calculations
+  const chartData = useMemo(() => daysOfWeek.map((day, index) => data[index.toString()] || 0), [data, daysOfWeek]);
 
   useEffect(() => {
     if (chartRef.current && chartData.some(count => count > 0)) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
           const counts = context.chart.data.datasets[0].data as number[];
+          if (!counts || counts.length === 0) return 5;
           const maxVal = Math.max(...counts);
           return Math.max(5, maxVal + Math.ceil(maxVal * 0.1));
         }) as any;
@@ -71,33 +72,49 @@ const SongsByDayOfWeekChart: React.FC<SongsByDayOfWeekChartProps> = ({
           };
         }
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: daysOfWeek,
-            datasets: [{
-              label: 'Songs Created',
-              data: chartData,
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'), // Assuming barColor might be rgb
-              borderWidth: 1,
-              ...datasetOptions,
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Songs Created',
+          data: chartData,
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'), // Assuming barColor might be rgb
+          borderWidth: 1,
+          ...datasetOptions,
+        };
+
+        // ⚡ Bolt: Mutate existing instance and call update('none') for O(1) rendering updates,
+        // rather than O(n) destroying and rebuilding the entire Chart canvas on every prop/window resize.
+        // Impact: Eliminates significant UI lag and canvas flashing when resizing the window.
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = daysOfWeek;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: daysOfWeek,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [chartData, barColor, fontColor, gridColor, onSetFilter, screenWidth, daysOfWeek]);
+
+  // ⚡ Bolt: Separate cleanup to run strictly on unmount to prevent repeated setup/teardown
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [chartData, barColor, fontColor, gridColor, onSetFilter, screenWidth]); 
+  }, []);
 
   if (!chartData.some(count => count > 0)) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song creation data by day of week.</p>;
