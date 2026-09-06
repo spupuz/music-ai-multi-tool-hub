@@ -177,6 +177,18 @@ export default {
 
         // ── GET /suno/* (Suno Studio API proxy) ──────────────────────────────────
         if (request.method === 'GET' && url.pathname.startsWith('/suno')) {
+            const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+            const rateLimitKeySuno = `ratelimit:suno:${ip}`;
+
+            if (env.STATS_KV) {
+                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeySuno) || '0', 10);
+                if (attempts >= 100) {
+                    return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+                        { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+                }
+                await env.STATS_KV.put(rateLimitKeySuno, (attempts + 1).toString(), { expirationTtl: 60 });
+            }
+
             const isWeb = url.pathname === '/suno-web' || url.pathname.startsWith('/suno-web/');
             const isApi = url.pathname === '/suno' || url.pathname.startsWith('/suno/');
             if (isWeb) {
