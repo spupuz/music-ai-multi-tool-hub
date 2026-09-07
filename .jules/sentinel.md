@@ -35,3 +35,7 @@
 **Vulnerability:** The Gemini API proxy endpoint in the Cloudflare Worker lacked rate limiting, allowing any user (or malicious actor) to spam requests, potentially leading to API quota exhaustion and unexpected billing costs.
 **Learning:** Even though the API key is secured server-side, exposing an unauthenticated proxy endpoint without rate limits still creates a denial-of-wallet (DoW) and resource exhaustion vulnerability.
 **Prevention:** Implement rate limiting (e.g., using Cloudflare KV tracking by client IP) on all unauthenticated proxy endpoints that consume third-party API quotas.
+## 2025-03-04 - [HIGH] Rate Limiting on Unauthenticated API Proxy Endpoint (Suno)
+**Vulnerability:** The Suno API proxy endpoint (`/suno/*`) in the Cloudflare Worker lacked rate limiting, allowing unauthenticated actors to spam requests, potentially leading to Suno API quota exhaustion, denial of service, and unexpected Cloudflare Worker costs (Denial-of-Wallet).
+**Learning:** Exposing unauthenticated proxy endpoints to third-party APIs without rate limits creates an open relay for resource exhaustion, even if the primary intent is just to bypass browser CORS.
+**Prevention:** Always implement rate limiting (e.g., using Cloudflare KV tracking by client IP) on all unauthenticated proxy endpoints that consume third-party resources or worker quotas.
