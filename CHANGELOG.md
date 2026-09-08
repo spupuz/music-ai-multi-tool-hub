@@ -1,3 +1,11 @@
+## [2.7.7] - 2026-09-08
+
+### Changed
+- **SongsByHourOfDayChart**: Chart.js instance now mutates data in-place and calls `update('none')` instead of destroying and recreating the canvas on every resize/render — eliminating UI lag and canvas flashing; cleanup moved to component unmount only. `hoursOfDay` array memoized to prevent re-allocation.
+
+### Security
+- **SongDeckPicker**: `Link` values imported via "Copy & Paste Key-Value" are now validated against `http:`/`https:` protocols before being bound to `href` — preventing an XSS vector where a `javascript:` URI could execute arbitrary code when a user clicked the link.
+
 ## [2.7.6] - 2026-09-08
 
 ### Changed

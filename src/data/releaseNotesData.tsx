@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.7",
+    content: (
+      <section id="version-2.7.7">
+        <SectionTitle>Version 2.7.7 - 2026-09-08</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SongsByHourOfDayChart</STRONG>: Chart.js instance now mutates data in-place and calls <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every resize/render — eliminating UI lag and canvas flashing; cleanup moved to component unmount only. <CODE>hoursOfDay</CODE> array memoized to prevent re-allocation.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SongDeckPicker</STRONG>: <CODE>Link</CODE> values imported via "Copy & Paste Key-Value" are now validated against <CODE>http:</CODE>/<CODE>https:</CODE> protocols before being bound to <CODE>href</CODE> — preventing an XSS vector where a <CODE>javascript:</CODE> URI could execute arbitrary code when a user clicked the link.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.6",
     content: (
       <section id="version-2.7.6">
