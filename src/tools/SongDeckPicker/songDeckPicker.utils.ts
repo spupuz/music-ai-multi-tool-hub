@@ -40,7 +40,16 @@ export const parseKeyValueFormat = (line: string): SongCardInterface | { error: 
         if (key === 'ArtistName') { card.artistName = value; foundArtist = true; }
         else if (key === 'Title') { card.title = value; foundTitle = true; }
         else if (key === 'Image') card.imageUrl = value;
-        else if (key === 'Link') card.webLink = value;
+        else if (key === 'Link') {
+            try {
+                const url = new URL(value);
+                if (['http:', 'https:'].includes(url.protocol)) {
+                    card.webLink = value;
+                }
+            } catch (_) {
+                // Ignore invalid URLs
+            }
+        }
         else if (key === 'Color') card.color = value && /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/i.test(value) ? value : undefined;
         else if (key === 'Comment') card.comment = value;
     }
