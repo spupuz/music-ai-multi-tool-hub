@@ -70,7 +70,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
                     </div>
                     <div className="flex gap-2">
                       <Button onClick={() => handleLoadPreset(preset.id)} variant="ghost" size="xs" className="px-3 border-blue-500/20 text-blue-400 hover:bg-blue-500/10">Deploy</Button>
-                      <Button onClick={() => handleDeletePreset(preset.id)} aria-label="Delete preset" variant="ghost" size="xs" className="px-3 border-red-500/20 text-red-400 hover:bg-red-500/10"><DeleteIcon className="w-3 h-3"/></Button>
+                      <Button onClick={() => handleDeletePreset(preset.id)} aria-label={`Delete preset: ${preset.name}`} variant="ghost" size="xs" className="px-3 border-red-500/20 text-red-400 hover:bg-red-500/10"><DeleteIcon className="w-3 h-3"/></Button>
                     </div>
                   </li>
                 ))}
@@ -104,10 +104,16 @@ const PresetModals: React.FC<PresetModalsProps> = ({
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer relative">
-                  <input type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                <label
+                  htmlFor="import-preset-file"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); importPresetFileRef.current?.click(); } }}
+                  className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer relative block focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <input id="import-preset-file" type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="hidden" />
                   <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-green-500 transition-colors">Select Architecture File</div>
-                </div>
+                </label>
                 {importPresetError && <p className="text-[9px] font-black uppercase tracking-widest text-red-400 text-center">{importPresetError}</p>}
               </div>
 
