@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.5",
+    content: (
+      <section id="version-2.7.5">
+        <SectionTitle>Version 2.7.5 - 2026-09-08</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>GenreVotesChart / TagUsageChart / TagVotesChart</STRONG>: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.</LI>
+          <LI><STRONG>SongsByDayOfWeekChart</STRONG>: Same Chart.js in-place update optimization; daysOfWeek array memoized to prevent unnecessary re-allocations.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno API proxy</STRONG>: added per-IP rate limiting (60 requests/60s) on the unauthenticated Suno proxy endpoint to prevent denial-of-wallet and quota exhaustion.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.4",
     content: (
       <section id="version-2.7.4">

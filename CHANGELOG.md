@@ -1,3 +1,12 @@
+## [2.7.5] - 2026-09-08
+
+### Changed
+- **GenreVotesChart / TagUsageChart / TagVotesChart**: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.
+- **SongsByDayOfWeekChart**: Same Chart.js in-place update optimization; daysOfWeek array memoized to prevent unnecessary re-allocations.
+
+### Security
+- **Suno API proxy**: added per-IP rate limiting (60 requests/60s) on the unauthenticated Suno proxy endpoint to prevent denial-of-wallet and quota exhaustion.
+
 ## [2.7.4] - 2026-09-06
 
 ### Added
