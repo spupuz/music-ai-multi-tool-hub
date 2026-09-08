@@ -1,3 +1,9 @@
+## [2.7.6] - 2026-09-08
+
+### Changed
+- **Palette Preset Modals**: The custom file upload trigger now uses a `label` wrapper with `tabIndex`, `role="button"`, and space/enter key handlers around a hidden file `input` — making it truly keyboard and screen-reader accessible instead of a visually-hidden absolute input.
+- **Palette Preset Modals**: The delete preset button's `aria-label` now includes the preset name (e.g. "Delete preset: myPreset") so screen readers convey which preset will be deleted.
+
 ## [2.7.5] - 2026-09-08
 
 ### Changed

@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.6",
+    content: (
+      <section id="version-2.7.6">
+        <SectionTitle>Version 2.7.6 - 2026-09-08</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Palette Preset Modals</STRONG>: The custom file upload trigger now uses a <CODE>label</CODE> wrapper with <CODE>tabIndex</CODE>, <CODE>role="button"</CODE>, and space/enter key handlers around a hidden file <CODE>input</CODE> — making it truly keyboard and screen-reader accessible instead of a visually-hidden absolute input.</LI>
+          <LI><STRONG>Palette Preset Modals</STRONG>: The delete preset button's <CODE>aria-label</CODE> now includes the preset name (e.g. "Delete preset: myPreset") so screen readers convey which preset will be deleted.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.5",
     content: (
       <section id="version-2.7.5">
