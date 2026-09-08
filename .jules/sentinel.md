@@ -39,3 +39,7 @@
 **Vulnerability:** The Suno API proxy endpoint (`/suno/*`) in the Cloudflare Worker lacked rate limiting, allowing unauthenticated actors to spam requests, potentially leading to Suno API quota exhaustion, denial of service, and unexpected Cloudflare Worker costs (Denial-of-Wallet).
 **Learning:** Exposing unauthenticated proxy endpoints to third-party APIs without rate limits creates an open relay for resource exhaustion, even if the primary intent is just to bypass browser CORS.
 **Prevention:** Always implement rate limiting (e.g., using Cloudflare KV tracking by client IP) on all unauthenticated proxy endpoints that consume third-party resources or worker quotas.
+## 2026-09-08 - [CRITICAL] React href XSS via javascript: URIs
+**Vulnerability:** The `webLink` property in `SongDeckPicker` was derived directly from unsanitized user input and assigned to the `href` attribute of `<a>` tags. If an attacker provided a link starting with `javascript:`, React would render it as-is, executing arbitrary code when the user clicked the link.
+**Learning:** React does not automatically sanitize `href` attributes against `javascript:` or `data:` URIs. Developers must explicitly validate URLs before binding them to `href` in JSX.
+**Prevention:** Always validate user-provided URLs using a strict protocol check (e.g., ensuring they start with `http://` or `https://`) before using them in `href` properties.
