@@ -31,15 +31,14 @@ const SongsByHourOfDayChart: React.FC<SongsByHourOfDayChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // ⚡ Bolt: Memoize static array to prevent recreation on every render
+  const hoursOfDay = useMemo(() => Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`), []);
 
-  const hoursOfDay = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-  const chartData = useMemo(() => hoursOfDay.map((_, index) => data[index.toString()] || 0), [data]);
+  // ⚡ Bolt: Memoize mapped data to prevent unnecessary re-calculations
+  const chartData = useMemo(() => hoursOfDay.map((_, index) => data[index.toString()] || 0), [data, hoursOfDay]);
 
   useEffect(() => {
     if (chartRef.current && chartData.some(count => count > 0)) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
@@ -93,34 +92,49 @@ const SongsByHourOfDayChart: React.FC<SongsByHourOfDayChartProps> = ({
           };
         }
         
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: hoursOfDay,
-            datasets: [{
-              label: 'Songs Created',
-              data: chartData,
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
-              borderWidth: 1,
-              ...datasetOptions,
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Songs Created',
+          data: chartData,
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          ...datasetOptions,
+        };
+
+        // ⚡ Bolt: Mutate existing instance and call update('none') for O(1) rendering updates,
+        // rather than O(n) destroying and rebuilding the entire Chart canvas on every prop/window resize.
+        // Impact: Eliminates significant UI lag and canvas flashing when resizing the window.
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = hoursOfDay;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: hoursOfDay,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-    // It's important to clean up the chart instance when the component unmounts or dependencies change.
+  }, [chartData, barColor, fontColor, gridColor, screenWidth, onSetFilter, hoursOfDay]);
+
+  // ⚡ Bolt: Separate cleanup to run strictly on unmount to prevent repeated setup/teardown
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [chartData, barColor, fontColor, gridColor, screenWidth, onSetFilter]);
+  }, []);
 
   if (!chartData.some(count => count > 0)) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song creation data by hour of day.</p>;
