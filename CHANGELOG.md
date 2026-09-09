@@ -1,3 +1,8 @@
+## [2.7.9] - 2026-09-09
+
+### Changed
+- **LyricProcessorTool**: Formatting toolbar buttons (UPPERCASE / lowercase / Title Case) now have descriptive `aria-label`s so screen readers announce their action clearly.
+
 ## [2.7.8] - 2026-09-09
 
 ### Changed

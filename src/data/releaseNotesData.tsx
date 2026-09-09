@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.9",
+    content: (
+      <section id="version-2.7.9">
+        <SectionTitle>Version 2.7.9 - 2026-09-09</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>LyricProcessorTool</STRONG>: Formatting toolbar buttons (UPPERCASE / lowercase / Title Case) now have descriptive <CODE>aria-label</CODE>s so screen readers announce their action clearly.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.8",
     content: (
       <section id="version-2.7.8">
