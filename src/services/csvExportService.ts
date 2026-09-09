@@ -5,7 +5,13 @@ const escapeCsvField = (field: string | number | boolean | undefined | null): st
     if (field === undefined || field === null) {
         return "";
     }
-    const stringField = String(field);
+    let stringField = String(field);
+
+    // Prevent CSV Formula Injection by prepending a single quote to fields starting with =, +, -, or @
+    if (/^[=+\-@]/.test(stringField)) {
+        stringField = "'" + stringField;
+    }
+
     // Replace " with "" and wrap in " if it contains , " or newline
     if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n') || stringField.includes('\r')) {
         return `"${stringField.replace(/"/g, '""')}"`;

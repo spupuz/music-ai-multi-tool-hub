@@ -43,3 +43,7 @@
 **Vulnerability:** The `webLink` property in `SongDeckPicker` was derived directly from unsanitized user input and assigned to the `href` attribute of `<a>` tags. If an attacker provided a link starting with `javascript:`, React would render it as-is, executing arbitrary code when the user clicked the link.
 **Learning:** React does not automatically sanitize `href` attributes against `javascript:` or `data:` URIs. Developers must explicitly validate URLs before binding them to `href` in JSX.
 **Prevention:** Always validate user-provided URLs using a strict protocol check (e.g., ensuring they start with `http://` or `https://`) before using them in `href` properties.
+## 2026-09-09 - [MEDIUM] Fix CSV Formula Injection in exports
+**Vulnerability:** The CSV export functionality in `src/services/csvExportService.ts` did not sanitize input fields starting with `=`, `+`, `-`, or `@`. When imported into spreadsheet software like Excel or Google Sheets, these inputs could be executed as formulas (CSV Formula Injection or Macro Injection), potentially leading to arbitrary command execution or data exfiltration.
+**Learning:** Even when exporting generic application data (like song titles or comments), user-provided strings can act as payloads if they begin with specific characters recognized by spreadsheet parsers.
+**Prevention:** Always escape CSV fields by prepending a single quote (`'`) to any string that begins with `=`, `+`, `-`, or `@` before adding it to the CSV content.
