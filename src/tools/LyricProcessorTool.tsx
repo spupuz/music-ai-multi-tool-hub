@@ -465,9 +465,9 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             
             {/* Formatting Toolbar */}
             <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Button onClick={handleUpperCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="UPPERCASE">AA</Button>
-              <Button onClick={handleLowerCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="lowercase">aa</Button>
-              <Button onClick={handleTitleCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="Title Case">Aa</Button>
+              <Button onClick={handleUpperCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="UPPERCASE" aria-label="Convert to UPPERCASE">AA</Button>
+              <Button onClick={handleLowerCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="lowercase" aria-label="Convert to lowercase">aa</Button>
+              <Button onClick={handleTitleCase} variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-xl bg-white dark:bg-black/40 border-gray-200 dark:border-white/10 text-xs font-black" title="Title Case" aria-label="Convert to Title Case">Aa</Button>
             </div>
           </div>
         </div>
