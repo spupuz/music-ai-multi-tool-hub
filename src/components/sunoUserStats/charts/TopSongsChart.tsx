@@ -42,15 +42,15 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
     return validSongs.sort((a,b) => (b[metric] || 0) - (a[metric] || 0)).slice(0, topN);
   }, [songs, metric, topN]);
 
+  // ⚡ Bolt: Memoize mapped data
+  const chartDataValues = React.useMemo(() => processedSongs.map(song => song[metric] || 0), [processedSongs, metric]);
+  const chartLabels = React.useMemo(() => processedSongs.map(song => song.title), [processedSongs]);
+
 
   useEffect(() => {
     if (chartRef.current && processedSongs.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
-        const chartDataValues = processedSongs.map(song => song[metric] || 0);
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
             const values = context.chart.data.datasets[0].data as number[];
             if (!values || values.length === 0) return 5;
@@ -110,33 +110,46 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
             padding: screenWidth < 640 ? 2 : 4
         };
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: processedSongs.map(song => song.title), 
-            datasets: [{
-              label: valueLabel,
-              data: chartDataValues,
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
-              borderWidth: 1,
-              ...datasetOptions
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: valueLabel,
+          data: chartDataValues,
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          ...datasetOptions
+        };
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = chartLabels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: chartLabels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [processedSongs, chartDataValues, chartLabels, metric, valueLabel, barColor, fontColor, gridColor, topN, screenWidth]);
+
+  // ⚡ Bolt: Separate cleanup to run strictly on unmount
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [processedSongs, metric, valueLabel, barColor, fontColor, gridColor, topN, screenWidth]);
+  }, []);
 
   if (!processedSongs || processedSongs.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song data available for this chart.</p>;
