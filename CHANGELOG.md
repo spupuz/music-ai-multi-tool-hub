@@ -1,3 +1,11 @@
+## [2.7.8] - 2026-09-09
+
+### Changed
+- **TopSongsChart**: Chart.js instance now mutates data in-place and calls `update('none')` instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted work; cleanup moved to component unmount only. Chart data and labels memoized to prevent unnecessary re-allocation.
+
+### Security
+- **CSV Export**: Fields exported via `src/services/csvExportService.ts` that begin with `=`, `+`, `-`, or `@` are now escaped with a leading single quote — preventing CSV Formula Injection (macro injection) when imported into spreadsheet applications like Excel or Google Sheets.
+
 ## [2.7.7] - 2026-09-08
 
 ### Changed

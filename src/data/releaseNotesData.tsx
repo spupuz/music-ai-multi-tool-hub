@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.8",
+    content: (
+      <section id="version-2.7.8">
+        <SectionTitle>Version 2.7.8 - 2026-09-09</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>TopSongsChart</STRONG>: Chart.js instance now mutates data in-place and calls <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted work; cleanup moved to component unmount only. Chart data and labels memoized to prevent unnecessary re-allocation.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>CSV Export</STRONG>: Fields exported via <CODE>src/services/csvExportService.ts</CODE> that begin with <CODE>=</CODE>, <CODE>+</CODE>, <CODE>-</CODE>, or <CODE>@</CODE> are now escaped with a leading single quote — preventing CSV Formula Injection (macro injection) when imported into spreadsheet applications like Excel or Google Sheets.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.7",
     content: (
       <section id="version-2.7.7">
