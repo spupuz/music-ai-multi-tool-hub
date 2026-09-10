@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.11",
+    content: (
+      <section id="version-2.7.11">
+        <SectionTitle>Version 2.7.11 - 2026-09-10</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>ID Generation</STRONG>: Unique identifiers across <CODE>SongDeckPicker</CODE> (external source cards, deck themes, song groups), <CODE>useSunoDataManagement</CODE> saved playlists, <CODE>RandomMusicStyleGenerator</CODE>, <CODE>CreativeConceptBlender</CODE>, <CODE>ChordProgressionTool</CODE>, <CODE>SongCoverArtTool</CODE>, <CODE>SongStructureBuilderTool</CODE>, <CODE>SparkTuneTool</CODE>, and <CODE>SunoCommunitySpinnerTool</CODE> now use <CODE>crypto.randomUUID()</CODE> instead of <CODE>Date.now()</CODE>-derived values — eliminating predictable, collision-prone IDs.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SunoMusicPlayer / SongDeckPicker / SunoUserStats</STRONG>: Buttons that are conditionally disabled (empty queue CSV export, no saved themes to load, no user data to update/clear) now display explanatory <CODE>title</CODE> tooltips indicating why the action is blocked.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.10",
     content: (
       <section id="version-2.7.10">

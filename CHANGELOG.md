@@ -1,3 +1,11 @@
+## [2.7.11] - 2026-09-10
+
+### Security
+- **ID Generation**: Unique identifiers across `SongDeckPicker` (external source cards, deck themes, song groups), `useSunoDataManagement` saved playlists, `RandomMusicStyleGenerator`, `CreativeConceptBlender`, `ChordProgressionTool`, `SongCoverArtTool`, `SongStructureBuilderTool`, `SparkTuneTool`, and `SunoCommunitySpinnerTool` now use `crypto.randomUUID()` instead of `Date.now()`-derived values — eliminating predictable, collision-prone IDs.
+
+### Changed
+- **SunoMusicPlayer / SongDeckPicker / SunoUserStats**: Buttons that are conditionally disabled (empty queue CSV export, no saved themes to load, no user data to update/clear) now display explanatory `title` tooltips indicating why the action is blocked.
+
 ## [2.7.10] - 2026-09-10
 
 ### Changed
