@@ -79,7 +79,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
           <Button 
             onClick={handleExportPlaylistCsv} 
             aria-label="Export current list to CSV"
-            title="Export current list to CSV" 
+            title={queue.length === 0 ? "Cannot export: Queue is empty" : "Export current list to CSV"}
             variant="ghost"
             size="sm"
             className="p-3 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl shadow-none"

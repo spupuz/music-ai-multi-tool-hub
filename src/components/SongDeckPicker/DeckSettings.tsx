@@ -172,6 +172,7 @@ export const DeckSettings: React.FC<DeckSettingsProps> = (props) => {
                             size="sm" 
                             onClick={() => props.setShowLoadThemeModal(true)} 
                             disabled={props.savedDeckThemes.length === 0}
+                            title={props.savedDeckThemes.length === 0 ? "No saved themes to load" : undefined}
                             startIcon={<LoadIcon />}
                             className="min-w-[180px]"
                         >
