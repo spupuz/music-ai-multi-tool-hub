@@ -1,3 +1,8 @@
+## [2.7.10] - 2026-09-10
+
+### Changed
+- **Suno Queue**: Search filtering in `useSunoQueue` now lowercases the filter query once before applying it inside the `.filter()` loop instead of recomputing `.toLowerCase()` up to four times per song for each render — reducing redundant string calculations in the audio queue.
+
 ## [2.7.9] - 2026-09-09
 
 ### Changed

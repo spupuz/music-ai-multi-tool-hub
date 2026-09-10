@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.10",
+    content: (
+      <section id="version-2.7.10">
+        <SectionTitle>Version 2.7.10 - 2026-09-10</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno Queue</STRONG>: Search filtering in <CODE>useSunoQueue</CODE> now lowercases the filter query once before applying it inside the <CODE>.filter()</CODE> loop instead of recomputing <CODE>.toLowerCase()</CODE> up to four times per song for each render — reducing redundant string calculations in the audio queue.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.9",
     content: (
       <section id="version-2.7.9">
