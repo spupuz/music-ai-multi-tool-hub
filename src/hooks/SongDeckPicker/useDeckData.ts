@@ -142,7 +142,7 @@ export const useDeckData = ({ trackLocalEvent, pickerMode }: UseDeckDataProps) =
                         else sunoGeneralUrlSongCount++;
                     } else { throw new Error(`Song details not found for ID ${sunoSongId.substring(0, 8)}...`); }
                 } else if (cardSourceType === 'other_url') {
-                    const newCard: SongCardInterface = { id: `otherurl-${Date.now()}-${i}`, artistName: "External Source", title: line.substring(0, 50) + (line.length > 50 ? "..." : ""), imageUrl: undefined, webLink: line, color: generateRandomColor(), originalInputLine: line, sourceType: 'other_url', isBonusApplied: false };
+                    const newCard: SongCardInterface = { id: crypto.randomUUID(), artistName: "External Source", title: line.substring(0, 50) + (line.length > 50 ? "..." : ""), imageUrl: undefined, webLink: line, color: generateRandomColor(), originalInputLine: line, sourceType: 'other_url', isBonusApplied: false };
                     newDeckBaseAccumulator.push(newCard);
                     setSongInfoCache(prev => new Map(prev).set(line, newCard));
                     successfulCardCreations++; otherUrlSongCount++;

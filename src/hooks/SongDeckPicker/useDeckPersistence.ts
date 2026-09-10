@@ -87,7 +87,7 @@ export const useDeckPersistence = ({
         };
 
         const newTheme: DeckTheme = { 
-            id: Date.now().toString(), 
+            id: crypto.randomUUID(),
             name: newThemeName.trim(), 
             settings: currentSettings, 
             createdAt: new Date().toISOString() 

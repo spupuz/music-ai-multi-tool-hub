@@ -206,7 +206,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 toolBackgroundColor, toolAccentColor, toolTextColor, wheelSegmentBorderColor, 
                 wheelTextFont, selectedSpinSound 
             }; 
-            const newSavedWheel = { id: Date.now().toString(), name: name.trim(), data: currentConfigData }; 
+            const newSavedWheel = { id: crypto.randomUUID(), name: name.trim(), data: currentConfigData };
             setSavedWheels(prev => [newSavedWheel, ...prev.filter(sw => sw.name.toLowerCase() !== name.trim().toLowerCase())]); 
             trackLocalEvent(TOOL_CATEGORY, 'wheelConfigSaved', name.trim()); 
             alert(`Configuration "${name.trim()}" saved!`); 
