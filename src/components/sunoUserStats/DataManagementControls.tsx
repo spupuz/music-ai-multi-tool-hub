@@ -27,6 +27,7 @@ const DataManagementControls: React.FC<DataManagementControlsProps> = ({
         <Button
           onClick={onUpdate}
           disabled={isUpdating || !isClearingPossible}
+          title={isUpdating ? "Data update in progress..." : !isClearingPossible ? "No user data found to update" : undefined}
           variant="primary"
           size="sm"
           startIcon={isUpdating ? null : <RefreshIcon className="w-3.5 h-3.5" />}
@@ -39,6 +40,7 @@ const DataManagementControls: React.FC<DataManagementControlsProps> = ({
         <Button
           onClick={onClear}
           disabled={isUpdating || !isClearingPossible}
+          title={isUpdating ? "Cannot clear data while update is in progress" : !isClearingPossible ? "No user data found to clear" : undefined}
           variant="ghost"
           size="sm"
           className="flex-1 px-6 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/10 border-red-500/20 shadow-none hover:shadow-none"
