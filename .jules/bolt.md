@@ -38,3 +38,6 @@
 ## 2026-09-08 - [Chart.js Recreation on Resize/Render Bottleneck - TopSongsChart]
 **Learning:** Recreating a Chart.js instance by calling `chart.destroy()` and `new Chart()` on every render cycle (e.g. tracking `screenWidth` changes via window resize listeners) is a significant codebase-specific performance bottleneck. Micro-optimizations like memoizing array mapping are negligible compared to canvas reconstruction.
 **Action:** For charts that react frequently to state updates like resizing, store the chart instance in a ref. Check for its existence in the main `useEffect` and explicitly rebuild the `datasetConfig`. Then, mutate the instance's `data.datasets[0]`, `data.labels`, and `options`, and call `chart.update('none')`. Extract the `chart.destroy()` cleanup strictly to a separate unmount `useEffect([], ...)`.
+## 2024-10-27 - [Optimization of loop string calculations in useSunoQueue]
+**Learning:** Found a case where `filterQuery.toLowerCase()` was executed inside a `filter()` loop in `useSunoQueue`, redundantly computing the lowercase string up to four times per song in the queue during each render filter.
+**Action:** Always extract invariant computations (like converting a search string to lowercase) outside of loop iterations (e.g. `.filter`, `.map`) to avoid O(n) redundant calculations.

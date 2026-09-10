@@ -42,11 +42,12 @@ export const useSunoQueue = ({
     let processedSongs = [...originalSongsList];
 
     if (filterQuery) {
+      const lowerFilterQuery = filterQuery.toLowerCase();
       processedSongs = processedSongs.filter(song =>
-        song.title.toLowerCase().includes(filterQuery.toLowerCase()) ||
-        (song.display_name && song.display_name.toLowerCase().includes(filterQuery.toLowerCase())) ||
-        (song.handle && song.handle.toLowerCase().includes(filterQuery.toLowerCase())) ||
-        (song.metadata?.tags && song.metadata.tags.toLowerCase().includes(filterQuery.toLowerCase()))
+        song.title.toLowerCase().includes(lowerFilterQuery) ||
+        (song.display_name && song.display_name.toLowerCase().includes(lowerFilterQuery)) ||
+        (song.handle && song.handle.toLowerCase().includes(lowerFilterQuery)) ||
+        (song.metadata?.tags && song.metadata.tags.toLowerCase().includes(lowerFilterQuery))
       );
     }
 
