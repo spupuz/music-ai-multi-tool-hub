@@ -87,7 +87,7 @@ export const useDeckSpecialModes = ({
             return;
         }
         const newGroup: SongGroup = {
-            id: `group-${Date.now()}`,
+            id: crypto.randomUUID(),
             name: currentGroupNameInput.trim() || `Group ${songGroups.length + 1}`,
             songs: [...loggedCards]
         };

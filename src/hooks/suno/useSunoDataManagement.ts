@@ -348,7 +348,7 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       return;
     }
     const newSavedPlaylist: SavedCustomPlaylist = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: name.trim(),
       content: contentToSave,
       createdAt: new Date().toISOString()

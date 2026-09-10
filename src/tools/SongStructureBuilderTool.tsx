@@ -180,7 +180,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         if (savedArrangements.some(s => s.name.toLowerCase() === newArrangementName.trim().toLowerCase())) { setErrorSave("An arrangement with this name already exists."); return; }
         
         const newSave: SavedArrangement = {
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             name: newArrangementName.trim(),
             createdAt: new Date().toISOString(),
             data: { arrangement, songTitle, tags, blockTypeColors, bpm, beatsPerBar }

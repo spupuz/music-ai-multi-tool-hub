@@ -180,7 +180,7 @@ Get your entry in on time! ⚡️
         trackLocalEvent(TOOL_CATEGORY, 'ChallengeGenerated', challengeName);
 
         saveChallengeToLocal({
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             challengeName, organizedBy, dueDate, genre, mood, themeOrKeyword, instrumentation, vocalStyle,
             tempo, durationConstraint, lyricPart, negativeConstraints, sunoSampleLink, audioSampleLink,
             submissionLink, showcasePlaylistLink, additionalDetails

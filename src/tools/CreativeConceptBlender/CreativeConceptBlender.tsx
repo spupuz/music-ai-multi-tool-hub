@@ -92,7 +92,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
   const generateConceptInternal = useCallback((rerollCatKey: CreativeLockableCategoryKey | null = null, addTwist: boolean = false) => {
     setIsGenerating(true); setCopiedFeedback(prev => ({...prev, id: null, text: 'COPY TO CLIPBOARD'}));
     setTimeout(() => {
-        const newId = Date.now().toString();
+        const newId = crypto.randomUUID();
         const prevConcept = currentConcept;
         
         function getNewValueForCategory<K extends CreativeLockableCategoryKey>(catKey: K, generatorFn: () => BlendedConceptParts[K]): BlendedConceptParts[K] {
@@ -245,7 +245,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
 
   const handleRecordItemSelect = (category: CreativeCustomItemCategoryKey, value: string) => {
     setCurrentConcept(prev => {
-        const newConcept: BlendedConceptParts = prev ? {...prev} : { id: Date.now().toString(), theme: '', style: '', texture: ''};
+        const newConcept: BlendedConceptParts = prev ? {...prev} : { id: crypto.randomUUID(), theme: '', style: '', texture: ''};
         (newConcept as any)[category] = value;
         return newConcept;
     });
@@ -254,7 +254,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
   
   const handleResetRecord = () => {
     if (window.confirm("Are you sure you want to clear your current recorded concept?")) {
-        setCurrentConcept({ id: Date.now().toString(), theme: '', style: '', texture: ''});
+        setCurrentConcept({ id: crypto.randomUUID(), theme: '', style: '', texture: ''});
         trackLocalEvent(TOOL_CATEGORY, 'recordModeReset');
     }
   };
@@ -265,7 +265,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
         setHistory(prev => [{ concept: currentConcept, lockedCategories: currentLockedCategories, optionalCategoryToggles }, ...prev.slice(0, 19)]);
       }
       if (newMode === 'record') {
-        setCurrentConcept({ id: Date.now().toString(), theme: '', style: '', texture: ''});
+        setCurrentConcept({ id: crypto.randomUUID(), theme: '', style: '', texture: ''});
       } else { // Switching to generate mode
         generateConceptInternal(null);
       }

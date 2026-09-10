@@ -47,3 +47,7 @@
 **Vulnerability:** The CSV export functionality in `src/services/csvExportService.ts` did not sanitize input fields starting with `=`, `+`, `-`, or `@`. When imported into spreadsheet software like Excel or Google Sheets, these inputs could be executed as formulas (CSV Formula Injection or Macro Injection), potentially leading to arbitrary command execution or data exfiltration.
 **Learning:** Even when exporting generic application data (like song titles or comments), user-provided strings can act as payloads if they begin with specific characters recognized by spreadsheet parsers.
 **Prevention:** Always escape CSV fields by prepending a single quote (`'`) to any string that begins with `=`, `+`, `-`, or `@` before adding it to the CSV content.
+## 2024-09-10 - [Weak Randomness in ID Generation]
+**Vulnerability:** Weak random number generation using `Date.now()` combined with template strings or `toString()` to create unique IDs across various tools (e.g., `SongDeckPicker`, `CreativeConceptBlender`, `SparkTuneTool`).
+**Learning:** Using `Date.now()` for generating IDs can lead to collisions and predictability, especially when operations happen quickly. This violates codebase security conventions which mandate `crypto.randomUUID()` for robust uniqueness.
+**Prevention:** Always use `crypto.randomUUID()` when generating unique identifiers to ensure robust, collision-resistant uniqueness without relying on weak pseudorandom number generators or predictable timestamps.

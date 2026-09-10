@@ -329,7 +329,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
   const handleSavePreset = () => {
     if (!newPresetName.trim()) return;
-    const newPreset: ArtStylePreset = { id: Date.now().toString(), name: newPresetName.trim(), settings: collectCurrentSettings(), createdAt: new Date().toISOString() };
+    const newPreset: ArtStylePreset = { id: crypto.randomUUID(), name: newPresetName.trim(), settings: collectCurrentSettings(), createdAt: new Date().toISOString() };
     setSavedArtStylePresets(prev => [newPreset, ...prev]); setShowSavePresetModal(false); setNewPresetName(''); trackLocalEvent(TOOL_CATEGORY, 'presetSaved', newPreset.name);
   };
   const handleLoadPreset = (id: string) => { const p = savedArtStylePresets.find(x => x.id === id); if (p) { applyPresetSettings(p.settings); setShowLoadPresetModal(false); trackLocalEvent(TOOL_CATEGORY, 'presetLoaded', p.name); } };

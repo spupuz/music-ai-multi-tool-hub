@@ -146,7 +146,7 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
     setCopiedTagsFeedback('');
 
     setTimeout(() => {
-        const newId = Date.now().toString();
+        const newId = crypto.randomUUID();
         const prevStyle = currentStyle;
 
         const getCountForCategory = (catKey: LockableCategoryKey): number => {

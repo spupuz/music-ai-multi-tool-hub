@@ -420,7 +420,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const handleSaveToFavorites = useCallback(() => {
     if (generatedProgression.length > 0) {
         const newFavorite: SavedProgressionEntry = {
-            id: Date.now().toString(),
+            id: crypto.randomUUID(),
             rootNote, mode, chordType, progression: generatedProgression,
             createdAt: new Date().toISOString(), note: ''
         };
