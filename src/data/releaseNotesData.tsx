@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.12",
+    content: (
+      <section id="version-2.7.12">
+        <SectionTitle>Version 2.7.12 - 2026-09-11</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Scatter Plots (Plays vs Comments / Plays vs Upvotes)</STRONG>: Chart.js instances now mutate data in-place and call <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.11",
     content: (
       <section id="version-2.7.11">

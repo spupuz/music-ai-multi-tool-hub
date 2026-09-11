@@ -1,3 +1,8 @@
+## [2.7.12] - 2026-09-11
+
+### Changed
+- **Scatter Plots (Plays vs Comments / Plays vs Upvotes)**: Chart.js instances now mutate data in-place and call `update('none')` instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
+
 ## [2.7.11] - 2026-09-10
 
 ### Security
