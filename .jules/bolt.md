@@ -41,3 +41,7 @@
 ## 2024-10-27 - [Optimization of loop string calculations in useSunoQueue]
 **Learning:** Found a case where `filterQuery.toLowerCase()` was executed inside a `filter()` loop in `useSunoQueue`, redundantly computing the lowercase string up to four times per song in the queue during each render filter.
 **Action:** Always extract invariant computations (like converting a search string to lowercase) outside of loop iterations (e.g. `.filter`, `.map`) to avoid O(n) redundant calculations.
+
+## 2026-09-11 - Prevent Chart.js Recreation Overheads
+**Learning:** Creating and destroying Chart.js instances inside `useEffect` dependencies (like on window resize or data update) causes significant performance bottlenecks and canvas flashing in React. The codebase exhibits a pattern where static data is recalculated frequently instead of simply being passed back into the existing Chart.js instance for update.
+**Action:** Always prefer mutating `chartInstanceRef.current.data.datasets` and `chartInstanceRef.current.options`, followed by `chartInstanceRef.current.update('none')`. Move the `destroy()` call exclusively to an empty dependency array `useEffect` unmount cleanup function to eliminate layout jank and wasted CPU cycles.

@@ -33,9 +33,6 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
 
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const baseOptions = getBaseChartOptions(fontColor, gridColor);
@@ -113,22 +110,36 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
         }
 
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'scatter',
-          data: {
-            datasets: datasets
-          },
-          options: scatterOptions,
-        });
+        // ⚡ Bolt: Mutate data in-place and use update('none') instead of destroying and recreating the chart instance on every render/resize
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.datasets = datasets;
+          chartInstanceRef.current.options = scatterOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+              datasets: datasets
+            },
+            options: scatterOptions,
+          });
+        }
       }
+    } else if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+      chartInstanceRef.current = null;
     }
+  }, [chartData, averageUpvoteRateOverall, fontColor, gridColor, pointColor, referenceLineColor]);
+
+  // ⚡ Bolt: Cleanup the chart instance only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [chartData, averageUpvoteRateOverall, fontColor, gridColor, pointColor, referenceLineColor]);
+  }, []);
 
   if (chartData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song data available for scatter plot.</p>;
