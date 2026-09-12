@@ -33,9 +33,6 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor) as any;
@@ -86,33 +83,47 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
             }
         };
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: processedData.map(d => d.song.title), 
-            datasets: [{
-              label: valueLabel,
-              data: processedData.map(d => d.increase),
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'), 
-              borderWidth: 1,
-              ...datasetOptions
-            }]
-          },
-          options: chartOptions,
-        });
+        const labels = processedData.map(d => d.song.title);
+        const datasetConfig = {
+          label: valueLabel,
+          data: processedData.map(d => d.increase),
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          ...datasetOptions
+        };
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) { 
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue]);
+
+  // ⚡ Bolt: Clean up the chart only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue]);
+  }, []);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song trend data available for this period.</p>;
