@@ -4,3 +4,6 @@
 ## 2023-10-27 - BPM Tapper Tool Accessibility Tab Roles
 **Learning:** When using standard `role="tablist"` and `role="tab"` to improve screen reader accessibility of custom tab controls, it is necessary to also add `aria-controls` to the tab itself, and ensure the content wrapper container has the `role="tabpanel"` attribute and the corresponding `id`.
 **Action:** Always include the full suite of ARIA attributes (`role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`) when building custom tab navigations to ensure proper semantic structure.
+## 2023-10-25 - Title on dynamic disabled buttons
+**Learning:** Disabled buttons without explanations cause friction because users don't know why they can't proceed. Binding a dynamic `title` attribute to the condition that disables the button provides immediate, accessible context.
+**Action:** Always provide a conditionally rendered `title` attribute to explain the specific reason a button is disabled.
