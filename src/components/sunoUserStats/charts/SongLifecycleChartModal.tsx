@@ -17,93 +17,111 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
 
   useEffect(() => {
     if (chartRef.current && history.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const baseOptions = getBaseChartOptions('#e5e7eb', '#374151');
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: history.map(p => new Date(p.timestamp)),
-            datasets: [
-              {
-                label: 'Plays',
-                data: history.map(p => p.plays),
-                borderColor: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                tension: 0.1,
-                fill: false,
-                yAxisID: 'yPlays',
-              },
-              {
-                label: 'Upvotes',
-                data: history.map(p => p.upvotes),
-                borderColor: '#2196F3',
-                backgroundColor: 'rgba(33, 150, 243, 0.2)',
-                tension: 0.1,
-                fill: false,
-                yAxisID: 'yUpvotesComments',
-              },
-              {
-                label: 'Comments',
-                data: history.map(p => p.comment_count),
-                borderColor: '#FFC107',
-                backgroundColor: 'rgba(255, 193, 7, 0.2)',
-                tension: 0.1,
-                fill: false,
-                yAxisID: 'yUpvotesComments',
-              },
-            ],
+
+        const labels = history.map(p => new Date(p.timestamp));
+        const datasets = [
+          {
+            label: 'Plays',
+            data: history.map(p => p.plays),
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            tension: 0.1,
+            fill: false,
+            yAxisID: 'yPlays',
           },
-          options: {
-            ...baseOptions,
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-              ...baseOptions.plugins,
-              legend: { ...baseOptions.plugins?.legend, display: true, position: 'top' },
-              title: { display: true, text: `Lifecycle: ${song.title}`, color: '#e5e7eb', font: {size: 16} },
+          {
+            label: 'Upvotes',
+            data: history.map(p => p.upvotes),
+            borderColor: '#2196F3',
+            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+            tension: 0.1,
+            fill: false,
+            yAxisID: 'yUpvotesComments',
+          },
+          {
+            label: 'Comments',
+            data: history.map(p => p.comment_count),
+            borderColor: '#FFC107',
+            backgroundColor: 'rgba(255, 193, 7, 0.2)',
+            tension: 0.1,
+            fill: false,
+            yAxisID: 'yUpvotesComments',
+          },
+        ];
+
+        const chartOptions = {
+          ...baseOptions,
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            ...baseOptions.plugins,
+            legend: { ...baseOptions.plugins?.legend, display: true, position: 'top' },
+            title: { display: true, text: `Lifecycle: ${song.title}`, color: '#e5e7eb', font: {size: 16} },
+          },
+          scales: {
+            ...baseOptions.scales,
+            x: {
+              ...(baseOptions.scales?.x as object),
+              type: 'time',
+              time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy HH:mm', displayFormats: {day: 'MMM dd'} },
+              title: { display: true, text: 'Date of Snapshot', color: '#e5e7eb' },
             },
-            scales: {
-              ...baseOptions.scales,
-              x: {
-                ...(baseOptions.scales?.x as object),
-                type: 'time',
-                time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy HH:mm', displayFormats: {day: 'MMM dd'} },
-                title: { display: true, text: 'Date of Snapshot', color: '#e5e7eb' },
-              },
-              yPlays: {
-                ...(baseOptions.scales?.y as object),
-                type: 'linear',
-                display: true,
-                position: 'left',
-                title: { display: true, text: 'Total Plays', color: '#4CAF50' },
-                grid: { drawOnChartArea: true, color: '#2a3b4d' }, // Main grid for plays
-                ticks: { color: '#4CAF50' }
-              },
-              yUpvotesComments: {
-                ...(baseOptions.scales?.y as object),
-                type: 'linear',
-                display: true,
-                position: 'right',
-                title: { display: true, text: 'Upvotes / Comments', color: '#FFC107' },
-                grid: { drawOnChartArea: false }, // No grid for this axis to avoid clutter
-                ticks: { color: '#FFC107'}
-              },
+            yPlays: {
+              ...(baseOptions.scales?.y as object),
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: { display: true, text: 'Total Plays', color: '#4CAF50' },
+              grid: { drawOnChartArea: true, color: '#2a3b4d' }, // Main grid for plays
+              ticks: { color: '#4CAF50' }
             },
-          } as any,
-        });
+            yUpvotesComments: {
+              ...(baseOptions.scales?.y as object),
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: { display: true, text: 'Upvotes / Comments', color: '#FFC107' },
+              grid: { drawOnChartArea: false }, // No grid for this axis to avoid clutter
+              ticks: { color: '#FFC107'}
+            },
+          },
+        } as any;
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.datasets = datasets;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: datasets,
+            },
+            options: chartOptions,
+          });
+        }
       }
+    } else if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+      chartInstanceRef.current = null;
     }
+  }, [history, song.title]);
+
+  // ⚡ Bolt: Clean up the chart only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
       }
     };
-  }, [history, song.title]);
+  }, []);
 
   const daysSinceCreation = Math.max(0, Math.floor((new Date().getTime() - new Date(song.created_at).getTime()) / (1000 * 60 * 60 * 24)));
   const firstPoint = history[0];
