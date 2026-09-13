@@ -91,19 +91,21 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
     }
     
     if (activeTableFilters) {
+      const activeFilterValueLower = activeTableFilters.value.toLowerCase();
+      const activeFilterValueInt = parseInt(activeTableFilters.value);
       processedSongs = processedSongs.filter(song => {
         if (activeTableFilters.type === 'tag') {
-          return song.metadata?.tags?.toLowerCase().includes(activeTableFilters.value.toLowerCase());
+          return song.metadata?.tags?.toLowerCase().includes(activeFilterValueLower);
         }
         if (activeTableFilters.type === 'genre') {
           const tagsString = song.metadata?.tags?.toLowerCase() || "";
-          return tagsString.includes(activeTableFilters.value.toLowerCase());
+          return tagsString.includes(activeFilterValueLower);
         }
         if (activeTableFilters.type === 'dayOfWeek') {
-          return new Date(song.created_at).getDay() === parseInt(activeTableFilters.value);
+          return new Date(song.created_at).getDay() === activeFilterValueInt;
         }
         if (activeTableFilters.type === 'hourOfDay') {
-          return new Date(song.created_at).getHours() === parseInt(activeTableFilters.value);
+          return new Date(song.created_at).getHours() === activeFilterValueInt;
         }
         return true;
       });

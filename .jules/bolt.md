@@ -45,3 +45,6 @@
 ## 2026-09-11 - Prevent Chart.js Recreation Overheads
 **Learning:** Creating and destroying Chart.js instances inside `useEffect` dependencies (like on window resize or data update) causes significant performance bottlenecks and canvas flashing in React. The codebase exhibits a pattern where static data is recalculated frequently instead of simply being passed back into the existing Chart.js instance for update.
 **Action:** Always prefer mutating `chartInstanceRef.current.data.datasets` and `chartInstanceRef.current.options`, followed by `chartInstanceRef.current.update('none')`. Move the `destroy()` call exclusively to an empty dependency array `useEffect` unmount cleanup function to eliminate layout jank and wasted CPU cycles.
+## 2024-05-18 - [Optimize table filtering loops]
+**Learning:** Extracting `toLowerCase()` and `parseInt()` from within a `.filter()` loop converts an O(N) operation to O(1), yielding measurable rendering performance wins for large song lists.
+**Action:** Always scan for invariant calculations inside array iteration functions (`map`, `filter`, `reduce`) in React hook dependencies and hoist them outside the loop.
