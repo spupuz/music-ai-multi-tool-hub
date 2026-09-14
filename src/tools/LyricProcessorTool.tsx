@@ -410,6 +410,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             onClick={handleLoadFromUrl} 
             disabled={isUrlLoading || !sunoUrlInput.trim()} 
+            title={!sunoUrlInput.trim() ? "Please enter a URL" : isUrlLoading ? "Loading in progress" : undefined}
             variant="primary" 
             size="md" 
             className="w-full sm:w-auto h-[42px] font-black uppercase tracking-widest text-[9px] px-8 shadow-green-500/10 shadow-xl flex items-center justify-center whitespace-nowrap"
@@ -483,8 +484,8 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <CheckboxField id="removeCurly" label="Strip { }" checked={removeCurlyBrackets} onChange={setRemoveCurlyBrackets} />
             </div>
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} variant="ghost" startIcon={<StatsIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-blue-500/20 text-blue-500">Count Syllables</Button>
-              <Button onClick={handleCleanLyrics} disabled={isLoading || !lyricsInput.trim()} variant="primary" startIcon={<SparklesIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px]" backgroundColor="#10b981">Clean & Header</Button>
+              <Button onClick={handleCountSyllables} disabled={isLoading || !lyricsInput.trim()} title={!lyricsInput.trim() ? "Please enter lyrics" : isLoading ? "Processing" : undefined} variant="ghost" startIcon={<StatsIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-blue-500/20 text-blue-500">Count Syllables</Button>
+              <Button onClick={handleCleanLyrics} disabled={isLoading || !lyricsInput.trim()} title={!lyricsInput.trim() ? "Please enter lyrics" : isLoading ? "Processing" : undefined} variant="primary" startIcon={<SparklesIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[10px]" backgroundColor="#10b981">Clean & Header</Button>
             </div>
           </div>
 
@@ -507,7 +508,7 @@ const LyricProcessorTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               </div>
             )}
 
-            <Button onClick={handleReplaceAll} disabled={isLoading || !findText} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
+            <Button onClick={handleReplaceAll} disabled={isLoading || !findText} title={!findText ? "Please enter text to find" : isLoading ? "Processing" : undefined} variant="ghost" startIcon={<RefreshIcon className="w-4 h-4" />} className="w-full font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-purple-500/20 text-purple-500">Execute Replacement</Button>
             {replaceMessage && <p className="text-[10px] font-black uppercase tracking-widest text-center mt-2 text-emerald-500 animate-fadeIn">{replaceMessage}</p>}
           </div>
         </div>

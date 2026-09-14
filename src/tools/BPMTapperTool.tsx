@@ -356,6 +356,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <Button 
                   onClick={handleLoadFromUrl} 
                   disabled={!finderUrlInput.trim() || finderState === 'loading' || finderState === 'analyzing'} 
+                  title={(!finderUrlInput.trim() ? "Please enter a URL" : (finderState === 'loading' || finderState === 'analyzing') ? "Analysis in progress" : undefined)}
                   variant="primary"
                   startIcon={<LinkIcon className="w-4 h-4 ml-0.5" />}
                   className="px-8 font-black uppercase tracking-widest"
