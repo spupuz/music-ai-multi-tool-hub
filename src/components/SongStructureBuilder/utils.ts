@@ -26,7 +26,13 @@ export const getContrastingTextColor = (hex: string): string => {
 };
 
 export const escapeCsvField = (field: string): string => {
-    const str = String(field || '');
+    let str = String(field || '');
+
+    // Prevent CSV Formula Injection by prepending a single quote to fields starting with =, +, -, or @
+    if (/^[=+\-@]/.test(str)) {
+        str = "'" + str;
+    }
+
     if (str.includes(',') || str.includes('"') || str.includes('\n')) {
         return `"${str.replace(/"/g, '""')}"`;
     }
