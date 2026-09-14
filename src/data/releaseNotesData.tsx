@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.15",
+    content: (
+      <section id="version-2.7.15">
+        <SectionTitle>Version 2.7.15 - 2026-09-14</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SongStructureBuilder CSV Export</STRONG>: <CODE>escapeCsvField</CODE> now sanitizes CSV fields starting with <CODE>=</CODE>, <CODE>+</CODE>, <CODE>-</CODE>, or <CODE>@</CODE> by prepending a single quote — preventing CSV Formula (Macro) Injection when exported files are opened in spreadsheet software like Excel or Google Sheets.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.14",
     content: (
       <section id="version-2.7.14">

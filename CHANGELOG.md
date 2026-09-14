@@ -1,3 +1,8 @@
+## [2.7.15] - 2026-09-14
+
+### Security
+- **SongStructureBuilder CSV Export**: `escapeCsvField` now sanitizes CSV fields starting with `=`, `+`, `-`, or `@` by prepending a single quote — preventing CSV Formula (Macro) Injection when exported files are opened in spreadsheet software like Excel or Google Sheets.
+
 ## [2.7.14] - 2026-09-14
 
 ### Changed
