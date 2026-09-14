@@ -211,6 +211,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               <Button 
                 onClick={handlePlaySelection} 
                 disabled={selection.end <= selection.start} 
+                title={selection.end <= selection.start ? "Please select a valid time range" : undefined}
                 variant="primary"
                 size="md"
                 startIcon={<PlayIcon className="w-3.5 h-3.5 ml-0.5" />}
@@ -241,6 +242,12 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <Button
                   onClick={handleCropAndDownload}
                   disabled={!waveformReady || selection.end <= selection.start || isSelectionTooLong}
+                  title={
+                    !waveformReady ? "Waveform is not ready" :
+                    selection.end <= selection.start ? "Please select a valid time range" :
+                    isSelectionTooLong ? "Selection exceeds 50% legal limit" :
+                    undefined
+                  }
                   loading={isLoading}
                   variant="primary"
                   size="lg"
