@@ -48,3 +48,7 @@
 ## 2024-05-18 - [Optimize table filtering loops]
 **Learning:** Extracting `toLowerCase()` and `parseInt()` from within a `.filter()` loop converts an O(N) operation to O(1), yielding measurable rendering performance wins for large song lists.
 **Action:** Always scan for invariant calculations inside array iteration functions (`map`, `filter`, `reduce`) in React hook dependencies and hoist them outside the loop.
+
+## 2026-09-12 - [Chart.js Recreation Bottleneck for Secondary Charts]
+**Learning:** Just like the primary charts, the secondary distribution and trend charts (CommentCountDistribution, PlayCountDistribution, UpvoteCountDistribution, PlaylistCreationDate, TopCommentedSongs, SongTrend, and SongLifecycleChartModal) were tearing down the canvas context and rebuilding the chart on every update. This is a significant codebase-specific bottleneck.
+**Action:** Always prefer mutating `chartInstanceRef.current.data.datasets` and `chartInstanceRef.current.options`, followed by `chartInstanceRef.current.update('none')`. Move the `destroy()` call exclusively to an empty dependency array `useEffect` unmount cleanup function.

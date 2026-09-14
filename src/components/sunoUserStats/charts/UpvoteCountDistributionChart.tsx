@@ -23,9 +23,6 @@ const UpvoteCountDistributionChart: React.FC<UpvoteCountDistributionChartProps> 
 
   useEffect(() => {
     if (chartRef.current && chartLabels.length > 0 && chartDataValues.some((v: number) => v > 0)) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
@@ -38,34 +35,47 @@ const UpvoteCountDistributionChart: React.FC<UpvoteCountDistributionChartProps> 
         chartOptions.scales.x.title = { display: true, text: 'Upvote Count Buckets', color: fontColor, font: { size: 10 } };
         chartOptions.scales.y.title = { display: true, text: 'Number of Songs', color: fontColor, font: { size: 10 } };
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: chartLabels,
-            datasets: [{
-              label: 'Songs in Upvote Bracket',
-              data: chartDataValues,
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
-              borderWidth: 1,
-              barPercentage: 0.7,
-              categoryPercentage: 0.8,
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Songs in Upvote Bracket',
+          data: chartDataValues,
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8,
+        };
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = chartLabels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: chartLabels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [chartLabels, chartDataValues, barColor, fontColor, gridColor]);
+
+  // ⚡ Bolt: Clean up the chart only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [chartLabels, chartDataValues, barColor, fontColor, gridColor]);
+  }, []);
 
   if (!chartDataValues.some(v => v > 0)) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No upvote count distribution data available.</p>;

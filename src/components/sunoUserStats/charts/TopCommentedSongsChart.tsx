@@ -35,9 +35,6 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current && processedSongs.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartDataValues = processedSongs.map(song => song.comment_count || 0);
@@ -94,33 +91,47 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
             }
         };
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: processedSongs.map(song => song.title), 
-            datasets: [{
-              label: valueLabel,
-              data: chartDataValues,
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
-              borderWidth: 1,
-              ...datasetOptions
-            }]
-          },
-          options: chartOptions,
-        });
+        const labels = processedSongs.map(song => song.title);
+        const datasetConfig = {
+          label: valueLabel,
+          data: chartDataValues,
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          ...datasetOptions
+        };
+
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [processedSongs, valueLabel, barColor, fontColor, gridColor, topN]);
+
+  // ⚡ Bolt: Clean up the chart only when the component is unmounted
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [processedSongs, valueLabel, barColor, fontColor, gridColor, topN]);
+  }, []);
 
   if (!processedSongs || processedSongs.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No songs with comments to display.</p>;
