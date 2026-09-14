@@ -1,3 +1,10 @@
+## [2.7.13] - 2026-09-14
+
+### Changed
+- **Secondary Charts**: Secondary distribution and trend charts (`CommentCountDistribution`, `PlayCountDistribution`, `UpvoteCountDistribution`, `PlaylistCreationDate`, `TopCommentedSongs`, `SongTrend`, and `SongLifecycleChartModal`) now mutate their Chart.js data/options in place and call `update('none')` instead of destroying and recreating the canvas on every update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
+- **DetailedSongPerformanceTable**: Table filtering now hoists invariant calculations (`toLowerCase()`, `parseInt()`) out of the `.filter()` loop instead of recomputing them per song — reducing redundant work for large song lists.
+- **MP3CutterTool**: "Play Selection" and "Crop & Download" buttons now display dynamic `title` tooltips explaining exactly why they are disabled (no valid time range, waveform not ready, or selection over the 50% legal limit).
+
 ## [2.7.12] - 2026-09-11
 
 ### Changed

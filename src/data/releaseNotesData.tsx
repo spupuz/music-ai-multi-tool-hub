@@ -8,6 +8,20 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.13",
+    content: (
+      <section id="version-2.7.13">
+        <SectionTitle>Version 2.7.13 - 2026-09-14</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Secondary Charts</STRONG>: Secondary distribution and trend charts (<CODE>CommentCountDistribution</CODE>, <CODE>PlayCountDistribution</CODE>, <CODE>UpvoteCountDistribution</CODE>, <CODE>PlaylistCreationDate</CODE>, <CODE>TopCommentedSongs</CODE>, <CODE>SongTrend</CODE>, and <CODE>SongLifecycleChartModal</CODE>) now mutate their Chart.js data/options in place and call <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.</LI>
+          <LI><STRONG>DetailedSongPerformanceTable</STRONG>: Table filtering now hoists invariant calculations (<CODE>toLowerCase()</CODE>, <CODE>parseInt()</CODE>) out of the <CODE>.filter()</CODE> loop instead of recomputing them per song — reducing redundant work for large song lists.</LI>
+          <LI><STRONG>MP3CutterTool</STRONG>: "Play Selection" and "Crop & Download" buttons now display dynamic <CODE>title</CODE> tooltips explaining exactly why they are disabled (no valid time range, waveform not ready, or selection over the 50% legal limit).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.12",
     content: (
       <section id="version-2.7.12">
