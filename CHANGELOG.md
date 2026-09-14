@@ -1,3 +1,8 @@
+## [2.7.14] - 2026-09-14
+
+### Changed
+- **BPMTapperTool / LyricProcessorTool**: Disabled tool buttons now display dynamic `title` tooltips explaining exactly why they are blocked (missing input or operation in progress).
+
 ## [2.7.13] - 2026-09-14
 
 ### Changed

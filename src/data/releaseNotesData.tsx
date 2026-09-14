@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.14",
+    content: (
+      <section id="version-2.7.14">
+        <SectionTitle>Version 2.7.14 - 2026-09-14</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>BPMTapperTool / LyricProcessorTool</STRONG>: Disabled tool buttons now display dynamic <CODE>title</CODE> tooltips explaining exactly why they are blocked (missing input or operation in progress).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.13",
     content: (
       <section id="version-2.7.13">
