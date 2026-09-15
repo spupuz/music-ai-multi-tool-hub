@@ -1,3 +1,4 @@
+import { sanitizeUrlForHref } from '@/utils/urlUtils';
 import React from 'react';
 import { SongCardInterface } from '@/types';
 import { getAdjustedTextColor, lightenDarkenColor } from '@/utils/imageUtils';
@@ -46,7 +47,7 @@ export const DeckFocusView: React.FC<DeckFocusViewProps> = (props) => {
                 <p className="text-lg md:text-xl text-center mb-6 opacity-80 font-bold" style={{ color: String(props.effectiveCardTextColor), fontFamily: props.cardTextFont }}>by {props.card.artistName}</p>
                 
                 <div className="relative group perspective-1000 mb-6">
-                    <a href={props.card.webLink || '#'} target="_blank" rel="noopener noreferrer" className="block">
+                    <a href={sanitizeUrlForHref(props.card.webLink) || '#'} target="_blank" rel="noopener noreferrer" className="block">
                         <img 
                             src={props.card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
                             alt={`${props.card.title} cover`} 
@@ -65,7 +66,7 @@ export const DeckFocusView: React.FC<DeckFocusViewProps> = (props) => {
                 )}
                 
                 {props.card.webLink && ( 
-                    <a href={props.card.webLink} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase tracking-widest underline hover:opacity-75 mb-6 block" style={{ color: String(props.effectiveCardTextColor), fontFamily: props.cardTextFont }}>
+                    <a href={sanitizeUrlForHref(props.card.webLink)} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase tracking-widest underline hover:opacity-75 mb-6 block" style={{ color: String(props.effectiveCardTextColor), fontFamily: props.cardTextFont }}>
                         LISTEN ON SOURCE ↗
                     </a> 
                 )}

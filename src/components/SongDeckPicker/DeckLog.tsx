@@ -1,3 +1,4 @@
+import { sanitizeUrlForHref } from '@/utils/urlUtils';
 import React from 'react';
 import InputField from '@/components/forms/InputField';
 import Button from '@/components/common/Button';
@@ -100,7 +101,7 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                             <p className="text-sm opacity-80" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.artistName}</p>
                                             <p className="text-[10px] mt-1 opacity-60" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>Logged: {new Date(log.timestamp).toLocaleString()}</p>
                                             {log.comment && <p className="italic text-xs mt-2 p-1.5 rounded bg-black/10 dark:bg-white/10 break-words" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.comment}</p>}
-                                            {log.webLink && <a href={log.webLink} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-75 text-[10px] mt-2 inline-block font-bold" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>SOURCE LINK ↗</a>}
+                                            {log.webLink && <a href={sanitizeUrlForHref(log.webLink)} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-75 text-[10px] mt-2 inline-block font-bold" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>SOURCE LINK ↗</a>}
                                         </div>
                                     </div>
                                 ))}
@@ -148,7 +149,7 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                             <div className="flex-grow min-w-0">
                                                 <p className="font-bold text-xs truncate" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.title}</p>
                                                 <p className="opacity-70 truncate text-[10px]" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>{log.artistName}</p>
-                                                {log.webLink && <a href={log.webLink} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-75 text-[10px] font-bold mt-1 inline-block" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>LINK ↗</a>}
+                                                {log.webLink && <a href={sanitizeUrlForHref(log.webLink)} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-75 text-[10px] font-bold mt-1 inline-block" style={{ color: String(getAdjustedTextColor(log.color || props.cardBackgroundColor, props.cardTextColor)), fontFamily: props.cardTextFont }}>LINK ↗</a>}
                                             </div>
                                         </div>
                                     ))}
