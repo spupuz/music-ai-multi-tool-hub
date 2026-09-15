@@ -7,8 +7,38 @@ import { AddCustomItemModal, ManageCustomItemsModal, ImportConfirmationModal, Ca
 import Spinner from '@/components/Spinner';
 import Button from '@/components/common/Button';
 import { SunoPromptIcon, CopyIcon, StarEmptyIcon, StarFilledIcon, NoteIcon, PlusCircleIcon, TagIcon, UserIcon } from './RandomMusicStyleGenerator.icons';
-import type { SavedStyleEntry } from '@/types';
+import type { SavedStyleEntry, GeneratedStyleParts, LockedCategoriesState, OptionalCategoryToggleState, MultiSelectItemCategoryKey, IntensityLevel } from '@/types';
 
+const RenderSavedItemActions = React.memo<{
+  item: SavedStyleEntry;
+  itemType: 'history' | 'favorite';
+  handleLoadSavedStyle: (entry: SavedStyleEntry) => void;
+  handleToggleFavorite: (style: GeneratedStyleParts, locks: LockedCategoriesState, toggles: OptionalCategoryToggleState, intensity: Partial<Record<MultiSelectItemCategoryKey, IntensityLevel>>) => void;
+  isFavorite: (id: string) => boolean;
+  setEditingNoteForId: (id: string | null) => void;
+}>(({ item, itemType, handleLoadSavedStyle, handleToggleFavorite, isFavorite, setEditingNoteForId }) => {
+  const styleToUse = item.style;
+  const locksToUse = item.lockedCategories;
+  const optionalTogglesToUse = item.optionalCategoryToggles;
+  const intensityToUse = item.categoryIntensity;
+
+  return (
+    <div className="flex gap-2 mt-3">
+      <Button onClick={() => handleLoadSavedStyle(item)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-500">Load</Button>
+      {itemType === 'history' && (
+        <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className={`text-[9px] font-black uppercase tracking-widest px-3 border-gray-200 dark:border-white/10 ${isFavorite(styleToUse.id) ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 'bg-white dark:bg-white/5 text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
+          {isFavorite(styleToUse.id) ? 'Unfav' : 'Fav'}
+        </Button>
+      )}
+      {itemType === 'favorite' && (
+        <>
+          <Button onClick={() => setEditingNoteForId(styleToUse.id)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"><NoteIcon className="w-3 h-3 mr-1" /> Note</Button>
+          <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all">Delete</Button>
+        </>
+      )}
+    </div>
+  );
+});
 
 const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => {
   const {
@@ -76,31 +106,6 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
   useEffect(() => {
     // Initial generation call from the hook will be handled internally if needed
   }, [currentStyle, handleFullGenerate]);
-
-
-  const RenderSavedItemActions: React.FC<{ item: SavedStyleEntry, itemType: 'history' | 'favorite' }> = ({ item, itemType }) => {
-    const styleToUse = item.style;
-    const locksToUse = item.lockedCategories;
-    const optionalTogglesToUse = item.optionalCategoryToggles;
-    const intensityToUse = item.categoryIntensity;
-
-    return (
-      <div className="flex gap-2 mt-3">
-        <Button onClick={() => handleLoadSavedStyle(item)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-500">Load</Button>
-        {itemType === 'history' && (
-          <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className={`text-[9px] font-black uppercase tracking-widest px-3 border-gray-200 dark:border-white/10 ${isFavorite(styleToUse.id) ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 'bg-white dark:bg-white/5 text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
-            {isFavorite(styleToUse.id) ? 'Unfav' : 'Fav'}
-          </Button>
-        )}
-        {itemType === 'favorite' && (
-          <>
-            <Button onClick={() => setEditingNoteForId(styleToUse.id)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center"><NoteIcon className="w-3 h-3 mr-1" /> Note</Button>
-            <Button onClick={() => handleToggleFavorite(styleToUse, locksToUse, optionalTogglesToUse, intensityToUse)} variant="ghost" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all">Delete</Button>
-          </>
-        )}
-      </div>
-    );
-  };
 
 
 
@@ -264,7 +269,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                     {history.map(hEntry => (
                       <div key={hEntry.style.id} className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-gray-200 dark:border-white/5 group transition-all hover:bg-gray-100 dark:hover:bg-white-[0.07] hover:border-gray-200 dark:hover:border-white/10">
                         <p className="text-gray-400 text-[11px] font-bold break-words line-clamp-2 leading-relaxed" title={formatStyleForDisplay(hEntry.style)}>{formatStyleForSuno(hEntry.style)}</p>
-                        <RenderSavedItemActions item={hEntry} itemType="history" />
+                        <RenderSavedItemActions item={hEntry} itemType="history" handleLoadSavedStyle={handleLoadSavedStyle} handleToggleFavorite={handleToggleFavorite} isFavorite={isFavorite} setEditingNoteForId={setEditingNoteForId} />
                       </div>
                     ))}
                   </div>
@@ -299,7 +304,7 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
                             <Button onClick={() => handleSaveNote(fEntry.style.id)} variant="primary" size="xs" className="text-[9px] font-black uppercase tracking-widest px-3 py-2 h-auto bg-emerald-500 text-black">Commit</Button>
                           </div>
                         ) : (fEntry.note && <p className="text-[9px] text-emerald-500 font-bold italic my-3 p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/10 break-words cursor-pointer hover:bg-emerald-500/20 transition-all" onClick={() => setEditingNoteForId(fEntry.style.id)}>{fEntry.note}</p>)}
-                        <RenderSavedItemActions item={fEntry} itemType="favorite" />
+                        <RenderSavedItemActions item={fEntry} itemType="favorite" handleLoadSavedStyle={handleLoadSavedStyle} handleToggleFavorite={handleToggleFavorite} isFavorite={isFavorite} setEditingNoteForId={setEditingNoteForId} />
                       </div>
                     ))}
                   </div>
@@ -313,4 +318,4 @@ const RandomMusicStyleGenerator: React.FC<ToolProps> = ({ trackLocalEvent }) => 
   );
 };
 
-export default RandomMusicStyleGenerator;
+export default React.memo(RandomMusicStyleGenerator);
