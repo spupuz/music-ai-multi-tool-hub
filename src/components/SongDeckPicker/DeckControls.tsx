@@ -92,6 +92,7 @@ export const DeckControls: React.FC<DeckControlsProps> = ({
                     onClick={buildDeck} 
                     loading={isLoading} 
                     disabled={isPickingRandomCard}
+                    title={isPickingRandomCard ? "Cannot build deck while randomly picking a card" : undefined}
                     backgroundColor={toolAccentColor}
                     textColor={getAdjustedTextColorForContrast(toolAccentColor, toolTextColor)}
                     startIcon={<PlusCircleIcon className="w-5 h-5" />}
@@ -103,6 +104,7 @@ export const DeckControls: React.FC<DeckControlsProps> = ({
                     onClick={handleApplyBonuses} 
                     loading={isLoading}
                     disabled={isPickingRandomCard || !rawBonusArtistsInput.trim()}
+                    title={isPickingRandomCard ? "Cannot apply bonuses while randomly picking a card" : !rawBonusArtistsInput.trim() ? "Please enter bonus artists" : undefined}
                     backgroundColor={toolAccentColor}
                     textColor={getAdjustedTextColorForContrast(toolAccentColor, toolTextColor)}
                     startIcon={<PlusCircleIcon className="w-5 h-5" />}
