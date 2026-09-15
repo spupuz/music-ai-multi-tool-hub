@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.16",
+    content: (
+      <section id="version-2.7.16">
+        <SectionTitle>Version 2.7.16 - 2026-09-15</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SongDeckPicker XSS</STRONG>: User-provided URLs (imported CSV cards, deck log links) are now passed through <CODE>sanitizeUrlForHref</CODE>, which enforces a strict <CODE>http:</CODE>/<CODE>https:</CODE>/<CODE>mailto:</CODE> protocol whitelist — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>RandomMusicStyleGenerator</STRONG>: <CODE>RenderSavedItemActions</CODE> was extracted from the parent render body to module scope and wrapped in <CODE>React.memo</CODE> (along with the main component) — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.</LI>
+          <LI><STRONG>SongDeckPicker (DeckControls)</STRONG>: Disabled "Build Deck" and "Apply Bonuses" buttons now display <CODE>title</CODE> tooltips explaining exactly why they are blocked (random pick in progress or missing bonus artists).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.15",
     content: (
       <section id="version-2.7.15">

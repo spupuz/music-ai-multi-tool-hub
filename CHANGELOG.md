@@ -1,3 +1,12 @@
+## [2.7.16] - 2026-09-15
+
+### Security
+- **SongDeckPicker XSS**: User-provided URLs (imported CSV cards, deck log links) are now passed through `sanitizeUrlForHref`, which enforces a strict `http:`/`https:`/`mailto:` protocol whitelist — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
+
+### Changed
+- **RandomMusicStyleGenerator**: `RenderSavedItemActions` was extracted from the parent render body to module scope and wrapped in `React.memo` (along with the main component) — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.
+- **SongDeckPicker (DeckControls)**: Disabled "Build Deck" and "Apply Bonuses" buttons now display `title` tooltips explaining exactly why they are blocked (random pick in progress or missing bonus artists).
+
 ## [2.7.15] - 2026-09-14
 
 ### Security
