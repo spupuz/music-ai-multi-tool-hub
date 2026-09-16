@@ -75,6 +75,7 @@ export const DeckFocusView: React.FC<DeckFocusViewProps> = (props) => {
                     <Button 
                         onClick={props.logSelectedCard} 
                         disabled={props.loggedCardsLength >= props.maxLoggedSongsN} 
+                        title={props.loggedCardsLength >= props.maxLoggedSongsN ? "Cannot log card: Maximum number of logged songs reached" : undefined}
                         variant="primary"
                         size="lg"
                         className="font-black !px-12 !py-4 shadow-2xl transform hover:scale-105 active:scale-95"

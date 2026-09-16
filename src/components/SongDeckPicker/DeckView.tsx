@@ -122,6 +122,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                     <Button 
                         onClick={props.handlePrepareRevealRound} 
                         disabled={props.isLoading || props.isPickingRandomCard || props.unloggedDeckForDisplay.length === 0 || props.loggedCards.length >= props.maxLoggedSongsN} 
+                        title={(props.isLoading || props.isPickingRandomCard || props.unloggedDeckForDisplay.length === 0 || props.loggedCards.length >= props.maxLoggedSongsN) ? "Cannot prepare reveal round right now" : undefined}
                         variant="primary"
                         size="md"
                         startIcon={<EyeOpenIcon className="w-5 h-5" />}
@@ -137,6 +138,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                         <Button 
                             onClick={props.handleRevealNextCard} 
                             disabled={props.revealedInPoolCount >= props.currentRevealPool.length} 
+                            title={props.revealedInPoolCount >= props.currentRevealPool.length ? "All cards in the pool are already revealed" : undefined}
                             variant="warning"
                             size="md"
                             startIcon={<EyeOpenIcon className="w-5 h-5" />}
@@ -173,6 +175,7 @@ export const DeckView: React.FC<DeckViewProps> = (props) => {
                             <Button 
                                 onClick={props.handleLogRevealedCards} 
                                 disabled={props.loggedCards.length + props.currentRevealPool.length > props.maxLoggedSongsN} 
+                                title={(props.loggedCards.length + props.currentRevealPool.length > props.maxLoggedSongsN) ? "Cannot log cards: Exceeds max logged songs limit" : undefined}
                                 variant="primary"
                                 size="lg"
                                 startIcon={<HandRaisedIcon className="w-6 h-6" />}
