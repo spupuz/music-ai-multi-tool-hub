@@ -56,3 +56,6 @@
 ## $(date +%Y-%m-%d) - [Extracted Inline Component to fix anti-pattern]
 **Learning:** React components defined inside the render body of other components (like `RenderSavedItemActions` inside `RandomMusicStyleGenerator`) cause the child to be treated as a completely new component type on every parent render. This bypasses the reconciliation algorithm, leading to full unmounts and remounts, trashing state and destroying DOM performance.
 **Action:** Always verify components are not defined inline. Extract them to the module scope (or outside the parent), pass needed values as props, and apply `React.memo` for maximum performance benefit.
+## $(date +%Y-%m-%d) - [Chart.js Recreation Bottleneck for Top Engaging/Comment Rate Charts]
+**Learning:** Found two more charts (`TopSongsByCommentRateChart` and `TopEngagingSongsChart`) that were unnecessarily tearing down the Chart.js instance by calling `destroy()` and rebuilding it on every dependency change.
+**Action:** As with other Chart.js components, always prefer mutating `chartInstanceRef.current.data.datasets` and `chartInstanceRef.current.options`, followed by `chartInstanceRef.current.update('none')`. Move the `destroy()` call exclusively to an empty dependency array `useEffect` unmount cleanup function.
