@@ -11,6 +11,18 @@ interface TagPairPerformanceTableProps {
 type SortableTagPairColumn = 'tagPair' | 'songCount' | 'avgPlays' | 'avgUpvotes' | 'avgComments';
 type SortDirection = 'asc' | 'desc';
 
+const SortArrow = React.memo<{ column: SortableTagPairColumn, sortColumn: SortableTagPairColumn, sortDirection: SortDirection }>(({ column, sortColumn, sortDirection }) => {
+  const isAsc = sortColumn === column && sortDirection === 'asc';
+  const isDesc = sortColumn === column && sortDirection === 'desc';
+  return (
+    <span className="inline-flex flex-col shrink-0">
+      <svg className={`w-2 h-2 ${isAsc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
+      <svg className={`w-2 h-2 ${isDesc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
+    </span>
+  );
+});
+SortArrow.displayName = 'SortArrow';
+
 const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPairData, topN = 10 }) => {
   const [sortColumn, setSortColumn] = useState<SortableTagPairColumn>('songCount');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -41,17 +53,6 @@ const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPa
     }
   };
 
-  const SortArrow: React.FC<{ column: SortableTagPairColumn }> = ({ column }) => {
-    const isAsc = sortColumn === column && sortDirection === 'asc';
-    const isDesc = sortColumn === column && sortDirection === 'desc';
-    return (
-      <span className="inline-flex flex-col shrink-0">
-        <svg className={`w-2 h-2 ${isAsc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
-        <svg className={`w-2 h-2 ${isDesc ? 'text-blue-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
-      </span>
-    );
-  };
-  
   const thClasses = "px-2 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-white/10 transition-colors whitespace-nowrap";
 
   if (!tagPairData || tagPairData.length === 0) {
@@ -74,31 +75,31 @@ const TagPairPerformanceTable: React.FC<TagPairPerformanceTableProps> = ({ tagPa
               <th scope="col" className={thClasses} onClick={() => handleSort('tagPair')} aria-sort={sortColumn === 'tagPair' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
                 <div className="flex items-center gap-2 group/header">
                   <span className={sortColumn === 'tagPair' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Tag Pair</span>
-                  <SortArrow column="tagPair" />
+                  <SortArrow column="tagPair" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('songCount')} aria-sort={sortColumn === 'songCount' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'songCount' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Nodes</span>
-                  <SortArrow column="songCount" />
+                  <SortArrow column="songCount" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgPlays')} aria-sort={sortColumn === 'avgPlays' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgPlays' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Plays</span>
-                  <SortArrow column="avgPlays" />
+                  <SortArrow column="avgPlays" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgUpvotes')} aria-sort={sortColumn === 'avgUpvotes' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgUpvotes' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Upvotes</span>
-                  <SortArrow column="avgUpvotes" />
+                  <SortArrow column="avgUpvotes" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgComments')} aria-sort={sortColumn === 'avgComments' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgComments' ? 'text-blue-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Comments</span>
-                  <SortArrow column="avgComments" />
+                  <SortArrow column="avgComments" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
             </tr>

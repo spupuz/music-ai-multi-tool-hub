@@ -17,6 +17,18 @@ interface DetailedSongPerformanceTableProps {
 type SortableColumn = 'title' | 'plays' | 'upvotes' | 'comments' | 'created_at' | 'duration' | 'upvoteRate' | 'commentRate' | 'playsPerDay' | 'upvotesPerDay' | 'commentsPerDay' | 'playsDelta' | 'upvotesDelta' | 'commentsDelta';
 type SortDirection = 'asc' | 'desc';
 
+const SortArrow = React.memo<{ column: SortableColumn, sortColumn: SortableColumn, sortDirection: SortDirection }>(({ column, sortColumn, sortDirection }) => {
+  const isAsc = sortColumn === column && sortDirection === 'asc';
+  const isDesc = sortColumn === column && sortDirection === 'desc';
+  return (
+    <span className="inline-flex flex-col shrink-0">
+      <svg className={`w-2 h-2 ${isAsc ? 'text-emerald-400' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
+      <svg className={`w-2 h-2 ${isDesc ? 'text-emerald-400' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
+    </span>
+  );
+});
+SortArrow.displayName = 'SortArrow';
+
 interface SongPerformanceData extends SunoClip {
   upvoteRate: number | null;
   commentRate: number | null;
@@ -178,17 +190,6 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
     }
   };
 
-  const SortArrow: React.FC<{ column: SortableColumn }> = ({ column }) => {
-    const isAsc = sortColumn === column && sortDirection === 'asc';
-    const isDesc = sortColumn === column && sortDirection === 'desc';
-    return (
-      <span className="inline-flex flex-col shrink-0">
-        <svg className={`w-2 h-2 ${isAsc ? 'text-emerald-400' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
-        <svg className={`w-2 h-2 ${isDesc ? 'text-emerald-400' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
-      </span>
-    );
-  };
-
   const getActiveFilterText = () => {
     if (!activeTableFilters) return null;
     let typeLabel = activeTableFilters.type.replace(/([A-Z])/g, ' $1');
@@ -262,7 +263,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                   >
                     <div className="flex items-center gap-2 group/header">
                       <span className={sortColumn === col.id ? 'text-emerald-400' : 'group-hover/header:text-gray-300'}>{col.label}</span>
-                      <SortArrow column={col.id as SortableColumn} />
+                      <SortArrow column={col.id as SortableColumn} sortColumn={sortColumn} sortDirection={sortDirection} />
                     </div>
                   </th>
                 ))}

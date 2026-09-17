@@ -9,14 +9,26 @@ interface PerformanceTableProps<T extends { name: string; count: number; avgPlay
   topN?: number;
 }
 
+type SortableColumn = 'name' | 'count' | 'avgPlays' | 'avgUpvotes' | 'avgComments' | 'avgUpvoteRate' | 'avgCommentRate';
+
+const SortArrow = React.memo<{ column: SortableColumn, sortColumn: SortableColumn, sortDirection: 'asc' | 'desc' }>(({ column, sortColumn, sortDirection }) => {
+  const isAsc = sortColumn === column && sortDirection === 'asc';
+  const isDesc = sortColumn === column && sortDirection === 'desc';
+  return (
+    <span className="inline-flex flex-col shrink-0">
+      <svg className={`w-2 h-2 ${isAsc ? 'text-orange-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
+      <svg className={`w-2 h-2 ${isDesc ? 'text-orange-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
+    </span>
+  );
+});
+SortArrow.displayName = 'SortArrow';
+
 const PerformanceTable = <T extends { name: string; count: number; avgPlays: number; avgUpvotes: number; avgComments: number; avgUpvoteRate?: number; avgCommentRate?: number; }>({
   title,
   data,
   itemTypeLabel,
   topN = 10,
 }: PerformanceTableProps<T>) => {
-  
-  type SortableColumn = 'name' | 'count' | 'avgPlays' | 'avgUpvotes' | 'avgComments' | 'avgUpvoteRate' | 'avgCommentRate';
   const [sortColumn, setSortColumn] = useState<SortableColumn>('avgPlays');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
@@ -48,17 +60,6 @@ const PerformanceTable = <T extends { name: string; count: number; avgPlays: num
     }
   };
 
-  const SortArrow: React.FC<{ column: SortableColumn }> = ({ column }) => {
-    const isAsc = sortColumn === column && sortDirection === 'asc';
-    const isDesc = sortColumn === column && sortDirection === 'desc';
-    return (
-      <span className="inline-flex flex-col shrink-0">
-        <svg className={`w-2 h-2 ${isAsc ? 'text-orange-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 1 L7 6 H1 Z" /></svg>
-        <svg className={`w-2 h-2 ${isDesc ? 'text-orange-500' : 'opacity-40'}`} viewBox="0 0 8 8" fill="currentColor"><path d="M4 7 L7 2 H1 Z" /></svg>
-      </span>
-    );
-  };
-
   const thClasses = "px-2 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-white/10 transition-colors whitespace-nowrap";
 
   if (sortedData.length === 0) {
@@ -81,43 +82,43 @@ const PerformanceTable = <T extends { name: string; count: number; avgPlays: num
               <th scope="col" className={thClasses} onClick={() => handleSort('name')}>
                 <div className="flex items-center gap-2 group/header">
                   <span className={sortColumn === 'name' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>{itemTypeLabel}</span>
-                  <SortArrow column="name"/>
+                  <SortArrow column="name" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgPlays')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgPlays' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Plays</span>
-                  <SortArrow column="avgPlays"/>
+                  <SortArrow column="avgPlays" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgUpvotes')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgUpvotes' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Upvotes</span>
-                  <SortArrow column="avgUpvotes"/>
+                  <SortArrow column="avgUpvotes" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('avgComments')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgComments' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Comments</span>
-                  <SortArrow column="avgComments"/>
+                  <SortArrow column="avgComments" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right hidden lg:table-cell`} onClick={() => handleSort('avgUpvoteRate')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgUpvoteRate' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Upvotes%</span>
-                  <SortArrow column="avgUpvoteRate"/>
+                  <SortArrow column="avgUpvoteRate" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right hidden lg:table-cell`} onClick={() => handleSort('avgCommentRate')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'avgCommentRate' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Comments%</span>
-                  <SortArrow column="avgCommentRate"/>
+                  <SortArrow column="avgCommentRate" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
               <th scope="col" className={`${thClasses} text-right`} onClick={() => handleSort('count')}>
                 <div className="flex items-center justify-end gap-2 group/header">
                   <span className={sortColumn === 'count' ? 'text-orange-500' : 'group-hover/header:text-gray-700 dark:group-hover/header:text-gray-200'}>Nodes</span>
-                  <SortArrow column="count"/>
+                  <SortArrow column="count" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </div>
               </th>
             </tr>

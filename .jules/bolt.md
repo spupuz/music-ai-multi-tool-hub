@@ -56,3 +56,7 @@
 ## $(date +%Y-%m-%d) - [Extracted Inline Component to fix anti-pattern]
 **Learning:** React components defined inside the render body of other components (like `RenderSavedItemActions` inside `RandomMusicStyleGenerator`) cause the child to be treated as a completely new component type on every parent render. This bypasses the reconciliation algorithm, leading to full unmounts and remounts, trashing state and destroying DOM performance.
 **Action:** Always verify components are not defined inline. Extract them to the module scope (or outside the parent), pass needed values as props, and apply `React.memo` for maximum performance benefit.
+
+## 2026-09-17 - [Extracted Inline Component to fix anti-pattern]
+**Learning:** React components defined inside the render body of other components (like `SortArrow` inside `DetailedSongPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable`) cause the child to be treated as a completely new component type on every parent render. This bypasses the reconciliation algorithm, leading to full unmounts and remounts, trashing state and destroying DOM performance.
+**Action:** Always verify components are not defined inline. Extract them to the module scope (or outside the parent), pass needed values as props, and apply `React.memo` for maximum performance benefit.
