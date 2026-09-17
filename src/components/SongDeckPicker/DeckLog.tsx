@@ -62,6 +62,7 @@ export const DeckLog: React.FC<DeckLogProps> = (props) => {
                                         <Button 
                                             onClick={props.handleMoveLoggedToGroup} 
                                             disabled={props.loggedCards.length === 0} 
+                                            title={props.loggedCards.length === 0 ? "No logged songs to move" : undefined}
                                             variant="primary"
                                             size="sm"
                                             startIcon={<FolderPlusIcon className="w-5 h-5"/>}
