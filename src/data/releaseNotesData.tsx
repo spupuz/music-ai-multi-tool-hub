@@ -8,6 +8,20 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.17",
+    content: (
+      <section id="version-2.7.17">
+        <SectionTitle>Version 2.7.17 - 2026-09-17</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Stats Tables</STRONG>: The inline <CODE>SortArrow</CODE> sort-indicator component was extracted to module scope and wrapped in <CODE>React.memo</CODE> across <CODE>DetailedSongPerformanceTable</CODE>, <CODE>TagGenrePerformanceTables</CODE>, and <CODE>TagPairPerformanceTable</CODE> — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.</LI>
+          <LI><STRONG>TopEngagingSongsChart / TopSongsByCommentRateChart</STRONG>: Chart.js instances now mutate their data and options in place and call <CODE>update('none')</CODE> instead of destroying and recreating the canvas on each update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.</LI>
+          <LI><STRONG>SongCoverArt (PresetModals) / SongDeckPicker (DeckFocusView, DeckLog, DeckView)</STRONG>: Disabled buttons now display <CODE>title</CODE> tooltips explaining exactly why they are blocked (no presets to export, max logged songs reached, no logged songs to move, reveal pool exhausted, or deck limits exceeded).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.16",
     content: (
       <section id="version-2.7.16">

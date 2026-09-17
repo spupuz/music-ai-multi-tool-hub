@@ -1,3 +1,10 @@
+## [2.7.17] - 2026-09-17
+
+### Changed
+- **Stats Tables**: The inline `SortArrow` sort-indicator component was extracted to module scope and wrapped in `React.memo` across `DetailedSongPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable` — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.
+- **TopEngagingSongsChart / TopSongsByCommentRateChart**: Chart.js instances now mutate their data and options in place and call `update('none')` instead of destroying and recreating the canvas on each update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
+- **SongCoverArt (PresetModals) / SongDeckPicker (DeckFocusView, DeckLog, DeckView)**: Disabled buttons now display `title` tooltips explaining exactly why they are blocked (no presets to export, max logged songs reached, no logged songs to move, reveal pool exhausted, or deck limits exceeded).
+
 ## [2.7.16] - 2026-09-15
 
 ### Security
