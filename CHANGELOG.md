@@ -1,3 +1,8 @@
+## [2.7.18] - 2026-09-17
+
+### Security
+- **Suno href XSS**: External `suno_playlist_url`, `suno_creator_url`, and `suno_song_url` values in `InfoBoxes.tsx` and `SunoSongComplianceTool.tsx` are now passed through `sanitizeUrlForHref`, which enforces a strict `http:`/`https:`/`mailto:` protocol whitelist — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
+
 ## [2.7.17] - 2026-09-17
 
 ### Changed

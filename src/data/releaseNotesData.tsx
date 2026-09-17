@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.18",
+    content: (
+      <section id="version-2.7.18">
+        <SectionTitle>Version 2.7.18 - 2026-09-17</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno href XSS</STRONG>: External <CODE>suno_playlist_url</CODE>, <CODE>suno_creator_url</CODE>, and <CODE>suno_song_url</CODE> values in <CODE>InfoBoxes.tsx</CODE> and <CODE>SunoSongComplianceTool.tsx</CODE> are now passed through <CODE>sanitizeUrlForHref</CODE>, which enforces a strict <CODE>http:</CODE>/<CODE>https:</CODE>/<CODE>mailto:</CODE> protocol whitelist — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.17",
     content: (
       <section id="version-2.7.17">
