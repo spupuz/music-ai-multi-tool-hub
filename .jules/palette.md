@@ -7,3 +7,7 @@
 ## 2023-10-25 - Title on dynamic disabled buttons
 **Learning:** Disabled buttons without explanations cause friction because users don't know why they can't proceed. Binding a dynamic `title` attribute to the condition that disables the button provides immediate, accessible context.
 **Action:** Always provide a conditionally rendered `title` attribute to explain the specific reason a button is disabled.
+
+## 2024-05-24 - Add tooltips to dynamically disabled buttons
+**Learning:** Found multiple instances where buttons were disabled based on dynamic conditions (like array length) without explaining why to the user. This creates a confusing UX where users aren't sure how to enable the functionality.
+**Action:** Always pair `disabled={condition}` with a corresponding `title={condition ? "Explanation" : undefined}` to ensure users understand why an action is unavailable.

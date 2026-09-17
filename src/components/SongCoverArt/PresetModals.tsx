@@ -95,7 +95,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-600 dark:text-purple-500 mb-8 text-center">Backup</h3>
             
             <div className="space-y-6">
-              <Button onClick={handleExportPresets} disabled={savedArtStylePresets.length === 0} variant="primary" size="sm" className="w-full font-black uppercase tracking-widest text-[9px] py-4 rounded-2xl shadow-purple-500/10" backgroundColor="#8b5cf6">
+              <Button onClick={handleExportPresets} disabled={savedArtStylePresets.length === 0} title={savedArtStylePresets.length === 0 ? "No saved presets available to backup" : undefined} variant="primary" size="sm" className="w-full font-black uppercase tracking-widest text-[9px] py-4 rounded-2xl shadow-purple-500/10" backgroundColor="#8b5cf6">
                 <div className="flex items-center justify-center gap-2"><ExportIcon /> Backup Presets to Disk</div>
               </Button>
               
