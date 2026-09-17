@@ -41,9 +41,6 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
@@ -107,33 +104,48 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
             }
         };
 
-        chartInstanceRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: processedData.map(d => d.song.title),
-            datasets: [{
-              label: 'Upvote Rate',
-              data: processedData.map(d => d.upvoteRate || 0),
-              backgroundColor: barColor,
-              borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
-              borderWidth: 1,
-              ...datasetOptions
-            }]
-          },
-          options: chartOptions,
-        });
+        const datasetConfig = {
+          label: 'Upvote Rate',
+          data: processedData.map(d => d.upvoteRate || 0),
+          backgroundColor: barColor,
+          borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
+          borderWidth: 1,
+          ...datasetOptions
+        };
+        const chartLabels = processedData.map(d => d.song.title);
+
+        // ⚡ Bolt: Mutate data in-place and use update('none') instead of destroying and recreating the chart instance on every render/resize
+        if (chartInstanceRef.current) {
+          chartInstanceRef.current.data.labels = chartLabels;
+          chartInstanceRef.current.data.datasets[0] = datasetConfig;
+          chartInstanceRef.current.options = chartOptions;
+          chartInstanceRef.current.update('none');
+        } else {
+          chartInstanceRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: chartLabels,
+              datasets: [datasetConfig]
+            },
+            options: chartOptions,
+          });
+        }
       }
     } else if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
+  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth]);
+
+  // ⚡ Bolt: Separate cleanup to run strictly on unmount
+  useEffect(() => {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
       }
     };
-  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth]);
+  }, []);
 
   if (!processedData || processedData.length === 0) {
     return <p className="text-center text-gray-500 text-sm italic py-4">No song data meets criteria for upvote rate chart.</p>;
