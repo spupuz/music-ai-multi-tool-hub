@@ -11,6 +11,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import Button from '@/components/common/Button';
 import { ComplianceCheckIcon, SaveIcon, LoadIcon, DownloadIcon, RefreshIcon, LyricsIcon } from '@/components/Icons';
 import { downloadSunoComplianceResultsAsCsv } from '@/services/csvExportService';
+import { sanitizeUrlForHref } from '@/utils/urlUtils';
 import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffusionService';
 import { safeSetItem } from '@/services/safeStorage';
 
@@ -530,8 +531,8 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                         )} 
                         <div className="flex-1 text-center sm:text-left min-w-0">
                           <h3 className="text-xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-400 truncate" title={result.clipData.title}>{result.clipData.title || "UNTITLED_SIGNAL"}</h3>
-                          <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mt-1">by <a href={result.clipData.suno_creator_url} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">{result.clipData.display_name || `@${result.clipData.handle}` || "ANONYMOUS_ENTITY"}</a></p>
-                          <a href={result.clipData.suno_song_url} target="_blank" rel="noopener noreferrer" className="text-[8px] font-black uppercase tracking-[0.2em] text-emerald-500 hover:text-emerald-400 mt-2 inline-block">SOURCE_LINK</a>
+                          <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mt-1">by <a href={sanitizeUrlForHref(result.clipData.suno_creator_url)} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">{result.clipData.display_name || `@${result.clipData.handle}` || "ANONYMOUS_ENTITY"}</a></p>
+                          <a href={sanitizeUrlForHref(result.clipData.suno_song_url)} target="_blank" rel="noopener noreferrer" className="text-[8px] font-black uppercase tracking-[0.2em] text-emerald-500 hover:text-emerald-400 mt-2 inline-block">SOURCE_LINK</a>
                         </div>
                       </div>
                     </div>

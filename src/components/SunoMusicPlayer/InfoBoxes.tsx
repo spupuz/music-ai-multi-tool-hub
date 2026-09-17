@@ -1,5 +1,6 @@
 import React from 'react';
 import type { SunoProfileDetail, SunoPlaylistDetail } from '@/types';
+import { sanitizeUrlForHref } from '@/utils/urlUtils';
 import { TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, FollowersIcon, ClipsIcon, PlaylistIcon } from './Icons';
 
 const AVATAR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="#1f2937" rx="64"/><circle cx="64" cy="64" r="32" fill="#374151"/><path d="M58 48v28c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V48l20-4v18c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c2 0 4 1 5 2V44l-16 4z" fill="#10b981"/></svg>';
@@ -90,11 +91,11 @@ export const PlaylistInfoBox: React.FC<{ detail: SunoPlaylistDetail }> = ({ deta
       </div> 
       <div className="flex-1 text-center md:text-left min-w-0 z-10"> 
         <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white uppercase tracking-tighter leading-none mb-1 truncate" title={detail.name || 'Untitled Playlist'}> 
-          <a href={detail.suno_playlist_url} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors"> {detail.name || 'Untitled Playlist'} </a> 
+          <a href={sanitizeUrlForHref(detail.suno_playlist_url)} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors"> {detail.name || 'Untitled Playlist'} </a>
         </h2> 
         {detail.creator_handle && detail.creator_display_name && (
           <p className="text-lg font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 mb-4 opacity-80 truncate" title={`Created by @${detail.creator_handle}`}> 
-            by <a href={detail.suno_creator_url} target="_blank" rel="noopener noreferrer" className="hover:underline"> {detail.creator_display_name} (@{detail.creator_handle}) </a> 
+            by <a href={sanitizeUrlForHref(detail.suno_creator_url)} target="_blank" rel="noopener noreferrer" className="hover:underline"> {detail.creator_display_name} (@{detail.creator_handle}) </a>
           </p>
         )} 
         {detail.description && <p className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-6 leading-relaxed max-w-2xl max-h-20 overflow-y-auto">{detail.description}</p>} 
