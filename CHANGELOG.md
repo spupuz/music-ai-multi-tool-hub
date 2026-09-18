@@ -1,3 +1,12 @@
+## [2.7.19] - 2026-09-18
+
+### Security
+- **UserStats & Player href XSS**: External `suno_song_url` and `suno_creator_url` values in `DetailedSongPerformanceTable`, `UserProfileCard`, the `TopEngagingSongs`/`TopSongs`/`TopCommentedSongs`/`TopSongsByCommentRate`/`SongTrend` charts, and `SunoMusicPlayerTool` are now passed through `sanitizeUrlForHref` — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
+
+### Changed
+- **SunoUserStats trend charts**: `CommentsTrendChart`, `PlaysTrendChart`, and `UpvotesTrendChart` now memoize their data transformations with `useMemo` before being passed to Chart.js — preventing redundant recalculations on every render; `DailySongCreationChart` does the same for its time-mapping of date points.
+- **InputField tooltips**: The info-tooltip icon in `InputField.tsx` is now keyboard accessible — the trigger carries `tabIndex={0}`, `role="button"`, and an `aria-label`, with the tooltip shown via `group-focus:opacity-100` alongside `group-hover`.
+
 ## [2.7.18] - 2026-09-17
 
 ### Security

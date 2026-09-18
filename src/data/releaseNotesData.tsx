@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.19",
+    content: (
+      <section id="version-2.7.19">
+        <SectionTitle>Version 2.7.19 - 2026-09-18</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>UserStats & Player href XSS</STRONG>: External <CODE>suno_song_url</CODE> and <CODE>suno_creator_url</CODE> values in <CODE>DetailedSongPerformanceTable</CODE>, <CODE>UserProfileCard</CODE>, the <CODE>TopEngagingSongs</CODE>/<CODE>TopSongs</CODE>/<CODE>TopCommentedSongs</CODE>/<CODE>TopSongsByCommentRate</CODE>/<CODE>SongTrend</CODE> charts, and <CODE>SunoMusicPlayerTool</CODE> are now passed through <CODE>sanitizeUrlForHref</CODE> — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>SunoUserStats trend charts</STRONG>: <CODE>CommentsTrendChart</CODE>, <CODE>PlaysTrendChart</CODE>, and <CODE>UpvotesTrendChart</CODE> now memoize their data transformations with <CODE>useMemo</CODE> before being passed to Chart.js — preventing redundant recalculations on every render; <CODE>DailySongCreationChart</CODE> does the same for its time-mapping of date points.</LI>
+          <LI><STRONG>InputField tooltips</STRONG>: The info-tooltip icon in <CODE>InputField.tsx</CODE> is now keyboard accessible — the trigger carries <CODE>tabIndex={0}</CODE>, <CODE>role="button"</CODE>, and an <CODE>aria-label</CODE>, with the tooltip shown via <CODE>group-focus:opacity-100</CODE> alongside <CODE>group-hover</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.18",
     content: (
       <section id="version-2.7.18">
