@@ -7,3 +7,6 @@
 ## 2023-10-25 - Title on dynamic disabled buttons
 **Learning:** Disabled buttons without explanations cause friction because users don't know why they can't proceed. Binding a dynamic `title` attribute to the condition that disables the button provides immediate, accessible context.
 **Action:** Always provide a conditionally rendered `title` attribute to explain the specific reason a button is disabled.
+## 2025-03-01 - [Keyboard Accessible Tooltips in Tailwind]
+**Learning:** Custom CSS-based tooltips built with Tailwind `group-hover` are inherently inaccessible to keyboard users unless explicitly managed. Simply wrapping an SVG in a `div` is not enough.
+**Action:** Always wrap tooltip triggers in a focusable container (`tabIndex={0}`, `role="button"`, and a descriptive `aria-label`). Apply the `group` class to this container, and add `group-focus:opacity-100` alongside `group-hover` on the actual tooltip element so it becomes visible on keyboard focus.
