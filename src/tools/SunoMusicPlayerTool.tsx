@@ -17,6 +17,7 @@ import { safeSetItem, safeGetItem } from '@/services/safeStorage';
 import { PlayCountIcon, UpvoteCountIcon, CommentCountIcon, ClipsIcon, FollowersIcon, TotalPlaysIcon, TotalUpvotesIcon, TotalCommentsProfileIcon, PlaylistIcon, CsvExportIcon, FileTxtIcon, FileCsvIcon, TrashIcon, SaveIcon, LoadIcon, RefreshIcon, PlaylistRemoveIcon, LyricsPlayerIcon, InfoPlayerIcon, SharePlayerIcon, KeyboardIcon, AppendIcon, ChevronDownIcon, PlayIcon, PauseIcon, SkipBackIcon, SkipForwardIcon, ShuffleIcon } from '@/components/Icons';
 import KeyboardShortcutsModal from '@/components/SunoMusicPlayer/KeyboardShortcutsModal';
 import { ProfileInfoBox, PlaylistInfoBox } from '@/components/SunoMusicPlayer/InfoBoxes';
+import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
 
 const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -591,7 +592,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <div className="mb-8 p-4 sm:p-8 glass-card border-gray-200 dark:border-white/10 shadow-2xl animate-fadeIn relative overflow-hidden group transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.3)]">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
-            <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 group/img">
+            <a href={sanitizeUrlForHref(playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`)} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 group/img">
               <div className="relative">
                 <img
                   src={playerState.currentSong.image_url || FALLBACK_IMAGE_DATA_URI}
@@ -607,10 +608,10 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               </div>
             </a>
             <div className="flex-1 text-center sm:text-left min-w-0 space-y-3">
-              <a href={playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`} target="_blank" rel="noopener noreferrer" className="inline-block max-w-full">
+              <a href={sanitizeUrlForHref(playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`)} target="_blank" rel="noopener noreferrer" className="inline-block max-w-full">
                 <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white truncate uppercase tracking-tighter italic leading-tight" title={playerState.currentSong.title}>{playerState.currentSong.title}</h3>
               </a>
-              <a href={playerState.currentSong.suno_creator_url || `https://suno.com/@${playerState.currentSong.handle}`} target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 transition-opacity">
+              <a href={sanitizeUrlForHref(playerState.currentSong.suno_creator_url || `https://suno.com/@${playerState.currentSong.handle}`)} target="_blank" rel="noopener noreferrer" className="block opacity-60 hover:opacity-100 transition-opacity">
                 <p className="text-[11px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 truncate" title={playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}>by {playerState.currentSong.display_name || `@${playerState.currentSong.handle}`}</p>
               </a>
               <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 flex items-center justify-center sm:justify-start gap-6 pt-2"> 

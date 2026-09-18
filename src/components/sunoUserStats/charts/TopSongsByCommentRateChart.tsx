@@ -1,3 +1,4 @@
+import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
 import React, { useEffect, useRef } from 'react';
 import { Chart } from 'chart.js';
@@ -158,7 +159,7 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
         {processedData.map((item) => (
           <a
             key={`cover-comment-rate-${item.song.id}`}
-            href={item.song.suno_song_url || `https://suno.com/song/${item.song.id}`}
+            href={sanitizeUrlForHref(item.song.suno_song_url || `https://suno.com/song/${item.song.id}`)}
             target="_blank"
             rel="noopener noreferrer"
             title={`View ${item.song.title} on Suno. Comment Rate: ${item.commentRate?.toFixed(1)}%`}

@@ -1,3 +1,4 @@
+import { sanitizeUrlForHref } from "@/utils/urlUtils";
 import React from 'react';
 import type { SunoProfileDetail } from '@/types';
 
@@ -72,7 +73,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ profile }) => {
         </div>
         
         <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-6 truncate group-hover:text-emerald-500 transition-colors" title={`@${profile.handle}`}>
-          <a href={`https://suno.com/@${profile.handle}`} target="_blank" rel="noopener noreferrer" className="hover:line-through decoration-2">
+          <a href={sanitizeUrlForHref(`https://suno.com/@${profile.handle}`)} target="_blank" rel="noopener noreferrer" className="hover:line-through decoration-2">
             @{profile.handle}
           </a>
         </p>

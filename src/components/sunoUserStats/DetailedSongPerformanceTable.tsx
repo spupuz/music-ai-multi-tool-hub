@@ -1,3 +1,4 @@
+import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
 import React, { useState, useMemo } from 'react';
 import type { SunoClip } from '@/types';
@@ -274,7 +275,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
               {filteredAndSortedSongs.map((song) => (
                 <tr key={song.id} className="group hover:bg-gray-100 dark:hover:bg-white/5 transition-all duration-300">
                   <td className="sticky left-0 z-20 bg-[#0a0a0a] group-hover:bg-gray-900/40 px-4 sm:px-6 py-4 whitespace-nowrap border-r border-white/5">
-                    <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="block relative h-10 w-10 sm:h-12 sm:w-12 group/thumb">
+                    <a href={sanitizeUrlForHref(song.suno_song_url || `https://suno.com/song/${song.id}`)} target="_blank" rel="noopener noreferrer" className="block relative h-10 w-10 sm:h-12 sm:w-12 group/thumb">
                       <div className="absolute inset-0 bg-emerald-500/10 rounded-xl blur-sm opacity-0 group-hover/thumb:opacity-100 transition-opacity"></div>
                       <img loading="lazy" decoding="async" 
                         src={song.image_url || FALLBACK_IMAGE_DATA_URI} 
@@ -285,7 +286,7 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                   </td>
                   <td className="sticky left-12 sm:left-16 z-20 bg-[#0a0a0a] group-hover:bg-gray-900/40 px-4 py-4 whitespace-nowrap border-r border-white/10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                     <div className="flex flex-col max-w-[120px] sm:max-w-xs overflow-hidden">
-                      <a href={song.suno_song_url || `https://suno.com/song/${song.id}`} target="_blank" rel="noopener noreferrer" className="text-xs sm:text-sm font-semibold text-white truncate hover:text-emerald-400 transition-colors" title={song.title}>
+                      <a href={sanitizeUrlForHref(song.suno_song_url || `https://suno.com/song/${song.id}`)} target="_blank" rel="noopener noreferrer" className="text-xs sm:text-sm font-semibold text-white truncate hover:text-emerald-400 transition-colors" title={song.title}>
                         {song.title}
                       </a>
                       <span className="text-[10px] font-medium text-gray-400 truncate" title={song.handle}>@{song.handle}</span>
