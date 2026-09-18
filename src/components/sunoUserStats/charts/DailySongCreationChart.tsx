@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js'; // Import Chart from 'chart.js'
 import type { DailyCreationStat } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -29,6 +29,15 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // ⚡ Bolt: Memoize mapping to prevent unnecessary recalculations on re-renders
+  const chartDataPoints = useMemo(() => {
+    if (!data) return [];
+    return data.map(d => ({
+      x: new Date(d.date).getTime() + new Date(d.date).getTimezoneOffset() * 60000,
+      y: d.count
+    }));
+  }, [data]);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -67,10 +76,7 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
         
         const datasetConfig = {
           label: 'Songs Created',
-          data: data.map(d => ({
-            x: new Date(d.date).getTime() + new Date(d.date).getTimezoneOffset() * 60000,
-            y: d.count
-          })),
+          data: chartDataPoints,
           borderColor: lineColor,
           backgroundColor: lineColor + '33', // semi-transparent fill
           tension: 0.1,
@@ -98,7 +104,7 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
       chartInstanceRef.current.destroy();
       chartInstanceRef.current = null;
     }
-  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+  }, [chartDataPoints, lineColor, fontColor, gridColor, screenWidth]);
 
   useEffect(() => {
     return () => {

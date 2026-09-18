@@ -63,3 +63,6 @@
 ## $(date +%Y-%m-%d) - [Chart.js Recreation Bottleneck for Top Engaging/Comment Rate Charts]
 **Learning:** Found two more charts (`TopSongsByCommentRateChart` and `TopEngagingSongsChart`) that were unnecessarily tearing down the Chart.js instance by calling `destroy()` and rebuilding it on every dependency change.
 **Action:** As with other Chart.js components, always prefer mutating `chartInstanceRef.current.data.datasets` and `chartInstanceRef.current.options`, followed by `chartInstanceRef.current.update('none')`. Move the `destroy()` call exclusively to an empty dependency array `useEffect` unmount cleanup function.
+## 2026-09-18 - [Chart Data Transformation Memoization Bug]
+**Learning:** When memoizing chart configurations derived from props using `useMemo`, blindly adding property derivatives like `data.length` to a `useEffect` dependency array alongside the memoized `chartConfig` can lead to a `TypeError` if `data` can be undefined or null. `chartConfig` already properly reflects changes to `data`, making the length dependency redundant and unsafe.
+**Action:** When migrating transformations to `useMemo`, ensure the extracted object is the sole dependency in subsequent `useEffect` blocks when replacing the original raw props, and verify that safe navigation (e.g., `data?.length`) is used if length must absolutely be tracked.
