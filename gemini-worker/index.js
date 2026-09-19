@@ -202,6 +202,18 @@ export default {
 
         // ── GET /stats ─────────────────────────────────────────────────────────────
         if (request.method === 'GET' && url.pathname === '/stats') {
+            const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+            const rateLimitKeyStats = `ratelimit:stats:${ip}`;
+
+            if (env.STATS_KV) {
+                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyStats) || '0', 10);
+                if (attempts >= 30) {
+                    return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+                        { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+                }
+                await env.STATS_KV.put(rateLimitKeyStats, (attempts + 1).toString(), { expirationTtl: 60 });
+            }
+
             if (!env.STATS_KV) {
                 return new Response(JSON.stringify({ error: 'STATS_KV not bound' }), { status: 500, headers: cors });
             }
@@ -252,9 +264,20 @@ export default {
 
         // ── /telemetry endpoint ────────────────────────────────────────────────────
         if (url.pathname === '/telemetry') {
+            const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+            const rateLimitKeyTelemetry = `ratelimit:telemetry:${ip}`;
+
+            if (env.STATS_KV) {
+                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyTelemetry) || '0', 10);
+                if (attempts >= 120) {
+                    return new Response(JSON.stringify({ error: 'Too many requests.' }),
+                        { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+                }
+                await env.STATS_KV.put(rateLimitKeyTelemetry, (attempts + 1).toString(), { expirationTtl: 60 });
+            }
+
             if (!env.STATS_KV) return new Response('KV Missing', { status: 500, headers: cors });
             
-            const ip = request.headers.get('cf-connecting-ip') || 'unknown';
             const country = request.headers.get('cf-ipcountry') || 'XX';
             const date = new Date().toISOString().split('T')[0];
             
