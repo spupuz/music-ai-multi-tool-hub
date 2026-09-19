@@ -61,7 +61,9 @@ export const useDeckPersistence = ({
     const handleSaveTheme = useCallback(() => {
         setErrorSaveTheme(null);
         if (!newThemeName.trim()) { setErrorSaveTheme("Theme name cannot be empty."); return; }
-        if (savedDeckThemes.some(t => t.name.toLowerCase() === newThemeName.trim().toLowerCase())) {
+        // ⚡ Bolt: Extract invariant .toLowerCase() outside of filter loop to prevent O(N) redundant calculations
+        const lowerNewThemeName = newThemeName.trim().toLowerCase();
+        if (savedDeckThemes.some(t => t.name.toLowerCase() === lowerNewThemeName)) {
             setErrorSaveTheme("A theme with this name already exists."); return;
         }
         

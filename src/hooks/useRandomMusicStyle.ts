@@ -375,7 +375,9 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
   const handleSaveCustomItem = () => {
     if (customItemCategory && customItemValue.trim()) {
       const trimmedValue = customItemValue.trim();
-      if (customItems[customItemCategory].some(item => item.toLowerCase() === trimmedValue.toLowerCase())) {
+      // ⚡ Bolt: Extract invariant .toLowerCase() outside of filter loop to prevent O(N) redundant calculations
+      const lowerTrimmedValue = trimmedValue.toLowerCase();
+      if (customItems[customItemCategory].some(item => item.toLowerCase() === lowerTrimmedValue)) {
         alert("This item already exists in your custom list for this category."); return;
       }
       setCustomItems(prev => ({ ...prev, [customItemCategory]: [...prev[customItemCategory], trimmedValue] }));

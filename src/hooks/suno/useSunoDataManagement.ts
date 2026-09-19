@@ -353,7 +353,9 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       content: contentToSave,
       createdAt: new Date().toISOString()
     };
-    setSavedCustomPlaylists(prev => [newSavedPlaylist, ...prev.filter(p => p.name.toLowerCase() !== name.trim().toLowerCase())]);
+    // ⚡ Bolt: Extract invariant .toLowerCase() outside of filter loop to prevent O(N) redundant calculations
+    const lowerName = name.trim().toLowerCase();
+    setSavedCustomPlaylists(prev => [newSavedPlaylist, ...prev.filter(p => p.name.toLowerCase() !== lowerName)]);
     setDataManagementStatus(`Playlist "${name.trim()}" saved locally!`);
     trackLocalEvent(TOOL_CATEGORY_PLAYER, 'playlistSavedLocally', name.trim());
     setTimeout(() => setDataManagementStatus(''), 3000);
