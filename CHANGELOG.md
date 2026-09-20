@@ -1,3 +1,11 @@
+## [2.7.20] - 2026-09-20
+
+### Security
+- **Worker rate limiting**: The `/stats` and `/telemetry` endpoints in `gemini-worker/index.js` now enforce IP-based rate limits via TTL-bound `STATS_KV` entries (30 req/min for `/stats`, 120 req/min for `/telemetry`), returning `429` with `Retry-After` to prevent KV quota exhaustion (Denial-of-Wallet) and telemetry spam.
+
+### Changed
+- **Loop-invariant optimizations**: Redundant `toLowerCase()` calls were hoisted out of `some()`/`filter()` loops in `useDeckPersistence`, `useSunoDataManagement`, and `useRandomMusicStyle` — eliminating O(N) repeated string allocations during duplicate-name checks.
+
 ## [2.7.19] - 2026-09-18
 
 ### Security

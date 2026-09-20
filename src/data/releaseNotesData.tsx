@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.20",
+    content: (
+      <section id="version-2.7.20">
+        <SectionTitle>Version 2.7.20 - 2026-09-20</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Worker rate limiting</STRONG>: The <CODE>/stats</CODE> and <CODE>/telemetry</CODE> endpoints in <CODE>gemini-worker/index.js</CODE> now enforce IP-based rate limits via TTL-bound <CODE>STATS_KV</CODE> entries (30 req/min for <CODE>/stats</CODE>, 120 req/min for <CODE>/telemetry</CODE>), returning <CODE>429</CODE> with <CODE>Retry-After</CODE> to prevent KV quota exhaustion (Denial-of-Wallet) and telemetry spam.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Loop-invariant optimizations</STRONG>: Redundant <CODE>toLowerCase()</CODE> calls were hoisted out of <CODE>some()</CODE>/<CODE>filter()</CODE> loops in <CODE>useDeckPersistence</CODE>, <CODE>useSunoDataManagement</CODE>, and <CODE>useRandomMusicStyle</CODE> — eliminating O(N) repeated string allocations during duplicate-name checks.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.19",
     content: (
       <section id="version-2.7.19">
