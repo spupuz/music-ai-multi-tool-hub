@@ -1,6 +1,6 @@
 import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { SongEngagementData } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -34,11 +34,14 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
   }, []);
 
   // Filter for valid items and sort, then slice
-  const processedData = React.useMemo(() => {
+  const processedData = useMemo(() => {
     const validData = data.filter(item => item && item.song && typeof item.upvoteRate === 'number');
     return validData.sort((a, b) => (b.upvoteRate || 0) - (a.upvoteRate || 0)).slice(0, topNValue);
   }, [data, topNValue]);
 
+  // ⚡ Bolt: Memoize mapped data
+  const chartLabels = useMemo(() => processedData.map(d => d.song.title), [processedData]);
+  const chartDataValues = useMemo(() => processedData.map(d => d.upvoteRate || 0), [processedData]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
@@ -107,13 +110,12 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
 
         const datasetConfig = {
           label: 'Upvote Rate',
-          data: processedData.map(d => d.upvoteRate || 0),
+          data: chartDataValues,
           backgroundColor: barColor,
           borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
           borderWidth: 1,
           ...datasetOptions
         };
-        const chartLabels = processedData.map(d => d.song.title);
 
         // ⚡ Bolt: Mutate data in-place and use update('none') instead of destroying and recreating the chart instance on every render/resize
         if (chartInstanceRef.current) {
@@ -136,7 +138,7 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth]);
+  }, [processedData, barColor, fontColor, gridColor, topNValue, screenWidth, chartLabels, chartDataValues]);
 
   // ⚡ Bolt: Separate cleanup to run strictly on unmount
   useEffect(() => {

@@ -66,3 +66,11 @@
 ## 2026-09-18 - [Chart Data Transformation Memoization Bug]
 **Learning:** When memoizing chart configurations derived from props using `useMemo`, blindly adding property derivatives like `data.length` to a `useEffect` dependency array alongside the memoized `chartConfig` can lead to a `TypeError` if `data` can be undefined or null. `chartConfig` already properly reflects changes to `data`, making the length dependency redundant and unsafe.
 **Action:** When migrating transformations to `useMemo`, ensure the extracted object is the sole dependency in subsequent `useEffect` blocks when replacing the original raw props, and verify that safe navigation (e.g., `data?.length`) is used if length must absolutely be tracked.
+
+## 2026-09-19 - [Redundant Chart Data Calculation]
+**Learning:** Found multiple chart components where array mappings and object iteration (`Object.keys`, `Object.values`, `.map()`) were placed directly in the function body without `useMemo`. This resulted in O(n) array mapping operations running on every re-render (e.g. when `screenWidth` changes due to window resize).
+**Action:** Extract expensive data transformations into a `useMemo` block that only recalculates when the source data changes, rather than running redundantly on every render. Ensure that generated `labels` and `chartDataValues` arrays are memoized so the chart update logic isn't triggered needlessly.
+
+## 2026-09-19 - [Redundant Chart Data Calculation]
+**Learning:** Found multiple chart components where array mappings and object iteration (`Object.keys`, `Object.values`, `.map()`) were placed directly in the function body without `useMemo`. This resulted in O(n) array mapping operations running on every re-render (e.g. when `screenWidth` changes due to window resize).
+**Action:** Extract expensive data transformations into a `useMemo` block that only recalculates when the source data changes, rather than running redundantly on every render. Ensure that generated `labels` and `chartDataValues` arrays are memoized at the top level of the component and added to the update `useEffect` dependency array, so the chart update logic isn't triggered needlessly and React hooks rules are respected.

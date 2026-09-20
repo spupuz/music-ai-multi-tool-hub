@@ -18,8 +18,8 @@ const UpvoteCountDistributionChart: React.FC<UpvoteCountDistributionChartProps> 
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
 
-  const chartLabels = Object.keys(data);
-  const chartDataValues = Object.values(data) as number[];
+  const chartLabels = React.useMemo(() => Object.keys(data), [data]);
+  const chartDataValues = React.useMemo(() => Object.values(data) as number[], [data]);
 
   useEffect(() => {
     if (chartRef.current && chartLabels.length > 0 && chartDataValues.some((v: number) => v > 0)) {

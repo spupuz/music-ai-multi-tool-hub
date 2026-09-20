@@ -1,6 +1,6 @@
 import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { SunoClip } from '@/types';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -29,16 +29,19 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
   const chartInstanceRef = useRef<Chart | null>(null);
 
   // Filter for valid song objects before processing
-  const processedSongs = React.useMemo(() => {
+  const processedSongs = useMemo(() => {
     const validSongs = songs.filter(s => s && typeof s === 'object');
     return validSongs.filter(s => (s.comment_count || 0) > 0).sort((a,b) => (b.comment_count || 0) - (a.comment_count || 0)).slice(0, topN);
   }, [songs, topN]);
+
+  // ⚡ Bolt: Memoize mapped data
+  const chartDataValues = useMemo(() => processedSongs.map(song => song.comment_count || 0), [processedSongs]);
+  const chartLabels = useMemo(() => processedSongs.map(song => song.title), [processedSongs]);
 
   useEffect(() => {
     if (chartRef.current && processedSongs.length > 0) {
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
-        const chartDataValues = processedSongs.map(song => song.comment_count || 0);
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
             const values = context.chart.data.datasets[0].data as number[];
             if (!values || values.length === 0) return 5;
@@ -92,7 +95,6 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
             }
         };
 
-        const labels = processedSongs.map(song => song.title);
         const datasetConfig = {
           label: valueLabel,
           data: chartDataValues,
@@ -103,7 +105,7 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
         };
 
         if (chartInstanceRef.current) {
-          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.labels = chartLabels;
           chartInstanceRef.current.data.datasets[0] = datasetConfig;
           chartInstanceRef.current.options = chartOptions;
           chartInstanceRef.current.update('none');
@@ -111,7 +113,7 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
           chartInstanceRef.current = new Chart(ctx, {
             type: 'bar',
             data: {
-              labels: labels,
+              labels: chartLabels,
               datasets: [datasetConfig]
             },
             options: chartOptions,
@@ -122,7 +124,7 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-  }, [processedSongs, valueLabel, barColor, fontColor, gridColor, topN]);
+  }, [processedSongs, chartDataValues, chartLabels, valueLabel, barColor, fontColor, gridColor, topN]);
 
   // ⚡ Bolt: Clean up the chart only when the component is unmounted
   useEffect(() => {
