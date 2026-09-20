@@ -146,9 +146,9 @@ async function hash(text) {
 }
 
 async function incrementKV(kv, key) {
-    const current = await kv.get(key);
-    const val = parseInt(current || '0') + 1;
-    await kv.put(key, val.toString());
+    const val = await kv.get(key);
+    const current = parseInt(val || '0', 10);
+    await kv.put(key, (current + 1).toString());
 }
 
 /**
@@ -162,6 +162,36 @@ function timingSafeEqual(a, b) {
         result |= a.charCodeAt(i) ^ b.charCodeAt(i);
     }
     return result === 0;
+}
+
+/**
+ * Handles sliding window rate limiting state
+ */
+async function getRateLimitState(kv, key, windowMs) {
+    const rawVal = await kv.get(key);
+    const now = Date.now();
+    let state = { attempts: 0, windowStart: now };
+
+    if (rawVal) {
+        try {
+            const parsed = JSON.parse(rawVal);
+            if (typeof parsed.attempts === 'number' && typeof parsed.windowStart === 'number') {
+                if (now - parsed.windowStart < windowMs) {
+                    state = parsed;
+                }
+            } else if (!isNaN(parseInt(rawVal))) {
+                // Legacy number format
+                state.attempts = parseInt(rawVal, 10);
+            }
+        } catch (e) {
+            // Not JSON, probably legacy number format
+            if (!isNaN(parseInt(rawVal))) {
+                state.attempts = parseInt(rawVal, 10);
+            }
+        }
+    }
+
+    return state;
 }
 
 export default {
@@ -181,12 +211,19 @@ export default {
             const rateLimitKeySuno = `ratelimit:suno:${ip}`;
 
             if (env.STATS_KV) {
-                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeySuno) || '0', 10);
-                if (attempts >= 60) {
+                const windowDuration = 60; // seconds
+                const windowMs = windowDuration * 1000;
+                let state = await getRateLimitState(env.STATS_KV, rateLimitKeySuno, windowMs);
+
+                if (state.attempts >= 60) {
                     return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
                         { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
                 }
-                await env.STATS_KV.put(rateLimitKeySuno, (attempts + 1).toString(), { expirationTtl: 60 });
+
+                state.attempts++;
+                // Cloudflare KV requires expirationTtl to be at least 60
+                const ttl = Math.max(60, windowDuration);
+                await env.STATS_KV.put(rateLimitKeySuno, JSON.stringify(state), { expirationTtl: ttl });
             }
 
             const isWeb = url.pathname === '/suno-web' || url.pathname.startsWith('/suno-web/');
@@ -288,11 +325,12 @@ export default {
         if (url.pathname === '/verify-password') {
             const ip = request.headers.get('cf-connecting-ip') || 'unknown';
             const rateLimitKey = `ratelimit:verify-password:${ip}`;
-            let attempts = 0;
+            let state = { attempts: 0, windowStart: Date.now() };
+            const windowDuration = 300; // seconds
 
             if (env.STATS_KV) {
-                attempts = parseInt(await env.STATS_KV.get(rateLimitKey) || '0', 10);
-                if (attempts >= 5) {
+                state = await getRateLimitState(env.STATS_KV, rateLimitKey, windowDuration * 1000);
+                if (state.attempts >= 5) {
                     return new Response(JSON.stringify({ valid: false, error: 'Too many attempts. Please try again later.' }),
                         { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '300' } });
                 }
@@ -307,8 +345,10 @@ export default {
 
             if (env.STATS_KV) {
                 if (!valid) {
-                    await env.STATS_KV.put(rateLimitKey, (attempts + 1).toString(), { expirationTtl: 300 });
-                } else if (attempts > 0) {
+                    state.attempts++;
+                    const ttl = Math.max(60, windowDuration);
+                    await env.STATS_KV.put(rateLimitKey, JSON.stringify(state), { expirationTtl: ttl });
+                } else if (state.attempts > 0) {
                     await env.STATS_KV.delete(rateLimitKey);
                 }
             }
@@ -322,12 +362,17 @@ export default {
         const rateLimitKeyGemini = `ratelimit:gemini:${ip}`;
 
         if (env.STATS_KV) {
-            const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyGemini) || '0', 10);
-            if (attempts >= 10) {
+            const windowDuration = 60; // seconds
+            let state = await getRateLimitState(env.STATS_KV, rateLimitKeyGemini, windowDuration * 1000);
+
+            if (state.attempts >= 10) {
                 return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
                     { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
             }
-            await env.STATS_KV.put(rateLimitKeyGemini, (attempts + 1).toString(), { expirationTtl: 60 });
+
+            state.attempts++;
+            const ttl = Math.max(60, windowDuration);
+            await env.STATS_KV.put(rateLimitKeyGemini, JSON.stringify(state), { expirationTtl: ttl });
         }
 
         if (!env.GEMINI_API_KEY) {
