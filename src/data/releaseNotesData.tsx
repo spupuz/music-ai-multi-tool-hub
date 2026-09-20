@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.21",
+    content: (
+      <section id="version-2.7.21">
+        <SectionTitle>Version 2.7.21 - 2026-09-21</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Worker rate-limit sliding window fix (HIGH)</STRONG>: <CODE>gemini-worker/index.js</CODE> now stores an <CODE>attempts</CODE> + <CODE>windowStart</CODE> state object in KV and enforces the window in application code instead of relying on per-write <CODE>expirationTtl</CODE>. Previously every increment extended the KV TTL from the current time, so slow continuous requests could trigger permanent 429 lockouts on <CODE>/suno</CODE>, <CODE>/verify-password</CODE>, and Gemini endpoints (with legacy numeric counters still read for backward compatibility).</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Chart memoization</STRONG>: <CODE>useMemo</CODE> now caches array/object data transformations in 10 SunoUserStats chart components (PlaylistCreationDate, SongLifecycle, SongTrend, TopCommented/TopEngaging, Plays/Upvotes distributions, scatter plots) — preventing redundant re-mapping on every render before Chart.js updates.</LI>
+          <LI><STRONG>Deck settings accessibility</STRONG>: All six native color picker inputs in <CODE>DeckSettings.tsx</CODE> now carry descriptive <CODE>aria-label</CODE>s for screen readers.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.20",
     content: (
       <section id="version-2.7.20">

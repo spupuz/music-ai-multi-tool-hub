@@ -1,3 +1,12 @@
+## [2.7.21] - 2026-09-21
+
+### Security
+- **Worker rate-limit sliding window fix (HIGH)**: `gemini-worker/index.js` now stores an `attempts` + `windowStart` state object in KV and enforces the window in application code instead of relying on per-write `expirationTtl`. Previously every increment extended the KV TTL from the current time, so slow continuous requests could trigger permanent 429 lockouts on `/suno`, `/verify-password`, and Gemini endpoints (with legacy numeric counters still read for backward compatibility).
+
+### Changed
+- **Chart memoization**: `useMemo` now caches array/object data transformations in 10 SunoUserStats chart components (PlaylistCreationDate, SongLifecycle, SongTrend, TopCommented/TopEngaging, Plays/Upvotes distributions, scatter plots) — preventing redundant re-mapping on every render before Chart.js updates.
+- **Deck settings accessibility**: All six native color picker inputs in `DeckSettings.tsx` now carry descriptive `aria-label`s for screen readers.
+
 ## [2.7.20] - 2026-09-20
 
 ### Security
