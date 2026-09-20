@@ -6,7 +6,7 @@ import { getBaseChartOptions } from '@/utils/chartUtils';
 
 interface PlaysUpvotesScatterPlotProps {
   songs: SunoClip[];
-  averageUpvoteRateOverall: number; // As a percentage, e.g., 10 for 10%
+  averageUpvoteRateOverall: number | null;
   fontColor?: string;
   gridColor?: string;
   pointColor?: string;
@@ -18,8 +18,8 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
   averageUpvoteRateOverall,
   fontColor = '#e5e7eb',
   gridColor = '#374151',
-  pointColor = '#3B82F6', // Blue-500
-  referenceLineColor = '#F59E0B', // Amber-500
+  pointColor = '#3B82F6', // Blue-500 for upvotes
+  referenceLineColor = '#10B981', // Emerald-500 for reference line
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart<'scatter'> | null>(null);
@@ -30,6 +30,9 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
     title: song.title,
     upvoteRate: song.play_count > 0 ? ((song.upvote_count || 0) / song.play_count) * 100 : 0,
   })), [songs]);
+
+  // ⚡ Bolt: Memoize maxPlays to avoid O(n) execution during render
+  const maxPlays = useMemo(() => Math.max(...chartData.map(d => d.x), 0), [chartData]);
 
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
@@ -62,7 +65,7 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
 
                   if (datasetLabel === 'Songs' && pointData) {
                     const upvoteRateDisplay = typeof pointData.upvoteRate === 'number'
-                      ? pointData.upvoteRate.toFixed(1) + '%'
+                      ? pointData.upvoteRate.toFixed(2) + '%'
                       : 'N/A';
                     return [
                       'Song: ' + (pointData.title || 'N/A'),
@@ -71,14 +74,14 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
                       'Upvote Rate: ' + upvoteRateDisplay,
                     ];
                   } else if (datasetLabel.startsWith('Avg. Upvote Rate') && pointData) {
-                    return datasetLabel + ': (Plays: ' + (pointData.x?.toLocaleString() ?? 'N/A') + 
-                           ', Est. Upvotes: ' + (pointData.y?.toFixed(0).toLocaleString() ?? 'N/A') + ')';
+                      return datasetLabel + ': (Plays: ' + (pointData.x?.toLocaleString() ?? 'N/A') +
+                             ', Est. Upvotes: ' + (pointData.y?.toFixed(0).toLocaleString() ?? 'N/A') + ')';
                   }
                   return datasetLabel + ': ' + (pointData.y?.toLocaleString() ?? 'N/A');
                 },
               },
             },
-            legend: {
+             legend: {
                  display: true, 
                  position: 'bottom',
                  labels: { color: fontColor }
@@ -94,7 +97,6 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
           pointHoverRadius: 7,
         }];
 
-        const maxPlays = Math.max(...chartData.map(d => d.x), 0);
         if (maxPlays > 0 && averageUpvoteRateOverall !== undefined && averageUpvoteRateOverall !== null) { // Added null check for safety
             datasets.push({
                 label: `Avg. Upvote Rate (${averageUpvoteRateOverall.toFixed(1)}%)`,
@@ -109,7 +111,6 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
             });
         }
 
-
         // ⚡ Bolt: Mutate data in-place and use update('none') instead of destroying and recreating the chart instance on every render/resize
         if (chartInstanceRef.current) {
           chartInstanceRef.current.data.datasets = datasets;
@@ -118,9 +119,7 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
         } else {
           chartInstanceRef.current = new Chart(ctx, {
             type: 'scatter',
-            data: {
-              datasets: datasets
-            },
+            data: { datasets },
             options: scatterOptions,
           });
         }
@@ -129,7 +128,7 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
       chartInstanceRef.current.destroy();
       chartInstanceRef.current = null;
     }
-  }, [chartData, averageUpvoteRateOverall, fontColor, gridColor, pointColor, referenceLineColor]);
+  }, [chartData, averageUpvoteRateOverall, fontColor, gridColor, pointColor, referenceLineColor, maxPlays]);
 
   // ⚡ Bolt: Cleanup the chart instance only when the component is unmounted
   useEffect(() => {

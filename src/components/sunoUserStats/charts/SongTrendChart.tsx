@@ -1,6 +1,6 @@
 import { sanitizeUrlForHref } from "@/utils/urlUtils";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { SongTrendData } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -29,8 +29,14 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
   const chartInstanceRef = useRef<Chart | null>(null);
 
   // Filter for valid items and sort, then slice
-  const validData = data.filter(item => item && item.song);
-  const processedData = validData.sort((a, b) => b.increase - a.increase).slice(0, topNValue);
+  const processedData = useMemo(() => {
+    const validData = data.filter(item => item && item.song);
+    return validData.sort((a, b) => b.increase - a.increase).slice(0, topNValue);
+  }, [data, topNValue]);
+
+  // ⚡ Bolt: Memoize mapped data
+  const chartLabels = useMemo(() => processedData.map(d => d.song.title), [processedData]);
+  const chartDataValues = useMemo(() => processedData.map(d => d.increase), [processedData]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
@@ -84,10 +90,9 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
             }
         };
 
-        const labels = processedData.map(d => d.song.title);
         const datasetConfig = {
           label: valueLabel,
-          data: processedData.map(d => d.increase),
+          data: chartDataValues,
           backgroundColor: barColor,
           borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
           borderWidth: 1,
@@ -95,7 +100,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
         };
 
         if (chartInstanceRef.current) {
-          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.labels = chartLabels;
           chartInstanceRef.current.data.datasets[0] = datasetConfig;
           chartInstanceRef.current.options = chartOptions;
           chartInstanceRef.current.update('none');
@@ -103,7 +108,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
           chartInstanceRef.current = new Chart(ctx, {
             type: 'bar',
             data: {
-              labels: labels,
+              labels: chartLabels,
               datasets: [datasetConfig]
             },
             options: chartOptions,
@@ -114,7 +119,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue]);
+  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue, chartLabels, chartDataValues]);
 
   // ⚡ Bolt: Clean up the chart only when the component is unmounted
   useEffect(() => {

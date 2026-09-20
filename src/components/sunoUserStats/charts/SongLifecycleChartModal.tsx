@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { SunoClip } from '@/types';
 import type { SongInteractionPoint } from '@/types/sunoUserStatsTypes';
@@ -15,17 +15,22 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
 
+  // ⚡ Bolt: Memoize mapped data
+  const chartLabels = useMemo(() => history.map(p => new Date(p.timestamp)), [history]);
+  const chartPlays = useMemo(() => history.map(p => p.plays), [history]);
+  const chartUpvotes = useMemo(() => history.map(p => p.upvotes), [history]);
+  const chartComments = useMemo(() => history.map(p => p.comment_count), [history]);
+
   useEffect(() => {
     if (chartRef.current && history.length > 0) {
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
         const baseOptions = getBaseChartOptions('#e5e7eb', '#374151');
 
-        const labels = history.map(p => new Date(p.timestamp));
         const datasets = [
           {
             label: 'Plays',
-            data: history.map(p => p.plays),
+            data: chartPlays,
             borderColor: '#4CAF50',
             backgroundColor: 'rgba(76, 175, 80, 0.2)',
             tension: 0.1,
@@ -34,7 +39,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
           },
           {
             label: 'Upvotes',
-            data: history.map(p => p.upvotes),
+            data: chartUpvotes,
             borderColor: '#2196F3',
             backgroundColor: 'rgba(33, 150, 243, 0.2)',
             tension: 0.1,
@@ -43,7 +48,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
           },
           {
             label: 'Comments',
-            data: history.map(p => p.comment_count),
+            data: chartComments,
             borderColor: '#FFC107',
             backgroundColor: 'rgba(255, 193, 7, 0.2)',
             tension: 0.1,
@@ -92,7 +97,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
         } as any;
 
         if (chartInstanceRef.current) {
-          chartInstanceRef.current.data.labels = labels;
+          chartInstanceRef.current.data.labels = chartLabels;
           chartInstanceRef.current.data.datasets = datasets;
           chartInstanceRef.current.options = chartOptions;
           chartInstanceRef.current.update('none');
@@ -100,7 +105,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
           chartInstanceRef.current = new Chart(ctx, {
             type: 'line',
             data: {
-              labels: labels,
+              labels: chartLabels,
               datasets: datasets,
             },
             options: chartOptions,
@@ -111,7 +116,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
       chartInstanceRef.current.destroy();
       chartInstanceRef.current = null;
     }
-  }, [history, song.title]);
+  }, [history, song.title, chartLabels, chartPlays, chartUpvotes, chartComments]);
 
   // ⚡ Bolt: Clean up the chart only when the component is unmounted
   useEffect(() => {

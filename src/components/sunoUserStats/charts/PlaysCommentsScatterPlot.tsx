@@ -31,6 +31,9 @@ const PlaysCommentsScatterPlot: React.FC<PlaysCommentsScatterPlotProps> = ({
     commentRate: song.play_count > 0 ? ((song.comment_count || 0) / song.play_count) * 100 : 0,
   })), [songs]);
 
+  // ⚡ Bolt: Memoize maxPlays to avoid O(n) execution during render
+  const maxPlays = useMemo(() => Math.max(...chartData.map(d => d.x), 0), [chartData]);
+
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
       const ctx = chartRef.current.getContext('2d');
@@ -94,7 +97,6 @@ const PlaysCommentsScatterPlot: React.FC<PlaysCommentsScatterPlotProps> = ({
           pointHoverRadius: 7,
         }];
 
-        const maxPlays = Math.max(...chartData.map(d => d.x), 0);
         if (maxPlays > 0 && averageCommentRateOverall !== null && averageCommentRateOverall !== undefined) {
             datasets.push({
                 label: `Avg. Comment Rate (${averageCommentRateOverall.toFixed(1)}%)`,
@@ -126,7 +128,7 @@ const PlaysCommentsScatterPlot: React.FC<PlaysCommentsScatterPlotProps> = ({
       chartInstanceRef.current.destroy();
       chartInstanceRef.current = null;
     }
-  }, [chartData, averageCommentRateOverall, fontColor, gridColor, pointColor, referenceLineColor]);
+  }, [chartData, averageCommentRateOverall, fontColor, gridColor, pointColor, referenceLineColor, maxPlays]);
 
   // ⚡ Bolt: Cleanup the chart instance only when the component is unmounted
   useEffect(() => {
