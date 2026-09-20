@@ -10,3 +10,6 @@
 ## 2025-03-01 - [Keyboard Accessible Tooltips in Tailwind]
 **Learning:** Custom CSS-based tooltips built with Tailwind `group-hover` are inherently inaccessible to keyboard users unless explicitly managed. Simply wrapping an SVG in a `div` is not enough.
 **Action:** Always wrap tooltip triggers in a focusable container (`tabIndex={0}`, `role="button"`, and a descriptive `aria-label`). Apply the `group` class to this container, and add `group-focus:opacity-100` alongside `group-hover` on the actual tooltip element so it becomes visible on keyboard focus.
+## 2026-09-20 - Color Inputs Need Explicit Labels
+**Learning:** React `<label>` elements that visually precede `<input>` elements but lack an `htmlFor` attribute matching the input's `id` do not provide an accessible name for screen readers. This is particularly problematic for native `<input type="color">` elements which have no inherent text content.
+**Action:** Always ensure inputs have an accessible name, either by strictly enforcing the `id`/`htmlFor` linkage with visual labels, or by providing a descriptive `aria-label` directly on the `<input>` when linkage is not possible or practical.
