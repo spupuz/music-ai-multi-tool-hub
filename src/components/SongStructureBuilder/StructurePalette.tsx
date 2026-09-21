@@ -53,6 +53,7 @@ const StructurePalette: React.FC<StructurePaletteProps> = ({
                                   onChange={(e) => onBlockColorChange(type, e.target.value)} 
                                   className="w-10 h-10 p-0 border-none rounded-lg cursor-pointer bg-transparent" 
                                   title={`Set color for ${type}`} 
+                                  aria-label={`Set color for ${type}`}
                               />
                             </div>
                         </div>
