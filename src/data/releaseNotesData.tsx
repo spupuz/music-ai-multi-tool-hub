@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.22",
+    content: (
+      <section id="version-2.7.22">
+        <SectionTitle>Version 2.7.22 - 2026-09-21</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Followers chart performance</STRONG>: The <CODE>FollowersTrendChart</CODE> component now memoizes its data transformations (value/label arrays and Y-axis padding calculation) with <CODE>useMemo</CODE>, avoiding redundant re-mapping on every render before the Chart.js redraw.</LI>
+          <LI><STRONG>Structure palette accessibility</STRONG>: The SongStructureBuilder color picker input now carries a descriptive <CODE>aria-label</CODE> for screen readers.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.21",
     content: (
       <section id="version-2.7.21">

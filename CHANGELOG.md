@@ -1,3 +1,9 @@
+## [2.7.22] - 2026-09-21
+
+### Changed
+- **Followers chart performance**: The `FollowersTrendChart` component now memoizes its data transformations (value/label arrays and Y-axis padding calculation) with `useMemo`, avoiding redundant re-mapping on every render before the Chart.js redraw.
+- **Structure palette accessibility**: The SongStructureBuilder color picker input now carries a descriptive `aria-label` for screen readers.
+
 ## [2.7.21] - 2026-09-21
 
 ### Security
