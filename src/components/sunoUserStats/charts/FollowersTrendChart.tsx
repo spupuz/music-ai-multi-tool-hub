@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Chart } from 'chart.js';
 import type { HistoricalDataPoint } from '@/types/sunoUserStatsTypes';
 import { getBaseChartOptions } from '@/utils/chartUtils';
@@ -26,37 +26,46 @@ const FollowersTrendChart: React.FC<FollowersTrendChartProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // ⚡ Bolt: Memoize chart data transformations to prevent re-calculations on every render
+  const chartConfig = useMemo(() => {
+    if (!data || data.length === 0) return null;
+
+    const values = data.map(d => d.value);
+    const labels = data.map(d => d.timestamp);
+    let yMinCalculated: number | undefined = undefined;
+    let yMaxCalculated: number | undefined = undefined;
+
+    if (values.length > 0) {
+      const minVal = Math.min(...values);
+      const maxVal = Math.max(...values);
+
+      if (values.length === 1) {
+        const padding = Math.max(2, Math.abs(minVal * 0.1) || 5);
+        yMinCalculated = Math.max(0, minVal - padding);
+        yMaxCalculated = maxVal + padding;
+        if (yMinCalculated >= yMaxCalculated) yMaxCalculated = yMinCalculated + 10;
+      } else {
+        const range = maxVal - minVal;
+        if (range === 0) {
+          const padding = Math.max(2, Math.abs(minVal * 0.05) || 5);
+          yMinCalculated = Math.max(0, minVal - padding);
+          yMaxCalculated = maxVal + padding;
+        } else {
+          const padding = Math.max(range * 0.1, 1);
+          yMinCalculated = Math.max(0, minVal - padding);
+          yMaxCalculated = maxVal + padding;
+        }
+      }
+    }
+
+    return { values, labels, yMinCalculated, yMaxCalculated };
+  }, [data]);
+
   useEffect(() => {
-    if (chartRef.current && data && data.length > 0) { 
+    if (chartRef.current && chartConfig) {
       const ctx = chartRef.current.getContext('2d');
       if (ctx) {
-        const values = data.map(d => d.value);
-        const labels = data.map(d => d.timestamp);
-        let yMinCalculated: number | undefined = undefined;
-        let yMaxCalculated: number | undefined = undefined;
-
-        if (values.length > 0) {
-          const minVal = Math.min(...values);
-          const maxVal = Math.max(...values);
-
-          if (values.length === 1) {
-            const padding = Math.max(2, Math.abs(minVal * 0.1) || 5);
-            yMinCalculated = Math.max(0, minVal - padding);
-            yMaxCalculated = maxVal + padding;
-            if (yMinCalculated >= yMaxCalculated) yMaxCalculated = yMinCalculated + 10;
-          } else {
-            const range = maxVal - minVal;
-            if (range === 0) {
-              const padding = Math.max(2, Math.abs(minVal * 0.05) || 5);
-              yMinCalculated = Math.max(0, minVal - padding);
-              yMaxCalculated = maxVal + padding;
-            } else {
-              const padding = Math.max(range * 0.1, 1);
-              yMinCalculated = Math.max(0, minVal - padding);
-              yMaxCalculated = maxVal + padding;
-            }
-          }
-        }
+        const { values, labels, yMinCalculated, yMaxCalculated } = chartConfig;
         
         const baseOptions = getBaseChartOptions(fontColor, gridColor);
         
@@ -129,7 +138,7 @@ const FollowersTrendChart: React.FC<FollowersTrendChartProps> = ({
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-  }, [data, lineColor, fontColor, gridColor, screenWidth]);
+  }, [chartConfig, data?.length, lineColor, fontColor, gridColor, screenWidth]);
 
   useEffect(() => {
     return () => {
