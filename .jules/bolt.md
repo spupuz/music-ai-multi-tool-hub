@@ -74,3 +74,7 @@
 ## 2026-09-19 - [Redundant Chart Data Calculation]
 **Learning:** Found multiple chart components where array mappings and object iteration (`Object.keys`, `Object.values`, `.map()`) were placed directly in the function body without `useMemo`. This resulted in O(n) array mapping operations running on every re-render (e.g. when `screenWidth` changes due to window resize).
 **Action:** Extract expensive data transformations into a `useMemo` block that only recalculates when the source data changes, rather than running redundantly on every render. Ensure that generated `labels` and `chartDataValues` arrays are memoized at the top level of the component and added to the update `useEffect` dependency array, so the chart update logic isn't triggered needlessly and React hooks rules are respected.
+
+## 2026-09-22 - [Redundant Math.max Calculation in SongTrendChart]
+**Learning:** O(n) array calculations wrapped in React functions (like `.map()` chained with `Math.max()`) placed directly in a `useEffect` function body without `useMemo` execute on every re-render and dependency update. This leads to redundant work that can slow down charts tracking frequently changing properties, like `screenWidth` from resize events.
+**Action:** Extract invariant mathematical reductions on large datasets (like `Math.max`) into a `useMemo` block that explicitly depends on the memoized dataset, preventing recalculations during unrelated renders while maintaining reactivity to the data.

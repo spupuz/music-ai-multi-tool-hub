@@ -38,6 +38,12 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
   const chartLabels = useMemo(() => processedData.map(d => d.song.title), [processedData]);
   const chartDataValues = useMemo(() => processedData.map(d => d.increase), [processedData]);
 
+  // ⚡ Bolt: Memoize max computation to avoid O(n) array mapping and iteration on every render
+  const suggestedMax = useMemo(() => {
+      const maxIncrease = Math.max(...chartDataValues, 0);
+      return maxIncrease + Math.ceil(maxIncrease * 0.05);
+  }, [chartDataValues]);
+
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {
       const ctx = chartRef.current.getContext('2d');
@@ -52,7 +58,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
         chartOptions.scales.x.ticks.minRotation = 30;
         
         chartOptions.scales.y.title = { display: true, text: valueLabel, color: fontColor, font: {size: 10} };
-        chartOptions.scales.y.suggestedMax = Math.max(...processedData.map(d => d.increase)) + Math.ceil(Math.max(...processedData.map(d => d.increase))*0.05);
+        chartOptions.scales.y.suggestedMax = suggestedMax;
         
         chartOptions.plugins.tooltip.callbacks = {
             title: function(tooltipItems: any[]) { // Typed tooltipItems
@@ -119,7 +125,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
         chartInstanceRef.current.destroy();
         chartInstanceRef.current = null;
     }
-  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue, chartLabels, chartDataValues]);
+  }, [processedData, valueLabel, barColor, fontColor, gridColor, topNValue, chartLabels, chartDataValues, suggestedMax]);
 
   // ⚡ Bolt: Clean up the chart only when the component is unmounted
   useEffect(() => {
