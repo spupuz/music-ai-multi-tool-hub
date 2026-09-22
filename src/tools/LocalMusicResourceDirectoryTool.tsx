@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import type { ToolProps } from '@/Layout';
 import Button from '@/components/common/Button';
 import ScrollReveal from '@/components/ScrollReveal';
+import { sanitizeUrlForHref } from '@/utils/urlUtils';
 import { 
   SearchIcon, 
   GlobeAltIcon, 
@@ -255,7 +256,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                 {category.items.map(item => (
                   <a
                     key={item.id}
-                    href={item.url}
+                    href={sanitizeUrlForHref(item.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackLocalEvent(TOOL_CATEGORY, 'resourceLinkClicked', item.title)}
