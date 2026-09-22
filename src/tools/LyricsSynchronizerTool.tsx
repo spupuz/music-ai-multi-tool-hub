@@ -374,7 +374,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
                 <div className="space-y-2">
                   <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Static Audio File</label>
-                  <div className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer relative">
+                  <div className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 focus-within:ring-2 focus-within:ring-emerald-500 transition-all cursor-pointer relative">
                     <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                     <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-emerald-500 transition-colors uppercase leading-relaxed">
                       {audioFileName ? audioFileName : 'Deploy MP3 Buffer'}

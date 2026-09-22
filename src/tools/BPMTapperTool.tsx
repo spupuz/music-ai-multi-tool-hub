@@ -377,7 +377,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             {/* File Upload Group */}
             <div>
               <label htmlFor="audioFile" className="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3 ml-1">Local Audio Import</label>
-              <div className="relative group">
+              <div className="relative group focus-within:ring-2 focus-within:ring-emerald-500 rounded-3xl">
                 <input 
                   type="file" 
                   id="audioFile" 

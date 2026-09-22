@@ -13,3 +13,6 @@
 ## 2026-09-20 - Color Inputs Need Explicit Labels
 **Learning:** React `<label>` elements that visually precede `<input>` elements but lack an `htmlFor` attribute matching the input's `id` do not provide an accessible name for screen readers. This is particularly problematic for native `<input type="color">` elements which have no inherent text content.
 **Action:** Always ensure inputs have an accessible name, either by strictly enforcing the `id`/`htmlFor` linkage with visual labels, or by providing a descriptive `aria-label` directly on the `<input>` when linkage is not possible or practical.
+## 2025-03-02 - Keyboard Accessible Custom File Uploads
+**Learning:** Custom file uploads that use `opacity-0` on a natively focusable `<input type="file">` are functional for keyboard users natively, but they lack a visible focus ring, creating a severe accessibility issue for sighted keyboard users. Replacing them with complex ARIA hacks on labels breaks native semantics.
+**Action:** When using an `opacity-0` file input positioned over a stylized container, always apply `focus-within:ring-2 focus-within:ring-emerald-500` (or similar) to the parent wrapper container. This allows the native input to receive focus in the background while the parent container visibly indicates the focus state.
