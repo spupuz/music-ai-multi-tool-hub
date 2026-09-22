@@ -1,3 +1,13 @@
+## [2.7.23] - 2026-09-22
+
+### Security
+- **Exposed proxy auth token removed (CRITICAL)**: The frontend bundle no longer reads `VITE_PROXY_AUTH_TOKEN` or sends an `X-Proxy-Auth` header. The insecure local `/proxy/` CORS proxy route was removed from `riffusionService.ts`, so the secret can no longer be baked into the static bundle. The Cloudflare Worker now exposes a secured `/proxy/*` endpoint (rate-limited, host-allowlisted, `X-Proxy-Auth` gated) for Flow Music/Riffusion domains.
+- **Resource directory href XSS (HIGH)**: `LocalMusicResourceDirectoryTool.tsx` now wraps each resource link URL in `sanitizeUrlForHref`, blocking `javascript:` / `data:` URI injection when binding `href` in JSX.
+
+### Changed
+- **Riffusion CORS proxy list**: Removed the dead local `/proxy/` entry and the token plumbing from `riffusionService.ts`; flow/riffusion fetches rely on the remaining public CORS proxies.
+- **Song trend chart performance**: `SongTrendChart.tsx` now memoizes the suggested Y-axis maximum computation with a `useMemo` that depends on the memoized chart data, preventing redundant `Math.max` array iterations on every render/resize.
+
 ## [2.7.22] - 2026-09-21
 
 ### Changed

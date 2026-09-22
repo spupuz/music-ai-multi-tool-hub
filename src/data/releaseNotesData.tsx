@@ -8,6 +8,24 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.23",
+    content: (
+      <section id="version-2.7.23">
+        <SectionTitle>Version 2.7.23 - 2026-09-22</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Exposed proxy auth token removed (CRITICAL)</STRONG>: The frontend bundle no longer reads <CODE>VITE_PROXY_AUTH_TOKEN</CODE> or sends an <CODE>X-Proxy-Auth</CODE> header. The insecure local <CODE>/proxy/</CODE> CORS proxy route was removed from <CODE>riffusionService.ts</CODE>, so the secret can no longer be baked into the static bundle. The Cloudflare Worker now exposes a secured <CODE>/proxy/*</CODE> endpoint (rate-limited, host-allowlisted, <CODE>X-Proxy-Auth</CODE> gated) for Flow Music/Riffusion domains.</LI>
+          <LI><STRONG>Resource directory href XSS (HIGH)</STRONG>: <CODE>LocalMusicResourceDirectoryTool.tsx</CODE> now wraps each resource link URL in <CODE>sanitizeUrlForHref</CODE>, blocking <CODE>javascript:</CODE> / <CODE>data:</CODE> URI injection when binding <CODE>href</CODE> in JSX.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Riffusion CORS proxy list</STRONG>: Removed the dead local <CODE>/proxy/</CODE> entry and the token plumbing from <CODE>riffusionService.ts</CODE>; flow/riffusion fetches rely on the remaining public CORS proxies.</LI>
+          <LI><STRONG>Song trend chart performance</STRONG>: <CODE>SongTrendChart.tsx</CODE> now memoizes the suggested Y-axis maximum computation with a <CODE>useMemo</CODE> that depends on the memoized chart data, preventing redundant <CODE>Math.max</CODE> array iterations on every render/resize.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.22",
     content: (
       <section id="version-2.7.22">

@@ -5,7 +5,6 @@ import { raceFetch, type ProxyAttempt } from './proxyUtils';
 
 // Extended list of CORS proxies to try
 const CORS_PROXIES = [
-    '/proxy/',
     'https://corsproxy.io/?',
     'https://api.allorigins.win/raw?url=',
     'https://thingproxy.freeboard.io/fetch/',
@@ -14,9 +13,6 @@ const CORS_PROXIES = [
     'https://cors.eu.org/',
     'https://yacdn.org/proxy/',
 ];
-
-// In production, this might be injected by the build process or a global config
-const PROXY_AUTH_TOKEN = import.meta.env.VITE_PROXY_AUTH_TOKEN;
 
 const RIFFUSION_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const CACHE_NAMESPACE_RIFFUSION = 'riffusion';
@@ -75,24 +71,14 @@ export function extractRiffusionSongId(url: string): string | null {
  * All proxies are raced in parallel; the first OK response wins.
  */
 async function fetchWithProxies(url: string, options: RequestInit = {}): Promise<Response | null> {
-    // Skip local proxy for Flow Music/Riffusion domains — these block server-side requests with 403.
-    // We rely on client-side public proxies (corsproxy.io, etc.) for these domains.
-    const isFlowLike = url.includes('flowmusic.app') || url.includes('producer.ai') || url.includes('riffusion.com');
-
-    const attempts: ProxyAttempt[] = CORS_PROXIES
-        .filter(proxy => !(proxy === '/proxy/' && isFlowLike))
-        .map(proxy => {
-            const isAllOrigins = proxy.includes('allorigins.win');
-            const targetUrl = isAllOrigins ? encodeURIComponent(url) : url;
-            const headers: Record<string, string> = {};
-            if (proxy === '/proxy/' && PROXY_AUTH_TOKEN) {
-                headers['X-Proxy-Auth'] = PROXY_AUTH_TOKEN;
-            }
-            return {
-                url: `${proxy}${targetUrl}`,
-                headers: Object.keys(headers).length > 0 ? headers : undefined,
-            };
-        });
+    const attempts: ProxyAttempt[] = CORS_PROXIES.map(proxy => {
+        const isAllOrigins = proxy.includes('allorigins.win');
+        const targetUrl = isAllOrigins ? encodeURIComponent(url) : url;
+        return {
+            url: `${proxy}${targetUrl}`,
+            headers: undefined,
+        };
+    });
 
     try {
         return await raceFetch(attempts, options, 10000);
