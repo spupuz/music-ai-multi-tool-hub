@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.24",
+    content: (
+      <section id="version-2.7.24">
+        <SectionTitle>Version 2.7.24 - 2026-09-22</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>File upload keyboard focus rings</STRONG>: The custom file upload dropzones in <CODE>BPMTapperTool</CODE> and <CODE>LyricsSynchronizerTool</CODE> now show a visible emerald focus ring on the parent container when the hidden file input receives focus, fixing WCAG focus visibility for sighted keyboard users without breaking native file input semantics or drag-and-drop.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.23",
     content: (
       <section id="version-2.7.23">

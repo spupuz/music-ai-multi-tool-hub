@@ -1,3 +1,8 @@
+## [2.7.24] - 2026-09-22
+
+### Changed
+- **File upload keyboard focus rings**: The custom file upload dropzones in `BPMTapperTool` and `LyricsSynchronizerTool` now show a visible emerald focus ring on the parent container when the hidden file input receives focus, fixing WCAG focus visibility for sighted keyboard users without breaking native file input semantics or drag-and-drop.
+
 ## [2.7.23] - 2026-09-22
 
 ### Security
