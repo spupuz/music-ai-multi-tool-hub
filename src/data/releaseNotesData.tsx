@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.26",
+    content: (
+      <section id="version-2.7.26">
+        <SectionTitle>Version 2.7.26 - 2026-09-23</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>About page performance</STRONG>: <CODE>AboutPage.tsx</CODE> now memoizes the category-based tool grouping with <CODE>useMemo</CODE>, preventing redundant <CODE>reduce</CODE> work on every re-render and matching the existing <CODE>Sidebar.tsx</CODE> pattern.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.25",
     content: (
       <section id="version-2.7.25">

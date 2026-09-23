@@ -1,3 +1,8 @@
+## [2.7.26] - 2026-09-23
+
+### Changed
+- **About page performance**: `AboutPage.tsx` now memoizes the category-based tool grouping with `useMemo`, preventing redundant `reduce` work on every re-render and matching the existing `Sidebar.tsx` pattern.
+
 ## [2.7.25] - 2026-09-23
 
 ### Security
