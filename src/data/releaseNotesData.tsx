@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.25",
+    content: (
+      <section id="version-2.7.25">
+        <SectionTitle>Version 2.7.25 - 2026-09-23</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Worker rate-limit sliding window fix (stats/telemetry endpoints)</STRONG>: Extended the HIGH-priority sliding-window fix from v2.7.21 to the rate-limit checks on <CODE>/stats</CODE> and <CODE>/telemetry</CODE> endpoints. Both now use the <CODE>getRateLimitState</CODE> helper to enforce proper time-window semantics instead of relying on KV TTL extension (preventing slow-drip attack lockouts).</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Timeline lyric reorder button tooltips</STRONG>: The move-up/move-down buttons for timeline lyrics in <CODE>SongStructureBuilder</CODE> now show context-aware tooltips when disabled (Cannot move up: Already at the top / Cannot move down: Already at the bottom), improving accessibility and UX.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.24",
     content: (
       <section id="version-2.7.24">

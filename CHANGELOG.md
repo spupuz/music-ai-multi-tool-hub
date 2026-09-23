@@ -1,3 +1,11 @@
+## [2.7.25] - 2026-09-23
+
+### Security
+- **Worker rate-limit sliding window fix (stats/telemetry endpoints)**: Extended the HIGH-priority sliding-window fix from v2.7.21 to the rate-limit checks on `/stats` and `/telemetry` endpoints. Both now use the `getRateLimitState` helper to enforce proper time-window semantics instead of relying on KV TTL extension (preventing slow-drip attack lockouts).
+
+### Changed
+- **Timeline lyric reorder button tooltips**: The move-up/move-down buttons for timeline lyrics in `SongStructureBuilder` now show context-aware tooltips when disabled (Cannot move up: Already at the top / Cannot move down: Already at the bottom), improving accessibility and UX.
+
 ## [2.7.24] - 2026-09-22
 
 ### Changed
