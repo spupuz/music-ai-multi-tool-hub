@@ -78,3 +78,6 @@
 ## 2026-09-22 - [Redundant Math.max Calculation in SongTrendChart]
 **Learning:** O(n) array calculations wrapped in React functions (like `.map()` chained with `Math.max()`) placed directly in a `useEffect` function body without `useMemo` execute on every re-render and dependency update. This leads to redundant work that can slow down charts tracking frequently changing properties, like `screenWidth` from resize events.
 **Action:** Extract invariant mathematical reductions on large datasets (like `Math.max`) into a `useMemo` block that explicitly depends on the memoized dataset, preventing recalculations during unrelated renders while maintaining reactivity to the data.
+## 2024-10-25 - Prevent O(n) array reduction in AboutPage on re-renders
+**Learning:** Found an unmemoized array `reduce` operation used to group tools by category on the `AboutPage`. Since this component displays a static configuration, mapping it during every re-render causes unnecessary layout computation.
+**Action:** Always wrap derived layout/configuration mappings (like `groupedTools`) in `React.useMemo` to eliminate CPU overhead during component updates, matching existing patterns like in `Sidebar.tsx`.

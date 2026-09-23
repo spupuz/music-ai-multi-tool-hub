@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { ToolId, ToolProps as LayoutToolProps } from '@/Layout';
 import Button from '@/components/common/Button';
 import { GithubIcon } from '@/components/Icons';
@@ -146,7 +146,8 @@ Thanks,
   const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
   const privacyPolicyLastUpdated = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const groupedTools = toolsList ? toolsList.reduce((acc, tool) => {
+  // ⚡ Bolt: Memoize groupedTools to prevent O(n) recalculation on every render
+  const groupedTools = useMemo(() => toolsList ? toolsList.reduce((acc, tool) => {
     if (tool.id === 'about') return acc;
     const category = tool.category || "Other Tools";
     if (!acc[category]) {
@@ -154,7 +155,7 @@ Thanks,
     }
     acc[category].push(tool);
     return acc;
-  }, {} as Record<string, Array<{ id: ToolId, name: string, icon?: React.ReactElement, category?: string }>>) : {};
+  }, {} as Record<string, Array<{ id: ToolId, name: string, icon?: React.ReactElement, category?: string }>>) : {}, [toolsList]);
 
   const getIconByToolId = (toolId: ToolId): React.ReactElement | undefined => {
     const tool = toolsList?.find(t => t.id === toolId);
