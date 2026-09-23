@@ -326,12 +326,13 @@ export default {
             const rateLimitKeyStats = `ratelimit:stats:${ip}`;
 
             if (env.STATS_KV) {
-                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyStats) || '0', 10);
-                if (attempts >= 30) {
+                let state = await getRateLimitState(env.STATS_KV, rateLimitKeyStats, 60000);
+                if (state.attempts >= 30) {
                     return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }),
                         { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
                 }
-                await env.STATS_KV.put(rateLimitKeyStats, (attempts + 1).toString(), { expirationTtl: 60 });
+                state.attempts++;
+                await env.STATS_KV.put(rateLimitKeyStats, JSON.stringify(state), { expirationTtl: 60 });
             }
 
             if (!env.STATS_KV) {
@@ -388,12 +389,13 @@ export default {
             const rateLimitKeyTelemetry = `ratelimit:telemetry:${ip}`;
 
             if (env.STATS_KV) {
-                const attempts = parseInt(await env.STATS_KV.get(rateLimitKeyTelemetry) || '0', 10);
-                if (attempts >= 120) {
+                let state = await getRateLimitState(env.STATS_KV, rateLimitKeyTelemetry, 60000);
+                if (state.attempts >= 120) {
                     return new Response(JSON.stringify({ error: 'Too many requests.' }),
                         { status: 429, headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '60' } });
                 }
-                await env.STATS_KV.put(rateLimitKeyTelemetry, (attempts + 1).toString(), { expirationTtl: 60 });
+                state.attempts++;
+                await env.STATS_KV.put(rateLimitKeyTelemetry, JSON.stringify(state), { expirationTtl: 60 });
             }
 
             if (!env.STATS_KV) return new Response('KV Missing', { status: 500, headers: cors });
