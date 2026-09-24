@@ -1,3 +1,13 @@
+## [2.7.28] - 2026-09-24
+
+### Security
+- **Prevent timing attacks and information leakage in API proxy (Sentinel)**: Removed timing-sensitive comparisons in the proxy layer to prevent information-leakage via timing side-channels.
+
+### Changed
+- **Performance table memoization fix**: Removed pre-computed lowercased helper properties from DetailedSongPerformanceTable; search/filter now uses inline toLowerCase() to avoid stale cached state.
+- **Custom Select cleanup**: Removed the ariaLabel prop and associated aria-label attribute from the shared Select component.
+- **Cleaned project notes**: Removed .jules/ documentation files that were accidentally tracked.
+
 ## [2.7.27] - 2026-09-24
 
 ### Changed

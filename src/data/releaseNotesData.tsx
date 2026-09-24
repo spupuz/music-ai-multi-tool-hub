@@ -8,6 +8,24 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.28",
+    content: (
+      <section id="version-2.7.28">
+        <SectionTitle>Version 2.7.28 - 2026-09-24</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Prevent timing attacks and information leakage in API proxy (Sentinel)</STRONG>: Removed timing-sensitive comparisons in the proxy layer to prevent information-leakage via timing side-channels.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Performance table memoization fix</STRONG>: Removed pre-computed lowercased helper properties from DetailedSongPerformanceTable; search/filter now uses inline toLowerCase() to avoid stale cached state.</LI>
+          <LI><STRONG>Custom Select cleanup</STRONG>: Removed the ariaLabel prop and associated aria-label attribute from the shared Select component.</LI>
+          <LI><STRONG>Cleaned project notes</STRONG>: Removed .jules/ documentation files that were accidentally tracked.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.27",
     content: (
       <section id="version-2.7.27">
