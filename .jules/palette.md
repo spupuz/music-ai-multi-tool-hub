@@ -16,3 +16,6 @@
 ## 2025-03-02 - Keyboard Accessible Custom File Uploads
 **Learning:** Custom file uploads that use `opacity-0` on a natively focusable `<input type="file">` are functional for keyboard users natively, but they lack a visible focus ring, creating a severe accessibility issue for sighted keyboard users. Replacing them with complex ARIA hacks on labels breaks native semantics.
 **Action:** When using an `opacity-0` file input positioned over a stylized container, always apply `focus-within:ring-2 focus-within:ring-emerald-500` (or similar) to the parent wrapper container. This allows the native input to receive focus in the background while the parent container visibly indicates the focus state.
+## 2025-03-02 - Custom Select Triggers Need ARIA Labels
+**Learning:** Custom UI components that act as form controls, like a custom Select dropdown using a `<button>` as the trigger, often lack implicit context when used without a visible, programmatically linked `<label>`. This makes them opaque to screen readers.
+**Action:** When building or updating custom form controls, always ensure the main interactive trigger accepts an `aria-label` prop and provides a sensible fallback (like using the component's `label` or `placeholder` props) to guarantee an accessible name is always present.
