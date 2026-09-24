@@ -17,6 +17,7 @@ interface SelectProps {
   containerClassName?: string;
   placeholder?: string;
   disabled?: boolean;
+  ariaLabel?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -29,7 +30,8 @@ const Select: React.FC<SelectProps> = ({
   labelClassName = '',
   containerClassName = '',
   placeholder = 'Select an option',
-  disabled = false
+  disabled = false,
+  ariaLabel
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -72,6 +74,7 @@ const Select: React.FC<SelectProps> = ({
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-label={ariaLabel || label || placeholder}
         className={`
           w-full flex items-center justify-between px-4 py-2.5 rounded-xl
           transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]
