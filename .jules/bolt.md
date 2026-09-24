@@ -81,3 +81,6 @@
 ## 2024-10-25 - Prevent O(n) array reduction in AboutPage on re-renders
 **Learning:** Found an unmemoized array `reduce` operation used to group tools by category on the `AboutPage`. Since this component displays a static configuration, mapping it during every re-render causes unnecessary layout computation.
 **Action:** Always wrap derived layout/configuration mappings (like `groupedTools`) in `React.useMemo` to eliminate CPU overhead during component updates, matching existing patterns like in `Sidebar.tsx`.
+## 2024-05-18 - Pre-computing Expensive String Operations in React Memos
+**Learning:** Calling `.toLowerCase()` inside a loop (like `.filter()` or `.sort()`) in a React component that executes frequently (e.g., on every keystroke during a search) causes significant CPU overhead and string allocations, especially when dealing with hundreds or thousands of rows.
+**Action:** When working with large datasets, pre-compute invariant values (like lowercasing fields intended for search) once during the initial data transformation or `useMemo` block, and reuse these pre-computed properties during filtering and sorting to achieve O(1) property access instead of repeating O(N) string transformations.

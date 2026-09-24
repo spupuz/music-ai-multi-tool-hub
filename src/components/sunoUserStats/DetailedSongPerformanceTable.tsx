@@ -31,6 +31,10 @@ const SortArrow = React.memo<{ column: SortableColumn, sortColumn: SortableColum
 SortArrow.displayName = 'SortArrow';
 
 interface SongPerformanceData extends SunoClip {
+  _titleLower?: string;
+  _displayNameLower?: string;
+  _handleLower?: string;
+  _tagsLower?: string;
   upvoteRate: number | null;
   commentRate: number | null;
   playsPerDay: number | null;
@@ -80,6 +84,10 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
   const enhancedSongs = useMemo<SongPerformanceData[]>(() => {
     return songs.map(song => ({
       ...song,
+      _titleLower: song.title.toLowerCase(),
+      _displayNameLower: song.display_name.toLowerCase(),
+      _handleLower: song.handle.toLowerCase(),
+      _tagsLower: song.metadata?.tags?.toLowerCase() || "",
       upvoteRate: calculateUpvoteRate(song.play_count || 0, song.upvote_count || 0),
       commentRate: calculateCommentRate(song.play_count || 0, song.comment_count || 0),
       playsPerDay: calculatePerDayMetric(song.play_count || 0, song.created_at),
@@ -97,9 +105,9 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
     if (filterText.trim()) {
       const lowerFilter = filterText.toLowerCase();
       processedSongs = processedSongs.filter(song =>
-        song.title.toLowerCase().includes(lowerFilter) ||
-        song.display_name.toLowerCase().includes(lowerFilter) ||
-        song.handle.toLowerCase().includes(lowerFilter)
+        (song._titleLower && song._titleLower.includes(lowerFilter)) ||
+        (song._displayNameLower && song._displayNameLower.includes(lowerFilter)) ||
+        (song._handleLower && song._handleLower.includes(lowerFilter))
       );
     }
     
@@ -108,11 +116,10 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
       const activeFilterValueInt = parseInt(activeTableFilters.value);
       processedSongs = processedSongs.filter(song => {
         if (activeTableFilters.type === 'tag') {
-          return song.metadata?.tags?.toLowerCase().includes(activeFilterValueLower);
+          return song._tagsLower && song._tagsLower.includes(activeFilterValueLower);
         }
         if (activeTableFilters.type === 'genre') {
-          const tagsString = song.metadata?.tags?.toLowerCase() || "";
-          return tagsString.includes(activeFilterValueLower);
+          return song._tagsLower && song._tagsLower.includes(activeFilterValueLower);
         }
         if (activeTableFilters.type === 'dayOfWeek') {
           return new Date(song.created_at).getDay() === activeFilterValueInt;
@@ -130,8 +137,8 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
 
       switch (sortColumn) {
         case 'title':
-          aSortValue = a.title.toLowerCase();
-          bSortValue = b.title.toLowerCase();
+          aSortValue = a._titleLower || a.title.toLowerCase();
+          bSortValue = b._titleLower || b.title.toLowerCase();
           break;
         case 'created_at':
           aSortValue = new Date(a.created_at);
