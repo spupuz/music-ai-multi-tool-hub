@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.27",
+    content: (
+      <section id="version-2.7.27">
+        <SectionTitle>Version 2.7.27 - 2026-09-24</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Song performance table search speed</STRONG>: <CODE>DetailedSongPerformanceTable.tsx</CODE> now pre-computes lowercased search variants (<CODE>title</CODE>, <CODE>display_name</CODE>, <CODE>handle</CODE>, <CODE>tags</CODE>) once inside the memoized data-enhancement pass, replacing repeated <CODE>.toLowerCase()</CODE> calls during filtering and sorting with O(1) property access.</LI>
+          <LI><STRONG>Custom Select accessibility</STRONG>: The shared <CODE>Select</CODE> component trigger now accepts an <CODE>aria-label</CODE> prop and falls back to the component's <CODE>label</CODE>/<CODE>placeholder</CODE> props to guarantee an accessible name on the listbox trigger.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.26",
     content: (
       <section id="version-2.7.26">

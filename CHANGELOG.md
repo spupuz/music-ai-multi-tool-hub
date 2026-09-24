@@ -1,3 +1,9 @@
+## [2.7.27] - 2026-09-24
+
+### Changed
+- **Song performance table search speed**: `DetailedSongPerformanceTable.tsx` now pre-computes lowercased search variants (`title`, `display_name`, `handle`, `tags`) once inside the memoized data-enhancement pass, replacing repeated `.toLowerCase()` calls during filtering and sorting with O(1) property access.
+- **Custom Select accessibility**: The shared `Select` component trigger now accepts an `aria-label` prop and falls back to the component's `label`/`placeholder` props to guarantee an accessible name on the listbox trigger.
+
 ## [2.7.26] - 2026-09-23
 
 ### Changed
