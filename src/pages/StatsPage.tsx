@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ToolProps } from '@/Layout';
 import { Line } from 'react-chartjs-2';
 import { useCountUp } from '@/hooks/useCountUp';
@@ -112,52 +112,68 @@ const StatsPage: React.FC<ToolProps> = () => {
   if (error) return <div className="text-center py-20 text-red-500 font-semibold">Error: {error}</div>;
   if (!stats) return null;
 
-  const validCountryEntries = Object.entries(stats.countries as Record<string, number>)
-    .filter(([alpha2, count]) => count > 0 && alpha2 !== 'XX')
-    .map(([alpha2, count]) => {
-      const country = resolveCountryByAlpha2(alpha2);
-      const mapCountryName = resolveMapCountryName(alpha2);
-      return country && mapCountryName
-        ? { alpha2, count, country, mapCountryName }
-        : null;
-    })
-    .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+  // ⚡ Bolt: Cache country list mapping to prevent O(N) recalculations on hover state changes.
+  // Impact: Reduces CPU time during tooltip interactions by avoiding redundant array manipulations.
+  const validCountryEntries = useMemo(() => {
+    return Object.entries(stats.countries as Record<string, number>)
+      .filter(([alpha2, count]) => count > 0 && alpha2 !== 'XX')
+      .map(([alpha2, count]) => {
+        const country = resolveCountryByAlpha2(alpha2);
+        const mapCountryName = resolveMapCountryName(alpha2);
+        return country && mapCountryName
+          ? { alpha2, count, country, mapCountryName }
+          : null;
+      })
+      .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+  }, [stats.countries]);
 
-  const mapData: Record<string, number> = {};
-  validCountryEntries.forEach(({ mapCountryName, count }) => {
-    mapData[mapCountryName] = count;
-  });
+  // ⚡ Bolt: Cache map data lookup object to avoid re-reducing the array on every render.
+  const mapData = useMemo(() => {
+    const data: Record<string, number> = {};
+    validCountryEntries.forEach(({ mapCountryName, count }) => {
+      data[mapCountryName] = count;
+    });
+    return data;
+  }, [validCountryEntries]);
 
-  const maxVisitors = Math.max(...validCountryEntries.map(({ count }) => count), 1);
+  // ⚡ Bolt: Memoize the max visitors calculation since array mapping + Math.max is an O(N) operation.
+  const maxVisitors = useMemo(() => Math.max(...validCountryEntries.map(({ count }) => count), 1), [validCountryEntries]);
   const countriesReached = validCountryEntries.length;
 
-  const colorScale = scaleSqrt<string>()
-    .domain([1, maxVisitors])
-    .range(["#475569", "#10b981"])
-    .clamp(true);
+  // ⚡ Bolt: Memoize the D3 color scale instance to prevent object thrashing during re-renders.
+  const colorScale = useMemo(() => {
+    return scaleSqrt<string>()
+      .domain([1, maxVisitors])
+      .range(["#475569", "#10b981"])
+      .clamp(true);
+  }, [maxVisitors]);
 
   const getCountryFill = (count: number, fallbackColor: string) => {
     if (count <= 0) return fallbackColor;
     return colorScale(count);
   };
 
-  const timelineData = {
-    labels: stats.timeline.map((t: any) => t.date),
-    datasets: [
-      {
-        label: 'Unique Visitors',
-        data: stats.timeline.map((t: any) => t.uniques),
-        borderColor: '#10b981',
-        backgroundColor: '#10b98122',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 2,
-        pointHoverRadius: 5,
-        pointBackgroundColor: '#10b981',
-        borderWidth: 3,
-      }
-    ]
-  };
+  // ⚡ Bolt: Cache the Chart.js configuration object.
+  // Impact: Prevents Chart.js from completely destroying and recreating the chart on simple UI updates.
+  const timelineData = useMemo(() => {
+    return {
+      labels: stats.timeline.map((t: any) => t.date),
+      datasets: [
+        {
+          label: 'Unique Visitors',
+          data: stats.timeline.map((t: any) => t.uniques),
+          borderColor: '#10b981',
+          backgroundColor: '#10b98122',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 2,
+          pointHoverRadius: 5,
+          pointBackgroundColor: '#10b981',
+          borderWidth: 3,
+        }
+      ]
+    };
+  }, [stats.timeline]);
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 animate-fadeIn pb-12">
