@@ -157,11 +157,24 @@ async function incrementKV(kv, key) {
  */
 function timingSafeEqual(a, b) {
     if (typeof a !== 'string' || typeof b !== 'string') return false;
-    if (a.length !== b.length) return false;
+
+    // Prevent DoS by enforcing a reasonable maximum length for secrets
+    if (a.length > 512 || b.length > 512) return false;
+
+    const maxLength = Math.max(a.length, b.length);
     let result = 0;
-    for (let i = 0; i < a.length; i++) {
-        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+
+    if (a.length !== b.length) {
+        result = 1;
     }
+
+    // Use bitwise OR with 0 to gracefully handle NaN (out of bounds) without branching
+    for (let i = 0; i < maxLength; i++) {
+        const charA = a.charCodeAt(i) | 0;
+        const charB = b.charCodeAt(i) | 0;
+        result |= charA ^ charB;
+    }
+
     return result === 0;
 }
 
