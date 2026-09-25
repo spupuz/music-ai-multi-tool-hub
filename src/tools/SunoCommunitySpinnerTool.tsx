@@ -470,28 +470,28 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{color:toolTextColor}}>Background Color</label>
                                     <div className="flex items-center gap-2">
-                                        <input type="color" value={toolBackgroundColor} onChange={(e) => setToolBackgroundColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
+                                        <input type="color" aria-label="Background Color" value={toolBackgroundColor} onChange={(e) => setToolBackgroundColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
                                         <input type="text" value={toolBackgroundColorHexInput} onChange={(e) => handleToolBgColorHexChange(e.target.value)} className="flex-grow px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm uppercase"/>
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{color:toolTextColor}}>Accent Color</label>
                                     <div className="flex items-center gap-2">
-                                        <input type="color" value={toolAccentColor} onChange={(e) => setToolAccentColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
+                                        <input type="color" aria-label="Accent Color" value={toolAccentColor} onChange={(e) => setToolAccentColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
                                         <input type="text" value={toolAccentColorHexInput} onChange={(e) => handleToolAccentColorHexChange(e.target.value)} className="flex-grow px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm uppercase"/>
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{color:toolTextColor}}>Text Color</label>
                                     <div className="flex items-center gap-2">
-                                        <input type="color" value={toolTextColor} onChange={(e) => setToolTextColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
+                                        <input type="color" aria-label="Text Color" value={toolTextColor} onChange={(e) => setToolTextColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
                                         <input type="text" value={toolTextColorHexInput} onChange={(e) => handleToolTextColorHexChange(e.target.value)} className="flex-grow px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm uppercase"/>
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{color:toolTextColor}}>Wheel Border</label>
                                     <div className="flex items-center gap-2">
-                                        <input type="color" value={wheelSegmentBorderColor} onChange={(e) => setWheelSegmentBorderColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
+                                        <input type="color" aria-label="Wheel Segment Border Color" value={wheelSegmentBorderColor} onChange={(e) => setWheelSegmentBorderColor(e.target.value)} className="h-10 w-12 rounded cursor-pointer bg-transparent border-none"/>
                                         <input type="text" value={wheelSegmentBorderColorHexInput} onChange={(e) => handleWheelSegmentBorderColorHexChange(e.target.value)} className="flex-grow px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm uppercase"/>
                                     </div>
                                 </div>
