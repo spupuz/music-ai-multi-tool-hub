@@ -8,6 +8,27 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.29",
+    content: (
+      <section id="version-2.7.29">
+        <SectionTitle>Version 2.7.29 - 2026-09-25</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Hardened proxy secret comparison</STRONG>: Updated the Worker's <CODE>timingSafeEqual</CODE> implementation to compare across the maximum input length without an early length-mismatch return, while enforcing a 512-character limit to reduce timing leaks and prevent excessive comparison work.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Stats page interaction performance</STRONG>: Memoized country mapping, map data, maximum visitor calculations, the color scale, and Chart.js timeline configuration so map hover updates no longer repeat expensive transformations.</LI>
+          <LI><STRONG>Project metadata cleanup</STRONG>: Removed accidentally tracked <CODE>.Jules/</CODE> notes and their date-rewrite helper from the release branch.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Color picker accessibility</STRONG>: Added descriptive <CODE>aria-label</CODE> values to color inputs in the Song Cover Art and Suno Community Spinner tools so screen readers announce each control's purpose.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.28",
     content: (
       <section id="version-2.7.28">

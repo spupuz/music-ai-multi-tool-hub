@@ -1,3 +1,15 @@
+## [2.7.29] - 2026-09-25
+
+### Security
+- **Hardened proxy secret comparison**: Updated the Worker's `timingSafeEqual` implementation to compare across the maximum input length without an early length-mismatch return, while enforcing a 512-character limit to reduce timing leaks and prevent excessive comparison work.
+
+### Changed
+- **Stats page interaction performance**: Memoized country mapping, map data, maximum visitor calculations, the color scale, and Chart.js timeline configuration so map hover updates no longer repeat expensive transformations.
+- **Project metadata cleanup**: Removed accidentally tracked `.Jules/` notes and their date-rewrite helper from the release branch.
+
+### Fixed
+- **Color picker accessibility**: Added descriptive `aria-label` values to color inputs in the Song Cover Art and Suno Community Spinner tools so screen readers announce each control's purpose.
+
 ## [2.7.28] - 2026-09-24
 
 ### Security
