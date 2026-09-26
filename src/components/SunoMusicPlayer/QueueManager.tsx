@@ -126,7 +126,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                    <span className="flex items-center gap-1"><PlayCountIcon className="w-3 h-3" /> {song.play_count?.toLocaleString() || '0'}</span> 
                    <span className="flex items-center gap-1"><UpvoteCountIcon className="w-3 h-3" /> {song.upvote_count?.toLocaleString() || '0'}</span> 
                 </div>
-                <Button onClick={() => removeSongFromQueue(song.id)} variant="ghost" size="xs" className="ml-4 p-3 hover:bg-red-500/20 rounded-xl text-red-500 dark:text-red-400 transition-all opacity-0 group-hover:opacity-100 border-none shadow-none" aria-label={`Remove ${song.title}`} startIcon={<TrashIcon className="w-4 h-4" />} />
+                <Button onClick={() => removeSongFromQueue(song.id)} variant="ghost" size="xs" className="ml-4 p-3 hover:bg-red-500/20 rounded-xl text-red-500 dark:text-red-400 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 border-none shadow-none" aria-label={`Remove ${song.title}`} startIcon={<TrashIcon className="w-4 h-4" />} />
               </li>
             ))}
             {queue.length === 0 && (<li className="p-12 text-center text-gray-500 dark:text-gray-600 text-xs font-black uppercase tracking-[0.2em] italic">Queue is empty</li>)}

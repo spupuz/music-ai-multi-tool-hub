@@ -30,7 +30,7 @@ const StatDisplayCard: React.FC<StatDisplayCardProps> = ({ title, value, descrip
           {title}
         </h3>
         {tooltipText && (
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto shrink-0">
+          <div className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity ml-auto shrink-0">
             <InfoIconWithTooltip text={tooltipText} className="w-3 h-3 text-gray-400 hover:text-gray-900 dark:hover:text-white" />
           </div>
         )}
