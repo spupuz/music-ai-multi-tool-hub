@@ -1,0 +1,3 @@
+## 2024-05-18 - Keyboard Accessible Tooltips
+**Learning:** Elements hidden visually until hover via `opacity-0 group-hover:opacity-100` are completely inaccessible to keyboard-only users who navigate interactive elements via the `Tab` key. Custom UI components utilizing this pattern (like generic info tooltips) effectively hide critical context.
+**Action:** When creating hover-based tooltips, ensure the trigger element has `tabIndex={0}`, a descriptive `aria-label`, and a clear visual focus indicator (e.g., `outline-none focus-visible:ring-2`). Additionally, pair `group-hover:opacity-100` with `group-focus:opacity-100` or `group-focus-within:opacity-100` on the tooltip itself so that it appears during keyboard focus.
