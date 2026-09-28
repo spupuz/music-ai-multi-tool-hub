@@ -132,8 +132,10 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
 
         return new Response(body, { status: sunoRes.status, headers });
     } catch (err) {
+        // Prevent information leakage by logging the raw error internally and returning a generic message
+        console.error('Suno proxy error:', err);
         return new Response(
-            JSON.stringify({ error: `Suno proxy error: ${err.message}` }),
+            JSON.stringify({ error: 'An internal error occurred during the proxy request' }),
             { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } }
         );
     }
@@ -294,8 +296,10 @@ export default {
                     }
                 });
             } catch (err) {
+                 // Prevent information leakage by logging the raw error internally and returning a generic message
+                 console.error('Proxy fetch error:', err);
                  return new Response(
-                    JSON.stringify({ error: `Proxy fetch error: ${err.message}` }),
+                    JSON.stringify({ error: 'An internal error occurred during the proxy fetch' }),
                     { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } }
                 );
             }
@@ -533,7 +537,9 @@ export default {
                 { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
 
         } catch (err) {
-            return new Response(`Worker error: ${err.message}`, { status: 500, headers: cors });
+            // Prevent information leakage by logging the raw error internally and returning a generic message
+            console.error('Worker error:', err);
+            return new Response(JSON.stringify({ error: 'An internal error occurred' }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
         }
     },
 };
