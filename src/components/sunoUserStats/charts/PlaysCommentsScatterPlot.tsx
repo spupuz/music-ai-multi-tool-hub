@@ -24,15 +24,21 @@ const PlaysCommentsScatterPlot: React.FC<PlaysCommentsScatterPlotProps> = ({
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart<'scatter'> | null>(null);
 
-  const chartData = useMemo(() => songs.map(song => ({
-    x: song.play_count || 0,
-    y: song.comment_count || 0,
-    title: song.title,
-    commentRate: song.play_count > 0 ? ((song.comment_count || 0) / song.play_count) * 100 : 0,
-  })), [songs]);
-
-  // ⚡ Bolt: Memoize maxPlays to avoid O(n) execution during render
-  const maxPlays = useMemo(() => Math.max(...chartData.map(d => d.x), 0), [chartData]);
+  // ⚡ Bolt: Compute maxPlays in the same pass as chartData to avoid O(N) intermediate array allocation and spread operator limits
+  const { chartData, maxPlays } = useMemo(() => {
+    let max = 0;
+    const data = songs.map(song => {
+      const x = song.play_count || 0;
+      if (x > max) max = x;
+      return {
+        x,
+        y: song.comment_count || 0,
+        title: song.title,
+        commentRate: song.play_count > 0 ? ((song.comment_count || 0) / song.play_count) * 100 : 0,
+      };
+    });
+    return { chartData: data, maxPlays: max };
+  }, [songs]);
 
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
