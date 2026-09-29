@@ -132,8 +132,9 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
 
         return new Response(body, { status: sunoRes.status, headers });
     } catch (err) {
+        console.error("Suno proxy error:", err);
         return new Response(
-            JSON.stringify({ error: `Suno proxy error: ${err.message}` }),
+            JSON.stringify({ error: 'Internal server error while fetching Suno data' }),
             { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } }
         );
     }
@@ -294,8 +295,9 @@ export default {
                     }
                 });
             } catch (err) {
+                 console.error("Proxy fetch error:", err);
                  return new Response(
-                    JSON.stringify({ error: `Proxy fetch error: ${err.message}` }),
+                    JSON.stringify({ error: 'Internal server error while proxying request' }),
                     { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } }
                 );
             }
@@ -533,7 +535,8 @@ export default {
                 { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
 
         } catch (err) {
-            return new Response(`Worker error: ${err.message}`, { status: 500, headers: cors });
+            console.error("Worker error:", err);
+            return new Response('Worker error: Internal server error', { status: 500, headers: cors });
         }
     },
 };
