@@ -193,7 +193,19 @@ const calculateAggregatedStats = (
     const genreStats: GenreStat[] = Array.from(genreMap.entries()).map(([name,data]) => ({ name,...data, avgPlays:data.count>0?data.totalPlays/data.count:0, avgUpvotes:data.count>0?data.totalUpvotes/data.count:0, avgComments:data.count>0?data.totalComments/data.count:0, avgUpvoteRate: data.totalPlays > 0 ? (data.totalUpvotes / data.totalPlays) * 100 : 0, avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0,}));
     const todayForCalc = new Date(currentFetchTimestamp); const thirtyDaysAgoDateForTotal = new Date(todayForCalc); thirtyDaysAgoDateForTotal.setDate(todayForCalc.getDate()-30);
     const songsCreatedLast30DaysList = songs.filter(s => new Date(s.created_at) >= thirtyDaysAgoDateForTotal);
-    const songsCreatedLast30Days = songsCreatedLast30DaysList.length; const upvotesOnSongsCreatedLast30Days = songsCreatedLast30DaysList.reduce((s,c)=>s+(c.upvote_count||0),0); const playsOnSongsCreatedLast30Days = songsCreatedLast30DaysList.reduce((s,c)=>s+(c.play_count||0),0); const commentsOnSongsCreatedLast30Days = songsCreatedLast30DaysList.reduce((s,c)=>s+(c.comment_count||0),0);
+
+    // ⚡ Bolt: Consolidated multiple array.reduce passes into a single loop to avoid redundant O(N) iterations
+    const songsCreatedLast30Days = songsCreatedLast30DaysList.length;
+    let upvotesOnSongsCreatedLast30Days = 0;
+    let playsOnSongsCreatedLast30Days = 0;
+    let commentsOnSongsCreatedLast30Days = 0;
+    for (let i = 0; i < songsCreatedLast30Days; i++) {
+        const c = songsCreatedLast30DaysList[i];
+        upvotesOnSongsCreatedLast30Days += c.upvote_count || 0;
+        playsOnSongsCreatedLast30Days += c.play_count || 0;
+        commentsOnSongsCreatedLast30Days += c.comment_count || 0;
+    }
+
     let maxDayCount = 0; let mpdIndex = -1; Object.entries(productivity.songsByDayOfWeek).forEach(([di,c])=>{if(c>maxDayCount){maxDayCount=c;mpdIndex=parseInt(di);}}); if (mpdIndex!==-1)productivity.mostProductiveDay = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][mpdIndex];
     let maxHourCount = 0; let mphIndex = -1; Object.entries(productivity.songsByHourOfDay).forEach(([hi,c])=>{if(c>maxHourCount){maxHourCount=c;mphIndex=parseInt(hi);}}); if (mphIndex!==-1)productivity.mostProductiveHour = `${String(mphIndex).padStart(2,'0')}:00 - ${String((mphIndex + 1) % 24).padStart(2,'0')}:00`;
     const dailySongCreationCounts: DailyCreationStat[] = []; for (let i=0;i<30;i++){const d=new Date(currentFetchTimestamp);d.setDate(d.getDate()-(29-i));const ds=d.toISOString().split('T')[0];dailySongCreationCounts.push({date:ds,count:songCreationMap.get(ds)||0});} dailySongCreationCounts.sort((a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime());

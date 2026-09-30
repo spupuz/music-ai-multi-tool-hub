@@ -483,9 +483,19 @@ export const fetchSunoPlaylistById = async (
 
   if (playlistDetail) {
     playlistDetail.num_songs = allPlaylistClips.length;
-    playlistDetail.total_clip_plays = allPlaylistClips.reduce((sum, clip) => sum + (clip.play_count || 0), 0);
-    playlistDetail.total_clip_upvotes = allPlaylistClips.reduce((sum, clip) => sum + (clip.upvote_count || 0), 0);
-    playlistDetail.total_clip_comments = allPlaylistClips.reduce((sum, clip) => sum + (clip.comment_count || 0), 0);
+    // ⚡ Bolt: Consolidated multiple array.reduce passes into a single loop to avoid redundant O(N) iterations
+    let totalPlays = 0;
+    let totalUpvotes = 0;
+    let totalComments = 0;
+    for (let i = 0; i < allPlaylistClips.length; i++) {
+        const clip = allPlaylistClips[i];
+        totalPlays += clip.play_count || 0;
+        totalUpvotes += clip.upvote_count || 0;
+        totalComments += clip.comment_count || 0;
+    }
+    playlistDetail.total_clip_plays = totalPlays;
+    playlistDetail.total_clip_upvotes = totalUpvotes;
+    playlistDetail.total_clip_comments = totalComments;
   }
 
   if (onProgress) onProgress(`Finished fetching playlist. Total ${allPlaylistClips.length} valid clips found for "${playlistDetail?.name || playlistId}".`);
