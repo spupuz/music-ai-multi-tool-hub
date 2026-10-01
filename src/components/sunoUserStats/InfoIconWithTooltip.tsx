@@ -12,7 +12,12 @@ const InfoIconWithTooltip: React.FC<InfoIconWithTooltipProps> = ({
   position = 'bottom', 
 }) => {
   return (
-    <div className={`relative inline-flex items-center group ${className}`} role="tooltip" aria-label={text}>
+    <div
+      className={`relative inline-flex items-center group ${className} outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-full`}
+      role="button"
+      tabIndex={0}
+      aria-label={text}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
