@@ -40,3 +40,7 @@ project-summary.md
 tasks-history.json
 chunks/
 omnistate-plugin/
+
+# Local agent notes (not project documentation)
+.jules/
+.Jules/

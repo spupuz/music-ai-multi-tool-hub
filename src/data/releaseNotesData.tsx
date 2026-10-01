@@ -8,6 +8,29 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.30",
+    content: (
+      <section id="version-2.7.30">
+        <SectionTitle>Version 2.7.30 - 2026-10-01</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Prevented error message leakage in the Cloudflare Worker (Sentinel, PRs #97, #98, #100, #103, #105)</STRONG>: The proxy endpoints no longer return raw <CODE>err.message</CODE> values in 500/502 responses. The Suno proxy, generic CORS proxy, and Gemini handler now log the original error via <CODE>console.error</CODE> for debugging and respond with generic messages such as <CODE>An internal error occurred</CODE>, closing a defense-in-depth gap that could expose internal paths, dependencies, and upstream configuration.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Keyboard-accessible tooltips (Palette, PRs #96, #99)</STRONG>: <CODE>InfoIcon</CODE> tooltips in the Lyric Processor, Song Compliance, TextArea, and Suno User Stats tools are now reachable by keyboard — triggers receive <CODE>tabIndex={0}</CODE>, <CODE>role="button"</CODE>, an <CODE>aria-label</CODE>, and a <CODE>focus-visible</CODE> ring, and the tooltip reveals on <CODE>group-focus</CODE> / <CODE>group-focus-within</CODE>.</LI>
+          <LI><STRONG>Hover-only controls visible on keyboard focus (Palette, PR #96)</STRONG>: The lyric reorder/insert controls in the Song Structure Builder and the queue remove button in the Music Player now pair <CODE>group-hover:opacity-100</CODE> with <CODE>focus-within:opacity-100</CODE> / <CODE>focus:opacity-100</CODE>, so they no longer disappear for keyboard users.</LI>
+          <LI><STRONG>Single-pass chart scale computation (Bolt, PRs #101, #102, #106)</STRONG>: <CODE>PlaysCommentsScatterPlot</CODE> and <CODE>PlaysUpvotesScatterPlot</CODE> now derive <CODE>maxPlays</CODE> inside the same <CODE>useMemo</CODE> pass that maps the dataset, removing an intermediate array allocation and avoiding <CODE>Maximum call stack size exceeded</CODE> crashes on large result sets. <CODE>StatsPage</CODE> computes <CODE>maxVisitors</CODE> with <CODE>reduce</CODE> for the same reason.</LI>
+          <LI><STRONG>Consolidated redundant reduce loops (Bolt, PR #104)</STRONG>: Playlist analysis, 30-day stats aggregation, and <CODE>fetchSunoPlaylistById</CODE> now accumulate plays, upvotes, and comments in a single O(N) loop instead of three separate passes.</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Local agent notes excluded from the repository</STRONG>: Merged branches reintroduced <CODE>.jules/</CODE> and <CODE>.Jules/</CODE> documentation files that had previously been removed as accidental. They are now git-ignored so they stay local.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.29",
     content: (
       <section id="version-2.7.29">

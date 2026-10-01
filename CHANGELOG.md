@@ -1,3 +1,17 @@
+## [2.7.30] - 2026-10-01
+
+### Security
+- **Prevented error message leakage in the Cloudflare Worker (Sentinel, PRs #97, #98, #100, #103, #105)**: The proxy endpoints no longer return raw `err.message` values in 500/502 responses. The Suno proxy, generic CORS proxy, and Gemini handler now log the original error via `console.error` for debugging and respond with generic messages such as `An internal error occurred`, closing a defense-in-depth gap that could expose internal paths, dependencies, and upstream configuration.
+
+### Changed
+- **Keyboard-accessible tooltips (Palette, PRs #96, #99)**: `InfoIcon` tooltips in the Lyric Processor, Song Compliance, TextArea, and Suno User Stats tools are now reachable by keyboard — triggers receive `tabIndex={0}`, `role="button"`, an `aria-label`, and a `focus-visible` ring, and the tooltip reveals on `group-focus` / `group-focus-within`.
+- **Hover-only controls visible on keyboard focus (Palette, PR #96)**: The lyric reorder/insert controls in the Song Structure Builder and the queue remove button in the Music Player now pair `group-hover:opacity-100` with `focus-within:opacity-100` / `focus:opacity-100`, so they no longer disappear for keyboard users.
+- **Single-pass chart scale computation (Bolt, PRs #101, #102, #106)**: `PlaysCommentsScatterPlot` and `PlaysUpvotesScatterPlot` now derive `maxPlays` inside the same `useMemo` pass that maps the dataset, removing an intermediate array allocation and avoiding `Maximum call stack size exceeded` crashes on large result sets. `StatsPage` computes `maxVisitors` with `reduce` for the same reason.
+- **Consolidated redundant reduce loops (Bolt, PR #104)**: Playlist analysis, 30-day stats aggregation, and `fetchSunoPlaylistById` now accumulate plays, upvotes, and comments in a single O(N) loop instead of three separate passes.
+
+### Fixed
+- **Local agent notes excluded from the repository**: Merged branches reintroduced `.jules/` and `.Jules/` documentation files that had previously been removed as accidental. They are now git-ignored so they stay local.
+
 ## [2.7.29] - 2026-09-25
 
 ### Security
