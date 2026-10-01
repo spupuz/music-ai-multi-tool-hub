@@ -28,13 +28,13 @@ const PlaysCommentsScatterPlot: React.FC<PlaysCommentsScatterPlotProps> = ({
   const { chartData, maxPlays } = useMemo(() => {
     let max = 0;
     const data = songs.map(song => {
-      const plays = song.play_count || 0;
-      if (plays > max) max = plays;
+      const x = song.play_count || 0;
+      if (x > max) max = x;
       return {
-        x: plays,
+        x,
         y: song.comment_count || 0,
         title: song.title,
-        commentRate: plays > 0 ? ((song.comment_count || 0) / plays) * 100 : 0,
+        commentRate: x > 0 ? ((song.comment_count || 0) / x) * 100 : 0,
       };
     });
     return { chartData: data, maxPlays: max };
