@@ -136,8 +136,8 @@ const StatsPage: React.FC<ToolProps> = () => {
     return data;
   }, [validCountryEntries]);
 
-  // ⚡ Bolt: Memoize the max visitors calculation since array mapping + Math.max is an O(N) operation.
-  const maxVisitors = useMemo(() => Math.max(...validCountryEntries.map(({ count }) => count), 1), [validCountryEntries]);
+  // ⚡ Bolt: Memoize the max visitors calculation and use reduce to avoid intermediate array allocation and spread limits.
+  const maxVisitors = useMemo(() => validCountryEntries.reduce((max, entry) => entry.count > max ? entry.count : max, 1), [validCountryEntries]);
   const countriesReached = validCountryEntries.length;
 
   // ⚡ Bolt: Memoize the D3 color scale instance to prevent object thrashing during re-renders.
