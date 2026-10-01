@@ -15,9 +15,17 @@ export const usePlaylistAnalysis = (
     ];
 
     const totalClips = originalSongsList.length;
-    const totalPlays = originalSongsList.reduce((sum, clip) => sum + (clip.play_count || 0), 0);
-    const totalUpvotes = originalSongsList.reduce((sum, clip) => sum + (clip.upvote_count || 0), 0);
-    const totalComments = originalSongsList.reduce((sum, clip) => sum + (clip.comment_count || 0), 0);
+
+    // ⚡ Bolt: Consolidated multiple array.reduce passes into a single loop to avoid redundant O(N) iterations
+    let totalPlays = 0;
+    let totalUpvotes = 0;
+    let totalComments = 0;
+    for (let i = 0; i < totalClips; i++) {
+      const clip = originalSongsList[i];
+      totalPlays += clip.play_count || 0;
+      totalUpvotes += clip.upvote_count || 0;
+      totalComments += clip.comment_count || 0;
+    }
 
     const tagMap = new Map<string, number>();
     const artistMap = new Map<string, { name: string; count: number; profileUrl?: string }>();
