@@ -24,15 +24,21 @@ const PlaysUpvotesScatterPlot: React.FC<PlaysUpvotesScatterPlotProps> = ({
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart<'scatter'> | null>(null);
 
-  const chartData = useMemo(() => songs.map(song => ({
-    x: song.play_count || 0,
-    y: song.upvote_count || 0,
-    title: song.title,
-    upvoteRate: song.play_count > 0 ? ((song.upvote_count || 0) / song.play_count) * 100 : 0,
-  })), [songs]);
-
-  // ⚡ Bolt: Memoize maxPlays to avoid O(n) execution during render
-  const maxPlays = useMemo(() => Math.max(...chartData.map(d => d.x), 0), [chartData]);
+  // ⚡ Bolt: Compute maxPlays in the same pass as data mapping to avoid O(N) intermediate array allocations and spread operator call stack limits
+  const { chartData, maxPlays } = useMemo(() => {
+    let max = 0;
+    const data = songs.map(song => {
+      const plays = song.play_count || 0;
+      if (plays > max) max = plays;
+      return {
+        x: plays,
+        y: song.upvote_count || 0,
+        title: song.title,
+        upvoteRate: plays > 0 ? ((song.upvote_count || 0) / plays) * 100 : 0,
+      };
+    });
+    return { chartData: data, maxPlays: max };
+  }, [songs]);
 
   useEffect(() => {
     if (chartRef.current && chartData.length > 0) {
