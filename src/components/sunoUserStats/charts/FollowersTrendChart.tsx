@@ -30,14 +30,24 @@ const FollowersTrendChart: React.FC<FollowersTrendChartProps> = ({
   const chartConfig = useMemo(() => {
     if (!data || data.length === 0) return null;
 
-    const values = data.map(d => d.value);
-    const labels = data.map(d => d.timestamp);
+    // ⚡ Bolt: Compute max and min values in the same pass as data mapping to avoid O(N) intermediate array allocations and spread operator call stack limits
+    let minVal = Infinity;
+    let maxVal = -Infinity;
+
+    const values: number[] = [];
+    const labels: string[] = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const d = data[i];
+      values.push(d.value);
+      labels.push(d.timestamp);
+      if (d.value < minVal) minVal = d.value;
+      if (d.value > maxVal) maxVal = d.value;
+    }
     let yMinCalculated: number | undefined = undefined;
     let yMaxCalculated: number | undefined = undefined;
 
     if (values.length > 0) {
-      const minVal = Math.min(...values);
-      const maxVal = Math.max(...values);
 
       if (values.length === 1) {
         const padding = Math.max(2, Math.abs(minVal * 0.1) || 5);
