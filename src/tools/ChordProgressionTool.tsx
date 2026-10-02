@@ -501,18 +501,19 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none"></div>
         
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Select label="Root Note" value={rootNote} onChange={setRootNote} options={rootNoteOptions} disabled={isRecording} />
-          <Select label="Mode/Scale" value={mode} onChange={setMode} options={modeOptions} disabled={isRecording} />
-          <Select label="Chord Type" value={chordType} onChange={(val) => setChordType(val as 'triad' | 'seventh')} options={chordTypeOptions} disabled={isRecording} />
+          <Select label="Root Note" value={rootNote} onChange={setRootNote} options={rootNoteOptions} disabled={isRecording} title={isRecording ? "Cannot change root note while recording" : undefined} />
+          <Select label="Mode/Scale" value={mode} onChange={setMode} options={modeOptions} disabled={isRecording} title={isRecording ? "Cannot change scale while recording" : undefined} />
+          <Select label="Chord Type" value={chordType} onChange={(val) => setChordType(val as 'triad' | 'seventh')} options={chordTypeOptions} disabled={isRecording} title={isRecording ? "Cannot change chord type while recording" : undefined} />
         </div>
         <div className="grid md:grid-cols-2 gap-6 mb-10">
-          <Select label="Common Library" value={selectedCommonProgression} onChange={setSelectedCommonProgression} options={filteredCommonProgressions.map(cp => ({value: cp.value, label: cp.label}))} disabled={isRecording} />
-          <Select label="Progression Length" value={progressionLength.toString()} onChange={(val) => setProgressionLength(parseInt(val))} options={progressionLengthOptions} disabled={isRecording || selectedCommonProgression !== 'none'} className={selectedCommonProgression !== 'none' || isRecording ? 'opacity-40 grayscale pointer-events-none' : ''}/>
+          <Select label="Common Library" value={selectedCommonProgression} onChange={setSelectedCommonProgression} options={filteredCommonProgressions.map(cp => ({value: cp.value, label: cp.label}))} disabled={isRecording} title={isRecording ? "Cannot select library while recording" : undefined} />
+          <Select label="Progression Length" value={progressionLength.toString()} onChange={(val) => setProgressionLength(parseInt(val))} options={progressionLengthOptions} disabled={isRecording || selectedCommonProgression !== 'none'} title={isRecording ? "Cannot change length while recording" : selectedCommonProgression !== 'none' ? "Length is fixed for common progressions" : undefined} className={selectedCommonProgression !== 'none' || isRecording ? 'opacity-40 grayscale pointer-events-none' : ''}/>
         </div>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
           <Button 
             onClick={handleGenerateProgression} 
             disabled={isLoading || isPlayingAudio || isRecording} 
+            title={isLoading ? "Generating..." : isPlayingAudio ? "Cannot generate while playing" : isRecording ? "Cannot generate while recording" : undefined}
             variant="primary"
             size="lg"
             startIcon={isLoading ? null : <TuneIcon className="w-5 h-5" />}
@@ -525,6 +526,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             onClick={handleToggleRecording} 
             disabled={isLoading || isPlayingAudio}
+            title={isLoading ? "Cannot record while generating" : isPlayingAudio ? "Cannot record while playing audio" : undefined}
             variant="ghost"
             size="lg"
             startIcon={<RecordIcon className={`${isRecording ? 'animate-pulse text-red-500' : ''}`} />}
@@ -536,6 +538,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             onClick={handlePlayProgression} 
             disabled={isLoading || isPlayingAudio || generatedProgression.length === 0 || isRecording} 
+            title={isLoading ? "Cannot play while generating" : isPlayingAudio ? "Already playing" : isRecording ? "Cannot play while recording" : generatedProgression.length === 0 ? "No progression to play" : undefined}
             variant="ghost"
             size="lg"
             startIcon={<PlayIcon className="w-5 h-5" />}
@@ -568,9 +571,9 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             </div>
             {!isRecording && (
                  <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3">
-                    <Button onClick={handleCopyToClipboard} disabled={copyButtonText === 'COPIED!'} variant="ghost" size="sm" startIcon={<CopyIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">{copyButtonText}</Button>
-                    <Button onClick={handleSaveToFavorites} disabled={saveFavButtonText === 'SAVED!'} variant="ghost" size="sm" startIcon={<StarIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {saveFavButtonText}</Button>
-                    <Button onClick={handleExportMidi} disabled={exportMidiButtonText === 'EXPORTED!'} variant="ghost" size="sm" startIcon={<MidiIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {exportMidiButtonText}</Button>
+                    <Button onClick={handleCopyToClipboard} disabled={copyButtonText === 'COPIED!'} title={copyButtonText === 'COPIED!' ? "Already copied" : undefined} variant="ghost" size="sm" startIcon={<CopyIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">{copyButtonText}</Button>
+                    <Button onClick={handleSaveToFavorites} disabled={saveFavButtonText === 'SAVED!'} title={saveFavButtonText === 'SAVED!' ? "Already saved" : undefined} variant="ghost" size="sm" startIcon={<StarIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {saveFavButtonText}</Button>
+                    <Button onClick={handleExportMidi} disabled={exportMidiButtonText === 'EXPORTED!'} title={exportMidiButtonText === 'EXPORTED!' ? "Already exported" : undefined} variant="ghost" size="sm" startIcon={<MidiIcon className="w-4 h-4 ml-0.5" />} className="w-full sm:w-auto font-black uppercase tracking-widest text-[10px] border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10"> {exportMidiButtonText}</Button>
                 </div>
             )}
           </div>
@@ -587,6 +590,7 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                     key={chord.name + chord.roman} 
                     onClick={() => handlePlaySingleChord(chord)} 
                     disabled={(isPlayingAudio && !isRecording) || (playingChordName !== null && playingChordName !== chord.name && !isRecording)}
+                    title={(isPlayingAudio && !isRecording) ? "Cannot play chord while loop is playing" : (playingChordName !== null && playingChordName !== chord.name && !isRecording) ? "Another chord is currently playing" : undefined}
                     variant="ghost"
                     className={`group relative p-4 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center min-h-[140px] sm:min-h-[120px] w-full border-2 shadow-sm h-auto gap-3
                                 ${playingChordName === chord.name && !isRecording 

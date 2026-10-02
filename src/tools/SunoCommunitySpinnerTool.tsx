@@ -509,7 +509,7 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 {wheelSegments.length > 0 && !isSumMismatch ? (
                     <div className="flex flex-col items-center transition-all duration-500 ease-in-out">
                         <div ref={canvasContainerRef} className="relative w-[300px] h-[300px] sm:w-[420px] sm:h-[420px] md:w-[480px] md:h-[480px] rounded-full shadow-[0_0_60px_rgba(0,0,0,0.6)] border-4 border-gray-700/50 bg-gray-900/20">
-                            <canvas ref={canvasRef} className="w-full h-full rounded-full cursor-pointer hover:scale-[1.01] transition-transform duration-300" onClick={handleSpin} />
+                            <canvas ref={canvasRef} className="w-full h-full rounded-full cursor-pointer hover:scale-[1.01] transition-transform duration-300 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" onClick={handleSpin} role="button" tabIndex={0} aria-label="Spin the wheel" onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSpin(); } }} />
                             
                             {/* Inner Spin Button / Center Piece - PERFECTLY CENTERED */}
                                 <Button 
