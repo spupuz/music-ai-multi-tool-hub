@@ -1,3 +1,9 @@
+## [2.7.32] - 2026-10-02
+
+### Changed
+- **Accessibility tooltips on disabled controls (Palette, PR #110)**: The `ChordProgressionTool` now displays context-aware `title` tooltips on disabled select menus and buttons to explain why controls are unavailable (e.g., "Cannot change root note while recording"). The `Select` component now accepts a `title` prop for consistent tooltip delivery.
+- **Keyboard-accessible wheel spinner (Palette, PR #110)**: The `SunoCommunitySpinnerTool` wheel canvas is now keyboard-focusable (`tabIndex={0}`), announces its purpose via `aria-label`, and triggers the spin action on `Enter` or `Space` key press. The focus ring appears via `focus-visible:ring-2 focus-visible:ring-emerald-500`.
+
 ## [2.7.31] - 2026-10-02
 
 ### Changed

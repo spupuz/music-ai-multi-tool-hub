@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.32",
+    content: (
+      <section id="version-2.7.32">
+        <SectionTitle>Version 2.7.32 - 2026-10-02</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Accessibility tooltips on disabled controls (Palette, PR #110)</STRONG>: The <CODE>ChordProgressionTool</CODE> now displays context-aware <CODE>title</CODE> tooltips on disabled select menus and buttons to explain why controls are unavailable (e.g., "Cannot change root note while recording"). The <CODE>Select</CODE> component now accepts a <CODE>title</CODE> prop for consistent tooltip delivery.</LI>
+          <LI><STRONG>Keyboard-accessible wheel spinner (Palette, PR #110)</STRONG>: The <CODE>SunoCommunitySpinnerTool</CODE> wheel canvas is now keyboard-focusable (<CODE>tabIndex={0}</CODE>), announces its purpose via <CODE>aria-label</CODE>, and triggers the spin action on <CODE>Enter</CODE> or <CODE>Space</CODE> key press. The focus ring appears via <CODE>focus-visible:ring-2 focus-visible:ring-emerald-500</CODE>.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.31",
     content: (
       <section id="version-2.7.31">
