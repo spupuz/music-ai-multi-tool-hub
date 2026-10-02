@@ -1,3 +1,8 @@
+## [2.7.31] - 2026-10-02
+
+### Changed
+- **Single-pass min/max computation in Suno User Stats trend charts (Bolt, PR #109)**: `UpvotesTrendChart`, `CommentsTrendChart`, `PlaysTrendChart`, and `FollowersTrendChart` now build their `values`/`labels` arrays and derive `minVal`/`maxVal` in one `for` loop instead of four separate traversals. This removes two redundant O(N) passes and intermediate allocations, and eliminates the `RangeError: Maximum call stack size exceeded` crash that the `Math.min(...values)` / `Math.max(...values)` spread calls could trigger on very large historical datasets.
+
 ## [2.7.30] - 2026-10-01
 
 ### Security

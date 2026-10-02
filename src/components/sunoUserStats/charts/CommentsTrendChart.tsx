@@ -48,7 +48,6 @@ const CommentsTrendChart: React.FC<CommentsTrendChartProps> = ({
     let yMaxCalculated: number | undefined = undefined;
 
     if (values.length > 0) {
-
       if (values.length === 1) {
         const padding = Math.max(2, Math.abs(minVal * 0.1) || 5);
         yMinCalculated = Math.max(0, minVal - padding);

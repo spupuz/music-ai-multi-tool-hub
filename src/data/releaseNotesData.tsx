@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.31",
+    content: (
+      <section id="version-2.7.31">
+        <SectionTitle>Version 2.7.31 - 2026-10-02</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Single-pass min/max computation in Suno User Stats trend charts (Bolt, PR #109)</STRONG>: <CODE>UpvotesTrendChart</CODE>, <CODE>CommentsTrendChart</CODE>, <CODE>PlaysTrendChart</CODE>, and <CODE>FollowersTrendChart</CODE> now build their <CODE>values</CODE>/<CODE>labels</CODE> arrays and derive <CODE>minVal</CODE>/<CODE>maxVal</CODE> in one <CODE>for</CODE> loop instead of four separate traversals. This removes two redundant O(N) passes and intermediate allocations, and eliminates the <CODE>RangeError: Maximum call stack size exceeded</CODE> crash that the <CODE>Math.min(...values)</CODE> / <CODE>Math.max(...values)</CODE> spread calls could trigger on very large historical datasets.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.30",
     content: (
       <section id="version-2.7.30">
