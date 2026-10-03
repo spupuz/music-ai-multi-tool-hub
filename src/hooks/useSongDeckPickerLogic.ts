@@ -177,10 +177,23 @@ export const useSongDeckPickerLogic = ({ trackLocalEvent }: ToolProps) => {
 
     useEffect(() => {
         if (pickerMode === PickerMode.RankingReveal && dataState.fullDeck.length > 0) {
-            const unrevealed = dataState.fullDeck.filter(c => !c.isRevealed);
-            if (unrevealed.length > 0) {
-                const maxRank = Math.max(...unrevealed.map(c => c.rank || 0));
-                specialModes.setNextRankToReveal(maxRank);
+            let maxRank = -Infinity;
+            let hasUnrevealed = false;
+
+            // Single-pass optimization replacing .filter().map() + Math.max(...)
+            for (let i = 0; i < dataState.fullDeck.length; i++) {
+                const card = dataState.fullDeck[i];
+                if (!card.isRevealed) {
+                    hasUnrevealed = true;
+                    const rank = card.rank || 0;
+                    if (rank > maxRank) {
+                        maxRank = rank;
+                    }
+                }
+            }
+
+            if (hasUnrevealed) {
+                specialModes.setNextRankToReveal(maxRank === -Infinity ? 0 : maxRank);
             } else {
                 specialModes.setNextRankToReveal(null);
             }
