@@ -13,7 +13,7 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ isOpen,
       <div className={`glass-card border-gray-200 dark:border-white/10 p-8 max-w-lg`} onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
           <h3 id="keyboard-shortcuts-title" className={`text-xl font-black uppercase tracking-tight text-gray-900 dark:text-white`}>Keyboard Shortcuts</h3>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all" aria-label="Close keyboard shortcuts modal">&times;</button>
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" aria-label="Close keyboard shortcuts modal">&times;</button>
         </div>
         <ul className={`space-y-4 text-sm text-gray-700 dark:text-gray-200`}>
           <li><strong className={'text-emerald-500 font-black uppercase tracking-widest text-[10px] mr-2'}>Space Bar:</strong> Play / Pause</li>
