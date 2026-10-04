@@ -40,7 +40,7 @@ const TagUsageChart: React.FC<TagUsageChartProps> = ({
 
     const labels = processedData.map(d => d.name);
     const counts = processedData.map(d => d.count);
-    const maxCount = Math.max(...counts, 0);
+    const maxCount = counts.reduce((max, val) => val > max ? val : max, 0);
     const suggestedMax = maxCount + Math.ceil(maxCount * 0.05);
 
     const bgColors = generateColorShades(barColorStart, barColorEnd, processedData.length);
