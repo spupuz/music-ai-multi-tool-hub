@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.33",
+    content: (
+      <section id="version-2.7.33">
+        <SectionTitle>Version 2.7.33 - 2026-10-04</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Fixed XSS bypass in URL sanitization (Sentinel, PR #112)</STRONG>: The <CODE>sanitizeUrlForHref</CODE> utility now strips control characters and whitespace before parsing URLs to prevent protocol obfuscation attacks that could bypass the safe-protocol filter.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Optimized rank computation in song deck picker (Bolt, PR #111)</STRONG>: The <CODE>useSongDeckPickerLogic</CODE> hook now derives the maximum rank of unrevealed cards in a single pass instead of filtering + mapping + spreading, preventing call stack overflow on decks with many cards.</LI>
+          <LI><STRONG>Eliminated Math.max spread calls in chart scaling (Bolt, PR #113)</STRONG>: Replaced 18 <CODE>Math.max(...spread)</CODE> calls with <CODE>.reduce()</CODE> in Suno User Stats charts (<CODE>CommentCountDistributionChart</CODE>, <CODE>DailySongCreationChart</CODE>, <CODE>GenreUsageChart</CODE>, <CODE>GenreVotesChart</CODE>, <CODE>PlayCountDistributionChart</CODE>, <CODE>PlaylistCreationDateChart</CODE>, <CODE>SongTrendChart</CODE>, <CODE>SongsByDayOfWeekChart</CODE>, <CODE>SongsByHourOfDayChart</CODE>, <CODE>TagUsageChart</CODE>, <CODE>TagVotesChart</CODE>, <CODE>TopCommentedSongsChart</CODE>, <CODE>TopEngagingSongsChart</CODE>, <CODE>TopSongsByCommentRateChart</CODE>, <CODE>TopSongsChart</CODE>, <CODE>UpvoteCountDistributionChart</CODE>). This eliminates <CODE>RangeError: Maximum call stack size exceeded</CODE> crashes on large datasets and improves performance.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.32",
     content: (
       <section id="version-2.7.32">

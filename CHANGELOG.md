@@ -1,3 +1,12 @@
+## [2.7.33] - 2026-10-04
+
+### Security
+- **Fixed XSS bypass in URL sanitization (Sentinel, PR #112)**: The `sanitizeUrlForHref` utility now strips control characters and whitespace before parsing URLs to prevent protocol obfuscation attacks that could bypass the safe-protocol filter.
+
+### Changed
+- **Optimized rank computation in song deck picker (Bolt, PR #111)**: The `useSongDeckPickerLogic` hook now derives the maximum rank of unrevealed cards in a single pass instead of filtering + mapping + spreading, preventing call stack overflow on decks with many cards.
+- **Eliminated Math.max spread calls in chart scaling (Bolt, PR #113)**: Replaced 18 `Math.max(...spread)` calls with `.reduce()` in Suno User Stats charts (`CommentCountDistributionChart`, `DailySongCreationChart`, `GenreUsageChart`, `GenreVotesChart`, `PlayCountDistributionChart`, `PlaylistCreationDateChart`, `SongTrendChart`, `SongsByDayOfWeekChart`, `SongsByHourOfDayChart`, `TagUsageChart`, `TagVotesChart`, `TopCommentedSongsChart`, `TopEngagingSongsChart`, `TopSongsByCommentRateChart`, `TopSongsChart`, `UpvoteCountDistributionChart`). This eliminates `RangeError: Maximum call stack size exceeded` crashes on large datasets and improves performance.
+
 ## [2.7.32] - 2026-10-02
 
 ### Changed
