@@ -46,7 +46,7 @@ const DailySongCreationChart: React.FC<DailySongCreationChartProps> = ({
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
             const counts = context.chart.data.datasets[0].data as number[];
             if (!counts || counts.length === 0) return 5; // Default if no data
-            const maxVal = Math.max(...counts);
+            const maxVal = counts.reduce((max, val) => val > max ? val : max, 0);
             return Math.max(5, maxVal + Math.ceil(maxVal*0.1)); // Ensure y-axis is at least 5, or 10% padding
         }) as any;
 

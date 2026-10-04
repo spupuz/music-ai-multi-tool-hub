@@ -40,7 +40,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
 
   // ⚡ Bolt: Memoize max computation to avoid O(n) array mapping and iteration on every render
   const suggestedMax = useMemo(() => {
-      const maxIncrease = Math.max(...chartDataValues, 0);
+      const maxIncrease = chartDataValues.reduce((max, val) => val > max ? val : max, 0);
       return maxIncrease + Math.ceil(maxIncrease * 0.05);
   }, [chartDataValues]);
 
