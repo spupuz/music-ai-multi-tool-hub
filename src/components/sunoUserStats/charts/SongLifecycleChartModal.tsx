@@ -166,7 +166,7 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
       <div className="bg-gray-850 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-emerald-500" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-3">
           <h2 id="lifecycle-modal-title" className="text-xl font-semibold text-emerald-300">Song Lifecycle Analysis</h2>
-          <button onClick={onClose} className="p-1 rounded-md hover:bg-gray-700 text-gray-400 hover:text-white" aria-label="Close modal">&times;</button>
+          <button onClick={onClose} className="p-1 rounded-md hover:bg-gray-700 text-gray-400 hover:text-white outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" aria-label="Close modal">&times;</button>
         </div>
         <div className="flex-shrink-0 mb-3">
           <p className="text-sm text-gray-400">Song: <strong className="text-emerald-200">{song.title}</strong> by @{song.handle}</p>
