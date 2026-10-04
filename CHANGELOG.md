@@ -1,3 +1,8 @@
+## [2.7.34] - 2026-10-04
+
+### Changed
+- **Focus states on modal close buttons (Palette, PR #114)**: The close buttons in `KeyboardShortcutsModal` and `SongLifecycleChartModal` now carry `outline-none focus-visible:ring-2 focus-visible:ring-emerald-500`, making dismiss controls reachable and clearly highlighted for keyboard users.
+
 ## [2.7.33] - 2026-10-04
 
 ### Security

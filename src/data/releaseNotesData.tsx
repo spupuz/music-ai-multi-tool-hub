@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.34",
+    content: (
+      <section id="version-2.7.34">
+        <SectionTitle>Version 2.7.34 - 2026-10-04</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Focus states on modal close buttons (Palette, PR #114)</STRONG>: The close buttons in <CODE>KeyboardShortcutsModal</CODE> and <CODE>SongLifecycleChartModal</CODE> now carry <CODE>outline-none focus-visible:ring-2 focus-visible:ring-emerald-500</CODE>, making dismiss controls reachable and clearly highlighted for keyboard users.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.33",
     content: (
       <section id="version-2.7.33">
