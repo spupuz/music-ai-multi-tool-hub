@@ -1,3 +1,11 @@
+## [2.7.35] - 2026-10-05
+
+### Changed
+- **Improve BPMTapperTool performance (Bolt, PR #116)**: Consolidated the `map` + `reduce` into a single `for` loop to avoid O(N) array allocation when computing standard deviation of tap intervals.
+
+### Security
+- **Add Content Security Policy header (Sentinel, PR #115)**: Added a `Content-Security-Policy` header to `public/_headers` to mitigate XSS and data injection attacks.
+
 ## [2.7.34] - 2026-10-04
 
 ### Changed

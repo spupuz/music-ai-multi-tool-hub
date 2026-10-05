@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.35",
+    content: (
+      <section id="version-2.7.35">
+        <SectionTitle>Version 2.7.35 - 2026-10-05</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Improve BPMTapperTool performance (Bolt, PR #116)</STRONG>: Consolidated the <CODE>map</CODE> + <CODE>reduce</CODE> into a single <CODE>for</CODE> loop to avoid O(N) array allocation when computing standard deviation of tap intervals.</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Add Content Security Policy header (Sentinel, PR #115)</STRONG>: Added a <CODE>Content-Security-Policy</CODE> header to <CODE>public/_headers</CODE> to mitigate XSS and data injection attacks.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.34",
     content: (
       <section id="version-2.7.34">
