@@ -84,7 +84,12 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           if (newTimestamps.length < 3) {
             setStatusMessage('Keep tapping to refine BPM...');
           } else {
-            const stdDev = Math.sqrt(recentIntervals.map(x => Math.pow(x - averageInterval, 2)).reduce((a, b) => a + b, 0) / recentIntervals.length);
+            // ⚡ Bolt: Consolidated map and reduce into a single loop to avoid O(N) array allocation
+            let sumOfSquares = 0;
+            for (let i = 0; i < recentIntervals.length; i++) {
+              sumOfSquares += Math.pow(recentIntervals[i] - averageInterval, 2);
+            }
+            const stdDev = Math.sqrt(sumOfSquares / recentIntervals.length);
             if (stdDev > averageInterval * 0.25 && recentIntervals.length >= 3) {
               setStatusMessage(`Tap count: ${recentIntervals.length}. Taps seem irregular.`);
             } else {
