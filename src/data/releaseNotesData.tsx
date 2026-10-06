@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.36",
+    content: (
+      <section id="version-2.7.36">
+        <SectionTitle>Version 2.7.36 - 2026-10-06</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Performance: Replace chained filter+map with single-pass reduce (Bolt, PR #118)</STRONG>: Consolidated <CODE>.filter(Boolean).map(...)</CODE> into <CODE>.reduce(...)</CODE> in <CODE>useRandomMusicStyle.ts</CODE> across three call sites (style summary, pipe-delimited tags, and copyable tags with bracket removal), eliminating intermediate array allocations.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.35",
     content: (
       <section id="version-2.7.35">

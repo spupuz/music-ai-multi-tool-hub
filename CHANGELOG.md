@@ -1,3 +1,12 @@
+## [2.7.36] - 2026-10-06
+
+
+
+### Changed
+
+- **Performance: Replace chained filter+map with single-pass reduce (Bolt, PR #118)**: Consolidated `.filter(Boolean).map(...)` into `.reduce(...)` in `useRandomMusicStyle.ts` across three call sites (style summary, pipe-delimited tags, and copyable tags with bracket removal), eliminating intermediate array allocations.
+
+
 ## [2.7.35] - 2026-10-05
 
 ### Changed
