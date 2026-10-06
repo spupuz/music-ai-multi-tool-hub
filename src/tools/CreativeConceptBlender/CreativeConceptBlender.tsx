@@ -297,7 +297,7 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
                 </span>
             </div>
             {activeMode === 'generate' && (
-                <div className="flex items-center space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                     <Button 
                         onClick={onReroll} 
                         disabled={isGenerating || isLocked} 
