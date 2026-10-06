@@ -251,7 +251,10 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
     let parts = [
       ...style.genres, ...style.moods, style.tempo, ...style.instrumentations, ...style.qualities,
       style.era, style.productionStyle, style.keyModeSuggestion, style.purpose, style.influence, style.soundDesignFocus
-    ].filter(Boolean).map(s => String(s).trim());
+    ].reduce((acc: string[], val) => {
+      if (val) acc.push(String(val).trim());
+      return acc;
+    }, []);
     return parts.join(', ').replace(/\([^)]+\)/g, '').replace(/\s+/g, ' ').trim();
   }, []);
 
@@ -260,7 +263,10 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
     let parts = [
       ...style.genres, ...style.moods, style.tempo, ...style.instrumentations, ...style.qualities,
       style.era, style.productionStyle, style.keyModeSuggestion, style.purpose, style.influence, style.soundDesignFocus
-    ].filter(Boolean).map(s => String(s).trim());
+    ].reduce((acc: string[], val) => {
+      if (val) acc.push(String(val).trim());
+      return acc;
+    }, []);
     return parts.join(' | ');
   }, []);
 
@@ -290,7 +296,13 @@ export const useRandomMusicStyle = (trackLocalEvent: ToolProps['trackLocalEvent'
       currentStyle.purpose,
       currentStyle.influence,
       currentStyle.soundDesignFocus
-    ].filter(Boolean).map(s => String(s).trim().replace(/\s*\([^)]*\)/g, '')).filter(s => s); // Remove bracketed content
+    ].reduce((acc: string[], val) => {
+      if (val) {
+        const trimmed = String(val).trim().replace(/\s*\([^)]*\)/g, '');
+        if (trimmed) acc.push(trimmed);
+      }
+      return acc;
+    }, []); // Remove bracketed content
     
     const uniqueTags = Array.from(new Set(tags));
     const textToCopy = uniqueTags.join(', ');
