@@ -207,6 +207,7 @@ Thanks,
                 alt="Buy Me A Coffee"
                 loading="lazy"
                 decoding="async"
+                referrerPolicy="no-referrer"
                 style={{ height: '40px', width: '145px', display: 'block', margin: '0 auto' }}
               />
             </a>
