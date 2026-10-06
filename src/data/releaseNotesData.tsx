@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.38",
+    content: (
+      <section id="version-2.7.38">
+        <SectionTitle>Version 2.7.38 - 2026-10-06</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Add referrerPolicy to external images (Sentinel, PR #120)</STRONG>: Added <CODE>referrerPolicy="no-referrer"</CODE> to Buy Me A Coffee images in <CODE>Sidebar.tsx</CODE> and <CODE>AboutPage.tsx</CODE> to prevent referrer leakage to external CDN domains.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.37",
     content: (
       <section id="version-2.7.37">

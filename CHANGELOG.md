@@ -1,3 +1,8 @@
+## [2.7.38] - 2026-10-06
+
+### Security
+- **Add referrerPolicy to external images (Sentinel, PR #120)**: Added `referrerPolicy="no-referrer"` to Buy Me A Coffee images in `Sidebar.tsx` and `AboutPage.tsx` to prevent referrer leakage to external CDN domains.
+
 ## [2.7.37] - 2026-10-06
 
 ### Accessibility
