@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.37",
+    content: (
+      <section id="version-2.7.37">
+        <SectionTitle>Version 2.7.37 - 2026-10-06</SectionTitle>
+        <SubSectionTitle>Accessibility</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Make hover-only UI controls keyboard accessible (Palette, PR #119)</STRONG>: Added <CODE>focus-within:opacity-100</CODE> to hover-only control containers in <CODE>CreativeConceptBlender</CODE>, <CODE>LyricProcessorTool</CODE>, <CODE>LyricsSynchronizerTool</CODE>, and <CODE>SunoMusicPlayerTool</CODE> so keyboard users can reach inline action buttons without mouse hover.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.36",
     content: (
       <section id="version-2.7.36">

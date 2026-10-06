@@ -1,3 +1,8 @@
+## [2.7.37] - 2026-10-06
+
+### Accessibility
+- **Make hover-only UI controls keyboard accessible (Palette, PR #119)**: Added `focus-within:opacity-100` to hover-only control containers in `CreativeConceptBlender`, `LyricProcessorTool`, `LyricsSynchronizerTool`, and `SunoMusicPlayerTool` so keyboard users can reach inline action buttons without mouse hover.
+
 ## [2.7.36] - 2026-10-06
 
 
