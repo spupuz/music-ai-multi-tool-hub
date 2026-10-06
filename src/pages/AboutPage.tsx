@@ -262,6 +262,7 @@ Thanks,
                     <img
                       src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
                       alt="Buy Me A Coffee"
+                      referrerPolicy="no-referrer"
                       style={{ height: '60px', width: '215px', filter: 'hue-rotate(15deg) brightness(1.1)' }}
                     />
                   </a>
