@@ -61,7 +61,7 @@ const ImportExportModal: React.FC<ImportExportModalProps> = ({ show, onClose, on
 
                     <section>
                         <h4 className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-4 opacity-60">External Source</h4>
-                        <input type="file" ref={importFileRef} accept=".txt,.csv" onChange={onFileImport} className="hidden" id="import-arrangement-file"/>
+                        <input aria-label="Import arrangement file" type="file" ref={importFileRef} accept=".txt,.csv" onChange={onFileImport} className="hidden" id="import-arrangement-file"/>
                         <label
                           htmlFor="import-arrangement-file"
                           role="button"

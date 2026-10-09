@@ -81,7 +81,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, confi
                 <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Import Configuration</h2>
                 <div className="mb-6">
                     <label htmlFor="import-file-upload" className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Option 1: Upload File</label>
-                    <input id="import-file-upload" type="file" ref={importFileRef} accept=".json" onChange={onFileChange} className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition-colors" />
+                    <input aria-label="Upload JSON file" id="import-file-upload" type="file" ref={importFileRef} accept=".json" onChange={onFileChange} className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition-colors" />
                 </div>
                 <div className="mb-6">
                     <label htmlFor="import-json-textarea" className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Option 2: Paste JSON Data</label>

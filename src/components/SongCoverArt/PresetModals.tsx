@@ -111,7 +111,7 @@ const PresetModals: React.FC<PresetModalsProps> = ({
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); importPresetFileRef.current?.click(); } }}
                   className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 transition-all cursor-pointer relative block focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
-                  <input id="import-preset-file" type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="hidden" />
+                  <input aria-label="Import architecture file" id="import-preset-file" type="file" ref={importPresetFileRef} accept=".json" onChange={handleImportFileChange} className="hidden" />
                   <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-green-500 transition-colors">Select Architecture File</div>
                 </label>
                 {importPresetError && <p className="text-[9px] font-black uppercase tracking-widest text-red-400 text-center">{importPresetError}</p>}

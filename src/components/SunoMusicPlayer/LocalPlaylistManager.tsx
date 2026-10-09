@@ -73,7 +73,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
             >
               Export TXT
             </Button>
-            <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
+            <input aria-label="Import TXT playlist file" type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
             <label
               htmlFor="import-txt-playlist"
               role="button"
@@ -83,7 +83,7 @@ export const LocalPlaylistManager: React.FC<LocalPlaylistManagerProps> = ({
             >
               <FileTxtIcon className="w-4 h-4 ml-1 opacity-60"/> Import TXT
             </label>
-            <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
+            <input aria-label="Import CSV playlist file" type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
             <label
               htmlFor="import-csv-playlist"
               role="button"
