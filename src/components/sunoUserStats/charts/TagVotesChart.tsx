@@ -38,9 +38,17 @@ const TagVotesChart: React.FC<TagVotesChartProps> = ({
   const chartConfig = useMemo(() => {
     if (!processedData || processedData.length === 0) return null;
 
-    const labels = processedData.map(d => d.name);
-    const counts = processedData.map(d => d.totalUpvotes);
-    const maxCount = counts.reduce((max, val) => val > max ? val : max, 0);
+    const labels = new Array(processedData.length);
+    const counts = new Array(processedData.length);
+    let maxCount = 0;
+
+    for (let i = 0; i < processedData.length; i++) {
+      const d = processedData[i];
+      labels[i] = d.name;
+      counts[i] = d.totalUpvotes;
+      if (d.totalUpvotes > maxCount) maxCount = d.totalUpvotes;
+    }
+
     const suggestedMax = maxCount + Math.ceil(maxCount * 0.05);
 
     const bgColors = generateColorShades(barColorStart, barColorEnd, processedData.length);

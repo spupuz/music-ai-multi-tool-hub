@@ -103,15 +103,21 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
             }
         };
 
+        const dataValues = new Array(processedData.length);
+        const chartLabels = new Array(processedData.length);
+        for (let i = 0; i < processedData.length; i++) {
+            dataValues[i] = processedData[i].commentRate || 0;
+            chartLabels[i] = processedData[i].song.title;
+        }
+
         const datasetConfig = {
           label: 'Comment Rate',
-          data: processedData.map(d => d.commentRate || 0),
+          data: dataValues,
           backgroundColor: barColor,
           borderColor: barColor.replace(')', ', 0.7)').replace('rgb', 'rgba'),
           borderWidth: 1,
           ...datasetOptions
         };
-        const chartLabels = processedData.map(d => d.song.title);
 
         // ⚡ Bolt: Mutate data in-place and use update('none') instead of destroying and recreating the chart instance on every render/resize
         if (chartInstanceRef.current) {

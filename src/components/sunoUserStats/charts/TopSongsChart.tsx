@@ -44,8 +44,15 @@ const TopSongsChart: React.FC<TopSongsChartProps> = ({
   }, [songs, metric, topN]);
 
   // ⚡ Bolt: Memoize mapped data
-  const chartDataValues = React.useMemo(() => processedSongs.map(song => song[metric] || 0), [processedSongs, metric]);
-  const chartLabels = React.useMemo(() => processedSongs.map(song => song.title), [processedSongs]);
+  const { chartDataValues, chartLabels } = React.useMemo(() => {
+    const values = new Array(processedSongs.length);
+    const labels = new Array(processedSongs.length);
+    for (let i = 0; i < processedSongs.length; i++) {
+      values[i] = processedSongs[i][metric] || 0;
+      labels[i] = processedSongs[i].title;
+    }
+    return { chartDataValues: values, chartLabels: labels };
+  }, [processedSongs, metric]);
 
 
   useEffect(() => {
