@@ -1,3 +1,10 @@
+## [2.7.39] - 2026-10-09
+
+### Changed
+
+- **PR #122**: Add aria-labels to hidden file inputs for better accessibility
+- **PR #121**: Replace multiple .map calls with single-pass loops in charts for performance
+
 ## [2.7.38] - 2026-10-06
 
 ### Security

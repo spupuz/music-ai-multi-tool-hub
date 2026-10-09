@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.39",
+    content: (
+      <section id="version-2.7.39">
+        <SectionTitle>Version 2.7.39 - 2026-10-09</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #122</STRONG>: Add aria-labels to hidden file inputs for better accessibility</LI>
+          <LI><STRONG>PR #121</STRONG>: Replace multiple .map calls with single-pass loops in charts for performance</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.38",
     content: (
       <section id="version-2.7.38">
