@@ -1,3 +1,10 @@
+## [2.7.40] - 2026-10-13
+
+### Changed
+
+- **PR #124**: Add focus states to collapsible sections in Palette
+- **PR #123**: Optimize chart parallel array generation in Bolt
+
 ## [2.7.39] - 2026-10-09
 
 ### Changed

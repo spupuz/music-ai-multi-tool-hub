@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.40",
+    content: (
+      <section id="version-2.7.40">
+        <SectionTitle>Version 2.7.40 - 2026-10-13</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #124</STRONG>: Add focus states to collapsible sections in Palette</LI>
+          <LI><STRONG>PR #123</STRONG>: Optimize chart parallel array generation in Bolt</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.39",
     content: (
       <section id="version-2.7.39">

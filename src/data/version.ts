@@ -1,2 +1,2 @@
-export const LATEST_VERSION = "2.7.39";
-export const LATEST_RELEASE_DATE = "2026-10-09";
+export const LATEST_VERSION = "2.7.40";
+export const LATEST_RELEASE_DATE = "2026-10-13";
