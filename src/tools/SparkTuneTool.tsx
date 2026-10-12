@@ -39,7 +39,7 @@ const CollapsibleSection: React.FC<{
         <div className="glass-card p-0 border-gray-200 dark:border-white/5 mb-2 overflow-hidden transition-all duration-500 shadow-none">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full p-5 flex flex-row items-center justify-start text-left group hover:bg-white dark:hover:bg-white/5 transition-all duration-300 border-none h-auto gap-6 outline-none appearance-none bg-transparent"
+                className="w-full p-5 flex flex-row items-center justify-start text-left group hover:bg-white dark:hover:bg-white/5 transition-all duration-300 border-none h-auto gap-6 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset rounded-xl appearance-none bg-transparent"
                 aria-expanded={isOpen}
             >
                 <div className="flex flex-col items-center shrink-0 w-10">
