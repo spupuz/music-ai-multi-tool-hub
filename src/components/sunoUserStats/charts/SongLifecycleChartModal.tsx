@@ -15,11 +15,22 @@ const SongLifecycleChartModal: React.FC<SongLifecycleChartModalProps> = ({ song,
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
 
-  // ⚡ Bolt: Memoize mapped data
-  const chartLabels = useMemo(() => history.map(p => new Date(p.timestamp)), [history]);
-  const chartPlays = useMemo(() => history.map(p => p.plays), [history]);
-  const chartUpvotes = useMemo(() => history.map(p => p.upvotes), [history]);
-  const chartComments = useMemo(() => history.map(p => p.comment_count), [history]);
+  // ⚡ Bolt: Memoize mapped data using a single-pass loop with pre-allocated arrays
+  const { chartLabels, chartPlays, chartUpvotes, chartComments } = useMemo(() => {
+    const len = history.length;
+    const labels = new Array(len);
+    const plays = new Array(len);
+    const upvotes = new Array(len);
+    const comments = new Array(len);
+    for (let i = 0; i < len; i++) {
+      const p = history[i];
+      labels[i] = new Date(p.timestamp);
+      plays[i] = p.plays;
+      upvotes[i] = p.upvotes;
+      comments[i] = p.comment_count;
+    }
+    return { chartLabels: labels, chartPlays: plays, chartUpvotes: upvotes, chartComments: comments };
+  }, [history]);
 
   useEffect(() => {
     if (chartRef.current && history.length > 0) {
