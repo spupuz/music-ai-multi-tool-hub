@@ -805,7 +805,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
             <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-white/10">
                {lyricsSourceField && <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600">Source: <span className="text-emerald-600/50">{lyricsSourceField}</span></p>}
-               <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
+               <Button onClick={handleCopyLyrics} disabled={!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song." || !!copyLyricsStatus} title={(!lyricsToDisplay || lyricsToDisplay === "Lyrics not available for this song.") ? "Cannot copy lyrics: Lyrics not available" : !!copyLyricsStatus ? "Already copied" : undefined} variant="primary" size="lg" className="min-w-[160px] font-black uppercase tracking-widest" backgroundColor="#10b981">
                  {copyLyricsStatus || "Copy Lyrics"}
                </Button>
             </div>

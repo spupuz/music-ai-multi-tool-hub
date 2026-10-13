@@ -464,7 +464,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
                         <div className="flex gap-2 flex-wrap"> 
                             <Button onClick={() => { setNewArrangementName(''); setErrorSave(null); setShowSaveModal(true); }} variant="primary" size="sm" startIcon={<SaveIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 h-9 sm:h-10" backgroundColor="#10b981">Save</Button>
-                            <Button onClick={() => setShowLoadModal(true)} disabled={savedArrangements.length === 0} variant="ghost" size="sm" startIcon={<LoadIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 border-gray-200 dark:border-white/10 h-9 sm:h-10">Saved ({savedArrangements.length})</Button>
+                            <Button onClick={() => setShowLoadModal(true)} disabled={savedArrangements.length === 0} title={savedArrangements.length === 0 ? "No saved arrangements available" : undefined} variant="ghost" size="sm" startIcon={<LoadIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 border-gray-200 dark:border-white/10 h-9 sm:h-10">Saved ({savedArrangements.length})</Button>
                             <Button onClick={() => setShowImportExportModal(true)} variant="ghost" size="sm" startIcon={<ExportIcon className="w-3 h-3"/>} className="font-black uppercase tracking-widest text-[9px] px-4 border-gray-200 dark:border-white/10 h-9 sm:h-10">Import/Export</Button>
                             <Button 
                               onClick={handleClearAll} 

@@ -451,7 +451,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
           </div>
 
           <div className="flex flex-row gap-2 md:gap-4">
-            <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
+            <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} title={!sunoUrlsInput.trim() ? "Please enter URLs to save" : isLoading ? "Loading in progress" : undefined} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
             <input type="file" ref={fileInputRef} onChange={handleLoadUrlsFromFile} accept=".txt" style={{ display: 'none' }} id="load-urls-file" />
             <Button onClick={() => fileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">LOAD CACHE</Button>
           </div>
@@ -513,7 +513,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
               <div className="flex animate-pulse items-center justify-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
                 Analysis Logs
               </div>
-               <Button onClick={handleExportToCsv} disabled={isLoading} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-gray-200 dark:border-white/10">Export Summary</Button>
+               <Button onClick={handleExportToCsv} disabled={isLoading} title={isLoading ? "Processing in progress" : undefined} variant="ghost" size="sm" startIcon={<DownloadIcon className="w-4 h-4" />} className="font-black uppercase tracking-widest text-[9px] border-gray-200 dark:border-white/10">Export Summary</Button>
             </div>
             <ScrollReveal className="stagger-fade">
             {batchRunResults.map((result, index) => (
@@ -524,7 +524,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                     <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Analysis In Progress</span>
                   </div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 truncate flex-grow ml-4" title={result.inputUrl}>Song: {result.inputUrl}</p>
-                  {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Song</Button>}
+                  {result.processingError && <Button onClick={() => handleRetryUrl(result.inputUrl)} disabled={isLoading || !isPasswordCorrect} title={!isPasswordCorrect ? "Incorrect password" : isLoading ? "Processing in progress" : undefined} variant="warning" size="xs" startIcon={<RefreshIcon className="w-3 h-3 text-black" />} className="ml-4 font-black uppercase tracking-widest text-[8px]">Retry Song</Button>}
                 </div>
                 {result.processingError && !result.clipData && (<ResultDisplay title="Processing Error" status={false} message={result.processingError} />)}
                 {result.clipData && (
@@ -560,7 +560,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                         <div className="p-4 bg-white dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-2xl max-h-40 overflow-y-auto text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-pre-wrap leading-relaxed scrollbar-thin">
                           {result.songLyrics}
                         </div>
-                        <Button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} variant="ghost" size="xs" startIcon={<LyricsIcon className="w-3 h-3" />} className="w-full font-black uppercase tracking-widest text-[8px] border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-white/5">Inject into Lyric Lab</Button>
+                        <Button onClick={() => handleProcessLyrics(result.songLyrics)} disabled={!result.songLyrics} title={!result.songLyrics ? "No lyrics available to inject" : undefined} variant="ghost" size="xs" startIcon={<LyricsIcon className="w-3 h-3" />} className="w-full font-black uppercase tracking-widest text-[8px] border-gray-200 dark:border-white/5 hover:bg-white dark:hover:bg-white/5">Inject into Lyric Lab</Button>
                       </div>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
