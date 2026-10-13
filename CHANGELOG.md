@@ -1,3 +1,9 @@
+## [2.7.41] - 2026-10-13
+
+### Changed
+
+- **PR #125**: Add explanatory tooltips to disabled buttons across `LyricsSynchronizerTool`, `SongStructureBuilderTool`, `SunoCommunitySpinnerTool`, `SunoMusicPlayerTool`, and `SunoSongComplianceTool`, so the reason a control is unavailable is surfaced instead of leaving a silently inert button.
+
 ## [2.7.40] - 2026-10-13
 
 ### Changed

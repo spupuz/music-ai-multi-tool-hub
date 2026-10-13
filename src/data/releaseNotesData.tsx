@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.41",
+    content: (
+      <section id="version-2.7.41">
+        <SectionTitle>Version 2.7.41 - 2026-10-13</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #125</STRONG>: Add explanatory tooltips to disabled buttons across <CODE>LyricsSynchronizerTool</CODE>, <CODE>SongStructureBuilderTool</CODE>, <CODE>SunoCommunitySpinnerTool</CODE>, <CODE>SunoMusicPlayerTool</CODE>, and <CODE>SunoSongComplianceTool</CODE>, so the reason a control is unavailable is surfaced instead of leaving a silently inert button.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.40",
     content: (
       <section id="version-2.7.40">
