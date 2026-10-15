@@ -52,7 +52,10 @@ const TagVotesChart: React.FC<TagVotesChartProps> = ({
     const suggestedMax = maxCount + Math.ceil(maxCount * 0.05);
 
     const bgColors = generateColorShades(barColorStart, barColorEnd, processedData.length);
-    const borderColors = bgColors.map(c => c.replace(')', ', 0.7)').replace('rgb', 'rgba'));
+    const borderColors = new Array(bgColors.length);
+    for (let i = 0; i < bgColors.length; i++) {
+        borderColors[i] = bgColors[i].replace(')', ', 0.7)').replace('rgb', 'rgba');
+    }
 
     return { labels, counts, suggestedMax, bgColors, borderColors };
   }, [processedData, barColorStart, barColorEnd]);
