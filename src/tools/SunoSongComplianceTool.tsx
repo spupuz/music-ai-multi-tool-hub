@@ -452,7 +452,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
 
           <div className="flex flex-row gap-2 md:gap-4">
             <Button onClick={handleSaveUrlsToFile} disabled={isLoading || !sunoUrlsInput.trim()} title={!sunoUrlsInput.trim() ? "Please enter URLs to save" : isLoading ? "Loading in progress" : undefined} variant="ghost" size="xs" startIcon={<SaveIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">SAVE CACHE</Button>
-            <input type="file" ref={fileInputRef} onChange={handleLoadUrlsFromFile} accept=".txt" style={{ display: 'none' }} id="load-urls-file" />
+            <input type="file" ref={fileInputRef} onChange={handleLoadUrlsFromFile} accept=".txt" style={{ display: 'none' }} id="load-urls-file" aria-label="Load URLs Cache File" />
             <Button onClick={() => fileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<LoadIcon className="w-4 h-4" />} className="flex-1 font-black uppercase tracking-widest text-[8px] md:text-[9px] border-gray-200 dark:border-white/10 p-2 md:p-3 h-8 md:h-auto">LOAD CACHE</Button>
           </div>
           <div>

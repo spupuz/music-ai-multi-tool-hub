@@ -209,7 +209,7 @@ export const ManageCustomItemsModal: React.FC<{
 
                 <footer className="p-8 pt-6 border-t border-white/5 bg-black/40 space-y-4">
                     <div className="flex gap-4">
-                         <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file"/>
+                         <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file" aria-label="Import custom items file"/>
                         <Button 
                             onClick={onExport} 
                             variant="ghost" 

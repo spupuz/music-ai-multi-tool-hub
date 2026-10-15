@@ -375,7 +375,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 <div className="space-y-2">
                   <label className="block text-[8px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Static Audio File</label>
                   <div className="p-4 bg-white dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-2xl text-center group hover:bg-gray-100 dark:hover:bg-white/10 focus-within:ring-2 focus-within:ring-emerald-500 transition-all cursor-pointer relative">
-                    <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                    <input type="file" id="audioFile" accept=".mp3" onChange={handleAudioFileChange} ref={audioFileInputRef} className="absolute inset-0 opacity-0 cursor-pointer z-10" aria-label="Upload static audio file" />
                     <div className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-emerald-500 transition-colors uppercase leading-relaxed">
                       {audioFileName ? audioFileName : 'Deploy MP3 Buffer'}
                     </div>
@@ -389,7 +389,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-500">Lyric Data Buffer</h3>
               <div className="flex gap-2">
-                <input type="file" ref={lrcFileInputRef} onChange={handleLrcFileChange} accept=".lrc" className="hidden" id="load-lrc-file" />
+                <input type="file" ref={lrcFileInputRef} onChange={handleLrcFileChange} accept=".lrc" className="hidden" id="load-lrc-file" aria-label="Load LRC File" />
                 <Button onClick={() => lrcFileInputRef.current?.click()} variant="ghost" size="xs" startIcon={<ImportIcon className="w-3 h-3" />} className="font-black uppercase tracking-widest text-[8px] border-gray-200 dark:border-white/10 flex items-center justify-center">Import LRC</Button>
               </div>
             </div>

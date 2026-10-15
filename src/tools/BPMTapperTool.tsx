@@ -391,6 +391,7 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   ref={fileInputRef} 
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                   disabled={finderState === 'loading' || finderState === 'analyzing'} 
+                  aria-label="Upload local audio file"
                 />
                 <div className="px-6 py-8 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-3xl bg-white dark:bg-white/5 group-hover:bg-gray-100 dark:group-hover:bg-white/10 group-hover:border-green-500/30 transition-all text-center">
                   <p className="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-emerald-500 transition-colors">

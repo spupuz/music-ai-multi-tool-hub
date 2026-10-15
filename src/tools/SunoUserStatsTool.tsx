@@ -285,7 +285,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             >
               Export Snapshot
             </Button>
-            <input type="file" ref={importFileRef} accept=".json" onChange={(e) => e.target.files && e.target.files[0] && importUserDataSnapshot(e.target.files[0])} style={{display: 'none'}} id="import-user-stats-file"/>
+            <input type="file" ref={importFileRef} accept=".json" onChange={(e) => e.target.files && e.target.files[0] && importUserDataSnapshot(e.target.files[0])} style={{display: 'none'}} id="import-user-stats-file" aria-label="Import User Stats File" />
             <Button 
               onClick={handleImportClick} 
               disabled={isLoading} 

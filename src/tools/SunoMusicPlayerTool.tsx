@@ -505,11 +505,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               >
                 Export TXT
               </Button>
-              <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" />
+              <input type="file" ref={fileInputTxtRef} onChange={handleImportPlaylistFromTxtFile} accept=".txt" style={{ display: 'none' }} id="import-txt-playlist" aria-label="Import TXT Playlist File" />
               <label htmlFor="import-txt-playlist" className="flex items-center justify-start p-3 border border-gray-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
                 <FileTxtIcon className="w-4 h-4 ml-1 opacity-60"/> Import TXT
               </label>
-              <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" />
+              <input type="file" ref={fileInputCsvRef} onChange={handleImportPlaylistFromCsvFile} accept=".csv" style={{ display: 'none' }} id="import-csv-playlist" aria-label="Import CSV Playlist File" />
               <label htmlFor="import-csv-playlist" className="flex items-center justify-start p-3 border border-gray-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-2xl cursor-pointer text-xs font-black uppercase tracking-widest transition-all gap-3">
                 <FileCsvIcon className="w-4 h-4 ml-1 opacity-60"/> Import CSV
               </label>
