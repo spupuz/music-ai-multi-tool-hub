@@ -1,3 +1,9 @@
+## [2.7.43] - 2026-10-15
+
+### Changed
+
+- **PR #128**: Pre-allocate chart color arrays in charts for better performance
+
 ## [2.7.42] - 2026-10-15
 
 ### Changed
