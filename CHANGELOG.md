@@ -1,3 +1,10 @@
+## [2.7.44] - 2026-10-15
+
+### Fixed
+
+- **Analytics tool crash**: `StatsPage` violated the Rules of Hooks by placing its `useMemo` calls after the `loading` / `error` / `!stats` early returns. The hook count changed between the loading render and the data render, so React threw error #310 ("Rendered more hooks than during the previous render") and the whole Analytics tool failed to load. All hooks now run before any early return, with null-safe inputs.
+- Added a regression test (`src/pages/__tests__/StatsPage.test.tsx`) covering the loading-to-success and loading-to-error transitions so the hook-ordering regression cannot silently return.
+
 ## [2.7.43] - 2026-10-15
 
 ### Changed

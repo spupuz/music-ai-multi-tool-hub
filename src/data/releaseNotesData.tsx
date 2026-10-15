@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.44",
+    content: (
+      <section id="version-2.7.44">
+        <SectionTitle>Version 2.7.44 - 2026-10-15</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Analytics tool crash</STRONG>: <CODE>StatsPage</CODE> violated the Rules of Hooks by placing its <CODE>useMemo</CODE> calls after the <CODE>loading</CODE> / <CODE>error</CODE> / <CODE>!stats</CODE> early returns. The hook count changed between the loading render and the data render, so React threw error #310 ("Rendered more hooks than during the previous render") and the whole Analytics tool failed to load. All hooks now run before any early return, with null-safe inputs.</LI>
+          <LI>Added a regression test (<CODE>src/pages/__tests__/StatsPage.test.tsx</CODE>) covering the loading-to-success and loading-to-error transitions so the hook-ordering regression cannot silently return.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.43",
     content: (
       <section id="version-2.7.43">

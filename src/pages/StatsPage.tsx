@@ -4,10 +4,6 @@ import { Line } from 'react-chartjs-2';
 import { useCountUp } from '@/hooks/useCountUp';
 import '@/components/sunoUserStats/charts/chartSetup';
 
-const AnimatedStat: React.FC<{ value: number }> = ({ value }) => {
-  const count = useCountUp(value, 700, true);
-  return <>{count.toLocaleString()}</>;
-};
 import { 
   ComposableMap, 
   Geographies, 
@@ -108,14 +104,17 @@ const StatsPage: React.FC<ToolProps> = () => {
     fetchStats();
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center py-24"><Spinner size="w-12 h-12" /></div>;
-  if (error) return <div className="text-center py-20 text-red-500 font-semibold">Error: {error}</div>;
-  if (!stats) return null;
+  // ⚠️ Rules of Hooks: ALL hooks must run before any early return,
+  // otherwise React throws error #310 ("Rendered more hooks than during
+  // the previous render") once loading/error state changes.
+  const statsCountries = stats?.countries as Record<string, number> | undefined;
+  const statsTimeline = stats?.timeline as Array<{ date: string; uniques: number }> | undefined;
 
   // ⚡ Bolt: Cache country list mapping to prevent O(N) recalculations on hover state changes.
   // Impact: Reduces CPU time during tooltip interactions by avoiding redundant array manipulations.
   const validCountryEntries = useMemo(() => {
-    return Object.entries(stats.countries as Record<string, number>)
+    if (!statsCountries) return [];
+    return Object.entries(statsCountries)
       .filter(([alpha2, count]) => count > 0 && alpha2 !== 'XX')
       .map(([alpha2, count]) => {
         const country = resolveCountryByAlpha2(alpha2);
@@ -125,7 +124,7 @@ const StatsPage: React.FC<ToolProps> = () => {
           : null;
       })
       .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
-  }, [stats.countries]);
+  }, [statsCountries]);
 
   // ⚡ Bolt: Cache map data lookup object to avoid re-reducing the array on every render.
   const mapData = useMemo(() => {
@@ -148,20 +147,16 @@ const StatsPage: React.FC<ToolProps> = () => {
       .clamp(true);
   }, [maxVisitors]);
 
-  const getCountryFill = (count: number, fallbackColor: string) => {
-    if (count <= 0) return fallbackColor;
-    return colorScale(count);
-  };
-
   // ⚡ Bolt: Cache the Chart.js configuration object.
   // Impact: Prevents Chart.js from completely destroying and recreating the chart on simple UI updates.
   const timelineData = useMemo(() => {
+    const timeline = statsTimeline ?? [];
     return {
-      labels: stats.timeline.map((t: any) => t.date),
+      labels: timeline.map((t) => t.date),
       datasets: [
         {
           label: 'Unique Visitors',
-          data: stats.timeline.map((t: any) => t.uniques),
+          data: timeline.map((t) => t.uniques),
           borderColor: '#10b981',
           backgroundColor: '#10b98122',
           fill: true,
@@ -173,7 +168,16 @@ const StatsPage: React.FC<ToolProps> = () => {
         }
       ]
     };
-  }, [stats.timeline]);
+  }, [statsTimeline]);
+
+  if (loading) return <div className="flex justify-center items-center py-24"><Spinner size="w-12 h-12" /></div>;
+  if (error) return <div className="text-center py-20 text-red-500 font-semibold">Error: {error}</div>;
+  if (!stats) return null;
+
+  const getCountryFill = (count: number, fallbackColor: string) => {
+    if (count <= 0) return fallbackColor;
+    return colorScale(count);
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 animate-fadeIn pb-12">
