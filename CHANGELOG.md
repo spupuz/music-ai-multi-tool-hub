@@ -1,3 +1,9 @@
+## [2.7.42] - 2026-10-15
+
+### Changed
+
+- **PR #127**: Add aria-labels to hidden file inputs for better accessibility across `BPMTapperTool`, `LyricsSynchronizerTool`, `RandomMusicStyleGenerator`, `SunoMusicPlayerTool`, `SunoSongComplianceTool`, and `SunoUserStatsTool`
+
 ## [2.7.41] - 2026-10-13
 
 ### Changed

@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.42",
+    content: (
+      <section id="version-2.7.42">
+        <SectionTitle>Version 2.7.42 - 2026-10-15</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #127</STRONG>: Add aria-labels to hidden file inputs for better accessibility across <CODE>BPMTapperTool</CODE>, <CODE>LyricsSynchronizerTool</CODE>, <CODE>RandomMusicStyleGenerator</CODE>, <CODE>SunoMusicPlayerTool</CODE>, <CODE>SunoSongComplianceTool</CODE>, and <CODE>SunoUserStatsTool</CODE></LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.41",
     content: (
       <section id="version-2.7.41">
