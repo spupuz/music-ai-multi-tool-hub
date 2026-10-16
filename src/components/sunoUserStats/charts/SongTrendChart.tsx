@@ -34,15 +34,25 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
     return validData.sort((a, b) => b.increase - a.increase).slice(0, topNValue);
   }, [data, topNValue]);
 
-  // ⚡ Bolt: Memoize mapped data
-  const chartLabels = useMemo(() => processedData.map(d => d.song.title), [processedData]);
-  const chartDataValues = useMemo(() => processedData.map(d => d.increase), [processedData]);
+  // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
+  const { chartLabels, chartDataValues, suggestedMax } = useMemo(() => {
+    const len = processedData.length;
+    const labels = new Array(len);
+    const values = new Array(len);
+    let maxVal = 0;
 
-  // ⚡ Bolt: Memoize max computation to avoid O(n) array mapping and iteration on every render
-  const suggestedMax = useMemo(() => {
-      const maxIncrease = chartDataValues.reduce((max, val) => val > max ? val : max, 0);
-      return maxIncrease + Math.ceil(maxIncrease * 0.05);
-  }, [chartDataValues]);
+    for (let i = 0; i < len; i++) {
+        labels[i] = processedData[i].song.title;
+        values[i] = processedData[i].increase;
+        if (values[i] > maxVal) maxVal = values[i];
+    }
+
+    return {
+        chartLabels: labels,
+        chartDataValues: values,
+        suggestedMax: maxVal + Math.ceil(maxVal * 0.05)
+    };
+  }, [processedData]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {

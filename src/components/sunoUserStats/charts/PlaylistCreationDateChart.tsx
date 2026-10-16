@@ -19,9 +19,17 @@ const PlaylistCreationDateChart: React.FC<PlaylistCreationDateChartProps> = ({
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
 
-  // ⚡ Bolt: Memoize mapped data
-  const chartLabels = useMemo(() => data.map(d => d.month), [data]);
-  const chartDataValues = useMemo(() => data.map(d => d.count), [data]);
+  // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
+  const { chartLabels, chartDataValues } = useMemo(() => {
+    const len = data.length;
+    const labels = new Array(len);
+    const values = new Array(len);
+    for (let i = 0; i < len; i++) {
+        labels[i] = data[i].month;
+        values[i] = data[i].count;
+    }
+    return { chartLabels: labels, chartDataValues: values };
+  }, [data]);
 
   useEffect(() => {
     if (chartRef.current && data.length > 0) {

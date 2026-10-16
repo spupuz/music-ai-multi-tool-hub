@@ -151,12 +151,19 @@ const StatsPage: React.FC<ToolProps> = () => {
   // Impact: Prevents Chart.js from completely destroying and recreating the chart on simple UI updates.
   const timelineData = useMemo(() => {
     const timeline = statsTimeline ?? [];
+    const len = timeline.length;
+    const labels = new Array(len);
+    const data = new Array(len);
+    for (let i = 0; i < len; i++) {
+        labels[i] = timeline[i].date;
+        data[i] = timeline[i].uniques;
+    }
     return {
-      labels: timeline.map((t) => t.date),
+      labels,
       datasets: [
         {
           label: 'Unique Visitors',
-          data: timeline.map((t) => t.uniques),
+          data,
           borderColor: '#10b981',
           backgroundColor: '#10b98122',
           fill: true,

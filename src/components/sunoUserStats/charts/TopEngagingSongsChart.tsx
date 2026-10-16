@@ -39,9 +39,17 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
     return validData.sort((a, b) => (b.upvoteRate || 0) - (a.upvoteRate || 0)).slice(0, topNValue);
   }, [data, topNValue]);
 
-  // ⚡ Bolt: Memoize mapped data
-  const chartLabels = useMemo(() => processedData.map(d => d.song.title), [processedData]);
-  const chartDataValues = useMemo(() => processedData.map(d => d.upvoteRate || 0), [processedData]);
+  // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
+  const { chartLabels, chartDataValues } = useMemo(() => {
+    const len = processedData.length;
+    const labels = new Array(len);
+    const values = new Array(len);
+    for (let i = 0; i < len; i++) {
+        labels[i] = processedData[i].song.title;
+        values[i] = processedData[i].upvoteRate || 0;
+    }
+    return { chartLabels: labels, chartDataValues: values };
+  }, [processedData]);
 
   useEffect(() => {
     if (chartRef.current && processedData.length > 0) {

@@ -34,9 +34,17 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
     return validSongs.filter(s => (s.comment_count || 0) > 0).sort((a,b) => (b.comment_count || 0) - (a.comment_count || 0)).slice(0, topN);
   }, [songs, topN]);
 
-  // ⚡ Bolt: Memoize mapped data
-  const chartDataValues = useMemo(() => processedSongs.map(song => song.comment_count || 0), [processedSongs]);
-  const chartLabels = useMemo(() => processedSongs.map(song => song.title), [processedSongs]);
+  // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
+  const { chartLabels, chartDataValues } = useMemo(() => {
+    const len = processedSongs.length;
+    const labels = new Array(len);
+    const values = new Array(len);
+    for (let i = 0; i < len; i++) {
+        labels[i] = processedSongs[i].title;
+        values[i] = processedSongs[i].comment_count || 0;
+    }
+    return { chartLabels: labels, chartDataValues: values };
+  }, [processedSongs]);
 
   useEffect(() => {
     if (chartRef.current && processedSongs.length > 0) {
