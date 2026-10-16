@@ -1,3 +1,14 @@
+## [2.7.45] - 2026-10-16
+
+### Changed
+
+- **PR #129**: Build the parallel Chart.js `labels` / `data` arrays in a single pass with pre-allocated arrays instead of one `.map()` traversal per array, in `StatsPage` and the `PlaylistCreationDateChart`, `SongTrendChart`, `TopCommentedSongsChart`, and `TopEngagingSongsChart` components. `SongTrendChart` also folds its `suggestedMax` max-scan into that same pass, replacing three `useMemo` hooks with one.
+- Restored explicit `string[]` / `number[]` annotations on the pre-allocated arrays, so the extracted values stay type-checked instead of degrading to `any[]`.
+
+### Added
+
+- Regression test (`src/components/sunoUserStats/charts/__tests__/chartArrayExtraction.test.tsx`) asserting the loop-based extraction produces exactly the same `labels` and `data` as the previous `.map()` implementation, including sort/filter ordering, `suggestedMax`, the `|| 0` count fallbacks, and the empty-input path. Verified load-bearing: it fails on an off-by-one loop, a swapped label/value assignment, and an incorrect `suggestedMax` scan.
+
 ## [2.7.44] - 2026-10-15
 
 ### Fixed

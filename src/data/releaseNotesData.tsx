@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.45",
+    content: (
+      <section id="version-2.7.45">
+        <SectionTitle>Version 2.7.45 - 2026-10-16</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #129</STRONG>: Build the parallel Chart.js <CODE>labels</CODE> / <CODE>data</CODE> arrays in a single pass with pre-allocated arrays instead of one <CODE>.map()</CODE> traversal per array, in <CODE>StatsPage</CODE> and the <CODE>PlaylistCreationDateChart</CODE>, <CODE>SongTrendChart</CODE>, <CODE>TopCommentedSongsChart</CODE>, and <CODE>TopEngagingSongsChart</CODE> components. <CODE>SongTrendChart</CODE> also folds its <CODE>suggestedMax</CODE> max-scan into that same pass, replacing three <CODE>useMemo</CODE> hooks with one.</LI>
+          <LI>Restored explicit <CODE>string[]</CODE> / <CODE>number[]</CODE> annotations on the pre-allocated arrays, so the extracted values stay type-checked instead of degrading to <CODE>any[]</CODE>.</LI>
+        </UL>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <UL>
+          <LI>Regression test (<CODE>src/components/sunoUserStats/charts/__tests__/chartArrayExtraction.test.tsx</CODE>) asserting the loop-based extraction produces exactly the same <CODE>labels</CODE> and <CODE>data</CODE> as the previous <CODE>.map()</CODE> implementation, including sort/filter ordering, <CODE>suggestedMax</CODE>, the <CODE>|| 0</CODE> count fallbacks, and the empty-input path. Verified load-bearing: it fails on an off-by-one loop, a swapped label/value assignment, and an incorrect <CODE>suggestedMax</CODE> scan.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.44",
     content: (
       <section id="version-2.7.44">

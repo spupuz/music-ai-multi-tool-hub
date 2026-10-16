@@ -37,8 +37,8 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
   // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
   const { chartLabels, chartDataValues, suggestedMax } = useMemo(() => {
     const len = processedData.length;
-    const labels = new Array(len);
-    const values = new Array(len);
+    const labels = new Array<string>(len);
+    const values = new Array<number>(len);
     let maxVal = 0;
 
     for (let i = 0; i < len; i++) {

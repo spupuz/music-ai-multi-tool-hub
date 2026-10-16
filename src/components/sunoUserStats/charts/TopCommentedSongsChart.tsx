@@ -37,8 +37,8 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
   // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
   const { chartLabels, chartDataValues } = useMemo(() => {
     const len = processedSongs.length;
-    const labels = new Array(len);
-    const values = new Array(len);
+    const labels = new Array<string>(len);
+    const values = new Array<number>(len);
     for (let i = 0; i < len; i++) {
         labels[i] = processedSongs[i].title;
         values[i] = processedSongs[i].comment_count || 0;

@@ -22,8 +22,8 @@ const PlaylistCreationDateChart: React.FC<PlaylistCreationDateChartProps> = ({
   // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
   const { chartLabels, chartDataValues } = useMemo(() => {
     const len = data.length;
-    const labels = new Array(len);
-    const values = new Array(len);
+    const labels = new Array<string>(len);
+    const values = new Array<number>(len);
     for (let i = 0; i < len; i++) {
         labels[i] = data[i].month;
         values[i] = data[i].count;

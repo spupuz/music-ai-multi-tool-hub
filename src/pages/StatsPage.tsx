@@ -152,8 +152,8 @@ const StatsPage: React.FC<ToolProps> = () => {
   const timelineData = useMemo(() => {
     const timeline = statsTimeline ?? [];
     const len = timeline.length;
-    const labels = new Array(len);
-    const data = new Array(len);
+    const labels = new Array<string>(len);
+    const data = new Array<number>(len);
     for (let i = 0; i < len; i++) {
         labels[i] = timeline[i].date;
         data[i] = timeline[i].uniques;

@@ -42,8 +42,8 @@ const TopEngagingSongsChart: React.FC<TopEngagingSongsChartProps> = ({
   // ⚡ Bolt: Memoize mapped data in a single pass to reduce memory allocations
   const { chartLabels, chartDataValues } = useMemo(() => {
     const len = processedData.length;
-    const labels = new Array(len);
-    const values = new Array(len);
+    const labels = new Array<string>(len);
+    const values = new Array<number>(len);
     for (let i = 0; i < len; i++) {
         labels[i] = processedData[i].song.title;
         values[i] = processedData[i].upvoteRate || 0;
