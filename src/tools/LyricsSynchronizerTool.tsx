@@ -324,7 +324,7 @@ const LyricsSynchronizerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             {(songTitle || artistName) && (
               <div className="flex flex-col items-center mb-8 animate-in fade-in zoom-in-95 duration-500">
                 <div className="relative group">
-                  <img
+                  <img referrerPolicy="no-referrer"
                     src={sunoCoverArtUrl || FALLBACK_IMAGE_DATA_URI}
                     alt={songTitle || 'Cover Art'}
                     className="w-40 h-40 object-cover rounded-3xl border border-gray-200 dark:border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500"

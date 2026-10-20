@@ -594,7 +594,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
             <a href={sanitizeUrlForHref(playerState.currentSong.suno_song_url || `https://suno.com/song/${playerState.currentSong.id}`)} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 group/img">
               <div className="relative">
-                <img
+                <img referrerPolicy="no-referrer"
                   src={playerState.currentSong.image_url || FALLBACK_IMAGE_DATA_URI}
                   alt={playerState.currentSong.title}
                   loading="lazy"
@@ -756,7 +756,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 }
               >
                 <div className="relative flex-shrink-0">
-                  <img
+                  <img referrerPolicy="no-referrer"
                     src={song.image_url || FALLBACK_IMAGE_DATA_URI}
                     alt={song.title}
                     loading="lazy"

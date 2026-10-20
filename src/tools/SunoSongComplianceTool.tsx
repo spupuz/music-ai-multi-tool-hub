@@ -532,7 +532,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                     <div className="p-4 bg-white dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5">
                       <div className="flex flex-col sm:flex-row gap-6 items-center">
                         {result.clipData.image_url && (
-                          <img src={result.clipData.image_url} alt="Cover Art" loading="lazy" decoding="async" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                          <img referrerPolicy="no-referrer" src={result.clipData.image_url} alt="Cover Art" loading="lazy" decoding="async" className="w-24 h-24 object-cover rounded-2xl border border-white/10 shadow-lg flex-shrink-0" onError={(e) => (e.currentTarget.style.display = 'none')} />
                         )} 
                         <div className="flex-1 text-center sm:text-left min-w-0">
                           <h3 className="text-xl font-black uppercase tracking-tighter text-emerald-600 dark:text-emerald-400 truncate" title={result.clipData.title}>{result.clipData.title || "UNTITLED_SIGNAL"}</h3>

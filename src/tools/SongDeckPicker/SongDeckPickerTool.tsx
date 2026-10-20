@@ -171,7 +171,7 @@ const SongDeckPickerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         </nav>
         
              {logic.customLogo && ( 
-                <img 
+                <img referrerPolicy="no-referrer"
                     src={logic.customLogo} 
                     alt="Custom Deck Picker Logo" 
                     className="mx-auto mb-8 rounded-3xl object-contain shadow-2xl" 

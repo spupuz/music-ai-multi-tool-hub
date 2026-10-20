@@ -48,7 +48,7 @@ export const DeckFocusView: React.FC<DeckFocusViewProps> = (props) => {
                 
                 <div className="relative group perspective-1000 mb-6">
                     <a href={sanitizeUrlForHref(props.card.webLink) || '#'} target="_blank" rel="noopener noreferrer" className="block">
-                        <img 
+                        <img referrerPolicy="no-referrer"
                             src={props.card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
                             alt={`${props.card.title} cover`} 
                             loading="lazy" decoding="async"
@@ -164,7 +164,7 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
                     {/* Riffusion/Flow card with image + audio snippet */}
                     {!isSunoCard && card.imageUrl && (
                         <div className="relative h-2/3 w-full group overflow-hidden">
-                            <img 
+                            <img referrerPolicy="no-referrer"
                                 src={card.imageUrl || props.FALLBACK_IMAGE_DATA_URI} 
                                 alt={`${card.title} cover`} 
                                 loading="lazy" decoding="async"
