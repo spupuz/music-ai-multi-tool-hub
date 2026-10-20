@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.47",
+    content: (
+      <section id="version-2.7.47">
+        <SectionTitle>Version 2.7.47 - 2026-10-20</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #131</STRONG>: Added <CODE>referrerPolicy="no-referrer"</CODE> to all external image elements across 20 components (image uploads, Suno player info boxes, user stats charts, Deck picker, audio tools, and compliance tools) to prevent referrer leakage when loading external images.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.46",
     content: (
       <section id="version-2.7.46">

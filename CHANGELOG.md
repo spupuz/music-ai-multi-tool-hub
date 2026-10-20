@@ -1,3 +1,9 @@
+## [2.7.47] - 2026-10-20
+
+### Security
+
+- **PR #131**: Added `referrerPolicy="no-referrer"` to all external image elements across 20 components (image uploads, Suno player info boxes, user stats charts, Deck picker, audio tools, and compliance tools) to prevent referrer leakage when loading external images.
+
 ## [2.7.46] - 2026-10-20
 
 ### Changed
