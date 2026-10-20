@@ -167,10 +167,14 @@ export const CreativeConceptBlender: React.FC<ToolProps> = ({ trackLocalEvent })
 
   const formatConceptForClipboard = (concept: BlendedConceptParts | null): string => {
     if (!concept) return "";
+    // ⚡ Bolt: Consolidated filter and map into a single reduce pass to avoid intermediate array allocation
     let parts = [
         concept.theme, concept.style, concept.texture,
         concept.musicality, concept.conflict, concept.character, concept.setting, concept.catalyst
-    ].filter(Boolean).map(s => String(s).trim());
+    ].reduce((acc: string[], val) => {
+        if (val) acc.push(String(val).trim());
+        return acc;
+    }, []);
     if (concept.twist) parts.push(`with a twist: ${String(concept.twist).trim()}`);
     return parts.join(', ');
   };
