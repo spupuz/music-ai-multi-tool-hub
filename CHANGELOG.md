@@ -1,3 +1,9 @@
+## [2.7.46] - 2026-10-20
+
+### Changed
+
+- **PR #130**: Consolidated `.filter(Boolean).map()` into a single-pass `.reduce()` in `CreativeConceptBlender`'s `formatConceptForClipboard`, avoiding the intermediate array allocation when building the concept parts list.
+
 ## [2.7.45] - 2026-10-16
 
 ### Changed

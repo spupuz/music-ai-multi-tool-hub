@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.46",
+    content: (
+      <section id="version-2.7.46">
+        <SectionTitle>Version 2.7.46 - 2026-10-20</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #130</STRONG>: Consolidated <CODE>.filter(Boolean).map()</CODE> into a single-pass <CODE>.reduce()</CODE> in <CODE>CreativeConceptBlender</CODE>'s <CODE>formatConceptForClipboard</CODE>, avoiding the intermediate array allocation when building the concept parts list.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.45",
     content: (
       <section id="version-2.7.45">
