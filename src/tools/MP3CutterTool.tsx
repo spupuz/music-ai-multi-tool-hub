@@ -148,7 +148,7 @@ const MP3CutterTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         
         {sunoArtistName && (
           <div className="my-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center gap-3">
-            <img 
+            <img referrerPolicy="no-referrer"
               src={sunoCoverArtUrl || FALLBACK_IMAGE_DATA_URI} 
               alt={fileName || 'Song Cover'} 
               className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-md border-2 border-emerald-500" 

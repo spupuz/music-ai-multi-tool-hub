@@ -16,7 +16,7 @@ export const ProfileInfoBox: React.FC<{ detail: SunoProfileDetail }> = ({ detail
       {detail.user_id !== "custom_list_synthetic_id" && detail.image_url && (
         <div className="relative flex-shrink-0 group/avatar">
           <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-md opacity-0 group-hover/avatar:opacity-100 transition-opacity"></div>
-          <img 
+          <img referrerPolicy="no-referrer"
             src={detail.image_url || PLACEHOLDER_AVATAR} 
             alt={`${detail.display_name}'s avatar`} 
             loading="lazy"
@@ -81,7 +81,7 @@ export const PlaylistInfoBox: React.FC<{ detail: SunoPlaylistDetail }> = ({ deta
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl group-hover:bg-emerald-500/10 transition-colors pointer-events-none"></div>
       <div className="relative flex-shrink-0 group/cover">
         <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-md opacity-0 group-hover/cover:opacity-100 transition-opacity"></div>
-        <img 
+        <img referrerPolicy="no-referrer"
           src={detail.image_url || detail.creator_avatar_image_url || PLACEHOLDER_ARTWORK} 
           alt={`${detail.name || 'Playlist'}'s artwork`} 
           loading="lazy"

@@ -504,7 +504,7 @@ const SongCoverArtTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-8">Processed Output</h3>
             <div className="aspect-square w-full bg-black/40 rounded-3xl overflow-hidden border border-white/10 shadow-inner relative group">
               {filteredPreviewUrl ? (
-                <img src={filteredPreviewUrl} alt="Preview" className="w-full h-full object-contain" />
+                <img referrerPolicy="no-referrer" src={filteredPreviewUrl} alt="Preview" className="w-full h-full object-contain" />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-8 text-gray-600">
                   <ConfigIcon className="w-8 h-8 opacity-20 mb-4" />

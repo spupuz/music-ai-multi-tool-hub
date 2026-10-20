@@ -108,7 +108,7 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                 }
               >
                 <div className="relative flex-shrink-0">
-                  <img
+                  <img referrerPolicy="no-referrer"
                     src={song.image_url || FALLBACK_IMAGE_DATA_URI}
                     alt={song.title}
                     className={`w-12 h-12 rounded-xl object-cover border border-gray-200 dark:border-white/10 transition-all duration-500 ${currentSong?.id === song.id ? 'border-emerald-500/50 scale-110 shadow-lg' : ''}`}

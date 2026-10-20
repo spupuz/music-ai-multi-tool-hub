@@ -181,7 +181,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
           aria-label="Upload inspiration image"
         />
         {preview ? (
-          <img loading="lazy" decoding="async" src={preview} alt="Preview" className="max-h-40 rounded-lg object-contain shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all" />
+          <img referrerPolicy="no-referrer" loading="lazy" decoding="async" src={preview} alt="Preview" className="max-h-40 rounded-lg object-contain shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all" />
         ) : (
           <div className="flex flex-row items-center gap-6 py-6 px-4">
             <UploadIcon className="w-12 h-12 flex-shrink-0 transition-colors text-emerald-500 group-hover:text-emerald-400" />
@@ -204,7 +204,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, label = "Uploa
                     onChange={c => setCrop(c)}
                     className="max-h-full max-w-full"
                 >
-                    <img
+                    <img referrerPolicy="no-referrer"
                         src={uncroppedImageSrc}
                         onLoad={onImageLoad}
                         alt="Image to crop"
