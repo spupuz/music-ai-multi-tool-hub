@@ -646,7 +646,7 @@ export const ManageCustomItemsModal: React.FC<{
                                         onClick={() => onDelete(catKey, item)} 
                                         variant="ghost" 
                                         size="xs" 
-                                        className="ml-2 p-1.5 text-red-500/30 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover/item:opacity-100" 
+                                        className="ml-2 p-1.5 text-red-500/30 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover/item:opacity-100 focus-visible:opacity-100"
                                         aria-label={`Delete ${item}`}
                                         startIcon={<TrashIcon className="w-3.5 h-3.5"/>}
                                       />
