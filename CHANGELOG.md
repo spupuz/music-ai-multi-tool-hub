@@ -1,3 +1,9 @@
+## [2.7.48] - 2026-10-22
+
+### Fixed
+
+- **PR #132**: Made the delete button in `CreativeConceptBlender`'s custom-items modal visible on keyboard focus by adding `focus-visible:opacity-100`, so keyboard users can see and interact with it without needing a mouse hover.
+
 ## [2.7.47] - 2026-10-20
 
 ### Security

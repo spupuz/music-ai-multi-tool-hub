@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.48",
+    content: (
+      <section id="version-2.7.48">
+        <SectionTitle>Version 2.7.48 - 2026-10-22</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #132</STRONG>: Made the delete button in <CODE>CreativeConceptBlender</CODE>'s custom-items modal visible on keyboard focus by adding <CODE>focus-visible:opacity-100</CODE>, so keyboard users can see and interact with it without needing a mouse hover.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.47",
     content: (
       <section id="version-2.7.47">
