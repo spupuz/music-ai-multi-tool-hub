@@ -336,6 +336,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             onClick={handleMainButtonClick} 
             disabled={isFetchingOrLoading || !identifierInput.trim()} 
+            title={!identifierInput.trim() ? "Please enter a Suno username, playlist URL, or song URLs" : isFetchingOrLoading ? "Loading in progress" : undefined}
             variant="primary"
             size="md"
             className="flex-grow sm:flex-grow-0 sm:min-w-[160px] font-black uppercase tracking-widest text-[8px] sm:text-sm h-10 md:h-auto py-2 sm:py-0 whitespace-nowrap"
@@ -348,6 +349,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             onClick={handleAppendSongs} 
             disabled={isFetchingOrLoading || !identifierInput.trim()} 
+            title={!identifierInput.trim() ? "Please enter a Suno username, playlist URL, or song URLs" : isFetchingOrLoading ? "Loading in progress" : undefined}
             variant="ghost"
             size="md"
             startIcon={<AppendIcon className="w-5 h-5" />}
@@ -452,7 +454,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost"
               size="sm"
               className="w-full justify-start border-red-500/30 text-red-700 dark:text-red-400 hover:bg-red-500/10 font-bold shadow-none"
-              title="Clears cached User IDs and Playlist Metadata"
+              title={isFetchingOrLoading ? "Cannot clear while loading" : "Clears cached User IDs and Playlist Metadata"}
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
             > 
               {getClearProfileCacheButtonText()} 
@@ -463,7 +465,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost"
               size="sm"
               className="w-full justify-start border-orange-500/30 text-orange-700 dark:text-orange-400 hover:bg-orange-500/10 font-bold shadow-none"
-              title="Clears cached individual song details and stream URLs"
+              title={isFetchingOrLoading ? "Cannot clear while loading" : "Clears cached individual song details and stream URLs"}
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />}
             > 
               {getClearSongInfoCacheButtonText()} 
@@ -474,7 +476,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
               variant="ghost"
               size="sm"
               className="w-full justify-start border-red-600/30 text-red-600 dark:text-red-500 hover:bg-red-600 hover:text-white font-bold shadow-none"
-              title="WARNING: Clears ALL application data and reloads"
+              title={isFetchingOrLoading ? "Cannot clear while loading" : "WARNING: Clears ALL application data and reloads"}
               startIcon={<TrashIcon className="w-3.5 h-3.5" />}
             > 
               {getClearAllHubDataButtonText()} 
