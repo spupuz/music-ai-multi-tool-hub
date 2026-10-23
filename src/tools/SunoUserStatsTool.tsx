@@ -249,6 +249,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
           <Button 
             type="submit" 
             disabled={!username.trim()} 
+            title={!username.trim() ? "Please enter a username" : undefined}
             loading={isLoading}
             variant="primary" 
             size="md" 
@@ -268,6 +269,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <Button 
               onClick={handleClearCurrentUserCache} 
               disabled={isLoading || !storedData} 
+              title={isLoading ? "Loading in progress" : !storedData ? "No data to clear" : undefined}
               variant="ghost" 
               size="xs" 
               startIcon={<RefreshIcon className="w-3.5 h-3.5" />} 
@@ -278,6 +280,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <Button 
               onClick={exportUserDataSnapshot} 
               disabled={isLoading || !storedData} 
+              title={isLoading ? "Loading in progress" : !storedData ? "No data to export" : undefined}
               variant="ghost" 
               size="xs" 
               startIcon={<ExportIcon className="w-3.5 h-3.5" />} 
@@ -289,6 +292,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <Button 
               onClick={handleImportClick} 
               disabled={isLoading} 
+              title={isLoading ? "Loading in progress" : undefined}
               variant="ghost" 
               size="xs" 
               startIcon={<ImportIcon className="w-3.5 h-3.5" />} 
@@ -299,6 +303,7 @@ const SunoUserStatsTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             <Button 
               onClick={handleClearAllHubDataFromStatsTool} 
               disabled={isLoading && clearAllHubDataClickCount < (CLEAR_CLICKS_NEEDED_GLOBAL -1) } 
+              title={isLoading ? "Loading in progress" : undefined}
               variant="ghost" 
               size="xs" 
               startIcon={<TrashIcon className="w-3.5 h-3.5" />} 
