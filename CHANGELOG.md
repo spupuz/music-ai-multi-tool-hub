@@ -1,3 +1,10 @@
+## [2.7.49] - 2026-10-23
+
+### Changed
+
+- **PR #134**: Optimized `calculateStandardDeviation` in `src/utils/mathUtils.ts` with standard for loops, consolidating reduce passes and improving accuracy by avoiding catastrophic cancellation.
+- **PR #133**: Added tooltip explanations for disabled action buttons in `SunoMusicPlayerTool` and `SunoUserStatsTool` to improve accessibility and UX.
+
 ## [2.7.48] - 2026-10-22
 
 ### Fixed

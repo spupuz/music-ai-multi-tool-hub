@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.49",
+    content: (
+      <section id="version-2.7.49">
+        <SectionTitle>Version 2.7.49 - 2026-10-23</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #134</STRONG>: Optimized <CODE>calculateStandardDeviation</CODE> in <CODE>src/utils/mathUtils.ts</CODE> with standard for loops, consolidating reduce passes and improving accuracy by avoiding catastrophic cancellation.</LI>
+          <LI><STRONG>PR #133</STRONG>: Added tooltip explanations for disabled action buttons in <CODE>SunoMusicPlayerTool</CODE> and <CODE>SunoUserStatsTool</CODE> to improve accessibility and UX.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.48",
     content: (
       <section id="version-2.7.48">
