@@ -13,9 +13,24 @@ export function calculateStandardDeviation(values: number[], mean?: number): num
   }
 
   const N = values.length;
-  const actualMean = mean === undefined ? values.reduce((acc, val) => acc + val, 0) / N : mean;
+  // ⚡ Bolt: Consolidated reduce passes into standard for loops, avoiding redundant iterations when calculating standard deviation.
+  // We avoid the naive E[X^2] - E[X]^2 formula to prevent catastrophic cancellation and preserve accuracy with custom means.
+  let actualMean = mean;
+  if (actualMean === undefined) {
+    let sum = 0;
+    for (let i = 0; i < N; i++) {
+      sum += values[i];
+    }
+    actualMean = sum / N;
+  }
+
+  let sumOfSquaredDifferences = 0;
+  for (let i = 0; i < N; i++) {
+    const diff = values[i] - actualMean;
+    sumOfSquaredDifferences += diff * diff;
+  }
   
-  const variance = values.reduce((acc, val) => acc + Math.pow(val - actualMean, 2), 0) / N;
+  const variance = sumOfSquaredDifferences / N;
   
   return Math.sqrt(variance);
 }
