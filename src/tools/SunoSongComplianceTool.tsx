@@ -544,6 +544,7 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
                     {result.clipData.id && (
                       <div className="my-4 p-2 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/5">
                         <iframe
+                          sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
                           src={`https://suno.com/embed/${result.clipData.id}`}
                           className="w-full h-24 rounded-xl border-0 opacity-80 hover:opacity-100 transition-opacity"
                           allow="autoplay; encrypted-media"
