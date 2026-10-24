@@ -57,18 +57,28 @@ export const usePlaylistAnalysis = (
       } catch (e) { }
     });
 
-    const allTags = Array.from(tagMap.entries()).map(([name, count]) => ({ name, count }));
+    const allTags = new Array(tagMap.size);
+    let tagIdx = 0;
+    for (const [name, count] of tagMap.entries()) {
+      allTags[tagIdx++] = { name, count };
+    }
     const mostCommonTags = allTags.filter(t => !commonGenres.includes(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
     const mostCommonGenres = allTags.filter(t => commonGenres.includes(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
 
-    const mostFeaturedArtists = Array.from(artistMap.entries())
-      .map(([handle, data]) => ({ handle, name: data.name, count: data.count, profileUrl: data.profileUrl }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
+    const mostFeaturedArtists = new Array(artistMap.size);
+    let artistIdx = 0;
+    for (const [handle, data] of artistMap.entries()) {
+      mostFeaturedArtists[artistIdx++] = { handle, name: data.name, count: data.count, profileUrl: data.profileUrl };
+    }
+    mostFeaturedArtists.sort((a, b) => b.count - a.count);
+    const topFeaturedArtists = mostFeaturedArtists.slice(0, 10);
 
-    const creationDateDistribution = Array.from(dateMap.entries())
-      .map(([month, count]) => ({ month, count }))
-      .sort((a, b) => a.month.localeCompare(b.month));
+    const creationDateDistribution = new Array(dateMap.size);
+    let dateIdx = 0;
+    for (const [month, count] of dateMap.entries()) {
+      creationDateDistribution[dateIdx++] = { month, count };
+    }
+    creationDateDistribution.sort((a, b) => a.month.localeCompare(b.month));
 
     return {
       totalClips,
@@ -80,7 +90,7 @@ export const usePlaylistAnalysis = (
       avgComments: totalClips > 0 ? totalComments / totalClips : 0,
       mostCommonTags,
       mostCommonGenres,
-      mostFeaturedArtists,
+      mostFeaturedArtists: topFeaturedArtists,
       creationDateDistribution
     };
   }, [originalSongsList, currentIdentifierType]);
