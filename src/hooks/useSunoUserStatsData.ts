@@ -186,11 +186,35 @@ const calculateAggregatedStats = (
     });
     
     const avgDurationSec = totalSongs > 0 ? totalDurationSec / totalSongs : 0;
-    const tagStats: TagStat[] = Array.from(tagMap.entries()).map(([name, data]) => ({ name, ...data, avgPlays:data.count>0?data.totalPlays/data.count:0, avgUpvotes:data.count>0?data.totalUpvotes/data.count:0, avgComments:data.count>0?data.totalComments/data.count:0, avgUpvoteRate: data.totalPlays > 0 ? (data.totalUpvotes / data.totalPlays) * 100 : 0, avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0 }));
+    const tagStats: TagStat[] = new Array(tagMap.size);
+    let tagIdx = 0;
+    for (const [name, data] of tagMap.entries()) {
+      tagStats[tagIdx++] = {
+        name,
+        ...data,
+        avgPlays: data.count > 0 ? data.totalPlays / data.count : 0,
+        avgUpvotes: data.count > 0 ? data.totalUpvotes / data.count : 0,
+        avgComments: data.count > 0 ? data.totalComments / data.count : 0,
+        avgUpvoteRate: data.totalPlays > 0 ? (data.totalUpvotes / data.totalPlays) * 100 : 0,
+        avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0
+      };
+    }
     const commonGenres = ['pop','rock','electronic','hip hop','jazz','classical','folk','metal','blues','r&b','reggae','country','funk','soul','disco','punk','ambient','techno','house','trance','synthwave','lo-fi','chiptune','drill','edm','idm','dnb','drum and bass','jungle','garage','grime','dubstep','trap','vaporwave','shoegaze','post-punk','indie','alternative'];
     const genreMap = new Map<string, { count:number; totalUpvotes:number; totalPlays:number; totalComments:number }>();
     tagStats.forEach(tag => { const pgs = tag.name.split(/\s+|-|\//); pgs.forEach(pg => { const nPg = pg.toLowerCase(); if(commonGenres.includes(nPg)){ const cur = genreMap.get(nPg) || {count:0,totalUpvotes:0,totalPlays:0,totalComments:0}; cur.count+=tag.count; cur.totalUpvotes+=tag.totalUpvotes; cur.totalPlays+=tag.totalPlays; cur.totalComments+=tag.totalComments; genreMap.set(nPg, cur); }});});
-    const genreStats: GenreStat[] = Array.from(genreMap.entries()).map(([name,data]) => ({ name,...data, avgPlays:data.count>0?data.totalPlays/data.count:0, avgUpvotes:data.count>0?data.totalUpvotes/data.count:0, avgComments:data.count>0?data.totalComments/data.count:0, avgUpvoteRate: data.totalPlays > 0 ? (data.totalUpvotes / data.totalPlays) * 100 : 0, avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0,}));
+    const genreStats: GenreStat[] = new Array(genreMap.size);
+    let genreIdx = 0;
+    for (const [name, data] of genreMap.entries()) {
+      genreStats[genreIdx++] = {
+        name,
+        ...data,
+        avgPlays: data.count > 0 ? data.totalPlays / data.count : 0,
+        avgUpvotes: data.count > 0 ? data.totalUpvotes / data.count : 0,
+        avgComments: data.count > 0 ? data.totalComments / data.count : 0,
+        avgUpvoteRate: data.totalPlays > 0 ? (data.totalUpvotes / data.totalPlays) * 100 : 0,
+        avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0,
+      };
+    }
     const todayForCalc = new Date(currentFetchTimestamp); const thirtyDaysAgoDateForTotal = new Date(todayForCalc); thirtyDaysAgoDateForTotal.setDate(todayForCalc.getDate()-30);
     const songsCreatedLast30DaysList = songs.filter(s => new Date(s.created_at) >= thirtyDaysAgoDateForTotal);
 
