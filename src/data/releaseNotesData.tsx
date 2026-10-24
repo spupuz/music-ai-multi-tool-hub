@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.51",
+    content: (
+      <section id="version-2.7.51">
+        <SectionTitle>Version 2.7.51 - 2026-10-24</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+      </section>
+    )
+  },
+  {
     version: "2.7.50",
     content: (
       <section id="version-2.7.50">
