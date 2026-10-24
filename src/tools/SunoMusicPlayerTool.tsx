@@ -642,6 +642,7 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         <div className="mb-6 w-full flex flex-col items-center animate-fadeIn">
           <div className="w-full max-w-3xl aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/30">
             <iframe
+              sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
               src={`https://suno.com/embed/${embedClipId}?autoplay=1`}
               className="w-full h-full border-0"
               allow="autoplay; encrypted-media"

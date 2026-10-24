@@ -150,6 +150,7 @@ export const RankingModal: React.FC<RankingModalProps> = (props) => {
                     {isSunoCard && (
                         <div className="relative h-2/3 w-full group overflow-hidden">
                             <iframe 
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
                                 src={`https://suno.com/embed/${card.embedClipId}`}
                                 className="w-full h-full object-cover rounded-t-[2.5rem] transition-transform duration-500 group-hover:scale-105" 
                                 allow="autoplay; encrypted-media"
