@@ -1,29 +1,29 @@
-## [2.7.49] - 2026-10-23
+## [2.7.50] - 2026-10-24 - 2026-10-23
 
 ### Changed
 
 - **PR #134**: Optimized `calculateStandardDeviation` in `src/utils/mathUtils.ts` with standard for loops, consolidating reduce passes and improving accuracy by avoiding catastrophic cancellation.
 - **PR #133**: Added tooltip explanations for disabled action buttons in `SunoMusicPlayerTool` and `SunoUserStatsTool` to improve accessibility and UX.
 
-## [2.7.48] - 2026-10-22
+## [2.7.50] - 2026-10-24 - 2026-10-22
 
 ### Fixed
 
 - **PR #132**: Made the delete button in `CreativeConceptBlender`'s custom-items modal visible on keyboard focus by adding `focus-visible:opacity-100`, so keyboard users can see and interact with it without needing a mouse hover.
 
-## [2.7.47] - 2026-10-20
+## [2.7.50] - 2026-10-24 - 2026-10-20
 
 ### Security
 
 - **PR #131**: Added `referrerPolicy="no-referrer"` to all external image elements across 20 components (image uploads, Suno player info boxes, user stats charts, Deck picker, audio tools, and compliance tools) to prevent referrer leakage when loading external images.
 
-## [2.7.46] - 2026-10-20
+## [2.7.50] - 2026-10-24 - 2026-10-20
 
 ### Changed
 
 - **PR #130**: Consolidated `.filter(Boolean).map()` into a single-pass `.reduce()` in `CreativeConceptBlender`'s `formatConceptForClipboard`, avoiding the intermediate array allocation when building the concept parts list.
 
-## [2.7.45] - 2026-10-16
+## [2.7.50] - 2026-10-24 - 2026-10-16
 
 ### Changed
 
@@ -34,56 +34,56 @@
 
 - Regression test (`src/components/sunoUserStats/charts/__tests__/chartArrayExtraction.test.tsx`) asserting the loop-based extraction produces exactly the same `labels` and `data` as the previous `.map()` implementation, including sort/filter ordering, `suggestedMax`, the `|| 0` count fallbacks, and the empty-input path. Verified load-bearing: it fails on an off-by-one loop, a swapped label/value assignment, and an incorrect `suggestedMax` scan.
 
-## [2.7.44] - 2026-10-15
+## [2.7.50] - 2026-10-24 - 2026-10-15
 
 ### Fixed
 
 - **Analytics tool crash**: `StatsPage` violated the Rules of Hooks by placing its `useMemo` calls after the `loading` / `error` / `!stats` early returns. The hook count changed between the loading render and the data render, so React threw error #310 ("Rendered more hooks than during the previous render") and the whole Analytics tool failed to load. All hooks now run before any early return, with null-safe inputs.
 - Added a regression test (`src/pages/__tests__/StatsPage.test.tsx`) covering the loading-to-success and loading-to-error transitions so the hook-ordering regression cannot silently return.
 
-## [2.7.43] - 2026-10-15
+## [2.7.50] - 2026-10-24 - 2026-10-15
 
 ### Changed
 
 - **PR #128**: Pre-allocate chart color arrays in charts for better performance
 
-## [2.7.42] - 2026-10-15
+## [2.7.50] - 2026-10-24 - 2026-10-15
 
 ### Changed
 
 - **PR #127**: Add aria-labels to hidden file inputs for better accessibility across `BPMTapperTool`, `LyricsSynchronizerTool`, `RandomMusicStyleGenerator`, `SunoMusicPlayerTool`, `SunoSongComplianceTool`, and `SunoUserStatsTool`
 
-## [2.7.41] - 2026-10-13
+## [2.7.50] - 2026-10-24 - 2026-10-13
 
 ### Changed
 
 - **PR #125**: Add explanatory tooltips to disabled buttons across `LyricsSynchronizerTool`, `SongStructureBuilderTool`, `SunoCommunitySpinnerTool`, `SunoMusicPlayerTool`, and `SunoSongComplianceTool`, so the reason a control is unavailable is surfaced instead of leaving a silently inert button.
 
-## [2.7.40] - 2026-10-13
+## [2.7.50] - 2026-10-24 - 2026-10-13
 
 ### Changed
 
 - **PR #124**: Add focus states to collapsible sections in Palette
 - **PR #123**: Optimize chart parallel array generation in Bolt
 
-## [2.7.39] - 2026-10-09
+## [2.7.50] - 2026-10-24 - 2026-10-09
 
 ### Changed
 
 - **PR #122**: Add aria-labels to hidden file inputs for better accessibility
 - **PR #121**: Replace multiple .map calls with single-pass loops in charts for performance
 
-## [2.7.38] - 2026-10-06
+## [2.7.50] - 2026-10-24 - 2026-10-06
 
 ### Security
 - **Add referrerPolicy to external images (Sentinel, PR #120)**: Added `referrerPolicy="no-referrer"` to Buy Me A Coffee images in `Sidebar.tsx` and `AboutPage.tsx` to prevent referrer leakage to external CDN domains.
 
-## [2.7.37] - 2026-10-06
+## [2.7.50] - 2026-10-24 - 2026-10-06
 
 ### Accessibility
 - **Make hover-only UI controls keyboard accessible (Palette, PR #119)**: Added `focus-within:opacity-100` to hover-only control containers in `CreativeConceptBlender`, `LyricProcessorTool`, `LyricsSynchronizerTool`, and `SunoMusicPlayerTool` so keyboard users can reach inline action buttons without mouse hover.
 
-## [2.7.36] - 2026-10-06
+## [2.7.50] - 2026-10-24 - 2026-10-06
 
 
 
@@ -92,7 +92,7 @@
 - **Performance: Replace chained filter+map with single-pass reduce (Bolt, PR #118)**: Consolidated `.filter(Boolean).map(...)` into `.reduce(...)` in `useRandomMusicStyle.ts` across three call sites (style summary, pipe-delimited tags, and copyable tags with bracket removal), eliminating intermediate array allocations.
 
 
-## [2.7.35] - 2026-10-05
+## [2.7.50] - 2026-10-24 - 2026-10-05
 
 ### Changed
 - **Improve BPMTapperTool performance (Bolt, PR #116)**: Consolidated the `map` + `reduce` into a single `for` loop to avoid O(N) array allocation when computing standard deviation of tap intervals.
@@ -100,12 +100,12 @@
 ### Security
 - **Add Content Security Policy header (Sentinel, PR #115)**: Added a `Content-Security-Policy` header to `public/_headers` to mitigate XSS and data injection attacks.
 
-## [2.7.34] - 2026-10-04
+## [2.7.50] - 2026-10-24 - 2026-10-04
 
 ### Changed
 - **Focus states on modal close buttons (Palette, PR #114)**: The close buttons in `KeyboardShortcutsModal` and `SongLifecycleChartModal` now carry `outline-none focus-visible:ring-2 focus-visible:ring-emerald-500`, making dismiss controls reachable and clearly highlighted for keyboard users.
 
-## [2.7.33] - 2026-10-04
+## [2.7.50] - 2026-10-24 - 2026-10-04
 
 ### Security
 - **Fixed XSS bypass in URL sanitization (Sentinel, PR #112)**: The `sanitizeUrlForHref` utility now strips control characters and whitespace before parsing URLs to prevent protocol obfuscation attacks that could bypass the safe-protocol filter.
@@ -114,18 +114,18 @@
 - **Optimized rank computation in song deck picker (Bolt, PR #111)**: The `useSongDeckPickerLogic` hook now derives the maximum rank of unrevealed cards in a single pass instead of filtering + mapping + spreading, preventing call stack overflow on decks with many cards.
 - **Eliminated Math.max spread calls in chart scaling (Bolt, PR #113)**: Replaced 18 `Math.max(...spread)` calls with `.reduce()` in Suno User Stats charts (`CommentCountDistributionChart`, `DailySongCreationChart`, `GenreUsageChart`, `GenreVotesChart`, `PlayCountDistributionChart`, `PlaylistCreationDateChart`, `SongTrendChart`, `SongsByDayOfWeekChart`, `SongsByHourOfDayChart`, `TagUsageChart`, `TagVotesChart`, `TopCommentedSongsChart`, `TopEngagingSongsChart`, `TopSongsByCommentRateChart`, `TopSongsChart`, `UpvoteCountDistributionChart`). This eliminates `RangeError: Maximum call stack size exceeded` crashes on large datasets and improves performance.
 
-## [2.7.32] - 2026-10-02
+## [2.7.50] - 2026-10-24 - 2026-10-02
 
 ### Changed
 - **Accessibility tooltips on disabled controls (Palette, PR #110)**: The `ChordProgressionTool` now displays context-aware `title` tooltips on disabled select menus and buttons to explain why controls are unavailable (e.g., "Cannot change root note while recording"). The `Select` component now accepts a `title` prop for consistent tooltip delivery.
 - **Keyboard-accessible wheel spinner (Palette, PR #110)**: The `SunoCommunitySpinnerTool` wheel canvas is now keyboard-focusable (`tabIndex={0}`), announces its purpose via `aria-label`, and triggers the spin action on `Enter` or `Space` key press. The focus ring appears via `focus-visible:ring-2 focus-visible:ring-emerald-500`.
 
-## [2.7.31] - 2026-10-02
+## [2.7.50] - 2026-10-24 - 2026-10-02
 
 ### Changed
 - **Single-pass min/max computation in Suno User Stats trend charts (Bolt, PR #109)**: `UpvotesTrendChart`, `CommentsTrendChart`, `PlaysTrendChart`, and `FollowersTrendChart` now build their `values`/`labels` arrays and derive `minVal`/`maxVal` in one `for` loop instead of four separate traversals. This removes two redundant O(N) passes and intermediate allocations, and eliminates the `RangeError: Maximum call stack size exceeded` crash that the `Math.min(...values)` / `Math.max(...values)` spread calls could trigger on very large historical datasets.
 
-## [2.7.30] - 2026-10-01
+## [2.7.50] - 2026-10-24 - 2026-10-01
 
 ### Security
 - **Prevented error message leakage in the Cloudflare Worker (Sentinel, PRs #97, #98, #100, #103, #105)**: The proxy endpoints no longer return raw `err.message` values in 500/502 responses. The Suno proxy, generic CORS proxy, and Gemini handler now log the original error via `console.error` for debugging and respond with generic messages such as `An internal error occurred`, closing a defense-in-depth gap that could expose internal paths, dependencies, and upstream configuration.
@@ -139,7 +139,7 @@
 ### Fixed
 - **Local agent notes excluded from the repository**: Merged branches reintroduced `.jules/` and `.Jules/` documentation files that had previously been removed as accidental. They are now git-ignored so they stay local.
 
-## [2.7.29] - 2026-09-25
+## [2.7.50] - 2026-10-24 - 2026-09-25
 
 ### Security
 - **Hardened proxy secret comparison**: Updated the Worker's `timingSafeEqual` implementation to compare across the maximum input length without an early length-mismatch return, while enforcing a 512-character limit to reduce timing leaks and prevent excessive comparison work.
@@ -151,7 +151,7 @@
 ### Fixed
 - **Color picker accessibility**: Added descriptive `aria-label` values to color inputs in the Song Cover Art and Suno Community Spinner tools so screen readers announce each control's purpose.
 
-## [2.7.28] - 2026-09-24
+## [2.7.50] - 2026-10-24 - 2026-09-24
 
 ### Security
 - **Prevent timing attacks and information leakage in API proxy (Sentinel)**: Removed timing-sensitive comparisons in the proxy layer to prevent information-leakage via timing side-channels.
@@ -161,18 +161,18 @@
 - **Custom Select cleanup**: Removed the ariaLabel prop and associated aria-label attribute from the shared Select component.
 - **Cleaned project notes**: Removed .jules/ documentation files that were accidentally tracked.
 
-## [2.7.27] - 2026-09-24
+## [2.7.50] - 2026-10-24 - 2026-09-24
 
 ### Changed
 - **Song performance table search speed**: `DetailedSongPerformanceTable.tsx` now pre-computes lowercased search variants (`title`, `display_name`, `handle`, `tags`) once inside the memoized data-enhancement pass, replacing repeated `.toLowerCase()` calls during filtering and sorting with O(1) property access.
 - **Custom Select accessibility**: The shared `Select` component trigger now accepts an `aria-label` prop and falls back to the component's `label`/`placeholder` props to guarantee an accessible name on the listbox trigger.
 
-## [2.7.26] - 2026-09-23
+## [2.7.50] - 2026-10-24 - 2026-09-23
 
 ### Changed
 - **About page performance**: `AboutPage.tsx` now memoizes the category-based tool grouping with `useMemo`, preventing redundant `reduce` work on every re-render and matching the existing `Sidebar.tsx` pattern.
 
-## [2.7.25] - 2026-09-23
+## [2.7.50] - 2026-10-24 - 2026-09-23
 
 ### Security
 - **Worker rate-limit sliding window fix (stats/telemetry endpoints)**: Extended the HIGH-priority sliding-window fix from v2.7.21 to the rate-limit checks on `/stats` and `/telemetry` endpoints. Both now use the `getRateLimitState` helper to enforce proper time-window semantics instead of relying on KV TTL extension (preventing slow-drip attack lockouts).
@@ -180,12 +180,12 @@
 ### Changed
 - **Timeline lyric reorder button tooltips**: The move-up/move-down buttons for timeline lyrics in `SongStructureBuilder` now show context-aware tooltips when disabled (Cannot move up: Already at the top / Cannot move down: Already at the bottom), improving accessibility and UX.
 
-## [2.7.24] - 2026-09-22
+## [2.7.50] - 2026-10-24 - 2026-09-22
 
 ### Changed
 - **File upload keyboard focus rings**: The custom file upload dropzones in `BPMTapperTool` and `LyricsSynchronizerTool` now show a visible emerald focus ring on the parent container when the hidden file input receives focus, fixing WCAG focus visibility for sighted keyboard users without breaking native file input semantics or drag-and-drop.
 
-## [2.7.23] - 2026-09-22
+## [2.7.50] - 2026-10-24 - 2026-09-22
 
 ### Security
 - **Exposed proxy auth token removed (CRITICAL)**: The frontend bundle no longer reads `VITE_PROXY_AUTH_TOKEN` or sends an `X-Proxy-Auth` header. The insecure local `/proxy/` CORS proxy route was removed from `riffusionService.ts`, so the secret can no longer be baked into the static bundle. The Cloudflare Worker now exposes a secured `/proxy/*` endpoint (rate-limited, host-allowlisted, `X-Proxy-Auth` gated) for Flow Music/Riffusion domains.
@@ -195,13 +195,13 @@
 - **Riffusion CORS proxy list**: Removed the dead local `/proxy/` entry and the token plumbing from `riffusionService.ts`; flow/riffusion fetches rely on the remaining public CORS proxies.
 - **Song trend chart performance**: `SongTrendChart.tsx` now memoizes the suggested Y-axis maximum computation with a `useMemo` that depends on the memoized chart data, preventing redundant `Math.max` array iterations on every render/resize.
 
-## [2.7.22] - 2026-09-21
+## [2.7.50] - 2026-10-24 - 2026-09-21
 
 ### Changed
 - **Followers chart performance**: The `FollowersTrendChart` component now memoizes its data transformations (value/label arrays and Y-axis padding calculation) with `useMemo`, avoiding redundant re-mapping on every render before the Chart.js redraw.
 - **Structure palette accessibility**: The SongStructureBuilder color picker input now carries a descriptive `aria-label` for screen readers.
 
-## [2.7.21] - 2026-09-21
+## [2.7.50] - 2026-10-24 - 2026-09-21
 
 ### Security
 - **Worker rate-limit sliding window fix (HIGH)**: `gemini-worker/index.js` now stores an `attempts` + `windowStart` state object in KV and enforces the window in application code instead of relying on per-write `expirationTtl`. Previously every increment extended the KV TTL from the current time, so slow continuous requests could trigger permanent 429 lockouts on `/suno`, `/verify-password`, and Gemini endpoints (with legacy numeric counters still read for backward compatibility).
@@ -210,7 +210,7 @@
 - **Chart memoization**: `useMemo` now caches array/object data transformations in 10 SunoUserStats chart components (PlaylistCreationDate, SongLifecycle, SongTrend, TopCommented/TopEngaging, Plays/Upvotes distributions, scatter plots) — preventing redundant re-mapping on every render before Chart.js updates.
 - **Deck settings accessibility**: All six native color picker inputs in `DeckSettings.tsx` now carry descriptive `aria-label`s for screen readers.
 
-## [2.7.20] - 2026-09-20
+## [2.7.50] - 2026-10-24 - 2026-09-20
 
 ### Security
 - **Worker rate limiting**: The `/stats` and `/telemetry` endpoints in `gemini-worker/index.js` now enforce IP-based rate limits via TTL-bound `STATS_KV` entries (30 req/min for `/stats`, 120 req/min for `/telemetry`), returning `429` with `Retry-After` to prevent KV quota exhaustion (Denial-of-Wallet) and telemetry spam.
@@ -218,7 +218,7 @@
 ### Changed
 - **Loop-invariant optimizations**: Redundant `toLowerCase()` calls were hoisted out of `some()`/`filter()` loops in `useDeckPersistence`, `useSunoDataManagement`, and `useRandomMusicStyle` — eliminating O(N) repeated string allocations during duplicate-name checks.
 
-## [2.7.19] - 2026-09-18
+## [2.7.50] - 2026-10-24 - 2026-09-18
 
 ### Security
 - **UserStats & Player href XSS**: External `suno_song_url` and `suno_creator_url` values in `DetailedSongPerformanceTable`, `UserProfileCard`, the `TopEngagingSongs`/`TopSongs`/`TopCommentedSongs`/`TopSongsByCommentRate`/`SongTrend` charts, and `SunoMusicPlayerTool` are now passed through `sanitizeUrlForHref` — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
@@ -227,19 +227,19 @@
 - **SunoUserStats trend charts**: `CommentsTrendChart`, `PlaysTrendChart`, and `UpvotesTrendChart` now memoize their data transformations with `useMemo` before being passed to Chart.js — preventing redundant recalculations on every render; `DailySongCreationChart` does the same for its time-mapping of date points.
 - **InputField tooltips**: The info-tooltip icon in `InputField.tsx` is now keyboard accessible — the trigger carries `tabIndex={0}`, `role="button"`, and an `aria-label`, with the tooltip shown via `group-focus:opacity-100` alongside `group-hover`.
 
-## [2.7.18] - 2026-09-17
+## [2.7.50] - 2026-10-24 - 2026-09-17
 
 ### Security
 - **Suno href XSS**: External `suno_playlist_url`, `suno_creator_url`, and `suno_song_url` values in `InfoBoxes.tsx` and `SunoSongComplianceTool.tsx` are now passed through `sanitizeUrlForHref`, which enforces a strict `http:`/`https:`/`mailto:` protocol whitelist — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
 
-## [2.7.17] - 2026-09-17
+## [2.7.50] - 2026-10-24 - 2026-09-17
 
 ### Changed
 - **Stats Tables**: The inline `SortArrow` sort-indicator component was extracted to module scope and wrapped in `React.memo` across `DetailedSongPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable` — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.
 - **TopEngagingSongsChart / TopSongsByCommentRateChart**: Chart.js instances now mutate their data and options in place and call `update('none')` instead of destroying and recreating the canvas on each update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
 - **SongCoverArt (PresetModals) / SongDeckPicker (DeckFocusView, DeckLog, DeckView)**: Disabled buttons now display `title` tooltips explaining exactly why they are blocked (no presets to export, max logged songs reached, no logged songs to move, reveal pool exhausted, or deck limits exceeded).
 
-## [2.7.16] - 2026-09-15
+## [2.7.50] - 2026-10-24 - 2026-09-15
 
 ### Security
 - **SongDeckPicker XSS**: User-provided URLs (imported CSV cards, deck log links) are now passed through `sanitizeUrlForHref`, which enforces a strict `http:`/`https:`/`mailto:` protocol whitelist — preventing `javascript:`/`data:` URI injection when links are rendered in `href` attributes.
@@ -248,29 +248,29 @@
 - **RandomMusicStyleGenerator**: `RenderSavedItemActions` was extracted from the parent render body to module scope and wrapped in `React.memo` (along with the main component) — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.
 - **SongDeckPicker (DeckControls)**: Disabled "Build Deck" and "Apply Bonuses" buttons now display `title` tooltips explaining exactly why they are blocked (random pick in progress or missing bonus artists).
 
-## [2.7.15] - 2026-09-14
+## [2.7.50] - 2026-10-24 - 2026-09-14
 
 ### Security
 - **SongStructureBuilder CSV Export**: `escapeCsvField` now sanitizes CSV fields starting with `=`, `+`, `-`, or `@` by prepending a single quote — preventing CSV Formula (Macro) Injection when exported files are opened in spreadsheet software like Excel or Google Sheets.
 
-## [2.7.14] - 2026-09-14
+## [2.7.50] - 2026-10-24 - 2026-09-14
 
 ### Changed
 - **BPMTapperTool / LyricProcessorTool**: Disabled tool buttons now display dynamic `title` tooltips explaining exactly why they are blocked (missing input or operation in progress).
 
-## [2.7.13] - 2026-09-14
+## [2.7.50] - 2026-10-24 - 2026-09-14
 
 ### Changed
 - **Secondary Charts**: Secondary distribution and trend charts (`CommentCountDistribution`, `PlayCountDistribution`, `UpvoteCountDistribution`, `PlaylistCreationDate`, `TopCommentedSongs`, `SongTrend`, and `SongLifecycleChartModal`) now mutate their Chart.js data/options in place and call `update('none')` instead of destroying and recreating the canvas on every update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
 - **DetailedSongPerformanceTable**: Table filtering now hoists invariant calculations (`toLowerCase()`, `parseInt()`) out of the `.filter()` loop instead of recomputing them per song — reducing redundant work for large song lists.
 - **MP3CutterTool**: "Play Selection" and "Crop & Download" buttons now display dynamic `title` tooltips explaining exactly why they are disabled (no valid time range, waveform not ready, or selection over the 50% legal limit).
 
-## [2.7.12] - 2026-09-11
+## [2.7.50] - 2026-10-24 - 2026-09-11
 
 ### Changed
 - **Scatter Plots (Plays vs Comments / Plays vs Upvotes)**: Chart.js instances now mutate data in-place and call `update('none')` instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.
 
-## [2.7.11] - 2026-09-10
+## [2.7.50] - 2026-10-24 - 2026-09-10
 
 ### Security
 - **ID Generation**: Unique identifiers across `SongDeckPicker` (external source cards, deck themes, song groups), `useSunoDataManagement` saved playlists, `RandomMusicStyleGenerator`, `CreativeConceptBlender`, `ChordProgressionTool`, `SongCoverArtTool`, `SongStructureBuilderTool`, `SparkTuneTool`, and `SunoCommunitySpinnerTool` now use `crypto.randomUUID()` instead of `Date.now()`-derived values — eliminating predictable, collision-prone IDs.
@@ -278,17 +278,17 @@
 ### Changed
 - **SunoMusicPlayer / SongDeckPicker / SunoUserStats**: Buttons that are conditionally disabled (empty queue CSV export, no saved themes to load, no user data to update/clear) now display explanatory `title` tooltips indicating why the action is blocked.
 
-## [2.7.10] - 2026-09-10
+## [2.7.50] - 2026-10-24 - 2026-09-10
 
 ### Changed
 - **Suno Queue**: Search filtering in `useSunoQueue` now lowercases the filter query once before applying it inside the `.filter()` loop instead of recomputing `.toLowerCase()` up to four times per song for each render — reducing redundant string calculations in the audio queue.
 
-## [2.7.9] - 2026-09-09
+## [2.7.50] - 2026-10-24 - 2026-09-09
 
 ### Changed
 - **LyricProcessorTool**: Formatting toolbar buttons (UPPERCASE / lowercase / Title Case) now have descriptive `aria-label`s so screen readers announce their action clearly.
 
-## [2.7.8] - 2026-09-09
+## [2.7.50] - 2026-10-24 - 2026-09-09
 
 ### Changed
 - **TopSongsChart**: Chart.js instance now mutates data in-place and calls `update('none')` instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted work; cleanup moved to component unmount only. Chart data and labels memoized to prevent unnecessary re-allocation.
@@ -296,7 +296,7 @@
 ### Security
 - **CSV Export**: Fields exported via `src/services/csvExportService.ts` that begin with `=`, `+`, `-`, or `@` are now escaped with a leading single quote — preventing CSV Formula Injection (macro injection) when imported into spreadsheet applications like Excel or Google Sheets.
 
-## [2.7.7] - 2026-09-08
+## [2.7.50] - 2026-10-24 - 2026-09-08
 
 ### Changed
 - **SongsByHourOfDayChart**: Chart.js instance now mutates data in-place and calls `update('none')` instead of destroying and recreating the canvas on every resize/render — eliminating UI lag and canvas flashing; cleanup moved to component unmount only. `hoursOfDay` array memoized to prevent re-allocation.
@@ -304,13 +304,13 @@
 ### Security
 - **SongDeckPicker**: `Link` values imported via "Copy & Paste Key-Value" are now validated against `http:`/`https:` protocols before being bound to `href` — preventing an XSS vector where a `javascript:` URI could execute arbitrary code when a user clicked the link.
 
-## [2.7.6] - 2026-09-08
+## [2.7.50] - 2026-10-24 - 2026-09-08
 
 ### Changed
 - **Palette Preset Modals**: The custom file upload trigger now uses a `label` wrapper with `tabIndex`, `role="button"`, and space/enter key handlers around a hidden file `input` — making it truly keyboard and screen-reader accessible instead of a visually-hidden absolute input.
 - **Palette Preset Modals**: The delete preset button's `aria-label` now includes the preset name (e.g. "Delete preset: myPreset") so screen readers convey which preset will be deleted.
 
-## [2.7.5] - 2026-09-08
+## [2.7.50] - 2026-10-24 - 2026-09-08
 
 ### Changed
 - **GenreVotesChart / TagUsageChart / TagVotesChart**: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.
@@ -319,7 +319,7 @@
 ### Security
 - **Suno API proxy**: added per-IP rate limiting (60 requests/60s) on the unauthenticated Suno proxy endpoint to prevent denial-of-wallet and quota exhaustion.
 
-## [2.7.4] - 2026-09-06
+## [2.7.50] - 2026-10-24 - 2026-09-06
 
 ### Added
 - **BPM Tapper**: the BPM Tools tabs now use proper WAI-ARIA `tablist`/`tab`/`tabpanel` semantics, and the TAP, Reset Stream, and Load buttons have accessible labels.
@@ -327,7 +327,7 @@
 ### Changed
 - **DailySongCreationChart**: Chart.js instance now updates its dataset and options in place (with `update('none')`) instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.
 
-## [2.7.2] - 2026-09-04
+## [2.7.50] - 2026-10-24 - 2026-09-04
 
 ### Changed
 - **GenreUsageChart**: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize; chart cleanup moved to component unmount only.
@@ -335,7 +335,7 @@
 ### Security
 - **Gemini proxy**: added per-IP rate limiting (10 requests/60s) on the unauthenticated Gemini API proxy endpoint to prevent denial-of-wallet and resource exhaustion.
 
-## [2.7.1] - 2026-09-04
+## [2.7.50] - 2026-10-24 - 2026-09-04
 
 ### Changed
 - **Spinner Wheel export**: Download button is now disabled when configuration is empty, with a tooltip explaining why.
@@ -344,7 +344,7 @@
 ### Fixed
 - Accessibility improvement for the song analysis action button.
 
-## [2.7.0] - 2026-09-04
+## [2.7.50] - 2026-10-24 - 2026-09-04
 
 ### Changed
 - **Unified design system**: the two UI modes (Architect/Classic) are merged into a single clean style; the mode toggle in the header is removed and only light/dark theme remains. The theme tokens are centralized in `index.css`.
@@ -363,23 +363,23 @@
 - "About This Hub" now uses the full browser width instead of a narrow centered column.
 - Profile stats (Songs/Followers/Plays/Upvotes/Comments) displayed with larger, readable labels and values.
 
-## [2.6.27] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Fixed
 - **Lyrics Synchronizer**: the "SYNC VECTOR" button now actually marks the next unsynced line (it had no click handler), and the spacebar shortcut works whenever an audio file is loaded (it previously required the audio to be playing). Space no longer misfires when a button is focused — it activates the focused button natively.
 - **Select dropdown (Song Deck Picker / shared)**: the Picker Mode dropdown menu background is now near-opaque instead of transparent, with legible hover/selected option states in both light and dark mode.
 
-## [2.6.26] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Fixed
 - **File uploads no longer erase metadata** in the analysis tools (Lyrics Synchronizer, MP3 Cutter, BPM Tapper): uploading an MP3 now keeps the title/artist/cover already fetched from a Suno/Riffusion URL or typed by the user (the filename is only used as a title fallback). MP3 Cutter additionally now resolves Suno URLs and fills in the song metadata, matching the other tools, while still requiring a manual MP3 upload for the audio (TOS compliance).
 
-## [2.6.25] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Fixed
 - **Lyrics Synchronizer**: loading a Suno URL now fetches and fills the song metadata (title, artist, cover art, and lyrics when the prompt looks like lyrics) while still requiring a manual MP3 upload for the audio (TOS compliance) — and it no longer wipes an MP3 that was already uploaded, so you can combine "upload MP3 + fetch the rest from the Suno URL".
 
-## [2.6.24] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Fixed
 - **localStorage quota self-healing**: `safeStorage` now evicts the largest regenerable caches (`sunoMusicPlayer_user_`/`playlist_` dumps, `sunoUserStats_` snapshots, song info caches) and transient logs before failing, so the app no longer spams "quota has been exceeded" errors or drops the last-session / user-cache persistence when storage fills up.
@@ -387,7 +387,7 @@
 - **Daily active ping robustness**: a corrupted `myVisitsLog` JSON no longer throws on startup.
 - **Broken release-notes build**: `sync-release-notes.js` no longer injects markdown template comments/headings into `releaseNotesData.tsx`, and the polluted `CHANGELOG.md` (v2.6.23 bullets duplicated across older sections) was cleaned up so `npm run build` succeeds.
 
-## [2.6.23] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Changed
 - **Suno TOS compliance**: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.
@@ -396,7 +396,7 @@
 - **Footer**: rimosso @flickerlog, visualizza solo @spupuz.
 - **SongDeckPicker**: anteprima iframe Suno embed al posto di audio CDN per le card classifica.
 
-## [2.6.22] - 2026-09-03
+## [2.7.50] - 2026-10-24 - 2026-09-03
 
 ### Changed
 - **Prevent chart recreation on resize/updates in Suno User Stats**: `CommentsTrendChart`, `FollowersTrendChart`, `PlaysTrendChart`, and `UpvotesTrendChart` now reuse their existing Chart.js instance (updating labels, dataset, and options in place via `update('none')`) instead of destroying and recreating the chart on every `screenWidth` change or data update, reducing jank and CPU churn during window resizes.
@@ -404,23 +404,23 @@
 ### Security
 - **Added rate limiting to the `/verify-password` endpoint**: the Worker now enforces a 5-attempt cap (per client IP) over a 300-second window using the existing `STATS_KV` store, returning HTTP 429 with a `Retry-After` header once the threshold is hit, to prevent brute-force discovery of the shared committee password.
 
-## [2.6.21] - 2026-09-02
+## [2.7.50] - 2026-10-24 - 2026-09-02
 
 ### Accessibility
 - **Made drag-and-drop file upload zones keyboard accessible**: `ImageUpload.tsx` and the Song Structure Builder import zone (`ImportExportModal.tsx`) now expose `role="button"`, `tabIndex={0}`, `onKeyDown` handlers (Enter/Space) that trigger the file picker, and visible focus rings — so keyboard and screen-reader users can activate uploads.
 - **Added explanatory titles to disabled buttons in Suno Music Player**: buttons like "Save New" playlist, "Clear Queue", and "Copy Lyrics" now show a `title` explaining why they're disabled (e.g. "Please enter a name for the new playlist"), so users understand what's preventing the action.
 
-## [2.6.20] - 2026-09-01
+## [2.7.50] - 2026-10-24 - 2026-09-01
 
 ### Security
 - **Fixed weak random ID generation in `LyricsSynchronizerTool`**: replaced remaining `Date.now()`-based lyric line ID generation with `crypto.randomUUID()` across parsed lyric lines, empty line placeholders, and LRC file imports to ensure robust, collision-resistant uniqueness.
 
-## [2.6.19] - 2026-08-31
+## [2.7.50] - 2026-10-24 - 2026-08-31
 
 ### Accessibility
 - **Added `aria-controls` to local playlist manager toggle**: the playlist Import/Export & Local Saves expandable button in `LocalPlaylistManager.tsx` now references its collapsible panel via `aria-controls` (alongside the existing `aria-expanded`), and the panel itself carries a matching `id="playlist-management-panel"` so screen readers can announce the relationship between the button and the panel it controls.
 
-## [2.6.18] - 2026-08-31
+## [2.7.50] - 2026-10-24 - 2026-08-31
 
 ### Security
 - **Fixed weak random ID generation in `LyricsSynchronizerTool`**: lyric line IDs are now generated with `crypto.randomUUID()` instead of `Math.random().toString(16)` combined with `Date.now()`, eliminating predictable/collision-prone identifiers for parsed lyric lines.
@@ -431,7 +431,7 @@
 ### Accessibility
 - **Added `aria-label` to new-playlist input fields**: the two new-playlist name inputs in the Local Playlist manager (`LocalPlaylistManager.tsx`) now expose descriptive `aria-label`s for screen readers.
 
-## [2.6.17] - 2026-08-28
+## [2.7.50] - 2026-10-24 - 2026-08-28
 
 ### Security
 - **Fixed timing attack on password verification**: the Gemini Worker's `/verify-password` endpoint now uses a constant-time string comparison (bitwise XOR loop) instead of the short-circuiting `===` operator, mitigating side-channel information leakage about the committee password.
@@ -439,7 +439,7 @@
 ### Changed
 - **Memoized data-heavy performance tables**: `CohortPerformanceTable`, `SongDurationPerformanceTable`, `TagGenrePerformanceTables`, and `TagPairPerformanceTable` are now wrapped in `React.memo` to prevent unnecessary re-renders and re-sorts when the parent `StatChartsArea` updates its state (e.g. `selectedPeriod`) but their props remain unchanged.
 
-## [2.6.16] - 2026-08-27
+## [2.7.50] - 2026-10-24 - 2026-08-27
 
 ### Security
 - **Fixed overly permissive CORS matching in the Worker**: replaced the `http://localhost:` prefix check (which allowed spoofed origins like `http://localhost.evil.com`) with strict hostname/port validation so only genuine localhost/127.0.0.1 origins are accepted.
@@ -453,7 +453,7 @@
 - **Optimized scatter-plot deduplication**: replaced the O(n²) `filter`/`findIndex` combination of top played/upvoted songs with a memoized O(n) `Map`-based approach.
 - **Wrapped Header in `React.memo`**: prevents unnecessary re-renders of the app header when layout state changes.
 
-## [2.6.15] - 2026-08-18
+## [2.7.50] - 2026-10-24 - 2026-08-18
 
 ### Security
 - **Fixed Server-Side Request Forgery (SSRF) in Suno proxy**: the Cloudflare Worker's Suno proxy now uses the `URL` constructor to safely compose target URLs and strictly enforces hostname matching, preventing path manipulation attacks (e.g., `@attacker.com` authority injection) that could redirect outbound fetches to malicious hosts.
@@ -461,12 +461,12 @@
 ### Changed
 - **Memoized DetailedSongPerformanceTable**: wrapped the large song performance table component in `React.memo` to prevent unnecessary re-renders when parent state changes, reducing lag in the Suno User Stats page.
 
-## [2.6.14] - 2026-08-17
+## [2.7.50] - 2026-10-24 - 2026-08-17
 
 ### Security
 - **Cloudflare Pages security headers**: added `public/_headers` to enforce `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security`, `X-XSS-Protection`, and `Permissions-Policy` on all responses.
 
-## [2.6.13] - 2026-08-17
+## [2.7.50] - 2026-10-24 - 2026-08-17
 
 ### Changed
 - **Optimized Music Theory Wiki search**: cached parsed HTML content in a `useMemo` map to prevent expensive `ReactDOMServer.renderToStaticMarkup` calls on every keystroke during search, improving responsiveness.
@@ -474,7 +474,7 @@
 ### Added
 - **Wiki search optimization notes**: added learning documentation in `.jules/bolt.md` about caching React content trees for search.
 
-## [2.6.12] - 2026-08-16
+## [2.7.50] - 2026-10-24 - 2026-08-16
 
 ### Added
 - **Keyboard-accessible file uploads**: custom file upload buttons in the Suno player playlist manager now support `tabIndex`, `role="button"`, and Enter/Space key handling with visible focus rings, so keyboard and screen-reader users can trigger TXT/CSV playlist imports.
@@ -486,7 +486,7 @@
 ### Fixed
 - **Reverse tabnabbing**: `window.open(..., '_blank')` calls in the Sidebar and About page now pass `'noopener,noreferrer'`, preventing newly opened pages from accessing the opener window.
 
-## [2.6.11] - 2026-08-14
+## [2.7.50] - 2026-10-24 - 2026-08-14
 
 ### Changed
 - **No more public CORS proxy fallbacks**: the Suno service now relies strictly on the verified Cloudflare Worker proxy for all fetches and short-URL resolution, removing the hardcoded fallback chain of unvetted public proxies (corsproxy.io, allorigins, thingproxy, cors-anywhere, etc.).
@@ -494,17 +494,17 @@
 ### Security
 - **Removed unvetted public CORS proxies**: third-party public proxy fallbacks could intercept traffic and exposed the app to SSRF-style risks; all Suno API reads and `suno.com/song` link resolution now go through the Worker proxy only.
 
-## [2.6.10] - 2026-08-14
+## [2.7.50] - 2026-10-24 - 2026-08-14
 
 ### Changed
 - **Accessible import/export modals**: the Suno community spinner's export textarea now carries an `aria-label`, the import file picker and JSON textarea have proper `htmlFor`/`id` label associations, so screen readers announce these fields correctly.
 
-## [2.6.9] - 2026-08-13
+## [2.7.50] - 2026-10-24 - 2026-08-13
 
 ### Changed
 - **Faster Suno player re-renders**: `SunoMusicPlayerTool` is wrapped in `React.memo`, so the component no longer re-renders when parent state changes without prop updates.
 
-## [2.6.8] - 2026-08-13
+## [2.7.50] - 2026-10-24 - 2026-08-13
 
 ### Changed
 - **Accessible buttons**: the shared `Button` component now shows a visible emerald keyboard focus ring (`focus-visible:ring-2`) on the "Report a bug" links across the Sidebar and About page, so keyboard users can tell where they are.
@@ -512,7 +512,7 @@
 ### Security
 - **Safe external links**: all "Report a bug" links opening in a new tab now include `rel="noopener noreferrer"`, preventing the opened page from hijacking the app via `window.opener`.
 
-## [2.6.7] - 2026-08-12
+## [2.7.50] - 2026-10-24 - 2026-08-12
 
 ### Changed
 - **Smoother audio visualizer**: the Suno player's `AudioVisualizer` is wrapped in `React.memo` and its `analyserNodes` prop is memoized with `useMemo`, so frequent playback time updates no longer restart its `requestAnimationFrame` loop (fixes animation micro-stutters during playback).
@@ -521,7 +521,7 @@
 ### Security
 - **Stronger IDs**: `Math.random()`-based identifiers in the Song Structure Builder and Song Deck Picker (blocks, lyric lines, imported/returned cards) are now generated with `crypto.randomUUID()`.
 
-## [2.6.6] - 2026-08-11
+## [2.7.50] - 2026-10-24 - 2026-08-11
 
 ### Changed
 - **Faster stats charts**: sunoUserStats charts now memoize their sorting/aggregation with `useMemo` and copy arrays before sorting (`[...data].sort()`), eliminating prop mutation side effects and redundant re-sorts on every render.
@@ -529,35 +529,35 @@
 ### Fixed
 - **Modal accessibility**: close buttons in the SunoMusicPlayer lyrics and metadata modals now carry `aria-label`s, so screen readers announce their purpose.
 
-## [2.6.5] - 2026-08-07
+## [2.7.50] - 2026-10-24 - 2026-08-07
 
 ### Changed
 - **Support section revamp**: removed the Floot referral link from the About page and made the Buy Me a Coffee button more prominent (larger, emerald-highlighted card) in both support sections.
 
-## [2.6.4] - 2026-08-07
+## [2.7.50] - 2026-10-24 - 2026-08-07
 
 ### Fixed
 - **Resource Nexus cards not visible**: the `stagger-fade` entrance animation used `animation-fill-mode: backwards`, which reverted cards to `opacity: 0` once the fade-in completed (now `both`, retaining the visible end state). Also removed `content-visibility: auto` (`cv-section`) from directory sections, which could prevent the `ScrollReveal` observer from firing for off-screen sections.
 - **ScrollReveal reliability**: `useScrollReveal` now reveals elements already in/near the viewport on mount and falls back to a scroll listener, so content is never left permanently hidden if `IntersectionObserver` never fires.
 - **White-on-white titles in light mode**: About and Special Mentions pages used hardcoded `text-white` for headings in Architect mode, making titles invisible on the light background. Now `text-gray-900 dark:text-white`.
 
-## [2.6.3] - 2026-08-06
+## [2.7.50] - 2026-10-24 - 2026-08-06
 
 ### Security
 - **No sensitive data in the repo**: `.env` is no longer tracked (untracked via `git rm --cached`), and docs/AGENTS now enforce that `.env`, `.dev.vars`, and `.wrangler/` stay out of git.
 - **`wrangler.toml` policy**: documented that it holds only non-secret bindings (names, KV namespace IDs) — API keys and passwords are set exclusively via `wrangler secret put` / the dashboard, never committed.
 
-## [2.6.2] - 2026-08-06
+## [2.7.50] - 2026-10-24 - 2026-08-06
 
 ### Changed
 - **Suno proxy cache optimization**: the Worker now caches per-endpoint — clips for 24h (immutable data), profiles for 10 min, playlists for 5 min, short links for 1h. Faster repeat loads and less load on Suno.
 
-## [2.6.1] - 2026-08-06
+## [2.7.50] - 2026-10-24 - 2026-08-06
 
 ### Fixed
 - **Clean console**: `sunoService` no longer attempts the guaranteed-to-fail direct browser fetch to Suno hosts (always blocked by CORS) — it goes straight to the Cloudflare Worker proxy, eliminating CORS error spam in the browser console.
 
-## [2.6.0] - 2026-08-06
+## [2.7.50] - 2026-10-24 - 2026-08-06
 
 ### Added
 - **Definitive Suno Proxy**: Suno API calls now route through the app's own Cloudflare Worker (`GET /suno/*`) instead of unreliable public CORS proxies. The Worker fetches Suno server-side (no browser CORS), caches responses at the edge for 10 minutes, and returns proper CORS headers. Public proxies remain only as a last-resort fallback.
@@ -569,12 +569,12 @@
 ### Fixed
 - **Suno CORS errors**: Profile, playlist and clip fetches no longer fail when free CORS proxies are down (thingproxy, corsproxy.org, yacdn, codetabs, etc.).
 
-## [2.5.5] - 2026-08-06
+## [2.7.50] - 2026-10-24 - 2026-08-06
 
 ### Fixed
 - **Release Notes Fallback**: GitHub releases whose bodies lack `###` section headers (older releases published as plain commit-subject lists) now render their content as a fallback bullet list instead of showing only the version title.
 
-## [2.4.0] - 2025-08-05
+## [2.7.50] - 2026-10-24 - 2025-08-05
 
 ### Added
 - **Service Layer Caching**: Added persistent caching layer for Suno clip data, Riffusion song data, and short URL resolutions to reduce redundant network requests.
@@ -599,7 +599,7 @@
 - **StatChartsPlaceholder**: Removed empty placeholder component.
 - **Console Log Cleanup**: Stripped noisy debug `console.log` statements from `sunoService.ts` and `riffusionService.ts`.
 
-## [2.3.0] - 2026-03-31
+## [2.7.50] - 2026-10-24 - 2026-03-31
 
 ### Changed
 - **Mobile UI & Accessibility Refinement**: Performed a high-precision overhaul for 375px+ viewports. Standardized responsive paddings and eliminated horizontal overflow across all tools.
@@ -612,7 +612,7 @@
 - **Community Spinner Polish**: Resolved the "flashing blue square" glitch by implementing custom focus rings and a more elegant `pulse-gentle` animation for the Spin button.
 - **Text Contrast**: Audited and corrected low-contrast technical status labels (e.g., "System Idle", "Waiting for Signal") across the Hub.
 
-## [2.2.0] - 2026-03-11
+## [2.7.50] - 2026-10-24 - 2026-03-11
 
 ### Added
 - **Hub Stats Page**: New interactive dashboard for site-wide telemetry and visitor analytics.
@@ -627,7 +627,7 @@
 - **Data Accuracy**: Standardized site metrics to track "Visits" instead of "Installations".
 - **Visual Consistency**: Replaced emoji placeholders with premium SVG icons in the Stats dashboard.
 
-## [2.1.0] - 2026-03-11
+## [2.7.50] - 2026-10-24 - 2026-03-11
 
 ### Fixed
 - **Full Mobile Responsiveness Overhaul**: Eliminated horizontal overflow across the entire application, focusing on the Suno User Stats tool.
@@ -637,7 +637,7 @@
 - **Header Scaling**: Optimized the main header to ensure branding remains on a single line on all devices using dynamic font sizes and ellipsis.
 - **Clean UI**: Removed redundant mobile-only "small screen" warning as the UI is now fully optimized.
 
-## [2.0.0] - 2026-02-22
+## [2.7.50] - 2026-10-24 - 2026-02-22
 
 ### Added
 - **Cloudflare Pages Migration**: The Hub is now a pure static site deployed on Cloudflare Pages.
@@ -659,7 +659,7 @@
 
 ---
 
-## [1.9.8] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **Lyric Processor Meta Update**: Enhanced metadata and legal clarity for processed lyrics.
@@ -668,7 +668,7 @@
 
 ---
 
-## [1.9.7] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **About Page Enhancements**: 
@@ -678,7 +678,7 @@
 
 ---
 
-## [1.9.6] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **Producer.AI Integration**: 
@@ -689,7 +689,7 @@
 
 ---
 
-## [1.9.5] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **Ranking Reveal Mode (Song Deck Picker)**: 
@@ -701,7 +701,7 @@
 
 ---
 
-## [1.9.4] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **Song Structure Builder "Power-Up"**: 
@@ -715,7 +715,7 @@
 
 ---
 
-## [1.9.3] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **Riffusion Integration Across Tools**: 
@@ -726,14 +726,14 @@
 
 ---
 
-## [1.9.2] - 2026-02-21
+## [2.7.50] - 2026-10-24 - 2026-02-21
 
 ### Added
 - **MP3 Cutter Riffusion Support**: Load and edit audio directly from Riffusion song URLs. Fetch metadata and stream automatically.
 
 ---
 
-## [1.9.1] - 2026-02-20
+## [2.7.50] - 2026-10-24 - 2026-02-20
 
 ### Added
 - **Music Shuffler Riffusion Integration**: Support for `riffusion.com/song/...` URLs with multi-platform playlist capability.
@@ -743,7 +743,7 @@
 
 ---
 
-## [1.9.0] - 2026-02-20
+## [2.7.50] - 2026-10-24 - 2026-02-20
 
 ### Added
 - **SparkTune Super-Generator**: 
@@ -753,7 +753,7 @@
 
 ---
 
-## [1.8.9] - 2026-02-20
+## [2.7.50] - 2026-10-24 - 2026-02-20
 
 ### Added
 - **Lyrics Synchronizer Layout**: 
@@ -763,7 +763,7 @@
 
 ---
 
-## [1.8.8] - 2026-02-19
+## [2.7.50] - 2026-10-24 - 2026-02-19
 
 ### Added
 - **Suno Shuffler Improvements**: 
@@ -772,7 +772,7 @@
 
 ---
 
-## [1.8.7] - 2026-02-19
+## [2.7.50] - 2026-10-24 - 2026-02-19
 
 ### Added
 - **Snippet Mode**: 30-second random song previews for rapid discovery in Suno Music Shuffler.
@@ -783,7 +783,7 @@
 
 ---
 
-## [1.8.6] - 2026-02-19
+## [2.7.50] - 2026-10-24 - 2026-02-19
 
 ### Added
 - **Suno User Stats "Data Nerd" Pack**: 
@@ -795,49 +795,49 @@
 
 ---
 
-## [1.8.5] - 2026-02-18
+## [2.7.50] - 2026-10-24 - 2026-02-18
 
 ### Added
 - **Duration Check (Compliance)**: Configurable duration limits (default 300s) for batch song validation. Includes CSV and summary report updates.
 
 ---
 
-## [1.8.4] - 2026-02-18
+## [2.7.50] - 2026-10-24 - 2026-02-18
 
 ### Added
 - **Custom URL Lists (Shuffler)**: Input a raw list of Suno URLs (one per line) to create on-the-fly playlists.
 
 ---
 
-## [1.8.2] - 2026-02-18
+## [2.7.50] - 2026-10-24 - 2026-02-18
 
 ### Added
 - **MP3 Cutter Enhancements**: Cover art display, MP3 export (via `lamejs`), and legal copyright disclaimer.
 
 ---
 
-## [1.8.0] - 2026-02-17
+## [2.7.50] - 2026-10-24 - 2026-02-17
 
 ### Added
 - **New Tool: MP3 Cutter & Cropper**: Visual waveform editing via `wavesurfer.js`, precise region selection, and audio export.
 
 ---
 
-## [1.7.6] - 2026-02-16
+## [2.7.50] - 2026-10-24 - 2026-02-16
 
 ### Added
 - **Comment Engagement Tracking**: Integrated comment counts across Stats charts, Shuffler queue, and Player info.
 
 ---
 
-## [1.7.4] - 2026-02-15
+## [2.7.50] - 2026-10-24 - 2026-02-15
 
 ### Added
 - **New Tool: Local Music Resource Directory**: Curated hub for samples, communities, and production tutorials.
 
 ---
 
-## [1.7.0] - 2026-02-15
+## [2.7.50] - 2026-10-24 - 2026-02-15
 
 ### Added
 - **OS Media Control Integration**: Robust Media Session API support for lock screen controls.
@@ -845,7 +845,7 @@
 
 ---
 
-## [1.6.0] - 2026-02-15
+## [2.7.50] - 2026-10-24 - 2026-02-15
 
 ### Added
 - **Follower Growth Metrics**: 7d/30d growth rates and percentage displays.
@@ -853,14 +853,14 @@
 
 ---
 
-## [1.5.0] - 2026-02-15
+## [2.7.50] - 2026-10-24 - 2026-02-15
 
 ### Added
 - **Suno Song Compliance Checker**: Batch processing, Gemini AI lyrics analysis, selectable content ratings (G to R), and CSV export.
 
 ---
 
-## [1.0.0] - 2026-02-14
+## [2.7.50] - 2026-10-24 - 2026-02-14
 
 ### Added
 - **Initial Launch**: 20+ specialized AI music tools including Suno Shuffler, Lyric Processor, Style Generator, Concept Blender, and Music Theory Wiki.

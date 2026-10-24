@@ -8,10 +8,10 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
-    version: "2.7.49",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.49">
-        <SectionTitle>Version 2.7.49 - 2026-10-23</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-23</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #134</STRONG>: Optimized <CODE>calculateStandardDeviation</CODE> in <CODE>src/utils/mathUtils.ts</CODE> with standard for loops, consolidating reduce passes and improving accuracy by avoiding catastrophic cancellation.</LI>
@@ -21,10 +21,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.48",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.48">
-        <SectionTitle>Version 2.7.48 - 2026-10-22</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-22</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #132</STRONG>: Made the delete button in <CODE>CreativeConceptBlender</CODE>'s custom-items modal visible on keyboard focus by adding <CODE>focus-visible:opacity-100</CODE>, so keyboard users can see and interact with it without needing a mouse hover.</LI>
@@ -33,10 +33,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.47",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.47">
-        <SectionTitle>Version 2.7.47 - 2026-10-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-20</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #131</STRONG>: Added <CODE>referrerPolicy="no-referrer"</CODE> to all external image elements across 20 components (image uploads, Suno player info boxes, user stats charts, Deck picker, audio tools, and compliance tools) to prevent referrer leakage when loading external images.</LI>
@@ -45,10 +45,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.46",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.46">
-        <SectionTitle>Version 2.7.46 - 2026-10-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-20</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #130</STRONG>: Consolidated <CODE>.filter(Boolean).map()</CODE> into a single-pass <CODE>.reduce()</CODE> in <CODE>CreativeConceptBlender</CODE>'s <CODE>formatConceptForClipboard</CODE>, avoiding the intermediate array allocation when building the concept parts list.</LI>
@@ -57,10 +57,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.45",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.45">
-        <SectionTitle>Version 2.7.45 - 2026-10-16</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-16</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #129</STRONG>: Build the parallel Chart.js <CODE>labels</CODE> / <CODE>data</CODE> arrays in a single pass with pre-allocated arrays instead of one <CODE>.map()</CODE> traversal per array, in <CODE>StatsPage</CODE> and the <CODE>PlaylistCreationDateChart</CODE>, <CODE>SongTrendChart</CODE>, <CODE>TopCommentedSongsChart</CODE>, and <CODE>TopEngagingSongsChart</CODE> components. <CODE>SongTrendChart</CODE> also folds its <CODE>suggestedMax</CODE> max-scan into that same pass, replacing three <CODE>useMemo</CODE> hooks with one.</LI>
@@ -74,10 +74,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.44",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.44">
-        <SectionTitle>Version 2.7.44 - 2026-10-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-15</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Analytics tool crash</STRONG>: <CODE>StatsPage</CODE> violated the Rules of Hooks by placing its <CODE>useMemo</CODE> calls after the <CODE>loading</CODE> / <CODE>error</CODE> / <CODE>!stats</CODE> early returns. The hook count changed between the loading render and the data render, so React threw error #310 ("Rendered more hooks than during the previous render") and the whole Analytics tool failed to load. All hooks now run before any early return, with null-safe inputs.</LI>
@@ -87,10 +87,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.43",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.43">
-        <SectionTitle>Version 2.7.43 - 2026-10-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-15</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #128</STRONG>: Pre-allocate chart color arrays in charts for better performance</LI>
@@ -99,10 +99,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.42",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.42">
-        <SectionTitle>Version 2.7.42 - 2026-10-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-15</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #127</STRONG>: Add aria-labels to hidden file inputs for better accessibility across <CODE>BPMTapperTool</CODE>, <CODE>LyricsSynchronizerTool</CODE>, <CODE>RandomMusicStyleGenerator</CODE>, <CODE>SunoMusicPlayerTool</CODE>, <CODE>SunoSongComplianceTool</CODE>, and <CODE>SunoUserStatsTool</CODE></LI>
@@ -111,10 +111,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.41",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.41">
-        <SectionTitle>Version 2.7.41 - 2026-10-13</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-13</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #125</STRONG>: Add explanatory tooltips to disabled buttons across <CODE>LyricsSynchronizerTool</CODE>, <CODE>SongStructureBuilderTool</CODE>, <CODE>SunoCommunitySpinnerTool</CODE>, <CODE>SunoMusicPlayerTool</CODE>, and <CODE>SunoSongComplianceTool</CODE>, so the reason a control is unavailable is surfaced instead of leaving a silently inert button.</LI>
@@ -123,10 +123,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.40",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.40">
-        <SectionTitle>Version 2.7.40 - 2026-10-13</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-13</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #124</STRONG>: Add focus states to collapsible sections in Palette</LI>
@@ -136,10 +136,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.39",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.39">
-        <SectionTitle>Version 2.7.39 - 2026-10-09</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-09</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #122</STRONG>: Add aria-labels to hidden file inputs for better accessibility</LI>
@@ -149,10 +149,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.38",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.38">
-        <SectionTitle>Version 2.7.38 - 2026-10-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-06</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Add referrerPolicy to external images (Sentinel, PR #120)</STRONG>: Added <CODE>referrerPolicy="no-referrer"</CODE> to Buy Me A Coffee images in <CODE>Sidebar.tsx</CODE> and <CODE>AboutPage.tsx</CODE> to prevent referrer leakage to external CDN domains.</LI>
@@ -161,10 +161,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.37",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.37">
-        <SectionTitle>Version 2.7.37 - 2026-10-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-06</SectionTitle>
         <SubSectionTitle>Accessibility</SubSectionTitle>
         <UL>
           <LI><STRONG>Make hover-only UI controls keyboard accessible (Palette, PR #119)</STRONG>: Added <CODE>focus-within:opacity-100</CODE> to hover-only control containers in <CODE>CreativeConceptBlender</CODE>, <CODE>LyricProcessorTool</CODE>, <CODE>LyricsSynchronizerTool</CODE>, and <CODE>SunoMusicPlayerTool</CODE> so keyboard users can reach inline action buttons without mouse hover.</LI>
@@ -173,10 +173,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.36",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.36">
-        <SectionTitle>Version 2.7.36 - 2026-10-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-06</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Performance: Replace chained filter+map with single-pass reduce (Bolt, PR #118)</STRONG>: Consolidated <CODE>.filter(Boolean).map(...)</CODE> into <CODE>.reduce(...)</CODE> in <CODE>useRandomMusicStyle.ts</CODE> across three call sites (style summary, pipe-delimited tags, and copyable tags with bracket removal), eliminating intermediate array allocations.</LI>
@@ -185,10 +185,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.35",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.35">
-        <SectionTitle>Version 2.7.35 - 2026-10-05</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-05</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Improve BPMTapperTool performance (Bolt, PR #116)</STRONG>: Consolidated the <CODE>map</CODE> + <CODE>reduce</CODE> into a single <CODE>for</CODE> loop to avoid O(N) array allocation when computing standard deviation of tap intervals.</LI>
@@ -201,10 +201,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.34",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.34">
-        <SectionTitle>Version 2.7.34 - 2026-10-04</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-04</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Focus states on modal close buttons (Palette, PR #114)</STRONG>: The close buttons in <CODE>KeyboardShortcutsModal</CODE> and <CODE>SongLifecycleChartModal</CODE> now carry <CODE>outline-none focus-visible:ring-2 focus-visible:ring-emerald-500</CODE>, making dismiss controls reachable and clearly highlighted for keyboard users.</LI>
@@ -213,10 +213,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.33",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.33">
-        <SectionTitle>Version 2.7.33 - 2026-10-04</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-04</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed XSS bypass in URL sanitization (Sentinel, PR #112)</STRONG>: The <CODE>sanitizeUrlForHref</CODE> utility now strips control characters and whitespace before parsing URLs to prevent protocol obfuscation attacks that could bypass the safe-protocol filter.</LI>
@@ -230,10 +230,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.32",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.32">
-        <SectionTitle>Version 2.7.32 - 2026-10-02</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-02</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Accessibility tooltips on disabled controls (Palette, PR #110)</STRONG>: The <CODE>ChordProgressionTool</CODE> now displays context-aware <CODE>title</CODE> tooltips on disabled select menus and buttons to explain why controls are unavailable (e.g., "Cannot change root note while recording"). The <CODE>Select</CODE> component now accepts a <CODE>title</CODE> prop for consistent tooltip delivery.</LI>
@@ -243,10 +243,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.31",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.31">
-        <SectionTitle>Version 2.7.31 - 2026-10-02</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-02</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Single-pass min/max computation in Suno User Stats trend charts (Bolt, PR #109)</STRONG>: <CODE>UpvotesTrendChart</CODE>, <CODE>CommentsTrendChart</CODE>, <CODE>PlaysTrendChart</CODE>, and <CODE>FollowersTrendChart</CODE> now build their <CODE>values</CODE>/<CODE>labels</CODE> arrays and derive <CODE>minVal</CODE>/<CODE>maxVal</CODE> in one <CODE>for</CODE> loop instead of four separate traversals. This removes two redundant O(N) passes and intermediate allocations, and eliminates the <CODE>RangeError: Maximum call stack size exceeded</CODE> crash that the <CODE>Math.min(...values)</CODE> / <CODE>Math.max(...values)</CODE> spread calls could trigger on very large historical datasets.</LI>
@@ -255,10 +255,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.30",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.30">
-        <SectionTitle>Version 2.7.30 - 2026-10-01</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-10-01</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Prevented error message leakage in the Cloudflare Worker (Sentinel, PRs #97, #98, #100, #103, #105)</STRONG>: The proxy endpoints no longer return raw <CODE>err.message</CODE> values in 500/502 responses. The Suno proxy, generic CORS proxy, and Gemini handler now log the original error via <CODE>console.error</CODE> for debugging and respond with generic messages such as <CODE>An internal error occurred</CODE>, closing a defense-in-depth gap that could expose internal paths, dependencies, and upstream configuration.</LI>
@@ -278,10 +278,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.29",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.29">
-        <SectionTitle>Version 2.7.29 - 2026-09-25</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-25</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Hardened proxy secret comparison</STRONG>: Updated the Worker's <CODE>timingSafeEqual</CODE> implementation to compare across the maximum input length without an early length-mismatch return, while enforcing a 512-character limit to reduce timing leaks and prevent excessive comparison work.</LI>
@@ -299,10 +299,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.28",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.28">
-        <SectionTitle>Version 2.7.28 - 2026-09-24</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-24</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Prevent timing attacks and information leakage in API proxy (Sentinel)</STRONG>: Removed timing-sensitive comparisons in the proxy layer to prevent information-leakage via timing side-channels.</LI>
@@ -317,10 +317,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.27",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.27">
-        <SectionTitle>Version 2.7.27 - 2026-09-24</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-24</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Song performance table search speed</STRONG>: <CODE>DetailedSongPerformanceTable.tsx</CODE> now pre-computes lowercased search variants (<CODE>title</CODE>, <CODE>display_name</CODE>, <CODE>handle</CODE>, <CODE>tags</CODE>) once inside the memoized data-enhancement pass, replacing repeated <CODE>.toLowerCase()</CODE> calls during filtering and sorting with O(1) property access.</LI>
@@ -330,10 +330,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.26",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.26">
-        <SectionTitle>Version 2.7.26 - 2026-09-23</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-23</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>About page performance</STRONG>: <CODE>AboutPage.tsx</CODE> now memoizes the category-based tool grouping with <CODE>useMemo</CODE>, preventing redundant <CODE>reduce</CODE> work on every re-render and matching the existing <CODE>Sidebar.tsx</CODE> pattern.</LI>
@@ -342,10 +342,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.25",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.25">
-        <SectionTitle>Version 2.7.25 - 2026-09-23</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-23</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Worker rate-limit sliding window fix (stats/telemetry endpoints)</STRONG>: Extended the HIGH-priority sliding-window fix from v2.7.21 to the rate-limit checks on <CODE>/stats</CODE> and <CODE>/telemetry</CODE> endpoints. Both now use the <CODE>getRateLimitState</CODE> helper to enforce proper time-window semantics instead of relying on KV TTL extension (preventing slow-drip attack lockouts).</LI>
@@ -358,10 +358,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.24",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.24">
-        <SectionTitle>Version 2.7.24 - 2026-09-22</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-22</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>File upload keyboard focus rings</STRONG>: The custom file upload dropzones in <CODE>BPMTapperTool</CODE> and <CODE>LyricsSynchronizerTool</CODE> now show a visible emerald focus ring on the parent container when the hidden file input receives focus, fixing WCAG focus visibility for sighted keyboard users without breaking native file input semantics or drag-and-drop.</LI>
@@ -370,10 +370,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.23",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.23">
-        <SectionTitle>Version 2.7.23 - 2026-09-22</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-22</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Exposed proxy auth token removed (CRITICAL)</STRONG>: The frontend bundle no longer reads <CODE>VITE_PROXY_AUTH_TOKEN</CODE> or sends an <CODE>X-Proxy-Auth</CODE> header. The insecure local <CODE>/proxy/</CODE> CORS proxy route was removed from <CODE>riffusionService.ts</CODE>, so the secret can no longer be baked into the static bundle. The Cloudflare Worker now exposes a secured <CODE>/proxy/*</CODE> endpoint (rate-limited, host-allowlisted, <CODE>X-Proxy-Auth</CODE> gated) for Flow Music/Riffusion domains.</LI>
@@ -388,10 +388,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.22",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.22">
-        <SectionTitle>Version 2.7.22 - 2026-09-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-21</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Followers chart performance</STRONG>: The <CODE>FollowersTrendChart</CODE> component now memoizes its data transformations (value/label arrays and Y-axis padding calculation) with <CODE>useMemo</CODE>, avoiding redundant re-mapping on every render before the Chart.js redraw.</LI>
@@ -401,10 +401,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.21",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.21">
-        <SectionTitle>Version 2.7.21 - 2026-09-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-21</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Worker rate-limit sliding window fix (HIGH)</STRONG>: <CODE>gemini-worker/index.js</CODE> now stores an <CODE>attempts</CODE> + <CODE>windowStart</CODE> state object in KV and enforces the window in application code instead of relying on per-write <CODE>expirationTtl</CODE>. Previously every increment extended the KV TTL from the current time, so slow continuous requests could trigger permanent 429 lockouts on <CODE>/suno</CODE>, <CODE>/verify-password</CODE>, and Gemini endpoints (with legacy numeric counters still read for backward compatibility).</LI>
@@ -418,10 +418,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.20",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.20">
-        <SectionTitle>Version 2.7.20 - 2026-09-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-20</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Worker rate limiting</STRONG>: The <CODE>/stats</CODE> and <CODE>/telemetry</CODE> endpoints in <CODE>gemini-worker/index.js</CODE> now enforce IP-based rate limits via TTL-bound <CODE>STATS_KV</CODE> entries (30 req/min for <CODE>/stats</CODE>, 120 req/min for <CODE>/telemetry</CODE>), returning <CODE>429</CODE> with <CODE>Retry-After</CODE> to prevent KV quota exhaustion (Denial-of-Wallet) and telemetry spam.</LI>
@@ -434,10 +434,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.19",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.19">
-        <SectionTitle>Version 2.7.19 - 2026-09-18</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-18</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>UserStats & Player href XSS</STRONG>: External <CODE>suno_song_url</CODE> and <CODE>suno_creator_url</CODE> values in <CODE>DetailedSongPerformanceTable</CODE>, <CODE>UserProfileCard</CODE>, the <CODE>TopEngagingSongs</CODE>/<CODE>TopSongs</CODE>/<CODE>TopCommentedSongs</CODE>/<CODE>TopSongsByCommentRate</CODE>/<CODE>SongTrend</CODE> charts, and <CODE>SunoMusicPlayerTool</CODE> are now passed through <CODE>sanitizeUrlForHref</CODE> — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
@@ -451,10 +451,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.18",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.18">
-        <SectionTitle>Version 2.7.18 - 2026-09-17</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-17</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno href XSS</STRONG>: External <CODE>suno_playlist_url</CODE>, <CODE>suno_creator_url</CODE>, and <CODE>suno_song_url</CODE> values in <CODE>InfoBoxes.tsx</CODE> and <CODE>SunoSongComplianceTool.tsx</CODE> are now passed through <CODE>sanitizeUrlForHref</CODE>, which enforces a strict <CODE>http:</CODE>/<CODE>https:</CODE>/<CODE>mailto:</CODE> protocol whitelist — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
@@ -463,10 +463,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.17",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.17">
-        <SectionTitle>Version 2.7.17 - 2026-09-17</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-17</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Stats Tables</STRONG>: The inline <CODE>SortArrow</CODE> sort-indicator component was extracted to module scope and wrapped in <CODE>React.memo</CODE> across <CODE>DetailedSongPerformanceTable</CODE>, <CODE>TagGenrePerformanceTables</CODE>, and <CODE>TagPairPerformanceTable</CODE> — fixing the inline-component anti-pattern that caused full unmount/remount churn on every parent render.</LI>
@@ -477,10 +477,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.16",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.16">
-        <SectionTitle>Version 2.7.16 - 2026-09-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-15</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>SongDeckPicker XSS</STRONG>: User-provided URLs (imported CSV cards, deck log links) are now passed through <CODE>sanitizeUrlForHref</CODE>, which enforces a strict <CODE>http:</CODE>/<CODE>https:</CODE>/<CODE>mailto:</CODE> protocol whitelist — preventing <CODE>javascript:</CODE>/<CODE>data:</CODE> URI injection when links are rendered in <CODE>href</CODE> attributes.</LI>
@@ -494,10 +494,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.15",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.15">
-        <SectionTitle>Version 2.7.15 - 2026-09-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-14</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>SongStructureBuilder CSV Export</STRONG>: <CODE>escapeCsvField</CODE> now sanitizes CSV fields starting with <CODE>=</CODE>, <CODE>+</CODE>, <CODE>-</CODE>, or <CODE>@</CODE> by prepending a single quote — preventing CSV Formula (Macro) Injection when exported files are opened in spreadsheet software like Excel or Google Sheets.</LI>
@@ -506,10 +506,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.14",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.14">
-        <SectionTitle>Version 2.7.14 - 2026-09-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-14</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>BPMTapperTool / LyricProcessorTool</STRONG>: Disabled tool buttons now display dynamic <CODE>title</CODE> tooltips explaining exactly why they are blocked (missing input or operation in progress).</LI>
@@ -518,10 +518,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.13",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.13">
-        <SectionTitle>Version 2.7.13 - 2026-09-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-14</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Secondary Charts</STRONG>: Secondary distribution and trend charts (<CODE>CommentCountDistribution</CODE>, <CODE>PlayCountDistribution</CODE>, <CODE>UpvoteCountDistribution</CODE>, <CODE>PlaylistCreationDate</CODE>, <CODE>TopCommentedSongs</CODE>, <CODE>SongTrend</CODE>, and <CODE>SongLifecycleChartModal</CODE>) now mutate their Chart.js data/options in place and call <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every update — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.</LI>
@@ -532,10 +532,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.12",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.12">
-        <SectionTitle>Version 2.7.12 - 2026-09-11</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-11</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Scatter Plots (Plays vs Comments / Plays vs Upvotes)</STRONG>: Chart.js instances now mutate data in-place and call <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted CPU cycles; cleanup moved to component unmount only.</LI>
@@ -544,10 +544,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.11",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.11">
-        <SectionTitle>Version 2.7.11 - 2026-09-10</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-10</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>ID Generation</STRONG>: Unique identifiers across <CODE>SongDeckPicker</CODE> (external source cards, deck themes, song groups), <CODE>useSunoDataManagement</CODE> saved playlists, <CODE>RandomMusicStyleGenerator</CODE>, <CODE>CreativeConceptBlender</CODE>, <CODE>ChordProgressionTool</CODE>, <CODE>SongCoverArtTool</CODE>, <CODE>SongStructureBuilderTool</CODE>, <CODE>SparkTuneTool</CODE>, and <CODE>SunoCommunitySpinnerTool</CODE> now use <CODE>crypto.randomUUID()</CODE> instead of <CODE>Date.now()</CODE>-derived values — eliminating predictable, collision-prone IDs.</LI>
@@ -560,10 +560,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.10",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.10">
-        <SectionTitle>Version 2.7.10 - 2026-09-10</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-10</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno Queue</STRONG>: Search filtering in <CODE>useSunoQueue</CODE> now lowercases the filter query once before applying it inside the <CODE>.filter()</CODE> loop instead of recomputing <CODE>.toLowerCase()</CODE> up to four times per song for each render — reducing redundant string calculations in the audio queue.</LI>
@@ -572,10 +572,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.9",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.9">
-        <SectionTitle>Version 2.7.9 - 2026-09-09</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-09</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>LyricProcessorTool</STRONG>: Formatting toolbar buttons (UPPERCASE / lowercase / Title Case) now have descriptive <CODE>aria-label</CODE>s so screen readers announce their action clearly.</LI>
@@ -584,10 +584,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.8",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.8">
-        <SectionTitle>Version 2.7.8 - 2026-09-09</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-09</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>TopSongsChart</STRONG>: Chart.js instance now mutates data in-place and calls <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every render/resize — eliminating chart flicker and wasted work; cleanup moved to component unmount only. Chart data and labels memoized to prevent unnecessary re-allocation.</LI>
@@ -600,10 +600,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.7",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.7">
-        <SectionTitle>Version 2.7.7 - 2026-09-08</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-08</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>SongsByHourOfDayChart</STRONG>: Chart.js instance now mutates data in-place and calls <CODE>update('none')</CODE> instead of destroying and recreating the canvas on every resize/render — eliminating UI lag and canvas flashing; cleanup moved to component unmount only. <CODE>hoursOfDay</CODE> array memoized to prevent re-allocation.</LI>
@@ -616,10 +616,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.6",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.6">
-        <SectionTitle>Version 2.7.6 - 2026-09-08</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-08</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Palette Preset Modals</STRONG>: The custom file upload trigger now uses a <CODE>label</CODE> wrapper with <CODE>tabIndex</CODE>, <CODE>role="button"</CODE>, and space/enter key handlers around a hidden file <CODE>input</CODE> — making it truly keyboard and screen-reader accessible instead of a visually-hidden absolute input.</LI>
@@ -629,10 +629,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.5",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.5">
-        <SectionTitle>Version 2.7.5 - 2026-09-08</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-08</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>GenreVotesChart / TagUsageChart / TagVotesChart</STRONG>: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize — preventing chart flicker and wasted work when the sidebar collapses; cleanup moved to component unmount only.</LI>
@@ -646,10 +646,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.4",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.4">
-        <SectionTitle>Version 2.7.4 - 2026-09-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-06</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>BPM Tapper</STRONG>: the BPM Tools tabs now use proper WAI-ARIA <CODE>tablist</CODE>/<CODE>tab</CODE>/<CODE>tabpanel</CODE> semantics, and the TAP, Reset Stream, and Load buttons have accessible labels.</LI>
@@ -662,10 +662,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.2",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.2">
-        <SectionTitle>Version 2.7.2 - 2026-09-04</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-04</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>GenreUsageChart</STRONG>: Chart.js instances now mutate data in-place instead of destroying and recreating on every render/resize; chart cleanup moved to component unmount only.</LI>
@@ -678,10 +678,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.1",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.1">
-        <SectionTitle>Version 2.7.1 - 2026-09-04</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-04</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Spinner Wheel export</STRONG>: Download button is now disabled when configuration is empty, with a tooltip explaining why.</LI>
@@ -695,10 +695,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.7.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.7.0">
-        <SectionTitle>Version 2.7.0 - 2026-09-04</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-04</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Unified design system</STRONG>: the two UI modes (Architect/Classic) are merged into a single clean style; the mode toggle in the header is removed and only light/dark theme remains. The theme tokens are centralized in <CODE>index.css</CODE>.</LI>
@@ -722,10 +722,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.27",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.27">
-        <SectionTitle>Version 2.6.27 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Lyrics Synchronizer</STRONG>: the "SYNC VECTOR" button now actually marks the next unsynced line (it had no click handler), and the spacebar shortcut works whenever an audio file is loaded (it previously required the audio to be playing). Space no longer misfires when a button is focused — it activates the focused button natively.</LI>
@@ -735,10 +735,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.26",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.26">
-        <SectionTitle>Version 2.6.26 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>File uploads no longer erase metadata</STRONG> in the analysis tools (Lyrics Synchronizer, MP3 Cutter, BPM Tapper): uploading an MP3 now keeps the title/artist/cover already fetched from a Suno/Riffusion URL or typed by the user (the filename is only used as a title fallback). MP3 Cutter additionally now resolves Suno URLs and fills in the song metadata, matching the other tools, while still requiring a manual MP3 upload for the audio (TOS compliance).</LI>
@@ -747,10 +747,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.25",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.25">
-        <SectionTitle>Version 2.6.25 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Lyrics Synchronizer</STRONG>: loading a Suno URL now fetches and fills the song metadata (title, artist, cover art, and lyrics when the prompt looks like lyrics) while still requiring a manual MP3 upload for the audio (TOS compliance) — and it no longer wipes an MP3 that was already uploaded, so you can combine "upload MP3 + fetch the rest from the Suno URL".</LI>
@@ -759,10 +759,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.24",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.24">
-        <SectionTitle>Version 2.6.24 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>localStorage quota self-healing</STRONG>: <CODE>safeStorage</CODE> now evicts the largest regenerable caches (<CODE>sunoMusicPlayer_user_</CODE>/<CODE>playlist_</CODE> dumps, <CODE>sunoUserStats_</CODE> snapshots, song info caches) and transient logs before failing, so the app no longer spams "quota has been exceeded" errors or drops the last-session / user-cache persistence when storage fills up.</LI>
@@ -774,10 +774,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.23",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.23">
-        <SectionTitle>Version 2.6.23 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno TOS compliance</STRONG>: Tutti gli strumenti ora mostrano errore immediato per URL Suno senza caricare CDN audio; player musica usa iframe embed ufficiale; tool di analisi (MP3 Cutter, BPM Tapper, Lyrics Sync) richiedono upload manuale MP3.</LI>
@@ -790,10 +790,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.22",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.22">
-        <SectionTitle>Version 2.6.22 - 2026-09-03</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-03</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Prevent chart recreation on resize/updates in Suno User Stats</STRONG>: <CODE>CommentsTrendChart</CODE>, <CODE>FollowersTrendChart</CODE>, <CODE>PlaysTrendChart</CODE>, and <CODE>UpvotesTrendChart</CODE> now reuse their existing Chart.js instance (updating labels, dataset, and options in place via <CODE>update('none')</CODE>) instead of destroying and recreating the chart on every <CODE>screenWidth</CODE> change or data update, reducing jank and CPU churn during window resizes.</LI>
@@ -806,10 +806,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.21",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.21">
-        <SectionTitle>Version 2.6.21 - 2026-09-02</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-02</SectionTitle>
         <SubSectionTitle>Accessibility</SubSectionTitle>
         <UL>
           <LI><STRONG>Made drag-and-drop file upload zones keyboard accessible</STRONG>: <CODE>ImageUpload.tsx</CODE> and the Song Structure Builder import zone (<CODE>ImportExportModal.tsx</CODE>) now expose <CODE>role="button"</CODE>, <CODE>tabIndex={0}</CODE>, <CODE>onKeyDown</CODE> handlers (Enter/Space) that trigger the file picker, and visible focus rings — so keyboard and screen-reader users can activate uploads.</LI>
@@ -819,10 +819,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.20",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.20">
-        <SectionTitle>Version 2.6.20 - 2026-09-01</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-09-01</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed weak random ID generation in <CODE>LyricsSynchronizerTool</CODE></STRONG>: replaced remaining <CODE>Date.now()</CODE>-based lyric line ID generation with <CODE>crypto.randomUUID()</CODE> across parsed lyric lines, empty line placeholders, and LRC file imports to ensure robust, collision-resistant uniqueness.</LI>
@@ -831,10 +831,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.19",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.19">
-        <SectionTitle>Version 2.6.19 - 2026-08-31</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-31</SectionTitle>
         <SubSectionTitle>Accessibility</SubSectionTitle>
         <UL>
           <LI><STRONG>Added <CODE>aria-controls</CODE> to local playlist manager toggle</STRONG>: the playlist Import/Export & Local Saves expandable button in <CODE>LocalPlaylistManager.tsx</CODE> now references its collapsible panel via <CODE>aria-controls</CODE> (alongside the existing <CODE>aria-expanded</CODE>), and the panel itself carries a matching <CODE>id="playlist-management-panel"</CODE> so screen readers can announce the relationship between the button and the panel it controls.</LI>
@@ -843,10 +843,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.18",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.18">
-        <SectionTitle>Version 2.6.18 - 2026-08-31</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-31</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed weak random ID generation in <CODE>LyricsSynchronizerTool</CODE></STRONG>: lyric line IDs are now generated with <CODE>crypto.randomUUID()</CODE> instead of <CODE>Math.random().toString(16)</CODE> combined with <CODE>Date.now()</CODE>, eliminating predictable/collision-prone identifiers for parsed lyric lines.</LI>
@@ -863,10 +863,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.17",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.17">
-        <SectionTitle>Version 2.6.17 - 2026-08-28</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-28</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed timing attack on password verification</STRONG>: the Gemini Worker's <CODE>/verify-password</CODE> endpoint now uses a constant-time string comparison (bitwise XOR loop) instead of the short-circuiting <CODE>===</CODE> operator, mitigating side-channel information leakage about the committee password.</LI>
@@ -879,10 +879,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.16",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.16">
-        <SectionTitle>Version 2.6.16 - 2026-08-27</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-27</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed overly permissive CORS matching in the Worker</STRONG>: replaced the <CODE>http://localhost:</CODE> prefix check (which allowed spoofed origins like <CODE>http://localhost.evil.com</CODE>) with strict hostname/port validation so only genuine localhost/127.0.0.1 origins are accepted.</LI>
@@ -902,10 +902,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.15",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.15">
-        <SectionTitle>Version 2.6.15 - 2026-08-18</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-18</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Fixed Server-Side Request Forgery (SSRF) in Suno proxy</STRONG>: the Cloudflare Worker's Suno proxy now uses the <CODE>URL</CODE> constructor to safely compose target URLs and strictly enforces hostname matching, preventing path manipulation attacks (e.g., <CODE>@attacker.com</CODE> authority injection) that could redirect outbound fetches to malicious hosts.</LI>
@@ -918,10 +918,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.14",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.14">
-        <SectionTitle>Version 2.6.14 - 2026-08-17</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-17</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>Cloudflare Pages security headers</STRONG>: added <CODE>public/_headers</CODE> to enforce <CODE>X-Frame-Options: DENY</CODE>, <CODE>X-Content-Type-Options: nosniff</CODE>, <CODE>Referrer-Policy: strict-origin-when-cross-origin</CODE>, <CODE>Strict-Transport-Security</CODE>, <CODE>X-XSS-Protection</CODE>, and <CODE>Permissions-Policy</CODE> on all responses.</LI>
@@ -930,10 +930,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.13",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.13">
-        <SectionTitle>Version 2.6.13 - 2026-08-17</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-17</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Optimized Music Theory Wiki search</STRONG>: cached parsed HTML content in a <CODE>useMemo</CODE> map to prevent expensive <CODE>ReactDOMServer.renderToStaticMarkup</CODE> calls on every keystroke during search, improving responsiveness.</LI>
@@ -946,10 +946,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.12",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.12">
-        <SectionTitle>Version 2.6.12 - 2026-08-16</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-16</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Keyboard-accessible file uploads</STRONG>: custom file upload buttons in the Suno player playlist manager now support <CODE>tabIndex</CODE>, <CODE>role="button"</CODE>, and Enter/Space key handling with visible focus rings, so keyboard and screen-reader users can trigger TXT/CSV playlist imports.</LI>
@@ -967,10 +967,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.11",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.11">
-        <SectionTitle>Version 2.6.11 - 2026-08-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-14</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>No more public CORS proxy fallbacks</STRONG>: the Suno service now relies strictly on the verified Cloudflare Worker proxy for all fetches and short-URL resolution, removing the hardcoded fallback chain of unvetted public proxies (corsproxy.io, allorigins, thingproxy, cors-anywhere, etc.).</LI>
@@ -983,10 +983,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.10",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.10">
-        <SectionTitle>Version 2.6.10 - 2026-08-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-14</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Accessible import/export modals</STRONG>: the Suno community spinner's export textarea now carries an <CODE>aria-label</CODE>, the import file picker and JSON textarea have proper <CODE>htmlFor</CODE>/<CODE>id</CODE> label associations, so screen readers announce these fields correctly.</LI>
@@ -995,10 +995,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.9",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.9">
-        <SectionTitle>Version 2.6.9 - 2026-08-13</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-13</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Faster Suno player re-renders</STRONG>: <CODE>SunoMusicPlayerTool</CODE> is wrapped in <CODE>React.memo</CODE>, so the component no longer re-renders when parent state changes without prop updates.</LI>
@@ -1007,10 +1007,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.8",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.8">
-        <SectionTitle>Version 2.6.8 - 2026-08-13</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-13</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Accessible buttons</STRONG>: the shared <CODE>Button</CODE> component now shows a visible emerald keyboard focus ring (<CODE>focus-visible:ring-2</CODE>) on the "Report a bug" links across the Sidebar and About page, so keyboard users can tell where they are.</LI>
@@ -1023,10 +1023,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.7",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.7">
-        <SectionTitle>Version 2.6.7 - 2026-08-12</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-12</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Smoother audio visualizer</STRONG>: the Suno player's <CODE>AudioVisualizer</CODE> is wrapped in <CODE>React.memo</CODE> and its <CODE>analyserNodes</CODE> prop is memoized with <CODE>useMemo</CODE>, so frequent playback time updates no longer restart its <CODE>requestAnimationFrame</CODE> loop (fixes animation micro-stutters during playback).</LI>
@@ -1040,10 +1040,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.6",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.6">
-        <SectionTitle>Version 2.6.6 - 2026-08-11</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-11</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Faster stats charts</STRONG>: sunoUserStats charts now memoize their sorting/aggregation with <CODE>useMemo</CODE> and copy arrays before sorting (<CODE>[...data].sort()</CODE>), eliminating prop mutation side effects and redundant re-sorts on every render.</LI>
@@ -1056,10 +1056,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.5",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.5">
-        <SectionTitle>Version 2.6.5 - 2026-08-07</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-07</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Support section revamp</STRONG>: removed the Floot referral link from the About page and made the Buy Me a Coffee button more prominent (larger, emerald-highlighted card) in both support sections.</LI>
@@ -1068,10 +1068,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.4",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.4">
-        <SectionTitle>Version 2.6.4 - 2026-08-07</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-07</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Resource Nexus cards not visible</STRONG>: the <CODE>stagger-fade</CODE> entrance animation used <CODE>animation-fill-mode: backwards</CODE>, which reverted cards to <CODE>opacity: 0</CODE> once the fade-in completed (now <CODE>both</CODE>, retaining the visible end state). Also removed <CODE>content-visibility: auto</CODE> (<CODE>cv-section</CODE>) from directory sections, which could prevent the <CODE>ScrollReveal</CODE> observer from firing for off-screen sections.</LI>
@@ -1082,10 +1082,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.3",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.3">
-        <SectionTitle>Version 2.6.3 - 2026-08-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-06</SectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
           <LI><STRONG>No sensitive data in the repo</STRONG>: <CODE>.env</CODE> is no longer tracked (untracked via <CODE>git rm --cached</CODE>), and docs/AGENTS now enforce that <CODE>.env</CODE>, <CODE>.dev.vars</CODE>, and <CODE>.wrangler/</CODE> stay out of git.</LI>
@@ -1095,10 +1095,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.2",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.2">
-        <SectionTitle>Version 2.6.2 - 2026-08-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-06</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno proxy cache optimization</STRONG>: the Worker now caches per-endpoint — clips for 24h (immutable data), profiles for 10 min, playlists for 5 min, short links for 1h. Faster repeat loads and less load on Suno.</LI>
@@ -1107,10 +1107,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.1",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.1">
-        <SectionTitle>Version 2.6.1 - 2026-08-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-06</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Clean console</STRONG>: <CODE>sunoService</CODE> no longer attempts the guaranteed-to-fail direct browser fetch to Suno hosts (always blocked by CORS) — it goes straight to the Cloudflare Worker proxy, eliminating CORS error spam in the browser console.</LI>
@@ -1119,10 +1119,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.6.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.6.0">
-        <SectionTitle>Version 2.6.0 - 2026-08-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-06</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Definitive Suno Proxy</STRONG>: Suno API calls now route through the app's own Cloudflare Worker (<CODE>GET /suno/*</CODE>) instead of unreliable public CORS proxies. The Worker fetches Suno server-side (no browser CORS), caches responses at the edge for 10 minutes, and returns proper CORS headers. Public proxies remain only as a last-resort fallback.</LI>
@@ -1140,10 +1140,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.5.5",
+    version: "2.7.50",
     content: (
-      <section id="version-2.5.5">
-        <SectionTitle>Version 2.5.5 - 2026-08-06</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-08-06</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Release Notes Fallback</STRONG>: GitHub releases whose bodies lack <CODE>###</CODE> section headers (older releases published as plain commit-subject lists) now render their content as a fallback bullet list instead of showing only the version title.</LI>
@@ -1152,10 +1152,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.4.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.4.0">
-        <SectionTitle>Version 2.4.0 - 2025-08-05</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2025-08-05</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Service Layer Caching</STRONG>: Added persistent caching layer for Suno clip data, Riffusion song data, and short URL resolutions to reduce redundant network requests.</LI>
@@ -1186,10 +1186,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.3.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.3.0">
-        <SectionTitle>Version 2.3.0 - 2026-03-31</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-03-31</SectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>Mobile UI & Accessibility Refinement</STRONG>: Performed a high-precision overhaul for 375px+ viewports. Standardized responsive paddings and eliminated horizontal overflow across all tools.</LI>
@@ -1207,10 +1207,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.2.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.2.0">
-        <SectionTitle>Version 2.2.0 - 2026-03-11</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-03-11</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Hub Stats Page</STRONG>: New interactive dashboard for site-wide telemetry and visitor analytics.</LI>
@@ -1231,10 +1231,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.1.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.1.0">
-        <SectionTitle>Version 2.1.0 - 2026-03-11</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-03-11</SectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <UL>
           <LI><STRONG>Full Mobile Responsiveness Overhaul</STRONG>: Eliminated horizontal overflow across the entire application, focusing on the Suno User Stats tool.</LI>
@@ -1248,10 +1248,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "2.0.0",
+    version: "2.7.50",
     content: (
-      <section id="version-2.0.0">
-        <SectionTitle>Version 2.0.0 - 2026-02-22</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-22</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Cloudflare Pages Migration</STRONG>: The Hub is now a pure static site deployed on Cloudflare Pages.</LI>
@@ -1278,10 +1278,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.8",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.8">
-        <SectionTitle>Version 1.9.8 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Lyric Processor Meta Update</STRONG>: Enhanced metadata and legal clarity for processed lyrics.</LI>
@@ -1293,10 +1293,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.7",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.7">
-        <SectionTitle>Version 1.9.7 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>About Page Enhancements</STRONG>:</LI>
@@ -1311,10 +1311,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.6",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.6">
-        <SectionTitle>Version 1.9.6 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Producer.AI Integration</STRONG>:</LI>
@@ -1332,10 +1332,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.5",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.5">
-        <SectionTitle>Version 1.9.5 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Ranking Reveal Mode (Song Deck Picker)</STRONG>:</LI>
@@ -1354,10 +1354,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.4",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.4">
-        <SectionTitle>Version 1.9.4 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Song Structure Builder "Power-Up"</STRONG>:</LI>
@@ -1378,10 +1378,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.3",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.3">
-        <SectionTitle>Version 1.9.3 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Riffusion Integration Across Tools</STRONG>:</LI>
@@ -1397,10 +1397,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.2",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.2">
-        <SectionTitle>Version 1.9.2 - 2026-02-21</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-21</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>MP3 Cutter Riffusion Support</STRONG>: Load and edit audio directly from Riffusion song URLs. Fetch metadata and stream automatically.</LI>
@@ -1410,10 +1410,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.1",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.1">
-        <SectionTitle>Version 1.9.1 - 2026-02-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-20</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Music Shuffler Riffusion Integration</STRONG>: Support for <CODE>riffusion.com/song/...</CODE> URLs with multi-platform playlist capability.</LI>
@@ -1428,10 +1428,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.9.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.9.0">
-        <SectionTitle>Version 1.9.0 - 2026-02-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-20</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>SparkTune Super-Generator</STRONG>:</LI>
@@ -1446,10 +1446,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.9",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.9">
-        <SectionTitle>Version 1.8.9 - 2026-02-20</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-20</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Lyrics Synchronizer Layout</STRONG>:</LI>
@@ -1464,10 +1464,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.8",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.8">
-        <SectionTitle>Version 1.8.8 - 2026-02-19</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-19</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno Shuffler Improvements</STRONG>:</LI>
@@ -1481,10 +1481,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.7",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.7">
-        <SectionTitle>Version 1.8.7 - 2026-02-19</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-19</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Snippet Mode</STRONG>: 30-second random song previews for rapid discovery in Suno Music Shuffler.</LI>
@@ -1500,10 +1500,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.6",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.6">
-        <SectionTitle>Version 1.8.6 - 2026-02-19</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-19</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno User Stats "Data Nerd" Pack</STRONG>:</LI>
@@ -1520,10 +1520,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.5",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.5">
-        <SectionTitle>Version 1.8.5 - 2026-02-18</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-18</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Duration Check (Compliance)</STRONG>: Configurable duration limits (default 300s) for batch song validation. Includes CSV and summary report updates.</LI>
@@ -1533,10 +1533,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.4",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.4">
-        <SectionTitle>Version 1.8.4 - 2026-02-18</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-18</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Custom URL Lists (Shuffler)</STRONG>: Input a raw list of Suno URLs (one per line) to create on-the-fly playlists.</LI>
@@ -1546,10 +1546,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.2",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.2">
-        <SectionTitle>Version 1.8.2 - 2026-02-18</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-18</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>MP3 Cutter Enhancements</STRONG>: Cover art display, MP3 export (via <CODE>lamejs</CODE>), and legal copyright disclaimer.</LI>
@@ -1559,10 +1559,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.8.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.8.0">
-        <SectionTitle>Version 1.8.0 - 2026-02-17</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-17</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>New Tool: MP3 Cutter & Cropper</STRONG>: Visual waveform editing via <CODE>wavesurfer.js</CODE>, precise region selection, and audio export.</LI>
@@ -1572,10 +1572,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.7.6",
+    version: "2.7.50",
     content: (
-      <section id="version-1.7.6">
-        <SectionTitle>Version 1.7.6 - 2026-02-16</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-16</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Comment Engagement Tracking</STRONG>: Integrated comment counts across Stats charts, Shuffler queue, and Player info.</LI>
@@ -1585,10 +1585,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.7.4",
+    version: "2.7.50",
     content: (
-      <section id="version-1.7.4">
-        <SectionTitle>Version 1.7.4 - 2026-02-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-15</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>New Tool: Local Music Resource Directory</STRONG>: Curated hub for samples, communities, and production tutorials.</LI>
@@ -1598,10 +1598,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.7.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.7.0">
-        <SectionTitle>Version 1.7.0 - 2026-02-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-15</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>OS Media Control Integration</STRONG>: Robust Media Session API support for lock screen controls.</LI>
@@ -1612,10 +1612,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.6.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.6.0">
-        <SectionTitle>Version 1.6.0 - 2026-02-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-15</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Follower Growth Metrics</STRONG>: 7d/30d growth rates and percentage displays.</LI>
@@ -1626,10 +1626,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.5.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.5.0">
-        <SectionTitle>Version 1.5.0 - 2026-02-15</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-15</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Suno Song Compliance Checker</STRONG>: Batch processing, Gemini AI lyrics analysis, selectable content ratings (G to R), and CSV export.</LI>
@@ -1639,10 +1639,10 @@ export const releaseNotes: ReleaseNoteItem[] = [
     )
   },
   {
-    version: "1.0.0",
+    version: "2.7.50",
     content: (
-      <section id="version-1.0.0">
-        <SectionTitle>Version 1.0.0 - 2026-02-14</SectionTitle>
+      <section id="version-2.7.50">
+        <SectionTitle>Version 2.7.50 - 2026-10-24 - 2026-02-14</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <UL>
           <LI><STRONG>Initial Launch</STRONG>: 20+ specialized AI music tools including Suno Shuffler, Lyric Processor, Style Generator, Concept Blender, and Music Theory Wiki.</LI>
