@@ -8,6 +8,21 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.52",
+    content: (
+      <section id="version-2.7.52">
+        <SectionTitle>Version 2.7.52 - 2026-10-24</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #137</STRONG>: 🛡️ Sentinel: [security improvement] Add sandbox attribute to third-party iframes</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+      </section>
+    )
+  },
+  {
     version: "2.7.51",
     content: (
       <section id="version-2.7.51">

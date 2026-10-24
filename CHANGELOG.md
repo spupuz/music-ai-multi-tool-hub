@@ -1,3 +1,15 @@
+## [2.7.52] - 2026-10-24
+
+### Added
+
+### Changed
+
+- **PR #137**: 🛡️ Sentinel: [security improvement] Add sandbox attribute to third-party iframes
+
+### Fixed
+
+### Security
+
 ## [2.7.51] - 2026-10-24
 
 ### Added
