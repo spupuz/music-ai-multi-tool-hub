@@ -1,3 +1,15 @@
+## [2.7.53] - 2026-10-29
+
+### Added
+
+### Changed
+
+- **PR #138**: 🎨 Palette: [UX improvement] Add accessible form associations to dropdowns in spinner setup
+
+### Fixed
+
+### Security
+
 ## [2.7.52] - 2026-10-24
 
 ### Added

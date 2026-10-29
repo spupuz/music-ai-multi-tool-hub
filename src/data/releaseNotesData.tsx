@@ -8,6 +8,21 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.53",
+    content: (
+      <section id="version-2.7.53">
+        <SectionTitle>Version 2.7.53 - 2026-10-29</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #138</STRONG>: 🎨 Palette: [UX improvement] Add accessible form associations to dropdowns in spinner setup</LI>
+        </UL>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+      </section>
+    )
+  },
+  {
     version: "2.7.52",
     content: (
       <section id="version-2.7.52">
