@@ -450,8 +450,8 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                     {customLogo && (
                                         <div className="mt-3 flex items-end gap-3 p-3 bg-black/10 rounded-md">
                                             <div className="flex-grow">
-                                                <label className="block text-xs font-semibold mb-1" style={{color:toolTextColor}}>Size</label>
-                                                <select value={selectedLogoSize} onChange={e => setSelectedLogoSize(e.target.value)} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
+                                                <label htmlFor="logoSize" className="block text-xs font-semibold mb-1" style={{color:toolTextColor}}>Size</label>
+                                                <select id="logoSize" value={selectedLogoSize} onChange={e => setSelectedLogoSize(e.target.value)} className="w-full px-2 py-1.5 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
                                                     {logoSizeOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                                 </select>
                                             </div>
@@ -460,8 +460,8 @@ const SunoCommunitySpinnerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-2" style={{color:toolTextColor}}>Typography</label>
-                                    <select value={wheelTextFont} onChange={e => setWheelTextFont(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
+                                    <label htmlFor="wheelTextFont" className="block text-sm font-medium mb-2" style={{color:toolTextColor}}>Typography</label>
+                                    <select id="wheelTextFont" value={wheelTextFont} onChange={e => setWheelTextFont(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-400/30 rounded text-sm focus:ring-1 focus:ring-emerald-400 text-gray-900">
                                         {cardTextFontOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                     </select>
                                 </div>
