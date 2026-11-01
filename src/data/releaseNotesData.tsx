@@ -8,6 +8,21 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.54",
+    content: (
+      <section id="version-2.7.54">
+        <SectionTitle>Version 2.7.54 - 2026-11-01</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #139 / #140</STRONG>: 🛡️ Sentinel: close protocol obfuscation bypass in <CODE>sanitizeUrlForHref</CODE> — return the cleaned URL instead of the original un-sanitized input</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+      </section>
+    )
+  },
+  {
     version: "2.7.53",
     content: (
       <section id="version-2.7.53">

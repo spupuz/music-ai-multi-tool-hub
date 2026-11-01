@@ -1,4 +1,17 @@
+## [2.7.54] - 2026-11-01
+
+### Added
+
+### Changed
+
+### Fixed
+
+- **PR #139 / #140**: 🛡️ Sentinel: close protocol obfuscation bypass in `sanitizeUrlForHref` — return the cleaned URL instead of the original un-sanitized input
+
+### Security
+
 ## [2.7.53] - 2026-10-29
+
 
 ### Added
 
