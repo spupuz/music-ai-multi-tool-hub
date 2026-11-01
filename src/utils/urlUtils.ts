@@ -9,7 +9,7 @@ export const sanitizeUrlForHref = (url: string | undefined | null): string | und
         const parsedUrl = new URL(cleanedUrl, 'http://localhost');
         // Only allow specific safe protocols
         if (['http:', 'https:', 'mailto:'].includes(parsedUrl.protocol)) {
-            return url;
+            return cleanedUrl;
         }
         return undefined; // Filter out javascript:, data:, etc.
     } catch (e) {
