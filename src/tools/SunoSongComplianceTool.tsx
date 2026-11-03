@@ -16,7 +16,7 @@ import { fetchRiffusionSongData, extractRiffusionSongId } from '@/services/riffu
 import { safeSetItem } from '@/services/safeStorage';
 
 const TOOL_CATEGORY = 'SunoSongCompliance';
-const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
+const WORKER_URL = import.meta.env.VITE_GEMINI_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
 
 function escapeRegex(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
