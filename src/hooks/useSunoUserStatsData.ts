@@ -107,7 +107,7 @@ const calculateAggregatedStats = (
     const productivity: ProductivityStats = { songsByDayOfWeek: {'0':0,'1':0,'2':0,'3':0,'4':0,'5':0,'6':0}, songsByHourOfDay: {}, mostProductiveDay: 'N/A', mostProductiveHour: 'N/A' };
     for (let i = 0; i < 24; i++) productivity.songsByHourOfDay[i.toString()] = 0;
     const songCreationMap = new Map<string, number>();
-    const newSongInteractionHistory: Record<string, SongInteractionPoint[]> = JSON.parse(JSON.stringify(previousAggregatedStats?.songInteractionHistory || {}));
+    const newSongInteractionHistory: Record<string, SongInteractionPoint[]> = previousAggregatedStats?.songInteractionHistory ? JSON.parse(JSON.stringify(previousAggregatedStats.songInteractionHistory)) : {};
     const playBuckets = {"0-10":0, "11-50":0, "51-100":0, "101-250":0, "251-500":0, "501-1k":0, "1k-5k":0, "5k+":0};
     const upvoteBuckets = {"0":0, "1-5":0, "6-10":0, "11-25":0, "26-50":0, "51-100":0, "100+":0};
     const commentBuckets = {"0":0, "1-2":0, "3-5":0, "6-10":0, "11-20":0, "21+":0};
