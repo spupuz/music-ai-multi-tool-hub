@@ -8,6 +8,21 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.55",
+    content: (
+      <section id="version-2.7.55">
+        <SectionTitle>Version 2.7.55 - 2026-11-03</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #141</STRONG>: 🛡️ Sentinel: make Gemini worker URL configurable via <CODE>VITE_GEMINI_WORKER_URL</CODE> env var with fallback, removing hardcoded proxy endpoint from client bundle</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.54",
     content: (
       <section id="version-2.7.54">

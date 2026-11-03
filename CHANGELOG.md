@@ -1,3 +1,15 @@
+## [2.7.55] - 2026-11-03
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Security
+
+- **PR #141**: 🛡️ Sentinel: make Gemini worker URL configurable via `VITE_GEMINI_WORKER_URL` env var with fallback, removing hardcoded proxy endpoint from client bundle
+
 ## [2.7.54] - 2026-11-01
 
 ### Added
