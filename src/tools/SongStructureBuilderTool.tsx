@@ -360,7 +360,13 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
             return;
         }
 
-        const data = JSON.parse(e.dataTransfer.getData('application/json'));
+        let data;
+        try {
+            data = JSON.parse(e.dataTransfer.getData('application/json'));
+        } catch {
+            setDropTargetIndex(null);
+            return;
+        }
         let newArrangement = [...arrangement];
 
         if (data.itemType === 'palette') {
