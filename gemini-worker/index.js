@@ -160,6 +160,9 @@ async function incrementKV(kv, key) {
 function timingSafeEqual(a, b) {
     if (typeof a !== 'string' || typeof b !== 'string') return false;
 
+    // Reject empty secrets: an empty configured secret must never authenticate.
+    if (a.length === 0 || b.length === 0) return false;
+
     // Prevent DoS by enforcing a reasonable maximum length for secrets
     if (a.length > 512 || b.length > 512) return false;
 
