@@ -230,7 +230,14 @@ const BpmAndKeyFinderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       if (!audioUrl) throw new Error("Could not find a valid audio URL for the provided link.");
 
       setFinderProgress(`Downloading audio for analysis...`);
-      const response = await fetch(audioUrl);
+      const controller = new AbortController();
+      const fetchTimeout = setTimeout(() => controller.abort(), 30000);
+      let response: Response;
+      try {
+        response = await fetch(audioUrl, { signal: controller.signal });
+      } finally {
+        clearTimeout(fetchTimeout);
+      }
       if (!response.ok) throw new Error(`Failed to download audio: ${response.statusText}`);
       const audioData = await response.arrayBuffer();
 
