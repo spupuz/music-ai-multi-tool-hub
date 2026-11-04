@@ -1,3 +1,8 @@
+## [2.7.58] - 2026-11-04
+### Changed
+- **PR #146**: Make Gemini worker URL configurable in aiAnalysisService and StatsPage
+
+
 ## [2.7.57] - 2026-11-04
 ### Added
 ### Changed

@@ -8,6 +8,30 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.58",
+    content: (
+      <section id="version-2.7.58">
+        <SectionTitle>Version 2.7.58 - 2026-11-04</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #146</STRONG>: Make Gemini worker URL configurable in aiAnalysisService and StatsPage</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
+    version: "2.7.57",
+    content: (
+      <section id="version-2.7.57">
+        <SectionTitle>Version 2.7.57 - 2026-11-04</SectionTitle>
+        <SubSectionTitle>Added</SubSectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+      </section>
+    )
+  },
+  {
     version: "2.7.56",
     content: (
       <section id="version-2.7.56">
