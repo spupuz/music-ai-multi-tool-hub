@@ -23,7 +23,7 @@ import {
 } from '@/components/Icons';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
-const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
+const WORKER_URL = import.meta.env.VITE_GEMINI_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
 
 const mapCountryNameAliases: Record<string, string> = {
   'United States': 'United States of America',

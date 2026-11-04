@@ -5,7 +5,7 @@
  */
 import type { ContentRatingCheckResult, LyricsLanguageCheckResult, RatingLevel, AiSynchronizedTimestamp } from '@/types';
 
-const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
+const WORKER_URL = import.meta.env.VITE_GEMINI_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
 const MODEL = 'gemini-2.5-flash';
 const REQUEST_TIMEOUT_MS = 30000;
 
