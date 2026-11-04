@@ -1,4 +1,4 @@
-## [2.7.55] - 2026-11-03
+## [2.7.56] - 2026-11-04
 
 ### Added
 
@@ -7,6 +7,11 @@
 ### Fixed
 
 ### Security
+
+- **PR #145**: Make telemetry worker URL configurable via `VITE_GEMINI_WORKER_URL` env var
+- **PR #144**: ⚡ Bolt: Refactor Array.prototype.reduce to standard for loop for chart optimisations
+- **PR #143**: Add 30s timeout to audio fetch in BPM Tapper to prevent indefinite hangs
+- **PR #142**: Improve SparkTune collapsible section accessibility
 
 - **PR #141**: 🛡️ Sentinel: make Gemini worker URL configurable via `VITE_GEMINI_WORKER_URL` env var with fallback, removing hardcoded proxy endpoint from client bundle
 

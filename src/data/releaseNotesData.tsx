@@ -8,15 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
-    version: "2.7.55",
+    version: "2.7.56",
     content: (
-      <section id="version-2.7.55">
-        <SectionTitle>Version 2.7.55 - 2026-11-03</SectionTitle>
+      <section id="version-2.7.56">
+        <SectionTitle>Version 2.7.56 - 2026-11-04</SectionTitle>
         <SubSectionTitle>Added</SubSectionTitle>
         <SubSectionTitle>Changed</SubSectionTitle>
         <SubSectionTitle>Fixed</SubSectionTitle>
         <SubSectionTitle>Security</SubSectionTitle>
         <UL>
+          <LI><STRONG>PR #145</STRONG>: Make telemetry worker URL configurable via <CODE>VITE_GEMINI_WORKER_URL</CODE> env var</LI>
+          <LI><STRONG>PR #144</STRONG>: ⚡ Bolt: Refactor Array.prototype.reduce to standard for loop for chart optimisations</LI>
+          <LI><STRONG>PR #143</STRONG>: Add 30s timeout to audio fetch in BPM Tapper to prevent indefinite hangs</LI>
+          <LI><STRONG>PR #142</STRONG>: Improve SparkTune collapsible section accessibility</LI>
           <LI><STRONG>PR #141</STRONG>: 🛡️ Sentinel: make Gemini worker URL configurable via <CODE>VITE_GEMINI_WORKER_URL</CODE> env var with fallback, removing hardcoded proxy endpoint from client bundle</LI>
         </UL>
       </section>
