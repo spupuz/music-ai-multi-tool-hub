@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const WORKER_URL = 'https://gemini-proxy.spupuz.workers.dev';
+const WORKER_URL = import.meta.env.VITE_GEMINI_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
 
 export function useTelemetry() {
   useEffect(() => {
