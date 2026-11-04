@@ -21,7 +21,7 @@ import BarsExplainer from '@/components/SongStructureBuilder/BarsExplainer';
 import { useTimelineResize } from '@/components/SongStructureBuilder/hooks/useTimelineResize';
 import { useLyricManager } from '@/components/SongStructureBuilder/hooks/useLyricManager';
 import { useImportExport } from '@/components/SongStructureBuilder/hooks/useImportExport';
-import { safeSetItem, safeGetItem } from '@/services/safeStorage';
+import { safeSetItem } from '@/services/safeStorage';
 
 
 const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
@@ -116,7 +116,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
     useEffect(() => {
         try {
-            const savedCurrentWork = safeGetItem(LOCAL_STORAGE_CURRENT_WORK_KEY);
+            const savedCurrentWork = localStorage.getItem(LOCAL_STORAGE_CURRENT_WORK_KEY);
             if (savedCurrentWork) {
                 const parsedData = JSON.parse(savedCurrentWork);
                 // Data Migration from v1 to v2 (notes field to lyrics array)
@@ -147,7 +147,7 @@ const SongStructureBuilderTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                 }
             }
 
-            const storedArrangements = safeGetItem(LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY);
+            const storedArrangements = localStorage.getItem(LOCAL_STORAGE_SAVED_ARRANGEMENTS_KEY);
             if (storedArrangements) {
                 setSavedArrangements(JSON.parse(storedArrangements));
             }
