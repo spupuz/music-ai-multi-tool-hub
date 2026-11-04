@@ -45,7 +45,10 @@ const TopSongsByCommentRateChart: React.FC<TopSongsByCommentRateChartProps> = ({
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
             const values = context.chart.data.datasets[0].data as number[];
             if (!values || values.length === 0) return 5; // Default if no data
-            const maxVal = values.reduce((max, val) => val > max ? val : max, 0);
+            let maxVal = 0;
+            for (let i = 0; i < values.length; i++) {
+                if (values[i] > maxVal) maxVal = values[i];
+            }
             return Math.max(5, maxVal + Math.ceil(maxVal * 0.05)); 
         }) as any;
         

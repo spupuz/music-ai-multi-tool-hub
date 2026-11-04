@@ -43,7 +43,10 @@ const SongsByHourOfDayChart: React.FC<SongsByHourOfDayChartProps> = ({
       if (ctx) {
         const chartOptions = getBaseChartOptions(fontColor, gridColor, (context) => {
           const counts = context.chart.data.datasets[0].data as number[];
-          const maxVal = counts.reduce((max, val) => val > max ? val : max, 0);
+          let maxVal = 0;
+          for (let i = 0; i < counts.length; i++) {
+              if (counts[i] > maxVal) maxVal = counts[i];
+          }
           return Math.max(5, maxVal + Math.ceil(maxVal * 0.1));
         }) as any;
 
