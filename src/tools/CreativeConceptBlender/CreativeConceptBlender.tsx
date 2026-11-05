@@ -660,7 +660,7 @@ export const ManageCustomItemsModal: React.FC<{
                 {importStatusMessage && <p className={`text-[10px] font-black uppercase tracking-widest mt-4 text-center ${importStatusMessage.includes("Error") ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}`}>{importStatusMessage}</p>}
                 <div className="mt-8 pt-8 border-t border-gray-200 dark:border-white/10 space-y-4">
                     <div className="flex gap-3">
-                        <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file"/>
+                        <input type="file" ref={fileInputRef} onChange={onImportFileSelected} accept=".json" style={{display: 'none'}} id="import-custom-items-file" aria-label="Import custom items file"/>
                         <Button onClick={onExport} variant="ghost" className="flex-1 font-black uppercase tracking-widest bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white" startIcon={<ExportIcon />}>Export</Button>
                         <label htmlFor="import-custom-items-file" className="flex-1 inline-flex items-center justify-center p-2.5 bg-teal-600/10 text-teal-600 hover:bg-teal-600 hover:text-white rounded-lg border border-teal-500/20 cursor-pointer text-[10px] font-black uppercase tracking-widest transition-all">
                           <ImportIcon className="w-4 h-4 mr-2"/>Import
