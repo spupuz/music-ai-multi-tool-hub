@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.59",
+    content: (
+      <section id="version-2.7.59">
+        <SectionTitle>Version 2.7.59 - 2026-11-05</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #147</STRONG>: Fix inconsistent localStorage access in SongStructureBuilderTool — use safeGetItem/safeSetItem consistently for SSR-safe storage access</LI>
+          <LI><STRONG>PR #148</STRONG>: Guard JSON.parse on drag-and-drop payload in SongStructureBuilderTool to prevent crash on malformed data; remove unused dependency</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.58",
     content: (
       <section id="version-2.7.58">

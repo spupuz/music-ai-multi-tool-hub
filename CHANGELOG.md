@@ -1,3 +1,10 @@
+## [2.7.59] - 2026-11-05
+
+### Fixed
+
+- **PR #147**: Fix inconsistent localStorage access in SongStructureBuilderTool — use safeGetItem/safeSetItem consistently for SSR-safe storage access
+- **PR #148**: Guard JSON.parse on drag-and-drop payload in SongStructureBuilderTool to prevent crash on malformed data; remove unused dependency
+
 ## [2.7.58] - 2026-11-04
 ### Changed
 - **PR #146**: Make Gemini worker URL configurable in aiAnalysisService and StatsPage
