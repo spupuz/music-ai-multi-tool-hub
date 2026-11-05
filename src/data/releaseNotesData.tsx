@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.61",
+    content: (
+      <section id="version-2.7.61">
+        <SectionTitle>Version 2.7.61 - 2026-11-05</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #151</STRONG>: Remove @google/genai dependency from gemini-worker index.js and update package-lock.json</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.60",
     content: (
       <section id="version-2.7.60">

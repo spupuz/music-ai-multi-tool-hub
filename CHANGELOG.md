@@ -1,3 +1,9 @@
+## [2.7.61] - 2026-11-05
+
+### Changed
+
+- **PR #151**: Remove @google/genai dependency from gemini-worker index.js and update package-lock.json
+
 ## [2.7.60] - 2026-11-05
 
 ### Changed
