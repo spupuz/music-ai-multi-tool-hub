@@ -1,3 +1,10 @@
+## [2.7.60] - 2026-11-05
+
+### Changed
+
+- **PR #150**: Fix XSS bypass in URL sanitization
+- **PR #149**: Optimize queue ordering array allocations
+
 ## [2.7.59] - 2026-11-05
 
 ### Fixed
