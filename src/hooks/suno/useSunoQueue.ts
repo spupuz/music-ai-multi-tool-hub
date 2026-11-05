@@ -53,12 +53,33 @@ export const useSunoQueue = ({
 
     if (!playerState.isShuffle) {
       if (manualOrderSongIds && sortCriteriaInternalState === 'default') {
-        const songIdToSongMap = new Map(processedSongs.map(s => [s.id, s]));
-        const orderedPart = manualOrderSongIds
-          .map(id => songIdToSongMap.get(id))
-          .filter(Boolean) as SunoClip[];
-        const orderedPartIds = new Set(orderedPart.map(s => s.id));
-        const remainingSongs = processedSongs.filter(s => !orderedPartIds.has(s.id));
+        // ⚡ Bolt: Consolidated mapping and filtering into single-pass loops to prevent O(N) intermediate array allocations
+        const songIdToSongMap = new Map<string, SunoClip>();
+        for (let i = 0; i < processedSongs.length; i++) {
+          const s = processedSongs[i];
+          songIdToSongMap.set(s.id, s);
+        }
+
+        const orderedPart: SunoClip[] = [];
+        const orderedPartIds = new Set<string>();
+
+        for (let i = 0; i < manualOrderSongIds.length; i++) {
+          const id = manualOrderSongIds[i];
+          const song = songIdToSongMap.get(id);
+          if (song) {
+            orderedPart.push(song);
+            orderedPartIds.add(song.id);
+          }
+        }
+
+        const remainingSongs: SunoClip[] = [];
+        for (let i = 0; i < processedSongs.length; i++) {
+          const s = processedSongs[i];
+          if (!orderedPartIds.has(s.id)) {
+            remainingSongs.push(s);
+          }
+        }
+
         processedSongs = [...orderedPart, ...remainingSongs];
       } else if (sortCriteriaInternalState !== 'default') {
         switch (sortCriteriaInternalState) {
