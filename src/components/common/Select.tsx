@@ -112,6 +112,7 @@ const Select: React.FC<SelectProps> = ({
                 type="button"
                 role="option"
                 aria-selected={value === option.value}
+                aria-label={option.label}
                 onClick={() => {
                   onChange(option.value);
                   setIsOpen(false);

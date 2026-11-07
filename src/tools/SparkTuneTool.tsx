@@ -43,6 +43,7 @@ const CollapsibleSection: React.FC<{
                 className="w-full p-5 flex flex-row items-center justify-start text-left group hover:bg-white dark:hover:bg-white/5 transition-all duration-300 border-none h-auto gap-6 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset rounded-xl appearance-none bg-transparent"
                 aria-expanded={isOpen}
                 aria-controls={panelId}
+                aria-label={`Toggle ${title}`}
             >
                 <div className="flex flex-col items-center shrink-0 w-10">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${
