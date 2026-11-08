@@ -8,10 +8,13 @@
     "dev": "vite",
     "prebuild": "npm run sync-notes",
     "build": "npm run build:tw && vite build",
-    "build:tw": "npx tailwindcss -i ./src/index.css -o ./dist/index.css",
+    "build:tw": "tailwindcss -i ./src/index.css -o ./dist/index.css",
     "preview": "vite preview",
     "sync-notes": "node scripts/sync-release-notes.js",
     "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20 <23"
   },
   "dependencies": {
     "chart.js": "4.5.0",
