@@ -46,7 +46,11 @@ export const usePlaylistAnalysis = (
       artistEntry.count++;
       artistMap.set(artistHandle, artistEntry);
 
-      const tags = clip.metadata?.tags?.split(',').map(t => t.trim().toLowerCase()).filter(Boolean) || [];
+      const tags = clip.metadata?.tags?.split(',').reduce((acc: string[], t) => {
+        const trimmed = t.trim().toLowerCase();
+        if (trimmed) acc.push(trimmed);
+        return acc;
+      }, []) || [];
       tags.forEach(tag => {
         tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
       });

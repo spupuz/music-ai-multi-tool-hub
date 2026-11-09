@@ -154,7 +154,11 @@ const calculateAggregatedStats = (
         }
 
 
-        const tags = song.metadata?.tags?.split(',').map(t => t.trim().toLowerCase()).filter(t => t) || [];
+        const tags = song.metadata?.tags?.split(',').reduce((acc: string[], t) => {
+            const trimmed = t.trim().toLowerCase();
+            if (trimmed) acc.push(trimmed);
+            return acc;
+        }, []) || [];
         tags.forEach(tag => { const current = tagMap.get(tag) || {count:0,totalUpvotes:0,totalPlays:0,totalComments:0}; current.count++; current.totalUpvotes+=song.upvote_count||0; current.totalPlays+=song.play_count||0; current.totalComments+=song.comment_count||0; tagMap.set(tag, current); });
         if (tags.length >= 2) {
             for (let i = 0; i < tags.length; i++) { for (let j = i + 1; j < tags.length; j++) { const pair = [tags[i], tags[j]].sort().join(' & '); if (!tagPairAggregates[pair]) tagPairAggregates[pair] = { count:0,totalPlays:0,totalUpvotes:0,totalComments:0, songIds: new Set() }; if (!tagPairAggregates[pair].songIds.has(song.id)) { tagPairAggregates[pair].count++; tagPairAggregates[pair].songIds.add(song.id); } tagPairAggregates[pair].totalPlays += song.play_count || 0; tagPairAggregates[pair].totalUpvotes += song.upvote_count || 0; tagPairAggregates[pair].totalComments += song.comment_count || 0; } }
