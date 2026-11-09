@@ -228,25 +228,21 @@ const StatsPage: React.FC<ToolProps> = () => {
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        onMouseEnter={() => setTooltipContent(`${countryName}: ${count.toLocaleString()} visits`)}
-                        onMouseLeave={() => setTooltipContent("")}
-                        style={{
-                          default: {
-                            fill: getCountryFill(count, "#1e293b"),
-                            outline: "none",
-                            stroke: "#00000030",
-                            strokeWidth: 0.3
-                          },
-                          hover: {
-                            fill: "#10b981",
-                            outline: "none",
-                            cursor: "pointer"
-                          },
-                          pressed: {
-                            fill: "#059669",
-                            outline: "none"
-                          }
+                        onMouseEnter={(e) => {
+                          setTooltipContent(`${countryName}: ${count.toLocaleString()} visits`);
+                          e.currentTarget.style.fill = "#10b981";
+                          e.currentTarget.style.cursor = "pointer";
                         }}
+                        onMouseLeave={(e) => {
+                          setTooltipContent("");
+                          e.currentTarget.style.fill = getCountryFill(count, "#1e293b");
+                        }}
+                        onMouseDown={(e) => { e.currentTarget.style.fill = "#059669"; }}
+                        onMouseUp={(e) => { e.currentTarget.style.fill = "#10b981"; }}
+                        fill={getCountryFill(count, "#1e293b")}
+                        stroke="#00000030"
+                        strokeWidth={0.3}
+                        style={{ outline: "none" }}
                       />
                     );
                   })
