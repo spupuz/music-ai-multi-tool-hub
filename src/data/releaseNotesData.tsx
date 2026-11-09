@@ -8,10 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
-    version: "2.7.61",
+    version: "2.7.62",
     content: (
-      <section id="version-2.7.61">
-        <SectionTitle>Version 2.7.61 - 2026-11-05</SectionTitle>
+      <section id="version-2.7.62">
+        <SectionTitle>Version 2.7.62 - 2026-11-09</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #156</STRONG>: ⚡ Bolt: Optimize tags parsing to use single-pass reduce</LI>
+          <LI><STRONG>PR #155</STRONG>: 🛡️ Sentinel: upgrade react-simple-maps to resolve d3-color ReDoS</LI>
+          <LI><STRONG>PR #154</STRONG>: 🎨 Palette: [UX improvement]</LI>
+          <LI><STRONG>PR #153</STRONG>: 🛡️ Sentinel: bump dependencies to resolve npm audit vulnerabilities</LI>
+          <LI><STRONG>PR #152</STRONG>: 🎨 Palette: [UX improvement] Add missing aria-labels to interactive elements</LI>
+        </UL>
         <SubSectionTitle>Changed</SubSectionTitle>
         <UL>
           <LI><STRONG>PR #151</STRONG>: Remove @google/genai dependency from gemini-worker index.js and update package-lock.json</LI>

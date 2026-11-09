@@ -1,4 +1,13 @@
-## [2.7.61] - 2026-11-05
+## [2.7.62] - 2026-11-09
+
+### Changed
+
+- **PR #156**: ⚡ Bolt: Optimize tags parsing to use single-pass reduce
+- **PR #155**: 🛡️ Sentinel: upgrade react-simple-maps to resolve d3-color ReDoS
+- **PR #154**: 🎨 Palette: [UX improvement]
+- **PR #153**: 🛡️ Sentinel: bump dependencies to resolve npm audit vulnerabilities
+- **PR #152**: 🎨 Palette: [UX improvement] Add missing aria-labels to interactive elements
+
 
 ### Changed
 
