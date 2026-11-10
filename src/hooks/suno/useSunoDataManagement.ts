@@ -29,8 +29,17 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
   const prevSongInfoCacheRef = useRef<Map<string, SunoClip>>(new Map());
   const SONG_CACHE_MAX_ENTRIES = 500;
 
-  const getCacheKey = useCallback((type: 'user' | 'playlist', id: string): string => 
+  const getCacheKey = useCallback((type: 'user' | 'playlist', id: string): string =>
     type === 'user' ? `${LOCAL_STORAGE_PREFIX_USER}${id}` : `${LOCAL_STORAGE_PREFIX_PLAYLIST}${id}`, []);
+
+  const isValidStoredData = (data: unknown): data is SunoMusicPlayerStoredData => {
+    if (!data || typeof data !== 'object') return false;
+    const d = data as Record<string, unknown>;
+    if (typeof d.identifier !== 'string' || !d.identifier.trim()) return false;
+    if (d.type !== 'user' && d.type !== 'playlist') return false;
+    if (d.clips && !Array.isArray(d.clips)) return false;
+    return true;
+  };
 
   const getCachedData = useCallback((type: 'user' | 'playlist', id: string): SunoMusicPlayerStoredData | null => {
     if (!id) return null;
@@ -38,7 +47,13 @@ export const useSunoDataManagement = ({ trackLocalEvent, setErrorPlayer }: UseSu
       const cacheKey = getCacheKey(type, id);
       const dataStr = safeGetItem(cacheKey);
       if (dataStr) {
-        return JSON.parse(dataStr) as SunoMusicPlayerStoredData;
+        const parsed = JSON.parse(dataStr);
+        if (!isValidStoredData(parsed)) {
+          console.warn(`[useSunoDataManagement] Cached data failed validation for ${type}:${id}, discarding.`);
+          safeRemoveItem(cacheKey);
+          return null;
+        }
+        return parsed;
       }
     } catch (e) {
       console.error("Error reading from cache:", e);

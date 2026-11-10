@@ -8,15 +8,18 @@
     "dev": "vite",
     "prebuild": "npm run sync-notes",
     "build": "npm run build:tw && vite build",
-    "build:tw": "npx tailwindcss -i ./src/index.css -o ./dist/index.css",
+    "build:tw": "tailwindcss -i ./src/index.css -o ./dist/index.css",
     "preview": "vite preview",
     "sync-notes": "node scripts/sync-release-notes.js",
     "test": "vitest run"
   },
+  "engines": {
+    "node": ">=20 <23"
+  },
   "dependencies": {
     "chart.js": "4.5.0",
     "chartjs-adapter-date-fns": "3.0.0",
-        "d3-scale": "^4.0.2",
+    "d3-scale": "^4.0.2",
     "date-fns": "2.30.0",
     "howler": "2.2.4",
     "lamejs": "1.2.1",
@@ -26,7 +29,7 @@
     "react-chartjs-2": "5.2.0",
     "react-dom": "19.1.0",
     "react-image-crop": "11.0.6",
-    "react-simple-maps": "^3.0.0",
+    "react-simple-maps": "^5.0.5",
     "topojson-client": "^3.1.0",
     "wavesurfer.js": "7.9.5"
   },
