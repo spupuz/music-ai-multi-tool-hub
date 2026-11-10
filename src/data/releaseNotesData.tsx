@@ -8,6 +8,23 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.63",
+    content: (
+      <section id="version-2.7.63">
+        <SectionTitle>Version 2.7.63 - 2026-11-10</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Build/runtime pinning:</STRONG> added <CODE>.node-version</CODE>/<CODE>.nvmrc</CODE> (Node 20.19.0), declared Node engines, and switched Tailwind build to the local <CODE>tailwindcss</CODE> binary (PR #157).</LI>
+          <LI><STRONG>Dependencies:</STRONG> upgraded <CODE>react-simple-maps</CODE> to v5 and refreshed the lockfile (PR #157).</LI>
+        </UL>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>Suno player cache:</STRONG> validate deserialized localStorage song cache before use and discard malformed entries to prevent corrupted/injected cache data from being consumed (PR #157).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.62",
     content: (
       <section id="version-2.7.62">

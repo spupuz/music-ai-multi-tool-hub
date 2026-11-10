@@ -1,3 +1,14 @@
+## [2.7.63] - 2026-11-10
+
+### Changed
+
+- **Build/runtime pinning:** added `.node-version`/`.nvmrc` (Node 20.19.0), declared Node engines, and switched Tailwind build to the local `tailwindcss` binary (PR #157).
+- **Dependencies:** upgraded `react-simple-maps` to v5 and refreshed the lockfile (PR #157).
+
+### Security
+
+- **Suno player cache:** validate deserialized localStorage song cache before use and discard malformed entries to prevent corrupted/injected cache data from being consumed (PR #157).
+
 ## [2.7.62] - 2026-11-09
 
 ### Changed
