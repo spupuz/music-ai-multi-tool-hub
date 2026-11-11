@@ -264,15 +264,23 @@ const DetailedSongPerformanceTable: React.FC<DetailedSongPerformanceTableProps> 
                 {columns.map((col) => (
                   <th 
                     key={col.id}
-                    className={`px-4 py-5 text-left text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors whitespace-nowrap ${col.id === 'title' ? 'sticky left-12 sm:left-16 z-40 bg-[#0a0a0a] border-r border-white/10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]' : ''}`} 
-                    scope="col" 
-                    onClick={() => handleSort(col.id as SortableColumn)} 
+                    className={`px-0 py-0 text-left text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap ${col.id === 'title' ? 'sticky left-12 sm:left-16 z-40 bg-[#0a0a0a] border-r border-white/10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]' : ''}`}
+                    scope="col"
                     aria-sort={sortColumn === col.id ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                   >
-                    <div className="flex items-center gap-2 group/header">
+                    {/*
+                      Palette: the sort control is a real <button> so keyboard and screen-reader
+                      users can sort. Previously the click handler sat on the <th> itself, which is
+                      not focusable and never announced as actionable, even though aria-sort was set.
+                    */}
+                    <button
+                      type="button"
+                      onClick={() => handleSort(col.id as SortableColumn)}
+                      className="w-full h-full px-4 py-5 flex items-center justify-start gap-2 group/header uppercase tracking-wider hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500"
+                    >
                       <span className={sortColumn === col.id ? 'text-emerald-400' : 'group-hover/header:text-gray-300'}>{col.label}</span>
                       <SortArrow column={col.id as SortableColumn} sortColumn={sortColumn} sortDirection={sortDirection} />
-                    </div>
+                    </button>
                   </th>
                 ))}
                 <th className="px-4 py-5 text-right text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider w-24" scope="col">Actions</th>
