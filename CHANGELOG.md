@@ -1,3 +1,10 @@
+## [2.7.64] - 2026-11-11
+
+### Changed
+
+- **PR #160**: 🎨 Palette: Make ToggleSwitch controls keyboard operable (role="switch", keyboard handlers, focus styles, accessible labeling).
+- **PR #159**: 🎨 Palette: Make song table column sorting keyboard accessible (sortable headers rendered as focusable buttons).
+
 ## [2.7.63] - 2026-11-10
 
 ### Changed

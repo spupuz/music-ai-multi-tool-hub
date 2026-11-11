@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.64",
+    content: (
+      <section id="version-2.7.64">
+        <SectionTitle>Version 2.7.64 - 2026-11-11</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #160</STRONG>: 🎨 Palette: Make ToggleSwitch controls keyboard operable (role="switch", keyboard handlers, focus styles, accessible labeling).</LI>
+          <LI><STRONG>PR #159</STRONG>: 🎨 Palette: Make song table column sorting keyboard accessible (sortable headers rendered as focusable buttons).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.63",
     content: (
       <section id="version-2.7.63">
