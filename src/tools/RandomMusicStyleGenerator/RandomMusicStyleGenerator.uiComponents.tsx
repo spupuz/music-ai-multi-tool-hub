@@ -252,12 +252,29 @@ export const ImportConfirmationModal: React.FC<{
 };
 
 export const ToggleSwitch: React.FC<{ id: string; label: string; checked: boolean; onChange: () => void; }> = ({ id, label, checked, onChange }) => (
-    <div className="flex items-center justify-between py-2 group cursor-pointer" onClick={onChange}>
-        <label htmlFor={id} className="text-[11px] font-black uppercase tracking-widest text-white/60 group-hover:text-white/90 transition-colors pointer-events-none">{label}</label>
-        <div 
+    <div
+        role="switch"
+        tabIndex={0}
+        aria-checked={checked}
+        aria-labelledby={`${id}-label`}
+        onClick={onChange}
+        onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                // preventDefault stops the page scrolling on Space; the click
+                // event some browsers synthesise for role="switch" is avoided
+                // because this handler owns the toggle.
+                e.preventDefault();
+                onChange();
+            }
+        }}
+        className="flex items-center justify-between py-2 group cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    >
+        <label id={`${id}-label`} className="text-[11px] font-black uppercase tracking-widest text-white/60 group-hover:text-white/90 transition-colors pointer-events-none">{label}</label>
+        <span
+            aria-hidden="true"
             className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all ${checked ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-white/10 border border-white/10'}`}
         >
             <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform shadow-sm ${checked ? 'text-emerald-600' : ''}`} />
-        </div>
+        </span>
     </div>
 );

@@ -21,14 +21,31 @@ import {
 } from './CreativeConceptBlender.constants';
 import { safeSetItem, safeRemoveItem, safeGetItem } from '@/services/safeStorage';
 
-const ToggleSwitch: React.FC<{ id: string; label: string; checked: boolean; onChange: () => void; className?: string }> = ({ id, label, checked, onChange, className = "" }) => (
-    <div className={`flex items-center justify-between w-full py-2 group cursor-pointer ${className}`} onClick={onChange}>
-        <label htmlFor={id} className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white transition-colors cursor-pointer select-none flex-grow pointer-events-none">{label}</label>
-        <div 
-            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-300 focus:outline-none flex-shrink-0 ml-4 border active:scale-95 shadow-none ${checked ? 'bg-emerald-500 border-transparent shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-slate-200 dark:bg-white/10 border-slate-300 dark:border-white/10'}`}
+export const ToggleSwitch: React.FC<{ id: string; label: string; checked: boolean; onChange: () => void; className?: string }> = ({ id, label, checked, onChange, className = "" }) => (
+    <div
+        role="switch"
+        tabIndex={0}
+        aria-checked={checked}
+        aria-labelledby={`${id}-label`}
+        onClick={onChange}
+        onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                // preventDefault stops the page scrolling on Space; the click
+                // event some browsers synthesise for role="switch" is avoided
+                // because this handler owns the toggle.
+                e.preventDefault();
+                onChange();
+            }
+        }}
+        className={`flex items-center justify-between w-full py-2 group cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${className}`}
+    >
+        <label id={`${id}-label`} className="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white transition-colors cursor-pointer select-none flex-grow pointer-events-none">{label}</label>
+        <span
+            aria-hidden="true"
+            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-300 flex-shrink-0 ml-4 border active:scale-95 shadow-none ${checked ? 'bg-emerald-500 border-transparent shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-slate-200 dark:bg-white/10 border-slate-300 dark:border-white/10'}`}
         >
             <span className={`${checked ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 shadow-sm`} />
-        </div>
+        </span>
     </div>
 );
 
