@@ -1,21 +1,23 @@
 /// <reference types="vite/client" />
 import type { RiffusionSongData } from '@/types';
 import { cacheGet, cacheSet } from './cacheUtils';
-import { raceFetch, type ProxyAttempt } from './proxyUtils';
 
-// Extended list of CORS proxies to try
-const CORS_PROXIES = [
-    'https://corsproxy.io/?',
-    'https://api.allorigins.win/raw?url=',
-    'https://thingproxy.freeboard.io/fetch/',
-    'https://cors-anywhere.herokuapp.com/',
-    'https://api.codetabs.com/v1/proxy?quest=',
-    'https://cors.eu.org/',
-    'https://yacdn.org/proxy/',
-];
+// Cloudflare Worker proxy URL - same as used for Suno API
+const WORKER_URL = import.meta.env.VITE_GEMINI_WORKER_URL || 'https://gemini-proxy.spupuz.workers.dev';
+const PROXY_BASE = `${WORKER_URL}/proxy`;
 
 const RIFFUSION_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const CACHE_NAMESPACE_RIFFUSION = 'riffusion';
+
+// Allowed hosts for Riffusion/Flow Music proxying (matches worker's SSRF protection)
+const ALLOWED_RIFFUSION_HOSTS = [
+    'flowmusic.app',
+    'www.flowmusic.app',
+    'classic.riffusion.com',
+    'riffusion.com',
+    'www.riffusion.com',
+    'producer.ai',
+];
 
 // Regex patterns for metadata scraping
 const RIFFUSION_TITLE_PATTERNS = [
@@ -67,22 +69,48 @@ export function extractRiffusionSongId(url: string): string | null {
 }
 
 /**
- * Helper to fetch content through a rotating list of CORS proxies.
- * All proxies are raced in parallel; the first OK response wins.
+ * Helper to fetch content through the Cloudflare Worker proxy.
+ * The Worker handles SSRF protection, rate limiting, and requires X-Proxy-Auth header.
+ * For local development, set VITE_GEMINI_WORKER_URL=http://localhost:8787 (wrangler dev).
  */
-async function fetchWithProxies(url: string, options: RequestInit = {}): Promise<Response | null> {
-    const attempts: ProxyAttempt[] = CORS_PROXIES.map(proxy => {
-        const isAllOrigins = proxy.includes('allorigins.win');
-        const targetUrl = isAllOrigins ? encodeURIComponent(url) : url;
-        return {
-            url: `${proxy}${targetUrl}`,
-            headers: undefined,
-        };
-    });
-
+async function fetchViaWorker(url: string, options: RequestInit = {}): Promise<Response | null> {
     try {
-        return await raceFetch(attempts, options, 10000);
+        const proxyUrl = `${PROXY_BASE}/${encodeURIComponent(url)}`;
+        const headers: Record<string, string> = {
+            ...((options.headers as Record<string, string>) || {}),
+            'X-Proxy-Auth': 'hub-proxy-client', // Required proxy token
+        };
+
+        const response = await fetch(proxyUrl, {
+            ...options,
+            headers,
+        });
+
+        if (!response.ok) {
+            console.warn(`[riffusionService] Worker proxy failed for ${url}: ${response.status}`);
+            return null;
+        }
+        return response;
     } catch (e) {
+        console.warn(`[riffusionService] Worker proxy error:`, e);
+        return null;
+    }
+}
+
+/**
+ * Helper to fetch content directly (for allowed hosts when Worker is unavailable).
+ * Falls back to direct fetch for hosts that support CORS.
+ */
+async function fetchDirect(url: string, options: RequestInit = {}): Promise<Response | null> {
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            console.warn(`[riffusionService] Direct fetch failed for ${url}: ${response.status}`);
+            return null;
+        }
+        return response;
+    } catch (e) {
+        console.warn(`[riffusionService] Direct fetch error:`, e);
         return null;
     }
 }
@@ -215,14 +243,11 @@ export async function fetchRiffusionSongData(url: string, forceRefresh = false):
         if (cached) return cached;
     }
 
-    // STRATEGY 1: HTML Scraping (Fastest and most compatible now)
-    const scrapeUrls = [
-        `https://www.flowmusic.app/song/${songId}`,
-        `https://classic.riffusion.com/song/${songId}`
-    ];
-
-    for (const pageUrl of scrapeUrls) {
-        const response = await fetchWithProxies(pageUrl);
+    // Try Cloudflare Worker proxy first (secure, rate-limited, SSRF-protected)
+    const workerUrls = ALLOWED_RIFFUSION_HOSTS.map(host => `https://${host}/song/${songId}`);
+    
+    for (const pageUrl of workerUrls) {
+        const response = await fetchViaWorker(pageUrl);
         if (response) {
             const html = await response.text();
             const scrapedData = await scrapeDataFromHtml(html, songId);
