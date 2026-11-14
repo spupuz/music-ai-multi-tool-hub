@@ -1,3 +1,11 @@
+## [2.7.65] - 2026-11-14
+
+### Changed
+
+- **PR #162**: 🛡️ Sentinel: Fix compliance CSV export using incorrect rating level and brittle any-cast types
+- **PR #163**: 🔧 Bolt: Auto-fix: music-ai-multi-tool-hub eviction sort
+- **PR #164**: 🎨 Palette: Make CheckboxField keyboard accessible
+
 ## [2.7.64] - 2026-11-11
 
 ### Changed
