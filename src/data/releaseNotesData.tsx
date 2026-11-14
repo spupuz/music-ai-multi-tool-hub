@@ -8,6 +8,20 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.65",
+    content: (
+      <section id="version-2.7.65">
+        <SectionTitle>Version 2.7.65 - 2026-11-14</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #162</STRONG>: 🛡️ Sentinel: Fix compliance CSV export using incorrect rating level and brittle any-cast types</LI>
+          <LI><STRONG>PR #163</STRONG>: 🔧 Bolt: Auto-fix: music-ai-multi-tool-hub eviction sort</LI>
+          <LI><STRONG>PR #164</STRONG>: 🎨 Palette: Make CheckboxField keyboard accessible</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.64",
     content: (
       <section id="version-2.7.64">
