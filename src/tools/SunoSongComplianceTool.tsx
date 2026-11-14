@@ -303,7 +303,12 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
   const handleExportToCsv = () => {
     if (batchRunResults.length === 0) { setExportStatusMessage("No results to export."); setTimeout(() => setExportStatusMessage(''), 3000); return; }
     try {
-      downloadSunoComplianceResultsAsCsv(batchRunResults.map(r => ({ ...r, contentRatingCheck: { ...r.contentRatingCheck, ratingLevelUsed: selectedRating } as any })));
+      downloadSunoComplianceResultsAsCsv(batchRunResults.map(r => ({
+        ...r,
+        contentRatingCheck: r.contentRatingCheck
+          ? { ...r.contentRatingCheck, ratingLevelUsed: selectedRating }
+          : undefined,
+      })));
       setExportStatusMessage("Results exported to CSV!");
       trackLocalEvent(TOOL_CATEGORY, 'csvExported', undefined, batchRunResults.length);
     } catch (e) {

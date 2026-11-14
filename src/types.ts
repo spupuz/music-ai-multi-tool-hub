@@ -452,6 +452,7 @@ export interface ContentRatingCheckResult {
   is_appropriate: boolean;
   explanation: string;
   message?: string;
+  ratingLevelUsed?: RatingLevel;
 }
 
 export type RatingLevel = 'G' | 'PG' | 'PG-13' | 'R' | 'Explicit';
