@@ -43,27 +43,33 @@ export const TextAreaField: React.FC<{ id: string; label: string; value: string;
 
 export const CheckboxField: React.FC<{ id: string; label: string; checked: boolean; onChange: (checked: boolean) => void; description?: string; labelTextColor?: string; className?: string; title?: string; }> = 
   ({ id, label, checked, onChange, description, labelTextColor, className = "mb-4", title }) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onChange(!checked);
+    }
+  };
+
   return (
-    <div className={`flex items-start group cursor-pointer ${className}`} onClick={() => onChange(!checked)}>
-        <div className="flex items-center h-6">
-            <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${checked ? 'bg-emerald-500 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-gray-100 dark:bg-white/5 border-gray-300 dark:border-white/20 group-hover:border-emerald-500/40'}`}>
-                {checked && (
-                    <svg className={`w-3.5 h-3.5 text-black`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                )}
-            </div>
-            <input 
-                id={id} 
-                type="checkbox" 
-                checked={checked} 
-                onChange={(e) => onChange(e.target.checked)} 
-                className="sr-only" 
-                title={title}
-            />
+    <div className={`flex items-start group cursor-pointer ${className}`}>
+        <div 
+            className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${checked ? 'bg-emerald-500 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-gray-100 dark:bg-white/5 border-gray-300 dark:border-white/20 group-hover:border-emerald-500/40'}`}
+            role="checkbox"
+            tabIndex={0}
+            aria-checked={checked}
+            aria-describedby={description ? `${id}-description` : undefined}
+            aria-label={label}
+            onClick={() => onChange(!checked)}
+            onKeyDown={handleKeyDown}
+        >
+            {checked && (
+                <svg className={`w-3.5 h-3.5 text-black`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            )}
         </div>
         <div className="ml-4 text-sm mt-0.5">
-            <label htmlFor={id} className={`text-[11px] font-black uppercase tracking-widest text-gray-800 dark:text-white/80 transition-colors pointer-events-none`} style={{color: labelTextColor}} title={title}>{label}</label>
+            <label htmlFor={id} className={`text-[11px] font-black uppercase tracking-widest text-gray-800 dark:text-white/80 transition-colors cursor-pointer`} style={{color: labelTextColor}} title={title}>{label}</label>
             {description && <p id={`${id}-description`} className={`text-gray-500 dark:text-white/40 text-[10px] mt-1 font-medium`}>{description}</p>}
         </div>
     </div>
