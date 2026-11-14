@@ -85,16 +85,19 @@ type EvictOpts = {
 
 const getSortedCandidateKeys = (predicate: (key: string) => boolean): string[] => {
   try {
-    const all = Object.keys(localStorage);
-    const matches = all.filter(predicate);
-    // Largest values first so we free quota as fast as possible.
-    return matches.sort((a, b) => {
+    // Capture sizes once per key to avoid repeated localStorage reads during sort comparisons.
+    const candidates: { key: string; size: number }[] = [];
+    for (const key of Object.keys(localStorage)) {
+      if (!predicate(key)) continue;
       try {
-        return (localStorage.getItem(b)?.length || 0) - (localStorage.getItem(a)?.length || 0);
+        candidates.push({ key, size: localStorage.getItem(key)?.length || 0 });
       } catch {
-        return 0;
+        candidates.push({ key, size: 0 });
       }
-    });
+    }
+    // Largest values first so we free quota as fast as possible.
+    candidates.sort((a, b) => b.size - a.size);
+    return candidates.map(candidate => candidate.key);
   } catch {
     return [];
   }
