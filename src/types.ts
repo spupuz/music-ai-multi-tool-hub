@@ -451,6 +451,7 @@ export interface LyricsLanguageCheckResult {
 export interface ContentRatingCheckResult {
   is_appropriate: boolean;
   explanation: string;
+  ratingLevelUsed?: RatingLevel; // The rating level used for this check
   message?: string;
 }
 

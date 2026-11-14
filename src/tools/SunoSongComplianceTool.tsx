@@ -219,9 +219,13 @@ const SunoSongComplianceTool: React.FC<ToolProps> = ({ trackLocalEvent, onNaviga
         setProgressMessage(`${batchProgressPrefix}: Checking content rating...`);
         try {
           const ratingResult = await checkContentRatingGemini(singleResult.songLyrics, currentRating);
-          singleResult.contentRatingCheck = { ...ratingResult, message: ratingResult.is_appropriate ? `Appropriate for ${currentRating}.` : `Not appropriate for ${currentRating}.` };
+          singleResult.contentRatingCheck = {
+            ...ratingResult,
+            ratingLevelUsed: currentRating,
+            message: ratingResult.is_appropriate ? `Appropriate for ${currentRating}.` : `Not appropriate for ${currentRating}.`,
+          };
           trackLocalEvent(TOOL_CATEGORY, 'contentRatingCheckResultGemini', `${url}-${currentRating}_${ratingResult.is_appropriate ? 'passed' : 'failed'}`, 1);
-        } catch (ratingError) { singleResult.contentRatingCheck = { is_appropriate: false, explanation: `Rating check for ${currentRating} failed: ${ratingError instanceof Error ? ratingError.message : String(ratingError)}`, message: `Rating check error.` }; }
+        } catch (ratingError) { singleResult.contentRatingCheck = { is_appropriate: false, explanation: `Rating check for ${currentRating} failed: ${ratingError instanceof Error ? ratingError.message : String(ratingError)}`, ratingLevelUsed: currentRating, message: `Rating check error.` }; }
       } else {
         singleResult.languageCheck = { primaryLanguageCode: 'N/A', untranslatableWordsFound: false, untranslatableWordsExplanation: "No lyrics.", message: "No lyrics." };
         singleResult.contentRatingCheck = { is_appropriate: true, explanation: `No lyrics, appropriate for ${currentRating} by default.`, message: `No lyrics.` };

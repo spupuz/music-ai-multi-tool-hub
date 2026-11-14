@@ -147,6 +147,7 @@ export const downloadSunoComplianceResultsAsCsv = (results: SingleSongCompliance
     ];
 
     const rows = results.map(result => {
+        const ratingLevel = result.contentRatingCheck?.ratingLevelUsed || 'N/A';
         return [
             escapeCsvField(result.inputUrl),
             escapeCsvField(result.clipData?.title),
@@ -163,7 +164,7 @@ export const downloadSunoComplianceResultsAsCsv = (results: SingleSongCompliance
             escapeCsvField(result.languageCheck?.primaryLanguageCode.toUpperCase()),
             escapeCsvField(result.languageCheck?.untranslatableWordsFound ? 'Yes' : (result.languageCheck ? 'No' : '')),
             escapeCsvField(result.languageCheck?.untranslatableWordsExplanation),
-            escapeCsvField(result.contentRatingCheck ? (results[0]?.contentRatingCheck as any)?.ratingLevelUsed || 'N/A' : 'N/A'), 
+            escapeCsvField(ratingLevel),
             escapeCsvField(result.contentRatingCheck?.is_appropriate ? 'Appropriate' : (result.contentRatingCheck ? 'Not Appropriate' : '')),
             escapeCsvField(result.contentRatingCheck?.explanation),
             escapeCsvField(result.processingError),
