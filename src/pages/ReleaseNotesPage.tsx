@@ -91,13 +91,18 @@ const ReleaseNotesPage: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         }
       }
 
-      merged.sort((a, b) => {
-        const [am, an, ap] = a.version.split('.').map(Number);
-        const [bm, bn, bp] = b.version.split('.').map(Number);
-        return bm - am || bn - an || bp - ap;
+      // Pre-compute sort keys once before sorting to avoid repeated parse work in comparator
+      const withKeys = merged.map(item => {
+        const parts = item.version.split('.');
+        return {
+          item,
+          major: Number(parts[0]) || 0,
+          minor: Number(parts[1]) || 0,
+          patch: Number(parts[2]) || 0,
+        };
       });
-
-      return merged;
+      withKeys.sort((a, b) => b.major - a.major || b.minor - a.minor || b.patch - a.patch);
+      return withKeys.map(({ item }) => item);
     }
     return staticNotes;
   }, [raw]);
