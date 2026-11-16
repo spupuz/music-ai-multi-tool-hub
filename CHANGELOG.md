@@ -1,3 +1,12 @@
+## [2.7.66] - 2026-11-16
+
+### Changed
+
+- **PR #168**: ⚡ Bolt: hoist syllable-counter constants out of the hot per-word path (adds `src/utils/lyricUtils.test.ts`).
+- **PR #167**: 🔨 Forge: pre-compute version sort keys in ReleaseNotesPage.
+- **PR #166**: 🎨 Palette: add dialog semantics and Escape handling to selection/history modals.
+- **PR #165**: 🎨 Palette: make queue song items keyboard-accessible.
+
 ## [2.7.65] - 2026-11-14
 
 ### Changed

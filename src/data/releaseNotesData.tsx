@@ -8,6 +8,21 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.66",
+    content: (
+      <section id="version-2.7.66">
+        <SectionTitle>Version 2.7.66 - 2026-11-16</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #168</STRONG>: ⚡ Bolt: hoist syllable-counter constants out of the hot per-word path (adds <CODE>src/utils/lyricUtils.test.ts</CODE>).</LI>
+          <LI><STRONG>PR #167</STRONG>: 🔨 Forge: pre-compute version sort keys in ReleaseNotesPage.</LI>
+          <LI><STRONG>PR #166</STRONG>: 🎨 Palette: add dialog semantics and Escape handling to selection/history modals.</LI>
+          <LI><STRONG>PR #165</STRONG>: 🎨 Palette: make queue song items keyboard-accessible.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.65",
     content: (
       <section id="version-2.7.65">
