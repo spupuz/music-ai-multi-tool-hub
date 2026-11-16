@@ -118,10 +118,10 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
                   )}
                 </div>
-                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => playSong(song)}> 
-                  <p className={`text-sm truncate font-black uppercase tracking-tight transition-colors ${currentSong?.id === song.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white group-hover:text-emerald-500'}`} title={song.title}>{song.title}</p> 
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 truncate mt-0.5" title={song.display_name || `@${song.handle}`}>{song.display_name || `@${song.handle}`}</p> 
-                </div>
+                <button type="button" className="flex-1 min-w-0 cursor-pointer text-left outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black" onClick={() => playSong(song)}>
+                  <p className={`text-sm truncate font-black uppercase tracking-tight transition-colors ${currentSong?.id === song.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white group-hover:text-emerald-500'}`} title={song.title}>{song.title}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 truncate mt-0.5" title={song.display_name || `@${song.handle}`}>{song.display_name || `@${song.handle}`}</p>
+                </button>
                 <div className="hidden sm:flex text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 flex-shrink-0 items-center gap-4"> 
                    <span className="flex items-center gap-1"><PlayCountIcon className="w-3 h-3" /> {song.play_count?.toLocaleString() || '0'}</span> 
                    <span className="flex items-center gap-1"><UpvoteCountIcon className="w-3 h-3" /> {song.upvote_count?.toLocaleString() || '0'}</span> 
