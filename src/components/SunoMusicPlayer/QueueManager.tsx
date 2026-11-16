@@ -118,7 +118,19 @@ export const QueueManager: React.FC<QueueManagerProps> = ({
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
                   )}
                 </div>
-                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => playSong(song)}> 
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Play ${song.title}`}
+                  className="flex-1 min-w-0 cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  onClick={() => playSong(song)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      playSong(song);
+                    }
+                  }}
+                >
                   <p className={`text-sm truncate font-black uppercase tracking-tight transition-colors ${currentSong?.id === song.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white group-hover:text-emerald-500'}`} title={song.title}>{song.title}</p> 
                   <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-600 truncate mt-0.5" title={song.display_name || `@${song.handle}`}>{song.display_name || `@${song.handle}`}</p> 
                 </div>
