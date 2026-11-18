@@ -423,7 +423,18 @@ export default {
             const country = request.headers.get('cf-ipcountry') || 'XX';
             const date = new Date().toISOString().split('T')[0];
             
-            const salt = env.TELEMETRY_SALT || 'default-salt-123';
+            // TELEMETRY_SALT is the secret pepper that makes IP hashes
+            // un-reversible by anyone who can read the KV store later.
+            // Fail closed: a missing or weak salt must never silently fall
+            // back to a hardcoded value, because that turns the "anonymized"
+            // IP hashes into a deterministic, guessable mapping.
+            const salt = env.TELEMETRY_SALT;
+            if (!salt || typeof salt !== 'string' || salt.length < 16) {
+                return new Response(
+                    JSON.stringify({ error: 'TELEMETRY_SALT not configured' }),
+                    { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } }
+                );
+            }
             const ipHash = await hash(ip + salt);
             
             await incrementKV(env.STATS_KV, 'total:pageviews');
