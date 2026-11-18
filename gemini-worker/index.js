@@ -289,13 +289,19 @@ export default {
                 });
 
                 const body = await proxyRes.text();
-                const contentType = proxyRes.headers.get('content-type') || 'text/html';
 
+                // Security: never reflect the upstream Content-Type verbatim. The
+                // only consumer of this route (riffusionService) reads the body as
+                // text for <meta> scraping, so forcing text/plain + nosniff is
+                // behavior-preserving and prevents the worker origin from being
+                // turned into a stored-XSS vector if an allow-listed host ever
+                // serves HTML (e.g. after a subdomain takeover/compromise).
                 return new Response(body, {
                     status: proxyRes.status,
                     headers: {
                         ...cors,
-                        'Content-Type': contentType,
+                        'Content-Type': 'text/plain; charset=utf-8',
+                        'X-Content-Type-Options': 'nosniff',
                     }
                 });
             } catch (err) {
