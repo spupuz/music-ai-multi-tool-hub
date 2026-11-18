@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.67",
+    content: (
+      <section id="version-2.7.67">
+        <SectionTitle>Version 2.7.67 - 2026-11-18</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #171</STRONG>: 🛡️ Sentinel: fail closed on missing or weak <CODE>TELEMETRY_SALT</CODE> in telemetry worker (no hardcoded fallback).</LI>
+          <LI><STRONG>PR #170</STRONG>: 🛡️ Sentinel: prevent reflected content-type XSS in <CODE>/proxy/*</CODE> route (force <CODE>text/plain</CODE> + <CODE>nosniff</CODE>).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.66",
     content: (
       <section id="version-2.7.66">

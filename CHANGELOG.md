@@ -1,3 +1,10 @@
+## [2.7.67] - 2026-11-18
+
+### Security
+
+- **PR #171**: 🛡️ Sentinel: fail closed on missing or weak `TELEMETRY_SALT` in telemetry worker (no hardcoded fallback).
+- **PR #170**: 🛡️ Sentinel: prevent reflected content-type XSS in `/proxy/*` route (force `text/plain` + `nosniff`).
+
 ## [2.7.66] - 2026-11-16
 
 ### Changed
