@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.68",
+    content: (
+      <section id="version-2.7.68">
+        <SectionTitle>Version 2.7.68 - 2026-11-19</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #172</STRONG>: 🛡️ Sentinel: enforce http/https protocol validation on the <CODE>/proxy/*</CODE> target URL to block non-safe schemes (file://, javascript:, etc.).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.67",
     content: (
       <section id="version-2.7.67">

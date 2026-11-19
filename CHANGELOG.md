@@ -1,3 +1,9 @@
+## [2.7.68] - 2026-11-19
+
+### Security
+
+- **PR #172**: 🛡️ Sentinel: enforce http/https protocol validation on the `/proxy/*` target URL to block non-safe schemes (file://, javascript:, etc.).
+
 ## [2.7.67] - 2026-11-18
 
 ### Security
