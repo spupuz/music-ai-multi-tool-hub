@@ -279,6 +279,11 @@ export default {
                 return new Response(JSON.stringify({ error: 'Host not allowed for proxying' }), { status: 403, headers: cors });
             }
 
+            // SSRF Protection: enforce a safe protocol to prevent file://, javascript:, etc.
+            if (targetUrlObj.protocol !== 'http:' && targetUrlObj.protocol !== 'https:') {
+                return new Response(JSON.stringify({ error: 'Protocol not allowed for proxying' }), { status: 403, headers: cors });
+            }
+
             try {
                 const proxyRes = await fetch(targetUrlObj.toString(), {
                     method: 'GET',
