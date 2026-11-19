@@ -95,7 +95,7 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
             const body = await cached.text();
             return new Response(body, {
                 status: 200,
-                headers: { ...cors, 'Content-Type': 'application/json', 'X-Suno-Proxy': 'cache' },
+                headers: { ...cors, 'Content-Type': 'application/json', 'X-Suno-Proxy': 'cache', 'X-Content-Type-Options': 'nosniff' },
             });
         }
     } catch (e) {
@@ -117,6 +117,7 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
             ...cors,
             'Content-Type': 'application/json',
             'X-Suno-Proxy': 'origin',
+            'X-Content-Type-Options': 'nosniff',
         };
 
         if (sunoRes.ok && ttlSeconds > 0) {
