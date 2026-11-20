@@ -409,6 +409,13 @@ export default {
             return new Response('Method Not Allowed', { status: 405, headers: cors });
         }
 
+        // Reject oversized request bodies to prevent memory exhaustion / DoS.
+        const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
+        if (Number.isFinite(contentLength) && contentLength > 65536) {
+            return new Response(JSON.stringify({ error: 'Request body too large' }),
+                { status: 413, headers: { ...cors, 'Content-Type': 'application/json' } });
+        }
+
         let body;
         try {
             body = await request.json();
