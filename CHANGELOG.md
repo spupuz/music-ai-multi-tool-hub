@@ -1,3 +1,10 @@
+## [2.7.69] - 2026-11-20
+
+### Security
+
+- **PR #173**: 🛡️ Sentinel: add `X-Content-Type-Options: nosniff` to Suno proxy cache/origin responses.
+- **PR #174**: 🛡️ Sentinel: add `Vary: Origin` header to worker CORS responses to prevent cache poisoning across origins.
+
 ## [2.7.68] - 2026-11-19
 
 ### Security

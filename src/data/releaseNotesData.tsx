@@ -8,6 +8,19 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.69",
+    content: (
+      <section id="version-2.7.69">
+        <SectionTitle>Version 2.7.69 - 2026-11-20</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #173</STRONG>: 🛡️ Sentinel: add <CODE>X-Content-Type-Options: nosniff</CODE> to Suno proxy cache/origin responses.</LI>
+          <LI><STRONG>PR #174</STRONG>: 🛡️ Sentinel: add <CODE>Vary: Origin</CODE> header to worker CORS responses to prevent cache poisoning across origins.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.68",
     content: (
       <section id="version-2.7.68">
