@@ -70,8 +70,8 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
 
     // Normalize path to prevent path traversal and ensure it starts with /
     let path = url.pathname.substring(prefixMatched.length);
-    if (!path.startsWith('/')) {
-        path = '/' + path;
+    if (!path.startsWith('/') || path.startsWith('//')) {
+        path = '/' + path.replace(/^\/+/, '');
     }
 
     let targetUrlObj;
@@ -83,7 +83,8 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
 
     // SSRF Protection: strictly enforce that the final URL's hostname matches the baseUrl's hostname
     const expectedHost = new URL(baseUrl).hostname;
-    if (targetUrlObj.hostname !== expectedHost) {
+    const expectedProtocol = new URL(baseUrl).protocol;
+    if (targetUrlObj.hostname !== expectedHost || targetUrlObj.protocol !== expectedProtocol) {
         return new Response(JSON.stringify({ error: 'SSRF Attempt Blocked' }), { status: 403, headers: cors });
     }
 
