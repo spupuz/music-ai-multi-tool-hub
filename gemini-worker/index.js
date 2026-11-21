@@ -70,9 +70,10 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
 
     // Normalize path to prevent path traversal and ensure it starts with /
     let path = url.pathname.substring(prefixMatched.length);
-    if (!path.startsWith('/')) {
-        path = '/' + path;
-    }
+    // Normalize to a single leading slash so protocol-relative paths
+    // (e.g. "//evil.com/...") cannot hijack the base URL host.
+    while (path.startsWith('/')) path = path.slice(1);
+    path = '/' + path;
 
     let targetUrlObj;
     try {
