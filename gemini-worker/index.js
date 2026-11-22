@@ -411,15 +411,38 @@ export default {
         }
 
         // Reject oversized request bodies to prevent memory exhaustion / DoS.
+        // Enforce the limit on the actual streamed body, not only the
+        // (client-controlled, optional) Content-Length header, so chunked or
+        // misreported large payloads cannot bypass it.
+        const MAX_BODY_BYTES = 65536;
         const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
-        if (Number.isFinite(contentLength) && contentLength > 65536) {
+        if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
             return new Response(JSON.stringify({ error: 'Request body too large' }),
                 { status: 413, headers: { ...cors, 'Content-Type': 'application/json' } });
         }
 
+        let bodyText = '';
+        if (request.body) {
+            const reader = request.body.getReader();
+            const decoder = new TextDecoder();
+            let received = 0;
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                received += value.byteLength;
+                if (received > MAX_BODY_BYTES) {
+                    try { await reader.cancel(); } catch (e) { /* ignore */ }
+                    return new Response(JSON.stringify({ error: 'Request body too large' }),
+                        { status: 413, headers: { ...cors, 'Content-Type': 'application/json' } });
+                }
+                bodyText += decoder.decode(value, { stream: true });
+            }
+            bodyText += decoder.decode();
+        }
+
         let body;
         try {
-            body = await request.json();
+            body = bodyText ? JSON.parse(bodyText) : {};
         } catch {
             body = {};
         }
