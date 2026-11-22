@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.70",
+    content: (
+      <section id="version-2.7.70">
+        <SectionTitle>Version 2.7.70 - 2026-11-22</SectionTitle>
+        <SubSectionTitle>Security</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #179</STRONG>: 🛡️ Sentinel: enforce request body size limit on the actual streamed body, not only the (client-controlled, optional) <CODE>Content-Length</CODE> header, so chunked or misreported large payloads cannot bypass it.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.69",
     content: (
       <section id="version-2.7.69">

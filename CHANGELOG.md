@@ -1,3 +1,9 @@
+## [2.7.70] - 2026-11-22
+
+### Security
+
+- **PR #179**: 🛡️ Sentinel: enforce request body size limit on the actual streamed body, not only the (client-controlled, optional) `Content-Length` header, so chunked or misreported large payloads cannot bypass it.
+
 ## [2.7.69] - 2026-11-20
 
 ### Security
