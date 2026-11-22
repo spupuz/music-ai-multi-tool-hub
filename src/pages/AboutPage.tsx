@@ -253,7 +253,7 @@ Thanks,
                   </div>
                   <a
                     href="https://www.buymeacoffee.com/spupuz"
-                    target="_blank"
+                    target="_blank" rel="noopener noreferrer"
                     rel="noopener noreferrer"
                     className="inline-block hover:scale-105 transition-transform mt-auto"
                     aria-label="Buy Me A Coffee to support the Music AI Multi-Tool Hub"
@@ -358,7 +358,7 @@ Thanks,
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
-                target="_blank"
+                target="_blank" rel="noopener noreferrer"
                 rel="noopener noreferrer"
                 as="a"
                 variant="primary"

@@ -168,7 +168,7 @@ Thanks,
             <div className="space-y-1">
               <Button
                 href="https://github.com/spupuz/music-ai-multi-tool-hub/issues"
-                target="_blank"
+                target="_blank" rel="noopener noreferrer"
                 rel="noopener noreferrer"
                 as="a"
                 variant="ghost"
@@ -197,7 +197,7 @@ Thanks,
           <div className="space-y-2">
             <a
               href="https://www.buymeacoffee.com/spupuz"
-              target="_blank"
+              target="_blank" rel="noopener noreferrer"
               rel="noopener noreferrer"
               className="block transition-transform hover:scale-[1.02] active:scale-[0.98]"
               aria-label="Buy Me A Coffee"

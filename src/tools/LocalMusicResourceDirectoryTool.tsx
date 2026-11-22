@@ -257,7 +257,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                   <a
                     key={item.id}
                     href={sanitizeUrlForHref(item.url)}
-                    target="_blank"
+                    target="_blank" rel="noopener noreferrer"
                     rel="noopener noreferrer"
                     onClick={() => trackLocalEvent(TOOL_CATEGORY, 'resourceLinkClicked', item.title)}
                     className="group flex flex-col p-6 bg-white dark:bg-black/20 rounded-3xl border border-gray-200 dark:border-white/5 hover:border-emerald-500/30 hover:bg-gray-50 dark:hover:bg-white/10 transition-all duration-300 shadow-sm hover:shadow-2xl"

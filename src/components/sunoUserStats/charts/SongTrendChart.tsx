@@ -161,7 +161,7 @@ const SongTrendChart: React.FC<SongTrendChartProps> = ({
           <a 
             key={item.song.id} 
             href={sanitizeUrlForHref(item.song.suno_song_url || `https://suno.com/song/${item.song.id}`)}
-            target="_blank" 
+            target="_blank" rel="noopener noreferrer" 
             rel="noopener noreferrer" 
             title={`View ${item.song.title} on Suno`}
             className="flex flex-col items-center group transform transition-transform hover:scale-105"

@@ -161,7 +161,7 @@ const TopCommentedSongsChart: React.FC<TopCommentedSongsChartProps> = ({
           <a 
             key={`cover-comment-${song.id}`} 
             href={sanitizeUrlForHref(song.suno_song_url || `https://suno.com/song/${song.id}`)}
-            target="_blank" 
+            target="_blank" rel="noopener noreferrer" 
             rel="noopener noreferrer" 
             title={`View ${song.title} on Suno`}
             className="flex flex-col items-center group transform transition-transform hover:scale-105"
