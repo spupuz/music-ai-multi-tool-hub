@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.71",
+    content: (
+      <section id="version-2.7.71">
+        <SectionTitle>Version 2.7.71 - 2026-11-23</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #180</STRONG>: Add dialog semantics, aria-labels, and aria-hidden to Suno player modals and deck card images for improved accessibility.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.70",
     content: (
       <section id="version-2.7.70">

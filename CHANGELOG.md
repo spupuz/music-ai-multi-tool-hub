@@ -1,3 +1,9 @@
+## [2.7.71] - 2026-11-23
+
+### Changed
+
+- **PR #180**: Add dialog semantics, aria-labels, and aria-hidden to Suno player modals and deck card images for improved accessibility.
+
 ## [2.7.70] - 2026-11-22
 
 ### Security
