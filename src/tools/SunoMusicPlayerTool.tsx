@@ -801,11 +801,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       )}
 
       {showLyricsModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowLyricsModal(false)}>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowLyricsModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowLyricsModal(false); }} role="dialog" aria-modal="true" aria-labelledby="lyrics-modal-title">
           <div className="glass-card p-8 border-gray-300 dark:border-white/20 shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col relative overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Lyrics</h2>
-              <Button onClick={() => setShowLyricsModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white dark:hover:bg-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-all rounded-xl">
+              <h2 id="lyrics-modal-title" className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Lyrics</h2>
+              <Button onClick={() => setShowLyricsModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white dark:hover:bg-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-all rounded-xl" aria-label="Close lyrics modal">
                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
               </Button>
             </div>
@@ -829,11 +829,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
       )}
 
       {showMetadataModal && playerState.currentSong && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowMetadataModal(false)}>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setShowMetadataModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowMetadataModal(false); }} role="dialog" aria-modal="true" aria-labelledby="metadata-modal-title">
           <div className="glass-card p-4 sm:p-8 border-gray-300 dark:border-white/20 shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col relative" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Metadata</h2>
-              <Button onClick={() => setShowMetadataModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white dark:hover:bg-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-all rounded-xl">
+              <h2 id="metadata-modal-title" className="text-3xl font-black uppercase tracking-tighter italic text-emerald-500">Metadata</h2>
+              <Button onClick={() => setShowMetadataModal(false)} variant="ghost" size="sm" className="p-2 hover:bg-white dark:hover:bg-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-all rounded-xl" aria-label="Close metadata modal">
                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
               </Button>
             </div>
