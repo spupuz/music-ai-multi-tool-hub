@@ -10,9 +10,9 @@ export const usePlaylistAnalysis = (
       return null;
     }
 
-    const commonGenres = [
+    const commonGenres = new Set([
       'pop', 'rock', 'electronic', 'hip hop', 'jazz', 'classical', 'folk', 'metal', 'blues', 'r&b', 'reggae', 'country', 'funk', 'soul', 'disco', 'punk', 'ambient', 'techno', 'house', 'trance', 'synthwave', 'lo-fi', 'chiptune', 'drill', 'edm', 'idm', 'dnb', 'drum and bass', 'jungle', 'garage', 'grime', 'dubstep', 'trap', 'vaporwave', 'shoegaze', 'post-punk', 'indie', 'alternative'
-    ];
+    ]);
 
     const totalClips = originalSongsList.length;
 
@@ -62,8 +62,9 @@ export const usePlaylistAnalysis = (
     for (const [name, count] of tagMap.entries()) {
       allTags[tagIdx++] = { name, count };
     }
-    const mostCommonTags = allTags.filter(t => !commonGenres.includes(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
-    const mostCommonGenres = allTags.filter(t => commonGenres.includes(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
+    // ⚡ Bolt: commonGenres is a Set — O(1) lookups instead of O(N) Array.includes in the filter hot path
+    const mostCommonTags = allTags.filter(t => !commonGenres.has(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
+    const mostCommonGenres = allTags.filter(t => commonGenres.has(t.name)).sort((a, b) => b.count - a.count).slice(0, 10);
 
     const mostFeaturedArtists = new Array(artistMap.size);
     let artistIdx = 0;
