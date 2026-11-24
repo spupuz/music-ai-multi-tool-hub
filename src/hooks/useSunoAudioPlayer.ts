@@ -307,11 +307,20 @@ export const useSunoAudioPlayer = ({
     // Note: AudioContext resume and graph initialization is now handled by achieveAudioSystemReady 
     // in the useSunoAudioSystem hook. The following creates a new Howl instance associated with the global Howler context.
 
+    // Riffusion / Flow Music clips are served as GCS .m4a (and occasionally .wav)
+    // files, not .mp3. Howler's WebAudio decoder only decodes the formats listed in
+    // `format`, so hardcoding ['mp3'] silently breaks playback for every
+    // non-Suno clip — the only path that streams directly. List every format the
+    // riffusionService can actually produce so the player decodes whatever it gets.
+    const audioFormat = audioUrl.endsWith('.m4a') ? 'm4a'
+      : audioUrl.endsWith('.wav') ? 'wav'
+      : 'mp3';
+
     const newSound = new Howl({
       src: [audioUrl],
       html5: false,
       volume: 1.0,
-      format: ['mp3'],
+      format: [audioFormat],
       onload: () => {
         if (currentPlayingSongIdRef.current !== song.id) return;
         const loadedDuration = newSound.duration();
