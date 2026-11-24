@@ -199,9 +199,10 @@ const calculateAggregatedStats = (
         avgCommentRate: data.totalPlays > 0 ? (data.totalComments / data.totalPlays) * 100 : 0
       };
     }
-    const commonGenres = ['pop','rock','electronic','hip hop','jazz','classical','folk','metal','blues','r&b','reggae','country','funk','soul','disco','punk','ambient','techno','house','trance','synthwave','lo-fi','chiptune','drill','edm','idm','dnb','drum and bass','jungle','garage','grime','dubstep','trap','vaporwave','shoegaze','post-punk','indie','alternative'];
+    // ⚡ Bolt: commonGenres is a Set — O(1) lookups instead of O(N) Array.includes in the tag-split hot path
+    const commonGenres = new Set(['pop','rock','electronic','hip hop','jazz','classical','folk','metal','blues','r&b','reggae','country','funk','soul','disco','punk','ambient','techno','house','trance','synthwave','lo-fi','chiptune','drill','edm','idm','dnb','drum and bass','jungle','garage','grime','dubstep','trap','vaporwave','shoegaze','post-punk','indie','alternative']);
     const genreMap = new Map<string, { count:number; totalUpvotes:number; totalPlays:number; totalComments:number }>();
-    tagStats.forEach(tag => { const pgs = tag.name.split(/\s+|-|\//); pgs.forEach(pg => { const nPg = pg.toLowerCase(); if(commonGenres.includes(nPg)){ const cur = genreMap.get(nPg) || {count:0,totalUpvotes:0,totalPlays:0,totalComments:0}; cur.count+=tag.count; cur.totalUpvotes+=tag.totalUpvotes; cur.totalPlays+=tag.totalPlays; cur.totalComments+=tag.totalComments; genreMap.set(nPg, cur); }});});
+    tagStats.forEach(tag => { const pgs = tag.name.split(/\s+|-|\//); pgs.forEach(pg => { const nPg = pg.toLowerCase(); if(commonGenres.has(nPg)){ const cur = genreMap.get(nPg) || {count:0,totalUpvotes:0,totalPlays:0,totalComments:0}; cur.count+=tag.count; cur.totalUpvotes+=tag.totalUpvotes; cur.totalPlays+=tag.totalPlays; cur.totalComments+=tag.totalComments; genreMap.set(nPg, cur); }});});
     const genreStats: GenreStat[] = new Array(genreMap.size);
     let genreIdx = 0;
     for (const [name, data] of genreMap.entries()) {
