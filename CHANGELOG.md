@@ -1,3 +1,13 @@
+## [2.7.72] - 2026-11-24
+
+### Fixed
+
+- **PR #182**: Fix Riffusion/Flow Music playback: Howler hardcoded `format: ['mp3']` but those clips are GCS `.m4a`/`.wav` files, so direct-stream playback silently failed. Derive format from URL extension.
+
+### Changed
+
+- **PR #181**: Convert `commonGenres` arrays to `Set` for O(1) membership testing in hot paths (`usePlaylistAnalysis.ts` filter loops, `useSunoUserStatsData.ts` tag-split loops).
+
 ## [2.7.71] - 2026-11-23
 
 ### Changed

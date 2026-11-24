@@ -8,6 +8,22 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.72",
+    content: (
+      <section id="version-2.7.72">
+        <SectionTitle>Version 2.7.72 - 2026-11-24</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #182</STRONG>: Fix Riffusion/Flow Music playback: Howler hardcoded <CODE>format: ['mp3']</CODE> but those clips are GCS <CODE>.m4a</CODE>/<CODE>.wav</CODE> files, so direct-stream playback silently failed. Derive format from URL extension.</LI>
+        </UL>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #181</STRONG>: Convert <CODE>commonGenres</CODE> arrays to <CODE>Set</CODE> for O(1) membership testing in hot paths (<CODE>usePlaylistAnalysis.ts</CODE> filter loops, <CODE>useSunoUserStatsData.ts</CODE> tag-split loops).</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.71",
     content: (
       <section id="version-2.7.71">
