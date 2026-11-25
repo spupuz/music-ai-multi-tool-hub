@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.73",
+    content: (
+      <section id="version-2.7.73">
+        <SectionTitle>Version 2.7.73 - 2026-11-25</SectionTitle>
+        <SubSectionTitle>Fixed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #183</STRONG>: Use <CODE>safeRemoveItem</CODE> instead of raw <CODE>localStorage.removeItem</CODE> in <CODE>cacheUtils.ts</CODE> to avoid throwing in privacy/quota mode.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.72",
     content: (
       <section id="version-2.7.72">

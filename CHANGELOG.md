@@ -1,3 +1,9 @@
+## [2.7.73] - 2026-11-25
+
+### Fixed
+
+- **PR #183**: Use `safeRemoveItem` instead of raw `localStorage.removeItem` in `cacheUtils.ts` to avoid throwing in privacy/quota mode.
+
 ## [2.7.72] - 2026-11-24
 
 ### Fixed
