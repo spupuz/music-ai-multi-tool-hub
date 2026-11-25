@@ -1,4 +1,4 @@
-import { safeSetItem } from './safeStorage';
+import { safeSetItem, safeRemoveItem } from './safeStorage';
 
 const CACHE_PREFIX = 'hubCache_';
 
@@ -34,7 +34,7 @@ export function cacheSet<T>(namespace: string, key: string, value: T, maxEntries
           return 0;
         }
       });
-      keys.slice(0, keys.length - maxEntries).forEach(k => localStorage.removeItem(k));
+      keys.slice(0, keys.length - maxEntries).forEach(k => safeRemoveItem(k));
     }
   } catch (e) {
     // Storage quota or privacy mode: fail silently, cache is best-effort.
@@ -43,7 +43,7 @@ export function cacheSet<T>(namespace: string, key: string, value: T, maxEntries
 
 export function cacheRemove(namespace: string, key: string): void {
   try {
-    localStorage.removeItem(`${CACHE_PREFIX}${namespace}_${key}`);
+    safeRemoveItem(`${CACHE_PREFIX}${namespace}_${key}`);
   } catch (e) {
     // ignore
   }
@@ -67,7 +67,7 @@ export function cacheGetAll<T>(namespace: string, maxEntries = 500): Map<string,
     });
     const toRemove = Math.max(0, keys.length - maxEntries);
     for (let i = 0; i < toRemove; i++) {
-      localStorage.removeItem(keys[i]);
+      safeRemoveItem(keys[i]);
     }
     for (let i = toRemove; i < keys.length; i++) {
       try {
@@ -92,7 +92,7 @@ export function cacheRemoveNamespace(namespace: string): number {
     const prefix = `${CACHE_PREFIX}${namespace}_`;
     Object.keys(localStorage).forEach(k => {
       if (k.startsWith(prefix)) {
-        localStorage.removeItem(k);
+        safeRemoveItem(k);
         removed++;
       }
     });
