@@ -370,11 +370,11 @@ const SunoMusicPlayerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
 
       {playlistAnalysis && (
         <details className="mb-8 glass-card border-gray-200 dark:border-white/10 overflow-hidden" open={showAnalysis} onToggle={(e) => setShowAnalysis((e.target as HTMLDetailsElement).open)}>
-          <summary className="p-6 text-xs font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400 cursor-pointer hover:bg-white/10 dark:hover:bg-white/5 rounded-t-3xl transition-all flex justify-between items-center group">
+          <summary className="p-6 text-xs font-black uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400 cursor-pointer hover:bg-white/10 dark:hover:bg-white/5 rounded-t-3xl transition-all flex justify-between items-center group outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
             <span>
               {currentIdentifierType === 'playlist' ? 'Playlist Analysis' : 'Song List Analysis'}
             </span>
-            <span className={`transform transition-transform duration-500 opacity-40 group-hover:opacity-100 ${showAnalysis ? 'rotate-180' : ''}`}>
+            <span className={`transform transition-transform duration-500 opacity-40 group-hover:opacity-100 focus-visible:opacity-100 ${showAnalysis ? 'rotate-180' : ''}`}>
                <ChevronDownIcon className="w-4 h-4" />
             </span>
           </summary>

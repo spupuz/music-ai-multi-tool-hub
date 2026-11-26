@@ -91,7 +91,7 @@ export const SelectField: React.FC<{ id: string; label: string; value: string; o
                 <option disabled value="" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">Select Parameter...</option>
                 {options.map(opt => (<option key={opt.value} value={opt.value} className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">{opt.label}</option>))}
             </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>

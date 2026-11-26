@@ -606,12 +606,12 @@ const ChordProgressionTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
                   </div>
                   
                   <div className="flex flex-col items-center gap-3 w-full">
-                    <div className="flex flex-wrap justify-center gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div className="flex flex-wrap justify-center gap-1.5 opacity-60 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">
                       {chord.notes.map(note => (
                         <span key={note} className={`text-[9px] font-black px-2 py-1 rounded-lg ${playingChordName === chord.name && !isRecording ? 'bg-black/20 text-black' : 'bg-slate-100/50 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/5'}`}>{note}</span>
                       ))}
                     </div>
-                    <SpeakerIcon className={`w-4 h-4 transition-all duration-300 ${playingChordName === chord.name && !isRecording ? 'text-black scale-110' : 'text-gray-400 group-hover:text-emerald-500 opacity-20 group-hover:opacity-100'}`} />
+                    <SpeakerIcon className={`w-4 h-4 transition-all duration-300 ${playingChordName === chord.name && !isRecording ? 'text-black scale-110' : 'text-gray-400 group-hover:text-emerald-500 focus-visible:text-emerald-500 opacity-20 group-hover:opacity-100 focus-visible:opacity-100'}`} />
                   </div>
                 </Button>
               ))}

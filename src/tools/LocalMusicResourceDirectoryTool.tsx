@@ -267,7 +267,7 @@ const LocalMusicResourceDirectoryTool: React.FC<ToolProps> = ({ trackLocalEvent 
                       <GlobeAltIcon className="w-4 h-4 text-gray-500 group-hover:text-emerald-500/50 transition-colors" />
                     </div>
                     <p className="text-xs font-bold text-gray-600 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{item.description}</p>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 opacity-40 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 opacity-40 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">
                       Open Link
                       <ChevronRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>

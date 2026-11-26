@@ -157,12 +157,12 @@ const ScaleChordViewerTool: React.FC<ToolProps> = ({ trackLocalEvent }) => {
         variant="ghost"
         className={`p-4 bg-slate-50/50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/10 group relative transition-all duration-300 hover:bg-white/10 hover:border-emerald-500/30 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex flex-row items-center justify-between gap-3 shadow-none h-auto w-full ${playingChordName === chord.name ? 'ring-2 ring-emerald-500/50 bg-emerald-500/5 border-emerald-500/20' : ''}`}
         aria-label={`Play chord ${chord.name} (${chord.roman})`}
-        endIcon={<SpeakerIcon className={`shrink-0 w-4 h-4 transition-all duration-300 ${playingChordName === chord.name ? 'text-emerald-500 scale-125' : 'text-gray-400 group-hover:text-emerald-500 opacity-20 group-hover:opacity-80'}`} />}
+        endIcon={<SpeakerIcon className={`shrink-0 w-4 h-4 transition-all duration-300 ${playingChordName === chord.name ? 'text-emerald-500 scale-125' : 'text-gray-400 group-hover:text-emerald-500 focus-visible:text-emerald-500 opacity-20 group-hover:opacity-80 focus-visible:opacity-80'}`} />}
     >
         <div className="text-left min-w-0">
             <p className="text-sm font-black uppercase tracking-tighter text-gray-900 dark:text-white truncate">{chord.name}</p>
             <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500">{chord.roman}</p>
-            <p className="text-[8px] font-bold text-gray-500 dark:text-gray-600 truncate opacity-40 group-hover:opacity-100 transition-opacity">({chord.notes.join(', ')})</p>
+            <p className="text-[8px] font-bold text-gray-500 dark:text-gray-600 truncate opacity-40 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity">({chord.notes.join(', ')})</p>
         </div>
     </Button>
   );
