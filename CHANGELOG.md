@@ -1,3 +1,9 @@
+## [2.7.74] - 2026-11-26
+
+### Changed
+
+- **PR #184**: Optimize cache sorting in `cacheUtils.ts` — read and parse each localStorage entry once upfront instead of O(n log n) re-reads per comparison, significantly reducing overhead for large caches.
+
 ## [2.7.73] - 2026-11-25
 
 ### Fixed

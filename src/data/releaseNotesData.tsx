@@ -8,6 +8,18 @@ export interface ReleaseNoteItem {
 
 export const releaseNotes: ReleaseNoteItem[] = [
   {
+    version: "2.7.74",
+    content: (
+      <section id="version-2.7.74">
+        <SectionTitle>Version 2.7.74 - 2026-11-26</SectionTitle>
+        <SubSectionTitle>Changed</SubSectionTitle>
+        <UL>
+          <LI><STRONG>PR #184</STRONG>: Optimize cache sorting in <CODE>cacheUtils.ts</CODE> — read and parse each localStorage entry once upfront instead of O(n log n) re-reads per comparison, significantly reducing overhead for large caches.</LI>
+        </UL>
+      </section>
+    )
+  },
+  {
     version: "2.7.73",
     content: (
       <section id="version-2.7.73">
