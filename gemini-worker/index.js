@@ -88,6 +88,15 @@ async function proxySunoRequest(request, url, baseUrl, prefixMatched) {
         return new Response(JSON.stringify({ error: 'SSRF Attempt Blocked' }), { status: 403, headers: cors });
     }
 
+    // SSRF Protection: enforce a safe protocol so non-HTTP(S) schemes
+    // (file:, data:, javascript:, etc.) can never be proxied even if a future
+    // baseUrl or path manipulation yields a hostname match. Mirrors the
+    // allowlist already enforced on the /proxy/* route and is behavior-
+    // preserving: the only consumers read the response as JSON/text.
+    if (targetUrlObj.protocol !== 'http:' && targetUrlObj.protocol !== 'https:') {
+        return new Response(JSON.stringify({ error: 'Protocol not allowed' }), { status: 403, headers: cors });
+    }
+
     const targetUrlString = targetUrlObj.toString();
     const ttlSeconds = cacheTtlForPath(path);
 
